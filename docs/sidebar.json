@@ -11,6 +11,7 @@
     "Cells": "cells.html",
     "Log Likelihood tools": "loglike.html",
     "Light Curve Generation": "lightcurve.html",
-    "Simulation": "simulation.html"
+    "Simulation": "simulation.html",
+    "Bayesian Blocks": "bayesian.html"
   }
 }

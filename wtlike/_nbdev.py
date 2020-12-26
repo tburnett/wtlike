@@ -37,7 +37,11 @@ index = {"Cache": "00_config.ipynb",
          "get_lightcurve": "09_lightcurve.ipynb",
          "flux_plot": "09_lightcurve.ipynb",
          "generate_cell": "10_simulation.ipynb",
-         "simulate_cells": "10_simulation.ipynb"}
+         "simulate_cells": "10_simulation.ipynb",
+         "CountFitness": "14_bayesian.ipynb",
+         "LikelihoodFitness": "14_bayesian.ipynb",
+         "get_bb_partition": "14_bayesian.ipynb",
+         "bb_overplot": "14_bayesian.ipynb"}
 
 modules = ["config.py",
            "effective_area.py",
@@ -49,7 +53,8 @@ modules = ["config.py",
            "cells.py",
            "loglike.py",
            "lightcurve.py",
-           "simulation.py"]
+           "simulation.py",
+           "bayesian.py"]
 
 doc_url = "https://tburnett.github.io/wtlike/"
 
