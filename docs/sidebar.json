@@ -1,10 +1,16 @@
 {
-  "Notebook": {
-    "Export to modules": "/export",
-    "Convert to html": "/export2html",
-    "Show doc": "/showdoc",
-    "Test functions": "/test",
-    "Core functions": "/core",
-    "Command line functions": "/cli"
+  "wtlike": {
+    "Overview": "/",
+    "Configuration data and basic functions": "config.html",
+    "Effective Area": "effective_area.html",
+    "GTI, or Good Time Interval": "gti.html",
+    "Exposure": "exposure.html",
+    "Photon Data": "photon_data.html",
+    "Weights": "weights.html",
+    "Poisson-like likelihood function": "poisson.html",
+    "Cells": "cells.html",
+    "Log Likelihood tools": "loglike.html",
+    "Light Curve Generation": "lightcurve.html",
+    "Simulation": "simulation.html"
   }
 }

@@ -7,24 +7,42 @@ entries:
 - folders:
   - folderitems:
     - output: web,pdf
-      title: Export to modules
-      url: /export.html
+      title: Overview
+      url: /
     - output: web,pdf
-      title: Convert to html
-      url: /export2html.html
+      title: Configuration data and basic functions
+      url: config.html
     - output: web,pdf
-      title: Show doc
-      url: /showdoc.html
+      title: Effective Area
+      url: effective_area.html
     - output: web,pdf
-      title: Test functions
-      url: /test.html
+      title: GTI, or Good Time Interval
+      url: gti.html
     - output: web,pdf
-      title: Core functions
-      url: /core.html
+      title: Exposure
+      url: exposure.html
     - output: web,pdf
-      title: Command line functions
-      url: /cli.html
+      title: Photon Data
+      url: photon_data.html
+    - output: web,pdf
+      title: Weights
+      url: weights.html
+    - output: web,pdf
+      title: Poisson-like likelihood function
+      url: poisson.html
+    - output: web,pdf
+      title: Cells
+      url: cells.html
+    - output: web,pdf
+      title: Log Likelihood tools
+      url: loglike.html
+    - output: web,pdf
+      title: Light Curve Generation
+      url: lightcurve.html
+    - output: web,pdf
+      title: Simulation
+      url: simulation.html
     output: web
-    title: Notebook
+    title: wtlike
   output: web
   title: Sidebar
