@@ -11,8 +11,6 @@ import matplotlib.ticker as ticker
 
 from scipy import (optimize, linalg)
 from scipy.linalg import (LinAlgError, LinAlgWarning)
-
-from utilities import  keyword_options
 from .poisson import *
 poisson_tolerance = 0.2
 
