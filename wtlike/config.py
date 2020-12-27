@@ -189,7 +189,8 @@ class Config:
     files :'' =  None
 
     # cache
-    cachepath: str = '/tmp/lc_cache'
+    cachepath: str = '/tmp/cache'
+
     # photon selection
     mjd_range : Tuple=None
     radius: float = 5

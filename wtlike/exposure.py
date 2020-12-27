@@ -8,9 +8,9 @@ import numpy as np
 import pandas as pd
 from scipy.integrate import simps
 
-from light_curves.config import *
-from light_curves.load_gti import get_gti
-from light_curves.effective_area import EffectiveArea
+from .config import *
+from .load_gti import get_gti
+from .effective_area import EffectiveArea
 
 # Cell
 def get_default_bins(config, exposure):
@@ -231,7 +231,7 @@ def get_binned_exposure(config, source, time_bins=None, key='', gti_key='gti'):
 
         return np.diff(cum)/(cum[-1]-cum[0]) * (len(time_bins)-1) , time_bins
 
-    key = f'binned_exposure_{source.name}' if key=='' else key
+    key = f'binexp_{source.name}' if key=='' else key
     description= f'binned exposure for source {source.name}'
 
     return config.cache(key, doit, time_bins, description=description)
