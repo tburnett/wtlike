@@ -8,9 +8,9 @@ import numpy as np
 import pandas as pd
 from astropy.stats.bayesian_blocks import FitnessFunc
 
-from light_curves.config import *
-from light_curves.lightcurve import get_lightcurve, fit_cells, flux_plot
-from light_curves.cells import get_cells, partition_cells
+from .config import *
+from .lightcurve import get_lightcurve, fit_cells, flux_plot
+from .cells import get_cells, partition_cells
 
 
 # Cell

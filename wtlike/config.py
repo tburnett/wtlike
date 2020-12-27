@@ -163,15 +163,12 @@ class Files:
     gti: str = '$HOME/work/lat-data/binned/'
     aeff:str = '$HOME/work/lat-data/aeff'
     weights: str = '$HOME/onedrive/fermi/weight_files'
-    cachepath: str = '/tmp/lc_cache'
 
     # expand -- not implemented in Path
     def __post_init__(self):
         d = self.__dict__
         for name, value in d.items():
             d[name] = Path(os.path.expandvars(value))
-#         self.cachepath.mkdir(exist_ok=True)
-#         self.cache = Cache(self.cachepath, clear=False)
 
     @property
     def valid(self):
@@ -191,6 +188,8 @@ class Config:
     verbose : int = 3
     files :'' =  None
 
+    # cache
+    cachepath: str = '/tmp/lc_cache'
     # photon selection
     mjd_range : Tuple=None
     radius: float = 5
@@ -216,18 +215,11 @@ class Config:
 
     def __post_init__(self):
         if self.files is None: self.files=Files()
-#         try:
-#             chpath = self.files.cachepath
-#             chpath.mkdir(exist_ok=True)
-#             self.cache = Cache(chpath, clear=False)
-#         except Exception as e:
-#             print(f'Could not create cache, {e}', file=sys.stderr)
-#             raise
-#             self.cache = None
+
     @property
     def cache(self):
         if not hasattr(self, '_cache'):
-            self._cache = Cache(self.files.cachepath, clear=False)
+            self._cache = Cache(self.cachepath, clear=False)
         return self._cache
 
     @property
