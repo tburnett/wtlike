@@ -32,6 +32,8 @@ nb_path: "nbs/04_photon_data.ipynb"
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Loads the photon data around a source, subject to a GTI.</p>
+<p>The function <a href="/wtlike/photon_data.html#get_photon_data"><code>get_photon_data</code></a> loads a data dataset of photons in a cone about a specified source, with time, position and energy info, the latter two binned.</p>
+<p>These are retrieved from a parquet arrow dataset that was created from standard</p>
 
 </div>
 </div>
@@ -75,7 +77,7 @@ nb_path: "nbs/04_photon_data.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_photon_data" class="doc_header"><code>get_photon_data</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/photon_data.py#L105" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_photon_data</code>(<strong><code>config</code></strong>:<code>configuration data</code>, <strong><code>source</code></strong>:<code>Source data</code>, <strong><code>key</code></strong>=<em><code>''</code></em>)</p>
+<h4 id="get_photon_data" class="doc_header"><code>get_photon_data</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/photon_data.py#L183" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_photon_data</code>(<strong><code>config</code></strong>:<code>configuration data</code>, <strong><code>source</code></strong>:<code>Source data</code>, <strong><code>key</code></strong>=<em><code>''</code></em>)</p>
 </blockquote>
 <p>Parameters:</p>
 <ul>
@@ -157,6 +159,15 @@ Head of the table, length 1,313,726:
 </div>
     {% endraw %}
 
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Parquet-conversion-code">Parquet conversion code<a class="anchor-link" href="#Parquet-conversion-code"> </a></h4><p>Copied here, needs integration. 
+Don't know how to make more of those "time_info" filesm, but the data come from the binned FITS files. 
+Need to modify this to read from the FITS files</p>
+
+</div>
+</div>
+</div>
 </div>
  
 

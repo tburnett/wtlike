@@ -22,6 +22,9 @@ entries:
       title: Exposure
       url: exposure.html
     - output: web,pdf
+      title: Manage the Parquet photon dataset
+      url: manage_dataset.html
+    - output: web,pdf
       title: Photon Data
       url: photon_data.html
     - output: web,pdf

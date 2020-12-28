@@ -13,7 +13,7 @@ google_search:
 
 host: 127.0.0.1
 # the preview server used. Leave as is.
-port: 4000
+port: 4001
 # the port where the preview is rendered.
 
 exclude:
