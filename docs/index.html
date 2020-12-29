@@ -35,7 +35,7 @@ nb_path: "nbs/index.ipynb"
 <li><a href="https://tburnett.github.io/light_curves/">this document</a></li>
 <li><a href="https://github.com/tburnett/wtlike">repository</a></li>
 </ul>
-<h2 id="Summary">Summary<a class="anchor-link" href="#Summary"> </a></h2><p>This package has code that was adapted to the <a href="https://nbdev.fast.ai/">nbdev</a> code/tests/documentation environment from the <a href="https://github.com/tburnett/lat-timing">github package lat-timing</a> to manage light curves of Fermi-LAT sources.<br>
+<h2 id="Context">Context<a class="anchor-link" href="#Context"> </a></h2><p>This package has code that was adapted to the <a href="https://nbdev.fast.ai/">nbdev</a> code/tests/documentation environment from the <a href="https://github.com/tburnett/lat-timing">github package lat-timing</a> to manage light curves of Fermi-LAT sources.<br>
 It is based on a <a href="https://arxiv.org/pdf/1910.00140.pdf">paper</a> by Matthew Kerr, which derives the <a href="/loglike.html#The-Kerr-likelihood-formula">weighted likelihood formalism</a> used here, specifically with
 the <a href="https://arxiv.org/pdf/1207.5578.pdf">Bayesian Block</a> to detect and characterize variability of a gamma-ray source.</p>
 <p>Also, I've ported some code from  my <a href="https://github.com/tburnett/jupydoc">jupydoc</a> documentation package supporting enhanced documentation combining Markdown and code, such that the 
@@ -54,18 +54,18 @@ Markdown reflects execution of the code.</p>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Module-summary">Module summary<a class="anchor-link" href="#Module-summary"> </a></h2><h3 id="Primary-ingredients:">Primary ingredients:<a class="anchor-link" href="#Primary-ingredients:"> </a></h3><ul>
-<li><p><strong>Photon data</strong>: time, energy, and position. This is managed as a <a href="https://parquet.apache.org/">Parquet</a> database, derived from the public <em>Fermi</em>-LAT data. Modules are <a href="/ #wtlike/photon_data.html"><code>photon_data</code></a> and <code>manage_dataset</code>.</p>
+<li><p><strong>Photon data</strong>: time, energy, and position. This is managed as a <a href="https://parquet.apache.org/">Parquet</a> database, derived from the public <em>Fermi</em>-LAT data. Modules are <a href="/photon_data.html"><code>photon_data</code></a> and <code>manage_dataset</code>.</p>
 </li>
-<li><p><strong>Exposure</strong>: Need to normalize expected rates as a function of time, position, and energy. Modules: <a href="/ #wtlike/exposure.html"><code>exposure</code></a>, <a href="/ #wtlike/effective_area.html"><code>effective_area</code></a>, and <code>gti</code>.</p>
+<li><p><strong>Exposure</strong>: Need to normalize expected rates as a function of time, position, and energy. Modules: <a href="/exposure.html"><code>exposure</code></a>, <a href="/effective_area.html"><code>effective_area</code></a>, and <code>gti</code>.</p>
 </li>
-<li><p><strong>Weights</strong>: for each photon, this is the probability that it was from a specific source. This requires an analysis of all the souces in the region about the source, involving <code>gtlike</code> or <code>pointlike</code>. Module <a href="/ #wtlike/weights.html"><code>weights</code></a> finds the data for a the source, and adds it to the photon list.</p>
+<li><p><strong>Weights</strong>: for each photon, this is the probability that it was from a specific source. This requires an analysis of all the souces in the region about the source, involving <code>gtlike</code> or <code>pointlike</code>. Module <a href="/weights.html"><code>weights</code></a> finds the data for a the source, and adds it to the photon list.</p>
 </li>
 </ul>
-<h3 id="The-light-curve">The light-curve<a class="anchor-link" href="#The-light-curve"> </a></h3><p>The module <a href="/ #wtlike/cells.html"><code>cells</code></a> creates a list of "cells", time intervals with a list of the photon weights, and an estimation from the exposure about the expected distribution. 
-Each cell is fit using the modules <a href="/ #wtlike/loglike.html"><code>loglike</code></a> and <a href="/ #wtlike/poisson.html"><code>poisson</code></a>.
-Finally, <a href="/ #wtlike/lightcurve.html"><code>lightcurve</code></a> makes a list of the fits.</p>
-<h3 id="Simulation">Simulation<a class="anchor-link" href="#Simulation"> </a></h3><p>A light curve can be also generated with a simulation, see <a href="/ #wtlike/simulation.html"><code>simulation</code></a>.</p>
-<h3 id="Bayesian-Blocks">Bayesian Blocks<a class="anchor-link" href="#Bayesian-Blocks"> </a></h3><p>The <a href="/ #wtlike/bayesian.html"><code>bayesian</code></a> module creates a partition, and refits the blocks.</p>
+<h3 id="The-light-curve">The light-curve<a class="anchor-link" href="#The-light-curve"> </a></h3><p>The module <a href="/cells.html"><code>cells</code></a> creates a list of "cells", time intervals with a list of the photon weights, and an estimation from the exposure about the expected distribution. 
+Each cell is fit using the modules <a href="/loglike.html"><code>loglike</code></a> and <a href="/poisson.html"><code>poisson</code></a>.
+Finally, <a href="/lightcurve.html"><code>lightcurve</code></a> makes a list of the fits.</p>
+<h3 id="Simulation">Simulation<a class="anchor-link" href="#Simulation"> </a></h3><p>A light curve can be also generated with a simulation, see <a href="/simulation.html"><code>simulation</code></a>.</p>
+<h3 id="Bayesian-Blocks">Bayesian Blocks<a class="anchor-link" href="#Bayesian-Blocks"> </a></h3><p>The <a href="/bayesian.html"><code>bayesian</code></a> module creates a partition, and refits the blocks.</p>
 
 </div>
 </div>
