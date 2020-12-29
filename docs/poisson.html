@@ -94,23 +94,23 @@ the const is such that $w=0$ at the peak.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="Poisson.alternate_spec" class="doc_header"><code>Poisson.alternate_spec</code><a href="__main__.py#L171" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Poisson.alternate_spec</code>(<strong><code>counts</code></strong>, <strong><code>flux</code></strong>, <strong><code>sig_flux</code></strong>, <strong><code>tol</code></strong>=<em><code>5</code></em>)</p>
+<h4 id="Poisson.from_fit" class="doc_header"><code>Poisson.from_fit</code><a href="__main__.py#L171" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Poisson.from_fit</code>(<strong><code>counts</code></strong>, <strong><code>flux</code></strong>, <strong><code>sig_flux</code></strong>, <strong><code>tol</code></strong>=<em><code>5</code></em>)</p>
 </blockquote>
-<p>Create a Poisson instance with the fit parameters from an analysis
+<p>Create a Poisson instance using the fit parameters from an analysis
 if a likelihood function.</p>
 <ul>
 <li>counts -- number of weights</li>
 <li>flux -- peak value, in flux units </li>
 <li>sig_flux -- its standard deviation, square root of the variance</li>
 </ul>
-<p>This is only relevant if the likelihood is not truncated by the Bayes requirement.</p>
+<p>This is relevant if the likelihood is not truncated by the Bayes requirement.</p>
 <p>If $s$ and $v$ are the signal rate and its variance, determined by an optimization for $n$ measurements,
-so $s$ is large compared with $\sqrt{v}$, then the poisson-like are parameters as follows.</p>
+so $s$ is large compared with $\sqrt{v}$, then the poisson-like parameters can be determined as follows.</p>
 <p>We use the properties of the Poisson distribution 
 $f(n;\lambda) = \exp(n \log\lambda - \lambda + \mathrm{const})$, 
 where the parameter $\lambda$ is equal to the expected value of number of occurrences $n$ and 
 to its variance, and that the function we want is shifted by the background $b$ and scaled by a factor
-$k$ so we use $f(k(s-b); \lambda)$ This implies that for the expected value of $s$, $\lambda = n$,
+$k$ so we use $f(k(s-b)| \lambda)$. This implies that for the expected value of $s$, $\lambda = n$,
 and $ k(s-b)= k^2 v = n$.</p>
 
 </div>
@@ -131,7 +131,7 @@ and $ k(s-b)= k^2 v = n$.</p>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># simple test: for 10K counts the error is 1% if no background </span>
-<span class="n">t</span> <span class="o">=</span> <span class="n">Poisson</span><span class="o">.</span><span class="n">alternate_spec</span><span class="p">(</span><span class="mi">10000</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">0.02</span> <span class="p">)</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">Poisson</span><span class="o">.</span><span class="n">from_fit</span><span class="p">(</span><span class="mi">10000</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">0.02</span> <span class="p">)</span>
 <span class="k">assert</span> <span class="nb">str</span><span class="p">(</span><span class="n">t</span><span class="p">)</span><span class="o">==</span><span class="s1">&#39;Poisson: mu,beta= 10000.0, 0.0&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;Fail: got </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">t</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span>
 </pre></div>
 
@@ -257,24 +257,6 @@ and the points that were used for the evaluation, with the output function as a 
 </div>
 </div>
 
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>Input: mu =      100	Fit:   Poisson: mu,beta= 100.0, 0.0
-Input: mu =     1000	Fit:   Poisson: mu,beta= 1000.3, 0.1
-Input: mu =    10000	Fit:   Poisson: mu,beta= 10021.4, 10.7
-Input: mu =   100000	Fit:   Poisson: mu,beta= 114749.9, 7628.5
-Input: mu =  1000000	Fit:   Poisson: mu,beta= 1030016.1, 15119.3
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
 </div>
     {% endraw %}
 
@@ -292,31 +274,6 @@ Input: mu =  1000000	Fit:   Poisson: mu,beta= 1030016.1, 15119.3
 </pre></div>
 
     </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>Poisson: mu,beta= 10100.0, 100.0
-</pre>
-</div>
-</div>
-
-<div class="output_area">
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>([9999.997554752043, 0.9974355313909493, 74.10298197458243],
- [9999.997554752043, 0.9994459695779796, 94.40413079520135])</pre>
-</div>
-
-</div>
-
 </div>
 </div>
 

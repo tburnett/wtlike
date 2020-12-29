@@ -266,9 +266,9 @@ class PoissonRep(object):
                 raise
             self.poiss =  self.pf.poiss
 
-        if self.ts>ts_min: # can use the simple non-truncated Poisson distribution.
+        if self.ts>ts_min: # can use the simple non-truncated scaled Poisson distribution.
             try:
-                self.poiss = Poisson.alternate_spec(loglike.n, rate,sig)
+                self.poiss = Poisson.from_fit(loglike.n, rate,sig)
                 self.pf = None
             except Exception as e:
                 use_fitter()

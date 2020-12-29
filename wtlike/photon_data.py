@@ -26,7 +26,7 @@ def convert_FT1( ft1_file,
 
         Returns:
 
-        - tzero, the start MET time,  and
+        - tstart, the start MET time,  and
 
         - DataFrame with dtype [('band', 'i1'), ('hpindex', '<i4'), ('time', '<f4')]
            where

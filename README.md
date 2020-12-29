@@ -1,89 +1,47 @@
 # The `wtlike` package
-> Code for generating fermi-LAT light curves. <br>
+> Code for generating fermi-LAT light curves.
 
 
-## Background
+### GitHub Links
 
-This package has code that is being adapted to the [nbdev](https://nbdev.fast.ai/) environment from [github package lat-timing](https://github.com/tburnett/lat-timing) to manage light curves of Fermi-LAT sources.  
+- [this document](https://tburnett.github.io/light_curves/)
+-  [repository](https://github.com/tburnett/wtlike)
 
-As pointed out there, it is based on a [paper](https://arxiv.org/pdf/1910.00140.pdf) by Matthew Kerr, 
+## Summary
 
-And at the same time, I've ported some code from  my [jupydoc](https://github.com/tburnett/jupydoc) documention package to allow enhanced documentation combining Markdown and code.
+This package has code that was adapted to the [nbdev](https://nbdev.fast.ai/) code/tests/documentation environment from the [github package lat-timing](https://github.com/tburnett/lat-timing) to manage light curves of Fermi-LAT sources.  
+It is based on a [paper](https://arxiv.org/pdf/1910.00140.pdf) by Matthew Kerr, which derives the [weighted likelihood formalism](/loglike.html#The-Kerr-likelihood-formula) used here, specifically with
+the [Bayesian Block](https://arxiv.org/pdf/1207.5578.pdf) to detect and characterize variability of a gamma-ray source.
+
+Also, I've ported some code from  my [jupydoc](https://github.com/tburnett/jupydoc) documentation package supporting enhanced documentation combining Markdown and code, such that the 
+Markdown reflects execution of the code.
 
 ## Installation
 Currently in pre-alpha, and must be cloned. This brings up the `nbdev` stuff as well.
 
 
 
-
 ## Module summary
 
+### Primary ingredients:
 
-### `config` -- configuration parameters, time and source  
+- **Photon data**: time, energy, and position. This is managed as a [Parquet](https://parquet.apache.org/) database, derived from the public _Fermi_-LAT data. Modules are [`photon_data`](/photon_data) and [`manage_dataset`](/manage_dataset.html).
 
-### `lightcurve` -- The light curve
+- **Exposure**: Need to normalize expected rates as a function of time, position, and energy. Modules: [`exposure`](/exposure.html), `effective_area`, and [`gti`](/gti.html).
 
-The light curve can be represented by plots of flux vs. time. The time range,
-limited by 'config.mjd_range`, if set. The actual livetime, during which *Fermi* is
-collecting data, is further limited by the GTI, for good-time interval. This is a list
-of start,stop pairs.
+- **Weights**: for each photon, this is the probability that it was from a specific source. This requires an analysis of all the souces in the region about the source, involving `gtlike` or `pointlike`. Module `weights` finds the data for a the source, and adds it to the photon list.
 
-### `gti`
+### The light-curve 
+The module `cells` creates a list of "cells", time intervals with a list of the photon weights, and an estimation from the exposure about the expected distribution. 
+Each cell is fit using the modules `loglike` and `poisson`.
+Finally, `lightcurve` makes a list of the fits.
 
-The module [gti](/light_curves/lgti.html) defines `get_gti`.
+### Simulation
+A light curve can be also generated with a simulation, see `simulation`.
 
-During the valid times, a the flux, or rate, is estimated by counting the number 
-of photons and dividing by the exposure.
-
-The source is defined by instantiating a [PointSource(/light_curves/config#PointSource) object, defined in 
-
-
-### `exposure` -- the exposure
-
-The exposure for the specified source is calculated from the  [exposure](/light_curves/exposure.html) module,
-which implements `get_exposure`. It depends on:
-
-- Space craft info (FT2)
-The FT2 file(s) contain spacecraft position and orientation as a function of time.
-
-### `effective_area` -- Efffective Area
-The module [effective_area](light_curves/effective_area.html) defines the functor class
-`EffectiveArea`, needed to calculate the exposure
-
-
-### `photon_data`
-
-### `weights`
+### Bayesian Blocks
+The `bayesian` module creates a partition, and refits the blocks.
 
 
 
-### `cells`
-
-A "cell" represents a time interval to measure the flux.
-
-### `bayesian`
-
-### `simulation`
-
-
-
-
-Dependencies:
-```
-- simulation: loglike, exposure, lightcurve
-
-- bayesian: lightcurve, cells
-
-- lightcurve: loglike, cells
-
-- loglike:  poisson
-
-- cells: photon_data, weigths, exposure
-
-- weights: photon_data
-
-- photon_data: gti
-
-- exposure: gti, effective_area
-```
 
