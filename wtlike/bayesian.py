@@ -117,7 +117,7 @@ class CountFitness(FitnessFunc):
 
         return self.mjd[change_points]
 
-# Cell
+#export
 class LikelihoodFitness(CountFitness):
     """ Fitness function that uses the full likelihood
     """
@@ -181,7 +181,9 @@ def get_bb_partition(config, lc, fitness_class=LikelihoodFitness, p0=0.05, key=N
 
 # Cell
 def bb_overplot(config, lc, bb_fit, ax=None, **kwargs):
-    fig, ax = plt.subplots(figsize=(10,4)) if ax is None else (ax.figure, ax)
-    flux_plot(config, lc,   ax=ax,
-              colors=(('lightblue', 'sandybrown', 'blue')), **kwargs)
+    """Plot light curve: cell fits with BB overplot
+
+    """
+    fig, ax = plt.subplots(1,1, figsize=(12,4)) if not ax else (ax.figure, ax)
+    flux_plot(config, lc, ax=ax, colors=(('lightblue', 'sandybrown', 'blue')),**kwargs)
     flux_plot(config, bb_fit, ax=ax, step=True, **kwargs)
