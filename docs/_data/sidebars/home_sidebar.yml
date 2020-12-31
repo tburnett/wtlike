@@ -13,6 +13,9 @@ entries:
       title: Configuration
       url: config.html
     - output: web,pdf
+      title: Data Management
+      url: 01-data_management.html
+    - output: web,pdf
       title: Effective Area
       url: effective_area.html
     - output: web,pdf
@@ -24,9 +27,6 @@ entries:
     - output: web,pdf
       title: Photon Data
       url: photon_data.html
-    - output: web,pdf
-      title: Manage Dataset
-      url: manage_dataset.html
     - output: web,pdf
       title: Weights
       url: weights.html

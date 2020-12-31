@@ -2,11 +2,12 @@
   "wtlike": {
     "Overview": "/",
     "Configuration": "config.html",
+    "Data Management":"data_man.html",
     "Effective Area": "effective_area.html",
     "GTI": "gti.html",
     "Exposure": "exposure.html",
     "Photon Data": "photon_data.html",
-    "Manage Dataset":"manage_dataset.html",
+
     "Weights": "weights.html",
     "Poisson-like likelihood function": "poisson.html",
     "Cells": "cells.html",

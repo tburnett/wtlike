@@ -193,12 +193,13 @@ class Config:
 
     # photon selection
     mjd_range : Tuple=None
-    radius: float = 5
+    radius: float = 7
     cos_theta_max:float=0.4
     z_max : float=100
 
     # binning
     energy_edges = np.logspace(2,6,17)
+    etypes = (0,1)
     time_interval: int = 1
     use_uint8: bool=False  # for weights
 
