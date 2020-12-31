@@ -1,13 +1,12 @@
 {
   "wtlike": {
     "Overview": "/",
-    "Configuration": "config.html",
-    "Data Management":"data_man.html",
+    "Configuration data and basic functions": "config.html",
+    "Manage the data": "01-data_man.html",
     "Effective Area": "effective_area.html",
-    "GTI": "gti.html",
+    "GTI, or Good Time Interval": "gti.html",
     "Exposure": "exposure.html",
     "Photon Data": "photon_data.html",
-
     "Weights": "weights.html",
     "Poisson-like likelihood function": "poisson.html",
     "Cells": "cells.html",

@@ -10,16 +10,16 @@ entries:
       title: Overview
       url: /
     - output: web,pdf
-      title: Configuration
+      title: Configuration data and basic functions
       url: config.html
     - output: web,pdf
-      title: Data Management
-      url: 01-data_management.html
+      title: Manage the data
+      url: 01-data_man.html
     - output: web,pdf
       title: Effective Area
       url: effective_area.html
     - output: web,pdf
-      title: GTI
+      title: GTI, or Good Time Interval
       url: gti.html
     - output: web,pdf
       title: Exposure
