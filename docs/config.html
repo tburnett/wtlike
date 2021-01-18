@@ -89,7 +89,7 @@ nb_path: "nbs/00_config.ipynb"
 
 <div class="output_markdown rendered_html output_subarea ">
 <h5 id="config.Config----parameters">config.Config -- parameters<a class="anchor-link" href="#config.Config----parameters"> </a></h5><p>for now, but could be obtained from an editable yaml file.</p>
-<p><details  class="nbdoc-description" >  <summary> config parameter list </summary>  <div style="margin-left: 5%"><pre>Configuration parameters <br>  verbose         : 3<br>  cachepath       : /tmp/cache<br>  mjd_range       : None<br>  radius          : 5<br>  cos_theta_max   : 0.4<br>  z_max           : 100<br>  time_interval   : 1<br>  use_uint8       : False<br>  nside           : 1024<br>  nest            : True<br>  bins_per_decade : 4<br>  base_spectrum   : lambda E: (E/1000)**-2.1<br>  energy_range    : (100.0, 1000000.0)<br>  likelihood_rep  : poisson<br></pre></div> </details></p>
+<p><details  class="nbdoc-description" >  <summary> config parameter list </summary>  <div style="margin-left: 5%"><pre>Configuration parameters <br>  verbose         : 3<br>  cachepath       : /tmp/cache<br>  mjd_range       : None<br>  radius          : 7<br>  cos_theta_max   : 0.4<br>  z_max           : 100<br>  time_interval   : 1<br>  use_uint8       : False<br>  nside           : 1024<br>  nest            : True<br>  bins_per_decade : 4<br>  base_spectrum   : lambda E: (E/1000)**-2.1<br>  energy_range    : (100.0, 1000000.0)<br>  likelihood_rep  : poisson<br></pre></div> </details></p>
 <h5 id="config.Files----default-file-paths">config.Files -- default file paths<a class="anchor-link" href="#config.Files----default-file-paths"> </a></h5><p><details  class="nbdoc-description" >  <summary> file list </summary>  <div style="margin-left: 5%"><pre>File paths for light curves<br>  data       : /home/burnett/data<br>  ft2        : /home/burnett/work/lat-data/ft2<br>  gti        : /home/burnett/work/lat-data/binned<br>  aeff       : /home/burnett/work/lat-data/aeff<br>  weights    : /home/burnett/onedrive/fermi/weight_files<br></pre></div> </details></p>
 <p>These are dataclass classes, and can be initialized with
 parameters. For example, to suppress printout</p>
@@ -97,7 +97,7 @@ parameters. For example, to suppress printout</p>
 <pre><code>config = Config(verbose=0)</code></pre>
 <h5 id="config.cache----a-file-cache">config.cache -- a file cache<a class="anchor-link" href="#config.cache----a-file-cache"> </a></h5><p>The class <code>Cache</code>, available from <code>config.cache</code> implements a file cache in the folder
 <code>config.files.cachepath</code></p>
-<p><details  class="nbdoc-description" >  <summary> cache contents </summary>  <div style="margin-left: 5%"><pre>Cache contents<br> key                          size  time                 name, in folder /tmp/cache<br>  gti                      1018319  2020-12-30 10:43     cache_file_65feafb1a00ba99.pkl<br></pre></div> </details></p>
+<p><details  class="nbdoc-description" >  <summary> cache contents </summary>  <div style="margin-left: 5%"><pre>Cache contents<br> key                          size  time                 name, in folder /tmp/cache<br>  gti                      1018321  2020-12-29 05:55     cache_file_3fa07cccddc0cbc6.pkl<br>  photons_Geminga         22334715  2020-12-29 05:57     cache_file_55c429e70273e19.pkl<br>  exposure_Geminga        86263782  2020-12-29 06:00     cache_file_6b9b5aabba763673.pkl<br>  binexp_Geminga             64450  2020-12-29 06:00     cache_file_16e94afb7a0c640.pkl<br>  cells_Geminga            4746232  2020-12-29 06:00     cache_file_99633b83cb9c28b.pkl<br>  lightfcurve_Geminga      6887303  2020-12-29 06:00     cache_file_13e6086314117a1.pkl<br>  photons_3C 279           3659059  2020-12-29 06:02     cache_file_f5649e6474dea2a.pkl<br>  exposure_3C 279         78040998  2020-12-29 06:04     cache_file_11471b8a6311d7d.pkl<br>  binexp_3C 279              64434  2020-12-29 06:04     cache_file_2c0392150e5c66.pkl<br>  cells_3C 279             1001088  2020-12-29 06:04     cache_file_37c8297c61b76a4.pkl<br>  lightfcurve_3C 279       4008017  2020-12-29 06:04     cache_file_4268cd9a8a907e4a.pkl<br>  weight_hist_Geminga          558  2021-01-17 15:53     cache_file_0965548252135b4.pkl<br></pre></div> </details></p>
 
 </div>
 
@@ -259,9 +259,9 @@ Test: Restoring from cache with key &#34;four&#34;
 Before remove:
 Cache contents
  key                          size  time                 name, in folder /tmp/test_cache
-  one                           13  2020-12-30 11:40     cache_file_12dab6a8c34cd727.pkl
-  two                           13  2020-12-30 11:40     cache_file_7dd5e75cfe8fc3c9.pkl
-  four                          18  2020-12-30 11:40     cache_file_d491725bec6268f.pkl
+  one                           13  2021-01-18 09:10     cache_file_3ad148db70fdd696.pkl
+  two                           13  2021-01-18 09:10     cache_file_6eedb81db9bf4df.pkl
+  four                          18  2021-01-18 09:10     cache_file_25e7e89ed95f21f.pkl
 
 </pre>
 </div>
@@ -433,7 +433,18 @@ Cache contents
   weights    : /home/burnett/onedrive/fermi/weight_files
  Cache contents
  key                          size  time                 name, in folder /tmp/cache
-  gti                      1018319  2020-12-30 10:43     cache_file_65feafb1a00ba99.pkl
+  gti                      1018321  2020-12-29 05:55     cache_file_3fa07cccddc0cbc6.pkl
+  photons_Geminga         22334715  2020-12-29 05:57     cache_file_55c429e70273e19.pkl
+  exposure_Geminga        86263782  2020-12-29 06:00     cache_file_6b9b5aabba763673.pkl
+  binexp_Geminga             64450  2020-12-29 06:00     cache_file_16e94afb7a0c640.pkl
+  cells_Geminga            4746232  2020-12-29 06:00     cache_file_99633b83cb9c28b.pkl
+  lightfcurve_Geminga      6887303  2020-12-29 06:00     cache_file_13e6086314117a1.pkl
+  photons_3C 279           3659059  2020-12-29 06:02     cache_file_f5649e6474dea2a.pkl
+  exposure_3C 279         78040998  2020-12-29 06:04     cache_file_11471b8a6311d7d.pkl
+  binexp_3C 279              64434  2020-12-29 06:04     cache_file_2c0392150e5c66.pkl
+  cells_3C 279             1001088  2020-12-29 06:04     cache_file_37c8297c61b76a4.pkl
+  lightfcurve_3C 279       4008017  2020-12-29 06:04     cache_file_4268cd9a8a907e4a.pkl
+  weight_hist_Geminga          558  2021-01-17 15:53     cache_file_0965548252135b4.pkl
 
 </pre>
 </div>

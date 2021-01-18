@@ -4,7 +4,7 @@
 
 ### GitHub Links
 
-- [this document](https://tburnett.github.io/light_curves/)
+- [this document](https://tburnett.github.io/wtlike/)
 -  [repository](https://github.com/tburnett/wtlike)
 
 ## Context
