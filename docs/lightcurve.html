@@ -2,7 +2,6 @@
 
 title: Light Curve Generation
 
-
 keywords: fastai
 sidebar: home_sidebar
 
@@ -37,19 +36,26 @@ nb_path: "nbs/09_lightcurve.ipynb"
 <li><code>tw</code> -- the cell width</li>
 <li><code>n</code>  -- number of photons</li>
 <li><code>e</code>  -- relative exposure</li>
-<li><code>fit</code> -- the fit object, containing info about the flux. This is usually a <a href="/loglike.html#PoissonRep"><code>PoissonRep</code></a> object</li>
+<li><code>fit</code> -- the fit object, containing info about the flux. This is usually a <a href="/loglike#PoissonRep"><code>PoissonRep</code></a> object</li>
 </ul>
 <p>It is generated from a set of cells</p>
 <p>Implemented here:</p>
 <ul>
-<li><a href="/lightcurve.html#get_lightcurve"><code>get_lightcurve</code></a></li>
-<li><a href="/lightcurve.html#fit_cells"><code>fit_cells</code></a></li>
-<li><a href="/lightcurve.html#flux_plot"><code>flux_plot</code></a></li>
+<li><a href="/lightcurve#get_lightcurve"><code>get_lightcurve</code></a></li>
+<li><a href="/lightcurve#fit_cells"><code>fit_cells</code></a></li>
+<li><a href="/lightcurve#flux_plot"><code>flux_plot</code></a></li>
 </ul>
 
 </div>
 </div>
 </div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    {% endraw %}
+
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
@@ -75,7 +81,7 @@ nb_path: "nbs/09_lightcurve.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="fit_cells" class="doc_header"><code>fit_cells</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/lightcurve.py#L78" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>fit_cells</code>(<strong><code>config</code></strong>, <strong><code>input_cells</code></strong>, <strong><code>min_exp</code></strong>:<code>minimum exposure factor</code>=<em><code>0.3</code></em>, <strong><code>repcl</code></strong>=<em><code>PoissonRep</code></em>)</p>
+<h4 id="fit_cells" class="doc_header"><code>fit_cells</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/lightcurve.py#L78" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>fit_cells</code>(<strong><code>config</code></strong>, <strong><code>input_cells</code></strong>, <strong><code>min_exp</code></strong>:<code>minimum exposure factor</code>=<em><code>0.3</code></em>, <strong><code>repcl</code></strong>=<em><code>'PoissonRep'</code></em>)</p>
 </blockquote>
 <p>Apply fits to the likelihoods for a set of cells
 return light-curve dataframe</p>
@@ -123,13 +129,6 @@ return light-curve dataframe</p>
 
 </div>
 </div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
 
 </div>
     {% endraw %}

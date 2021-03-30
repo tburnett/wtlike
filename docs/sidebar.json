@@ -1,18 +1,18 @@
 {
   "wtlike": {
     "Overview": "/",
-    "Configuration data and basic functions": "config.html",
-    "Data management": "01-data_man.html",
-    "Effective Area": "effective_area.html",
-    "GTI, or Good Time Interval": "gti.html",
-    "Exposure": "exposure.html",
-    "Photon Data": "photon_data.html",
-    "Weights": "weights.html",
-    "Poisson-like likelihood function": "poisson.html",
-    "Cells": "cells.html",
-    "Log Likelihood tools": "loglike.html",
-    "Light Curve Generation": "lightcurve.html",
-    "Simulation": "simulation.html",
-    "Bayesian Blocks": "bayesian.html"
+    "Configuration data and basic functions": "/config",
+    "Data management": "/man",
+    "Effective Area": "/effective_area",
+    "GTI, or Good Time Interval": "/gti",
+    "Exposure": "/exposure",
+    "Photon Data": "/photon_data",
+    "Weights": "/weights",
+    "Poisson-like likelihood function": "/poisson",
+    "Cells": "/cells",
+    "Log Likelihood tools": "/loglike",
+    "Light Curve Generation": "/lightcurve",
+    "Simulation": "/simulation",
+    "Bayesian Blocks": "/bayesian"
   }
 }

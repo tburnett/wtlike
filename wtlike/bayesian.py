@@ -173,7 +173,7 @@ def get_bb_partition(config, lc, fitness_class=LikelihoodFitness, p0=0.05, key=N
 
     key = f'BB_edges_' if key is '' else key
 
-    edges = config.cache(key, doit,  description='BB edges for...')
+    edges = config.cache(key, doit,  description=key if config.verbose>0 else '')
 
     if config.verbose>0:
         print(f'Partitioned {len(lc)} cells into {len(edges)-1} blocks, using {fitness_class.__name__} ' )

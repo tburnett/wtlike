@@ -2,7 +2,6 @@
 
 title: The `wtlike` package
 
-
 keywords: fastai
 sidebar: home_sidebar
 
@@ -54,18 +53,18 @@ Markdown reflects execution of the code.</p>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Module-summary">Module summary<a class="anchor-link" href="#Module-summary"> </a></h2><h3 id="Primary-ingredients:">Primary ingredients:<a class="anchor-link" href="#Primary-ingredients:"> </a></h3><ul>
-<li><p><strong>Photon data</strong>: time, energy, and position. This is managed as a <a href="https://parquet.apache.org/">Parquet</a> database, derived from the public <em>Fermi</em>-LAT data. Modules are <a href="/photon_data.html"><code>photon_data</code></a> and <code>data_man</code>.</p>
+<li><p><strong>Photon data</strong>: time, energy, and position. This is managed as a <a href="https://parquet.apache.org/">Parquet</a> database, derived from the public <em>Fermi</em>-LAT data. Modules are <a href="/photon_data"><code>photon_data</code></a> and <a href="/data_man"><code>data_man</code></a>.</p>
 </li>
-<li><p><strong>Exposure</strong>: Need to normalize expected rates as a function of time, position, and energy. Modules: <a href="/exposure.html"><code>exposure</code></a>, <a href="/effective_area.html"><code>effective_area</code></a>, and <code>gti</code>.</p>
+<li><p><strong>Exposure</strong>: Need to normalize expected rates as a function of time, position, and energy. Modules: <a href="/exposure"><code>exposure</code></a>, <a href="/effective_area"><code>effective_area</code></a>, and <code>gti</code>.</p>
 </li>
-<li><p><strong>Weights</strong>: for each photon, this is the probability that it was from a specific source. This requires an analysis of all the souces in the region about the source, involving <code>gtlike</code> or <code>pointlike</code>. Module <a href="/weights.html"><code>weights</code></a> finds the data for a the source, and adds it to the photon list.</p>
+<li><p><strong>Weights</strong>: for each photon, this is the probability that it was from a specific source. This requires an analysis of all the souces in the region about the source, involving <code>gtlike</code> or <code>pointlike</code>. Module <a href="/weights"><code>weights</code></a> finds the data for a the source, and adds it to the photon list.</p>
 </li>
 </ul>
-<h3 id="The-light-curve">The light-curve<a class="anchor-link" href="#The-light-curve"> </a></h3><p>The module <a href="/cells.html"><code>cells</code></a> creates a list of "cells", time intervals with a list of the photon weights, and an estimation from the exposure about the expected distribution. 
-Each cell is fit using the modules <a href="/loglike.html"><code>loglike</code></a> and <a href="/poisson.html"><code>poisson</code></a>.
-Finally, <a href="/lightcurve.html"><code>lightcurve</code></a> makes a list of the fits.</p>
-<h3 id="Simulation">Simulation<a class="anchor-link" href="#Simulation"> </a></h3><p>A light curve can be also generated with a simulation, see <a href="/simulation.html"><code>simulation</code></a>.</p>
-<h3 id="Bayesian-Blocks">Bayesian Blocks<a class="anchor-link" href="#Bayesian-Blocks"> </a></h3><p>The <a href="/bayesian.html"><code>bayesian</code></a> module creates a partition, and refits the blocks.</p>
+<h3 id="The-light-curve">The light-curve<a class="anchor-link" href="#The-light-curve"> </a></h3><p>The module <a href="/cells"><code>cells</code></a> creates a list of "cells", time intervals with a list of the photon weights, and an estimation from the exposure about the expected distribution. 
+Each cell is fit using the modules <a href="/loglike"><code>loglike</code></a> and <a href="/poisson"><code>poisson</code></a>.
+Finally, <a href="/lightcurve"><code>lightcurve</code></a> makes a list of the fits.</p>
+<h3 id="Simulation">Simulation<a class="anchor-link" href="#Simulation"> </a></h3><p>A light curve can be also generated with a simulation, see <a href="/simulation"><code>simulation</code></a>.</p>
+<h3 id="Bayesian-Blocks">Bayesian Blocks<a class="anchor-link" href="#Bayesian-Blocks"> </a></h3><p>The <a href="/bayesian"><code>bayesian</code></a> module creates a partition, and refits the blocks.</p>
 
 </div>
 </div>

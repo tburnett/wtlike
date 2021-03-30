@@ -30,6 +30,7 @@ class LogLike(object):
         assert self.n>0, f'No data for cell {cell}'
         if type(self.w[0])==np.uint8:
             self.w = np.array(self.w, np.float)/256
+        self.verbose=0
 
 
 
@@ -42,19 +43,29 @@ class LogLike(object):
             #return None
             raise RuntimeError(f'Fit failure: {self}')
         hess = self.hessian(pars)
-        outdict = dict( counts=len(self.w) )
+        outdict = dict( counts=len(self.w), flux=round(pars[0],4))
         if len(pars)==1:
-            outdict.update(flux=round(pars[0],4),
-                           sig_flux=round(np.sqrt(1/hess[0]),4) )
+            outdict.update( sig_flux=round(np.sqrt(1/hess[0]),4),
+                      )
         else:
             beta = pars[1]
-            var  = np.linalg.inv(hess)
-            err  = np.sqrt(var.diagonal())
-            sig_flux=err[0]
-            sig_beta=err[1]
-            corr = var[0,1]/(err[0]*err[1])
-            outdict.update(flux=pars[0], beta=beta,
-                        sig_flux=sig_flux, sig_beta=sig_beta,corr=corr)
+            try:
+                var  = np.linalg.inv(hess)
+                err  = np.sqrt(var.diagonal())
+                sig_flux=err[0]
+                sig_beta=err[1]
+                corr = var[0,1]/(err[0]*err[1])
+                outdict.update(flux=pars[0], beta=beta,
+                            sig_flux=sig_flux, sig_beta=sig_beta,corr=corr)
+            except LinAlgError as e:
+                # flag as nan
+                if self.verbose>0:
+                    print(f'Failed 2-d fit, Hessian= {hess}: {e}')
+                outdict.update(
+                    beta=0, sig_beta=np.nan, corr=np.nan)
+
+
+
         return outdict
 
     def __call__(self, pars ):
@@ -210,7 +221,7 @@ class GaussianRep(object):
         return f'{self.__class__.__module__}.{self.__class__.__name__}:\n{pd.Series(self.fit)}'
 
 # Cell
-class Gaussian2dRep(GaussianRep):
+class Gaussian2dRep(object):
     def __init__(self, loglike):
         super(Gaussian2dRep, self).__init__(loglike, fix_beta=False)
 
