@@ -168,7 +168,7 @@ class Files:
     def __post_init__(self):
         d = self.__dict__
         for name, value in d.items():
-            d[name] = Path(os.path.expandvars(value))
+            d[name] = Path(os.path.expandvars(value)) if value is not None else None
 
     @property
     def valid(self):
@@ -187,6 +187,9 @@ class Config:
     """Default light curve configuration parameters"""
     verbose : int = 3
     files :'' =  None
+
+    # data source: if set, expect all data files here
+    data_folder:  '' = None
 
     # cache
     cachepath: str = '/tmp/cache'
@@ -216,7 +219,9 @@ class Config:
     likelihood_rep: str='poisson'
 
     def __post_init__(self):
-        if self.files is None: self.files=Files()
+
+        if self.files is None:
+            self.files=Files(data=Path(self.data_folder) if self.data_folder is not None else None)
 
     @property
     def cache(self):

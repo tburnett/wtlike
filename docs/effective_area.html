@@ -65,69 +65,6 @@ nb_path: "nbs/01_effective_area.ipynb"
     
 <div class="cell border-box-sizing code_cell rendered">
 
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h2 id="InterpTable" class="doc_header"><code>class</code> <code>InterpTable</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/effective_area.py#L109" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>InterpTable</code>(<strong><code>xbins</code></strong>, <strong><code>ybins</code></strong>, <strong><code>augment</code></strong>=<em><code>True</code></em>)</p>
-</blockquote>
-<p>Helper class -- does 2-d interpolation</p>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4 id="effective_area_plots" class="doc_header"><code>effective_area_plots</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/effective_area.py#L175" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>effective_area_plots</code>(<strong><code>ea</code></strong>, <strong><code>fignum</code></strong>=<em><code>1</code></em>)</p>
-</blockquote>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
 <div class="output_wrapper">
 <div class="output">
 
@@ -175,7 +112,7 @@ nb_path: "nbs/01_effective_area.ipynb"
     <span class="n">ea</span> <span class="o">=</span> <span class="n">EffectiveArea</span><span class="p">(</span><span class="n">file_path</span><span class="o">=</span><span class="n">eafile</span><span class="p">)</span>
     <span class="n">e</span><span class="p">,</span> <span class="n">ct</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span> <span class="mi">1</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;USing file </span><span class="si">{</span><span class="n">ea</span><span class="o">.</span><span class="n">aeff_file</span><span class="si">}</span><span class="s1">:</span><span class="se">\n</span><span class="s1">Values at E=</span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1">, cos(theta)=</span><span class="si">{</span><span class="n">ct</span><span class="si">}</span><span class="s1"> : </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">round</span><span class="p">,</span> <span class="n">ea</span><span class="p">(</span><span class="n">e</span><span class="p">,</span><span class="n">ct</span><span class="p">)))</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-    <span class="n">effective_area_plots</span><span class="p">(</span><span class="n">ea</span><span class="p">)</span>
+    <span class="n">ea</span><span class="o">.</span><span class="n">plots</span><span class="p">()</span>
 <span class="k">else</span><span class="p">:</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Not running this test here, since don&#39;&#39;t have the file&#39;</span><span class="p">)</span>
 </pre></div>

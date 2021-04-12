@@ -97,12 +97,11 @@ def get_ft1_data( config, ft1_file):
         glon_sel = glon[sel]
         glat_sel = glat[sel]
 
-        # event class -- temporary
-        def to_hex(x):
-            from functools import reduce
-            r= reduce(lambda byte, bit: byte*2 + bit, x, 0)
-            return f'{r:08x}'
-        echex = [to_hex(row) for row in ec[sel]]
+        # event class -- turn into single int for later mask
+#         bits = np.array([1<<n for n in range(20)])
+#         def to_bin(x):
+#             return np.sum(bits[x[:20]])
+#         ec = [to_bin(row[20]) for row in ec[sel]]
 
         # pixelate direction
         hpindex = healpy.ang2pix(nside, glon_sel, glat_sel, nest=nest, lonlat=True).astype(np.int32)
@@ -117,10 +116,10 @@ def get_ft1_data( config, ft1_file):
                     [ band_index,
                      hpindex,
                      (time-tstart)[sel].astype(np.float32),
-                    echex, ### temp
+                    # ec, ### temp
                     ],
                     names=['band', hpname, 'time',
-                           'ec', #### temp
+                           #'ec', #### temp
                           ])
         if verbose>1:
             print(f'\tReturning tstart={tstart:.0f}, {len(recarray):,} photons.')

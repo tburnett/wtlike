@@ -125,7 +125,6 @@ class EffectiveArea(object):
         ax2.grid(alpha=0.5)
         fig.set_facecolor('white')
 
-# Cell
 class _InterpTable(object):
     """Helper class -- does 2-d interpolation
     """

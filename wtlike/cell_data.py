@@ -13,14 +13,19 @@ from .source_data import *
 class CellData(SourceData):
     """Manage a set of cells generated from a data set
 
-    """
-
-    def __init__(self, config, source, bins=None):
-        """
         Invoke superclass to load photon data and exposure for the source.
         Manage a list of cells
+
+        * config Config instance, with file paths appropriate fo SourceData
+        * source PointSource instance
+        * bins time bins: use default otherwise
         """
-        super().__init__(config, source, )
+
+    def __init__(self, config, source, bins=None, clear=False):
+        """
+
+        """
+        super().__init__(config, source, clear )
 
         self.source_name =source.name
         self.verbose = config.verbose
