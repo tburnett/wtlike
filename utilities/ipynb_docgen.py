@@ -194,8 +194,9 @@ class FigureWrapper(Wrapper):
             browser_fn =fn
             
             # actually save it for the document, perhaps both in the local, and document folders
+            # note uses rcParams['savefig.pad_inches']
             for folder in self.fig_folders:
-                fig.savefig(os.path.join(folder,fn), bbox_inches='tight', pad_inches=0.5)#, **fig_kwargs)
+                fig.savefig(os.path.join(folder,fn), bbox_inches='tight') #, pad_inches=0.5)#, **fig_kwargs)
             if plt: plt.close(getattr(fig, 'number', None) )
             img_width = f'width={fig.width}' if hasattr(fig,'width') else ''
 

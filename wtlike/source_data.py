@@ -145,6 +145,10 @@ def _get_photons_near_source(config, source, week): #tzero, photon_df):
     out_df = pd.DataFrame(np.rec.fromarrays(
         [np.array(dfc.band), time, dfc.nest_index, t2],
         names='band time pixel radius'.split()))[in_cone]
+
+    # make sure times are monotonic by sorting (needed for most weeks after March 2018)
+    out_df = out_df.sort_values(by='time')
+
     return out_df
 
 # Cell
@@ -163,30 +167,35 @@ def get_default_bins(config, exposure):
     nbins = int(round((stop-start)/step))
     tb =time_bins = np.linspace(start, stop, nbins+1)
     if config.verbose>0:
+        a,b = time_bins[0], time_bins[-1]
         print(f'Time bins: {nbins} intervals of {step} days, '\
-              f'in range ({time_bins[0]:.1f}, {time_bins[-1]:.1f})')
+              f'from MJD {a:.1f}({UTC(a)[:10]}) to {b:.1f}({UTC(b)[:10]}))')
     return time_bins
 
 def _load_from_weekly_data(config, source):
+    """
+    Generate combinded DataFrames from a list of pickled files
+    Either weekly or monthly
+    """
 
     # check weights
     weight_file =  check_weights(config,  source)
     assert weight_file is not None
 
-
-    weekly_folder = Path(config.data_folder)
-    week_files = sorted(list(weekly_folder.glob('*.pkl')))
-    wk = list(map(lambda f: int(os.path.splitext(f)[0][-3:])-9, week_files))
+    data_folder = Path(config.data_folder)
+    data_files = sorted(list(data_folder.glob('*.pkl')))
+    iname = data_folder.name
 
     if config.verbose>1:
         print(f"Assembling photon data and exposure for source {source.name} from"\
-              f' folder "{weekly_folder}", with {len(wk)} weeks, last=#{max(wk)}')
+              f' folder "{data_folder}", with {len(data_files)} files,'\
+              f' last={data_files[-1].name}')
 
     verbose, config.verbose=config.verbose, 0
     # list of data framees
     pp = []
     ee = []
-    for f in week_files:
+    for f in data_files:
         print('.', end='')
         with open(f, 'rb') as inp:
             week = pickle.load(inp)
@@ -227,8 +236,9 @@ class SourceData(object):
         verbose = config.verbose
         self.config = config
         self.source = source
-
-        key = f'{source.name}_data'
+        dname =  config.data_folder.name if config.data_folder is not None else ''
+        key = f'{source.name}_{dname}_data'
+        source.data_key = key
 
         if config.data_folder is None and key not in config.cache:
             raise Exception(f'Data for {source.name} is not cached, and config.data_folder is not set')
@@ -277,11 +287,12 @@ class SourceData(object):
         cum = cumexp[edge_index]
 
         bexp = np.diff(cum)/(cum[-1]-cum[0]) * (len(time_bins)-1)
-        if config.verbose>0:
+        if config.verbose>1:
             print(f'Relative exposure per bin:\n{pd.Series(bexp).describe(percentiles=[])}')
         return bexp, time_bins
 
     def plot(self):
+        import matplotlib.pyplot as plt
         fig, (ax1,ax2, ax3,ax4) = plt.subplots(1,4, figsize=(15,4))
         ax1.hist(self.p_df.time.values, 500, histtype='step');
         ax1.set(xlabel='Time (MJD)')

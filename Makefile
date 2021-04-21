@@ -15,6 +15,7 @@ docs_serve: docs
 	cd docs && bundle exec jekyll serve
 
 docs: $(SRC)
+	echo $SRC
 	nbdev_build_docs
 	touch docs
 

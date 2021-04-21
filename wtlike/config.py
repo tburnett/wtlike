@@ -115,6 +115,7 @@ class Cache(dict):
         - `func` -- user function that will return an object that can be pickled
         - `pars`, `kwargs` -- pass to `func`
         - `description` -- optional string that will be printed
+        - `overwrite` -- if set, overwrite previous entry if exists
 
         Example:
         <pre>
@@ -134,24 +135,29 @@ class Cache(dict):
 
         ret = self.get(key)
         if description:
-            print(f'{description}: {"Saving to" if key not in self else "Restoring from"} cache with key "{key}"')
+            print(f'{description}: {"Saving to" if key not in self or overwrite else "Restoring from"} cache with key "{key}"')
 
         if ret is None or overwrite:
             ret = func(*pars, **kwargs)
-            self.add(key, ret)
+            self.add(key, ret, exist_ok=overwrite)
         return ret
 
-    def __str__(self):
+    def show(self, starts_with=''):
         import datetime
         if not self.path: return 'Cache not enabled'
-        s = f'Cache contents\n {"key":20}   {"size":>10}  {"time":20} {"name"}, in folder {self.path}\n'
+        title = 'Cache contents' if not starts_with else f'Cache entries starting with {starts_with}'
+        s = f'{title}\n {"key":30}   {"size":>10}  {"time":20} {"name"}, in folder {self.path}\n'
         for name, value in self.items():
-            if name is None: continue
+            if name is None or not name.startswith(starts_with) : continue
             stat = value.stat()
             size = stat.st_size
             mtime= str(datetime.datetime.fromtimestamp(stat.st_mtime))[:16]
-            s += f'  {name:20s}  {size:10}  {mtime:20} {value.name}\n'
+            s += f'  {name:30s}  {size:10}  {mtime:20} {value.name}\n'
         return s
+
+    def __str__(self):
+        return self.show()
+
 
 # Cell
 @dataclass
@@ -185,7 +191,7 @@ class Files:
 @dataclass
 class Config:
     """Default light curve configuration parameters"""
-    verbose : int = 3
+    verbose : int = 1
     files :'' =  None
 
     # data source: if set, expect all data files here
@@ -220,8 +226,10 @@ class Config:
 
     def __post_init__(self):
 
+        if self.data_folder is not None:
+            self.data_folder = Path(self.data_folder)
         if self.files is None:
-            self.files=Files(data=Path(self.data_folder) if self.data_folder is not None else None)
+            self.files=Files(data=self.data_folder )
 
     @property
     def cache(self):
@@ -231,7 +239,7 @@ class Config:
 
     @property
     def valid(self):
-        return self.files.valid
+        return self.data_folder is not None and self.files.valid
 
     def __str__(self):
         s = 'Configuration parameters \n'

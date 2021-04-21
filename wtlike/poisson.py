@@ -4,7 +4,8 @@ __all__ = ['Poisson', 'PoissonFitter']
 
 # Cell
 import numpy as np
-from scipy import optimize, special, polyfit, stats
+from numpy import polyfit
+from scipy import optimize, special, stats
 
 class Poisson(object):
     r"""This is a functor class which returns the log of a three-parameter Poisson-like function used to represent
@@ -176,7 +177,7 @@ class Poisson(object):
     def from_fit(cls, counts, flux, sig_flux, tol=5):
         """
         Create a Poisson instance using the fit parameters from an analysis
-        if a likelihood function.
+        of a likelihood function.
 
         - counts -- number of weights
         - flux -- peak value, in flux units
@@ -212,6 +213,18 @@ class Poisson(object):
 # Cell
 class PoissonFitter(object):
     """ Helper class to fit a log likelihood function to the Poisson
+
+    parameters
+    ----------
+    - func : function of one parameter
+    - fmax : position of maximum value, or None
+           if None, estimate using fmin
+    - scale: float | None
+        estimate for scale to use; if None, estimate from derivatime
+    - tol : float
+        absolute tolerance in probability amplitude for fit, within default domain out to delta L of 4
+    - delta : float
+        value to calculate numerical derivative at zero flux
 
     """
 
@@ -373,8 +386,8 @@ class PoissonFitter(object):
         else: fig = ax.figure
         pfmax = self(self.smax)
         ax.plot(x, np.exp(self(x)-pfmax), '-', label='Input function')
-        ax.plot(xp, np.exp(self._poiss(xp)), 'o', label='Poisson approx.')
-        ax.plot(x, np.exp(self._poiss(x)), ':')
+        ax.plot(xp, np.exp(self(xp)-pfmax), 'o', color='orange', label='points used for approx.')
+        ax.plot(x, np.exp(self._poiss(x)), '--', lw=2,color='orange', label='Poisson approx.')
         if legend: ax.legend(loc='upper right', prop=dict(size=8) )
         ax.set(xlim=(0,None), ylim=(0,1.05))
         if xticks:

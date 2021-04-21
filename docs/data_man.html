@@ -79,7 +79,7 @@ contents</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="get_ft1_data" class="doc_header"><code>get_ft1_data</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L17" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>get_ft1_data</code>(<strong><code>config</code></strong>, <strong><code>ft1_file</code></strong>)</p>
+<h2 id="get_ft1_data" class="doc_header"><code>get_ft1_data</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L18" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>get_ft1_data</code>(<strong><code>config</code></strong>, <strong><code>ft1_file</code></strong>)</p>
 </blockquote>
 <p>Read in a photon data (FT1) file, bin in energy and position to convert to a compact DataFrame</p>
 <ul>
@@ -99,7 +99,9 @@ contents</p>
 <ul>
 <li><code>band</code> (uint8):    energy band index*2 + 0,1 for Front/Back</li>
 <li><code>nest_index</code>  if nest else <code>ring_index</code> (uint32): HEALPIx index for the nside</li>
+<li><code>run_diff</code>   Run number difference from previous entry. (Saved as spase arary)</li>
 <li><code>time</code> (float32):    the elapsed time in s from header value TSTART in the FT1 file</li>
+<li><code>rtime</code> (float32): MET time relative to run id.</li>
 </ul>
 </li>
 <li><p>gti times as an interleaved start, stop array.</p>
@@ -135,23 +137,90 @@ contents</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="get_ft2_info" class="doc_header"><code>get_ft2_info</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L130" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>get_ft2_info</code>(<strong><code>config</code></strong>, <strong><code>filename</code></strong>, <strong><code>gti</code></strong>=<em><code>None</code></em>)</p>
+<h2 id="get_ft2_info" class="doc_header"><code>get_ft2_info</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L159" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>get_ft2_info</code>(<strong><code>config</code></strong>, <strong><code>filename</code></strong>, <strong><code>gti</code></strong>=<em><code>'&lt;lambda&gt;'</code></em>)</p>
 </blockquote>
 <p>Process a FT2 file, with S/C history data, and return a summary DataFrame</p>
 <p>Parameters:</p>
+<ul>
+<li>config -- verbose, cos_theta_max, z_max</li>
+<li>filename -- spacecraft (FT2) file</li>
+<li>gti -- GTI object that checkes for allowed intervals, in MJD units</li>
+</ul>
+<p>Returns: A DataFrame with fields consistent with GTI if specified</p>
+<ul>
+<li>start, stop -- interval in MJD units</li>
+<li>livetime -- sec</li>
+<li>ra_scz, dec_scz --spaceraft direction</li>
+<li>ra_zenith, dec_zenith -- local zenith</li>
+</ul>
 
-<pre><code>- config -- verbose, cos_theta_max, z_max
-- filename -- spacecraft (FT2) files
-- gti -- GTI object with allowed intervals or None
+</div>
 
-</code></pre>
-<p>Returns:
-    A DataFrame with fields</p>
+</div>
 
-<pre><code>    - start, stop -- interval in MJD units
-    - livetime -- sec
-    - ra_scz, dec_scz --spaceraft direction
-    - ra_zenith, dec_zenith -- local zenith</code></pre>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># filename =Path(&#39;/tmp/from_gsfc/week668_ft2.fits&#39;)</span>
+<span class="c1"># if os.path.exists(filename):</span>
+<span class="c1">#     config = Config()</span>
+<span class="c1">#     config.verbose=3</span>
+<span class="c1">#     t = get_ft2_info(config, filename); </span>
+<span class="c1">#     print(t.head())</span>
+<span class="c1"># else:</span>
+<span class="c1">#     print(f&#39;File {filename} does not exist, skipping get_ft2_info test&#39;)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h2 id="WeeklyData" class="doc_header"><code>class</code> <code>WeeklyData</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L203" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>WeeklyData</code>(<strong><code>config</code></strong>, <strong><code>week</code></strong>, <strong><code>saveto</code></strong>)</p>
+</blockquote>
+<p>Download and process weekly Fermi-LAT files from GSFC,</p>
+<p>at FTP '<a href="https://heasarc.gsfc.nasa.gov/FTP/fermi/data/lat/weekly">https://heasarc.gsfc.nasa.gov/FTP/fermi/data/lat/weekly</a>'</p>
+<ul>
+<li>week: a mission week number</li>
+<li>saveto: path to save the files</li>
+</ul>
+<p>Creates a pickled file as  dict with</p>
+<ul>
+<li>tstart--start time (MJD)</li>
+<li>photons -- DataFrame with photon data--see <a href="wtlike/data_man#get_ft1_data"><code>get_ft1_data</code></a></li>
+<li>sc_data -- DataFrame with Spacecraft data--see <a href="wtlike/data_man#get_ft2_info"><code>get_ft2_info</code></a></li>
+<li>gti_times -- array of interleaved start/stop times from the photon data</li>
+</ul>
 
 </div>
 
@@ -181,9 +250,39 @@ contents</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="WeeklyData" class="doc_header"><code>class</code> <code>WeeklyData</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L172" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>WeeklyData</code>(<strong><code>config</code></strong>, <strong><code>week</code></strong>, <strong><code>saveto</code></strong>)</p>
+<h2 id="GTI" class="doc_header"><code>class</code> <code>GTI</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L278" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>GTI</code>(<strong><code>gti_times</code></strong>)</p>
 </blockquote>
-<p>Download and process weekly Fermi-LAT files from GSFC</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h2 id="MonthlyData" class="doc_header"><code>class</code> <code>MonthlyData</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L288" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>MonthlyData</code>(<strong><code>config</code></strong>, <strong><code>saveto</code></strong>)</p>
+</blockquote>
 
 </div>
 
@@ -197,16 +296,170 @@ contents</p>
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Develop-montly">Develop montly<a class="anchor-link" href="#Develop-montly"> </a></h2>
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># %%capture cap</span>
+<span class="c1"># for m in range(1,152 ):</span>
+<span class="c1">#     md.process(m)</span>
+
+<span class="c1"># md.process(152)</span>
+
+<span class="c1"># from pathlib import Path</span>
+<span class="c1"># folder = Path(&#39;/mnt/c/users/thbur/tmp/monthly&#39;)</span>
+<span class="c1"># ft2 = sorted(folder.glob(&#39;ft2_20*.fits&#39;)); ft2</span>
+<span class="c1"># ft1 = sorted(folder.glob(&#39;P305_Source_*_zmax105.fits&#39;))</span>
+<span class="c1"># len(ft2), len(ft1)</span>
+
+<span class="c1"># %%time</span>
+<span class="c1"># dd = []</span>
+<span class="c1"># for m in range(12):</span>
+<span class="c1">#     dd.append( process(m))</span>
+
+<span class="c1"># year_sel = lambda month: (month+7)//12</span>
+<span class="c1"># list(map( year_sel, range(12)))</span>
+
+<span class="c1"># ft2[0].header[&#39;TSTART&#39;]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Load-weekly">Load weekly<a class="anchor-link" href="#Load-weekly"> </a></h3>
 </div>
 </div>
 </div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># config = Config(verbose=2)</span>
+<span class="c1"># wkfolder = &#39;/home/burnett/weekly&#39;</span>
+
+<span class="c1"># for wk in [669]: #range(532, 668): #59,100):</span>
+<span class="c1">#     wd = WeeklyData(config, wk, wkfolder)</span>
+<span class="c1">#     wd.save()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="check-the-weekly-files">check the weekly files<a class="anchor-link" href="#check-the-weekly-files"> </a></h2>
 </div>
 </div>
 </div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># weekly_folder = Path(wkfolder)</span>
+<span class="c1"># ff = sorted(list(weekly_folder.glob(&#39;*.pkl&#39;)))</span>
+<span class="c1"># wk = list(map(lambda f: int(os.path.splitext(f)[0][-3:]), ff))</span>
+<span class="c1"># lastweek = pickle.load(open(ff[-1],&#39;rb&#39;))</span>
+
+<span class="c1"># print(f&#39;Weekly folder &quot;{weekly_folder}&quot; contains {len(wk)} weeks, from {wk[0]} to {wk[-1]}&#39;)</span>
+<span class="c1"># print(f&#39;Most recent data to UTC {UTC(MJD(lastweek[&quot;tstart&quot;])+7)}&#39;)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">nbdev.export</span> <span class="kn">import</span> <span class="n">notebook2script</span>
+<span class="n">notebook2script</span><span class="p">()</span>
+<span class="o">!</span>date
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Converted 00_config.ipynb.
+Converted 01_data_man.ipynb.
+Converted 01_effective_area.ipynb.
+Converted 02_gti.ipynb.
+Converted 02_source_data.ipynb.
+Converted 03_exposure.ipynb.
+Converted 04_photon_data.ipynb.
+Converted 05_weights.ipynb.
+Converted 06_poisson.ipynb.
+Converted 07_cell_data.ipynb.
+Converted 07_cells.ipynb.
+Converted 08_loglike.ipynb.
+Converted 09_lightcurve.ipynb.
+Converted 10_simulation.ipynb.
+Converted 14_bayesian.ipynb.
+Converted index.ipynb.
+Mon Apr 19 04:58:27 PDT 2021
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">searchsorted</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
 </div>
  
 
