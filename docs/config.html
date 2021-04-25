@@ -170,7 +170,7 @@ filename in a file <code>index.pkl</code> in the same folder.</p>
 <p>One-line usage interface for cache use</p>
 <ul>
 <li><code>key</code> -- key to use, usually a string. Must be hashable <br>
-  If none, ignore cache and return the function evaluation</li>
+  If None, ignore cache and return the function evaluation</li>
 <li><code>func</code> -- user function that will return an object that can be pickled</li>
 <li><code>pars</code>, <code>kwargs</code> -- pass to <code>func</code></li>
 <li><code>description</code> -- optional string that will be printed</li>
@@ -305,7 +305,7 @@ Cache contents
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="Files" class="doc_header"><code>class</code> <code>Files</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L164" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Files</code>(<strong><code>data</code></strong>:<code>str</code>=<em><code>'$HOME/data'</code></em>, <strong><code>ft2</code></strong>:<code>str</code>=<em><code>'$HOME/work/lat-data/ft2'</code></em>, <strong><code>gti</code></strong>:<code>str</code>=<em><code>'$HOME/work/lat-data/binned/'</code></em>, <strong><code>aeff</code></strong>:<code>str</code>=<em><code>'$HOME/work/lat-data/aeff'</code></em>, <strong><code>weights</code></strong>:<code>str</code>=<em><code>'$HOME/onedrive/fermi/weight_files'</code></em>)</p>
+<h2 id="Files" class="doc_header"><code>class</code> <code>Files</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L165" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Files</code>(<strong><code>data</code></strong>:<code>str</code>=<em><code>'$HOME/data'</code></em>, <strong><code>ft2</code></strong>:<code>str</code>=<em><code>'$HOME/work/lat-data/ft2'</code></em>, <strong><code>gti</code></strong>:<code>str</code>=<em><code>'$HOME/work/lat-data/binned/'</code></em>, <strong><code>aeff</code></strong>:<code>str</code>=<em><code>'$HOME/work/lat-data/aeff'</code></em>, <strong><code>weights</code></strong>:<code>str</code>=<em><code>'$HOME/onedrive/fermi/weight_files'</code></em>)</p>
 </blockquote>
 <p>paths to the various files that we need</p>
 
@@ -375,7 +375,7 @@ Cache contents
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="Config" class="doc_header"><code>class</code> <code>Config</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L192" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Config</code>(<strong><code>verbose</code></strong>:<code>int</code>=<em><code>1</code></em>, <strong><code>files</code></strong>:<code>=*`None`*, **`data_folder`**:</code>=<em><code>None</code></em>, <strong><code>cachepath</code></strong>:<code>str</code>=<em><code>'/tmp/cache'</code></em>, <strong><code>mjd_range</code></strong>:<code>Tuple</code>=<em><code>None</code></em>, <strong><code>radius</code></strong>:<code>float</code>=<em><code>7</code></em>, <strong><code>cos_theta_max</code></strong>:<code>float</code>=<em><code>0.4</code></em>, <strong><code>z_max</code></strong>:<code>float</code>=<em><code>100</code></em>, <strong><code>time_interval</code></strong>:<code>int</code>=<em><code>1</code></em>, <strong><code>use_uint8</code></strong>:<code>bool</code>=<em><code>False</code></em>, <strong><code>nside</code></strong>:<code>int</code>=<em><code>1024</code></em>, <strong><code>nest</code></strong>:<code>bool</code>=<em><code>True</code></em>, <strong><code>bins_per_decade</code></strong>:<code>int</code>=<em><code>4</code></em>, <strong><code>base_spectrum</code></strong>:<code>str</code>=<em><code>'lambda E: (E/1000)**-2.1'</code></em>, <strong><code>energy_range</code></strong>:<code>Tuple</code>=<em><code>(100.0, 1000000.0)</code></em>, <strong><code>likelihood_rep</code></strong>:<code>str</code>=<em><code>'poisson'</code></em>)</p>
+<h2 id="Config" class="doc_header"><code>class</code> <code>Config</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L193" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Config</code>(<strong><code>verbose</code></strong>:<code>int</code>=<em><code>1</code></em>, <strong><code>files</code></strong>:<code>=*`None`*, **`data_folder`**:</code>=<em><code>None</code></em>, <strong><code>cachepath</code></strong>:<code>str</code>=<em><code>'/tmp/cache'</code></em>, <strong><code>mjd_range</code></strong>:<code>Tuple</code>=<em><code>None</code></em>, <strong><code>radius</code></strong>:<code>float</code>=<em><code>7</code></em>, <strong><code>cos_theta_max</code></strong>:<code>float</code>=<em><code>0.4</code></em>, <strong><code>z_max</code></strong>:<code>float</code>=<em><code>100</code></em>, <strong><code>time_interval</code></strong>:<code>int</code>=<em><code>1</code></em>, <strong><code>use_uint8</code></strong>:<code>bool</code>=<em><code>False</code></em>, <strong><code>nside</code></strong>:<code>int</code>=<em><code>1024</code></em>, <strong><code>nest</code></strong>:<code>bool</code>=<em><code>True</code></em>, <strong><code>bins_per_decade</code></strong>:<code>int</code>=<em><code>4</code></em>, <strong><code>base_spectrum</code></strong>:<code>str</code>=<em><code>'lambda E: (E/1000)**-2.1'</code></em>, <strong><code>energy_range</code></strong>:<code>Tuple</code>=<em><code>(100.0, 1000000.0)</code></em>, <strong><code>likelihood_rep</code></strong>:<code>str</code>=<em><code>'poisson'</code></em>)</p>
 </blockquote>
 <p>Default light curve configuration parameters</p>
 
@@ -477,7 +477,7 @@ Cache contents
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="MJD" class="doc_header"><code>MJD</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L258" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>MJD</code>(<strong><code>met</code></strong>)</p>
+<h4 id="MJD" class="doc_header"><code>MJD</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L259" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>MJD</code>(<strong><code>met</code></strong>)</p>
 </blockquote>
 <p>convert MET to MJD</p>
 
@@ -502,7 +502,7 @@ Cache contents
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="UTC" class="doc_header"><code>UTC</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L267" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>UTC</code>(<strong><code>mjd</code></strong>)</p>
+<h4 id="UTC" class="doc_header"><code>UTC</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L268" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>UTC</code>(<strong><code>mjd</code></strong>)</p>
 </blockquote>
 <p>convert MJD value to ISO date string</p>
 
@@ -551,7 +551,7 @@ Cache contents
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="PointSource" class="doc_header"><code>class</code> <code>PointSource</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L274" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>PointSource</code>(<strong><code>name</code></strong>, <strong><code>position</code></strong>=<em><code>None</code></em>)</p>
+<h2 id="PointSource" class="doc_header"><code>class</code> <code>PointSource</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L275" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>PointSource</code>(<strong><code>name</code></strong>, <strong><code>position</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <p>Manage the position and name of a point source</p>
 
@@ -576,7 +576,7 @@ Cache contents
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="PointSource.fk5" class="doc_header"><code>PointSource.fk5</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L307" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>PointSource.fk5</code>(<strong><code>name</code></strong>, <strong><code>position</code></strong>)</p>
+<h4 id="PointSource.fk5" class="doc_header"><code>PointSource.fk5</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L308" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>PointSource.fk5</code>(<strong><code>name</code></strong>, <strong><code>position</code></strong>)</p>
 </blockquote>
 <p>position: (ra,dec) tuple</p>
 

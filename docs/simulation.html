@@ -97,7 +97,10 @@ $$ \big(1 + \alpha w + \beta \ (1-w)\ \big) $$
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
-<div class="input">
+<details class="description">
+      <summary data-open="Hide Code" data-close="Show Code"></summary>
+        <summary></summary>
+        <div class="input">
 
 <div class="inner_cell">
     <div class="input_area">
@@ -119,6 +122,7 @@ $$ \big(1 + \alpha w + \beta \ (1-w)\ \big) $$
 </div>
 </div>
 
+    </details>
 </div>
     {% endraw %}
 
@@ -135,12 +139,100 @@ $$ \big(1 + \alpha w + \beta \ (1-w)\ \big) $$
 
 <div class="inner_cell">
     <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">wtlike.source_data</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">(</span><span class="n">data_folder</span><span class="o">=</span><span class="s1">&#39;/home/burnett/weekly&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">source</span> <span class="o">=</span> <span class="n">PointSource</span><span class="p">(</span><span class="s1">&#39;Geminga&#39;</span><span class="p">)</span>
+<span class="n">sd</span> <span class="o">=</span> <span class="n">SourceData</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">source</span><span class="p">);</span> <span class="n">sd</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>photons and exposure for Geminga: Restoring from cache with key &#34;Geminga_weekly_data&#34;
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>SourceData: Source Geminga with:
+	 data:     2,381,241 photons from   2008-08-04 to 2021-04-22
+	 exposure: 3,106,496 intervals from 2008-08-04 to 2021-04-22</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="bp">self</span><span class="o">=</span><span class="n">sd</span>
+<span class="n">nbins</span><span class="o">=</span><span class="mi">50</span>
+<span class="n">np</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">p_df</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">nbins</span><span class="o">+</span><span class="mi">1</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>array([ 76196,  49374,  36838,  35817,  29239,  27614,  27018,  23363,
+        16153,  21891,  20818,  14583,  21031,  12904,  11575,  13903,
+        15386,  13518,  13428,  12146,  16433,  11605,  14782,  10378,
+        16876,  10088,  10985,   8734,  20185,  20890,  12759,  26453,
+        16459,  36519,   9818,  15488,  41751,  12771,  26995,  58443,
+        25703,  72872,  66044,  57439,  14731,  69507, 126686,  76965,
+       128716,      0])</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">wtlike.weights</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
+<span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">(</span><span class="n">data_folder</span><span class="o">=</span><span class="s1">&#39;/home/burnett/weekly&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">valid</span><span class="p">:</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s1">&#39;font&#39;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
     <span class="n">source</span> <span class="o">=</span> <span class="n">PointSource</span><span class="p">(</span><span class="s1">&#39;Geminga&#39;</span><span class="p">)</span>
-    <span class="n">h</span> <span class="o">=</span> <span class="n">get_weight_hist</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">source</span><span class="p">)</span>
+    <span class="n">photon_data</span> <span class="o">=</span> <span class="n">SourceData</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">source</span><span class="p">)</span>
+    <span class="n">h</span> <span class="o">=</span> <span class="n">photon_data</span><span class="o">.</span><span class="n">weight_histogram</span><span class="p">()</span>
     <span class="n">sf</span> <span class="o">=</span> <span class="n">_Sampler</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
     <span class="n">data</span> <span class="o">=</span> <span class="n">sf</span><span class="p">(</span><span class="mi">10000</span><span class="p">)</span>
     <span class="n">fig</span><span class="p">,</span><span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
@@ -152,6 +244,32 @@ $$ \big(1 + \alpha w + \beta \ (1-w)\ \big) $$
 </pre></div>
 
     </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>photons and exposure for Geminga: Restoring from cache with key &#34;Geminga_weekly_data&#34;
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+
+
+<div class="output_png output_subarea ">
+<img src="data:image/png;base64,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fI0xKGbPnk1KSgpxcXF07tyZ5cuXAzBlyhTnSj65ubkYY5g/fz5t27YlISGBF154gfXr13PJJZcQHx9fbYrBqudWPf/06dPnvP6uXbu47rrraNmyJYmJifziF7+guLgYgJEjR5Kfn88tt9xCbGwsTz755DnPVVhYyK233kqLFi3o2LEjf/7zn6vFcfvtt3PHHXc4F4WvbX5scCwG/+tf/xpwrKHbtGlTHn74YQBKS0uJjo7m8OHD1V5/0qRJrF69mjFjxhAbG1utDD755BMuuugiEhISePDBB10um9e5c2fuueceunXrds6+48eP8+677/LEE08QGxvLVVddxa233sprr70GwHvvvUe3bt0YPHgw0dHRTJkyhc2bN/P9998D8OqrrzJ+/HhSU1NJSUlh/PjxLFiwAIDt27ezceNGHn/8cWJiYrjtttvIzMzk3XffrTXOL774gqysLJo1a0br1q156KH/63kZPHgwbdq0oXnz5lx99dVs3brVue+uu+7igQce4OabbyY2NpY+ffqwb98+xo0bR0JCAhdffDFfffWV8/iMjAxmzpxJ165dSUhIYNSoUZSVldUaU2FhIbfddhutWrWiXbt2PPfcc17FKyKB522f7gQgBpjuzcGWZb1kWVaWZVlZ9bF2sG3bNubOncv69es5evQoy5YtIyMjw+Xx69atY8eOHbz99tuMGzeO6dOn88knn7B161YWLVpUp8n0LcvikUceobCwkO+++469e/c6l+d77bXXSEtL46OPPuLYsWPOJFjVsGHDSE1NpbCwkMWLFzNx4kTnhQPAhx9+yNChQykuLubWW291Of9w3759WblyJQDr16+nTZs2zvfz+eef07lzZxISEqqdM336dH7yk58wd+5cjh07Vm35vI8//pj169ezefNmFi1aVKfl/LZv305kZCSdOnVybju7lCHA1q1b6d79/xpkmjZtSocOHVzur3lu+/btiYuLq3V/TWPHjmXs2LGUlJSwa9cubr/9due+m2++mR07drB//3569OjBL37xi2rnLlq0iGnTplFUVESTJk3o1asXPXr0oKioiOzs7HMS4htvvMGyZcvYtWsX27dvZ9q0aefEU1FRwS233EL37t0pKChg+fLlPPvss85ydheviASex6RrjEkDJgG/B5oYY+IrB1RR5d+RgQzSbpGRkZSXl/Ptt99y6tQpMjIy6NChg8vjf//73xMdHc0NN9xA06ZNGTZsGElJSaSkpPCTn/ykWo3FWx07dqRfv340adKEVq1a8dBDD3mdvPfu3ctnn33G7NmziY6O5tJLL2X06NHOmiDAVVddRf/+/YmMjGTkyJFs3ry51uc6uzDAwYMHWbVqFffccw8FBQUcO3aMTz/9lL59+57X+8rJySE+Pp60tDSuvfZaNm3adF7nAxw7dozmzZtX29a8eXOOHj1ap/3Nmzfn2LFjWJbl8dyaGjduzM6dOykqKiI2NpaePXs69919993ExcXRpEkTZ237yJEjzv0///nPueyyy4iOjubnP/850dHR3HHHHURGRjJkyJBz/m7GjBlD27ZtadGiBZMmTeKtt946J57169dz4MABJk+eTFRUFO3bt+fee+9l4cKFHuMVkcDzpqbbHogGXgcOV3kA/K7y98yARBckHTt25Nlnn2XKlCkkJSUxdOhQCgsLXR7funVr5+8xMTHn/LsuA5z279/P0KFDSUlJoVmzZowYMYKioiKvzi0sLKRFixbVamvp6ekUFBQ4/92mTRvn7xdccAFlZWW1NnPHxMSQlZXFp59+yqpVq+jbty+9e/dmzZo1dUq6NV+3LmUTGxtLSUlJtW0lJSXO93u++0tKSoiNjcUY4/Hcml555RW2b9/OxRdfzOWXX87HH38MwJkzZ8jJyaFDhw40a9bM2VJS9f/wfP9uqq7BnJ6eXuvfZF5eHoWFhcTHxzsfM2bM4Mcff3Qbr4jYw5ukuwm4tpYHOBLxtUDY3QcyfPhwPvvsM/Ly8jDGMGHCBJ+fs2nTppw4ccL573379rk89pFHHsEYw9dff01JSQmvv/56tf7PsyNta5OcnMyhQ4eq1c7y8/NJSUmpU9x9+/ZlxYoVfPXVV1x++eX07duXZcuW8cUXX3D11VfXeo67+HzVqVMnTp8+zY4dO5zbNm/e7Oz/7datW7Wa+/Hjx9m1a5fL/TXP3b17d7Wyq7q/posuuoi33nqL/fv3M2HCBLKzszl+/DhvvvkmS5Ys4ZNPPuHIkSPk5uYCuOzD9sbevXudv+fn55OcnHzOMW3btqVdu3YUFxc7H0ePHmXp0qVu4xURe3hMupZlFVuWtbLmo3J3XuW/g3evSgBs27aNFStWUF5eTnR0NDExMURG+t6Cfumll7Jq1Sry8/M5cuQIM2fOdHns0aNHiY2NJT4+noKCAp566qlq+1u3bs3u3btrPbdt27b07t2bRx55hLKyMr7++mteeeWVc/oUvdW3b1/++te/0rVrV6Kiopz3E7dr187liF538XnDsizKyso4efIkAGVlZZSXlwOOi5dBgwYxefJkjh8/zpo1a1iyZAkjR44EHM2233zzDe+++y5lZWVMnTqVSy65hIsvvhiAO+64g6effpqCggIKCwuZM2cOd911F+BI6JdeeimPP/44ZWVlvP/++3z99dfcdttttcb5+uuvc+DAASIiIoiPd/S6REZGcvToUZo0aULLli05ceKEX241+9Of/sQPP/zAoUOHmDFjBkOGDDnnmCuuuIJmzZoxe/ZsSktLOXPmDN988w3r1693G6+I2COk5l5OiY8J6G09KfExXh1XXl5OTk4O3333HY0bN6Z379689NJLPr9+v379GDJkCJdccgmJiYlMmDCBDz/8sNZjH3vsMe644w6aN29Ox44dGTlyJM8884xz/yOPPMKvf/1rHn74YR599FGys7Ornf/WW29x//33k5ycTEJCAo8//jj9+vWrU9y9e/emtLTUWavt2rUr0dHRLmu54Biwc+edd/L8888zcuTIaiNovZGXl0e7du2c/46JiSE9Pd1ZY5w3bx533303SUlJtGzZkueff95ZG23VqhXvvvsuY8aMYcSIEVx55ZXOPk2A++67j927d5OZ6egVGT16NPfdd59z/8KFC7nrrrtISEggLS2NxYsXu7y4+Pvf/85DDz3EiRMnSE9PZ+HChc6+2WXLlpGSkkKLFi144okneP7558+rDGoaPnw4N9xwA4WFhQwcOJBHHz13BtbIyEg++ugjxo8fT7t27SgvL6dz587OQVeu4hURexhfmru8kZWVZdV2O8p3331Hly5dAvraIuGi5mQogabPp9hm/gDW7jlIz6lrg7M/QIwxX1qWlVVz+3nPvSwiIiJ1o6QrIiJik5Dq0xWR2p3tyxaR+k01XREREZsENelWVFQE8+VFpBaBHlwp0pAFLek2bdqUgoICTp48qQ+5SIiwLIuDBw/qNiKRAAlan25qaipFRUXk5eXVOv2giARHdHQ0qampwQ5DJCwFLelGRESQlJREUlJSsEIQERGxlQZSiYiI2ERJV0RExCZKuiIiIjZR0hUREbGJkq6IiIhNlHRFRERsoqQrIiJiEyVdERERmyjpioiI2ERJV0RExCZKuiIiIjZR0hUREbGJkq6IiIhNlHRFRERsoqQrIiJiEyVdERERmyjpioiI2ERJV0RExCZKuiIiIjZR0hUREbGJkq6IiIhNlHRFRERsoqQrIiJiEyVdERERmyjpioiI2MRj0jXG3GiMWWGM2WeMKTfG/GCMWWSM6WpHgCIiIuGikRfHtAC+BOYBB4A0IAdYa4zJtCwrL4DxiYiIhA2PSdeyrLeAt6puM8Z8AXwPZANzAhOaiIhIeKlrn+7Byp+n/BWIiIhIuPM66RpjIo0xUcaYi4AXgX3AwoBFJiIiEmbOp6a7DigHtgOXANdZlrW/tgONMb80xmwwxmw4cOCAH8IUERGp/84n6Y4EegLDgRLgf40xGbUdaFnWS5ZlZVmWldWqVSufgxQREQkHXiddy7K+syxrXeXAqv8CYnGMYhYREREv1GkglWVZxcBOoKN/wxEREQlfdUq6xpjWwMXALv+GIyIiEr483qdrjHkf2Ah8jaMvtxPwW+A0ukdXRETEa97MSLUWuB0YD0QBe4GVwEzLsnIDFpmIiEiY8WZGqtnAbBtiERERCWtaZUhERMQmSroiIiI2UdIVERGxiZKuiIiITZR0RUREbKKkKyIiYhMlXREREZso6YqIiNjEmxmpREREgiYqMoKMnL/Vum9h1EGiIutP/VFJV0REQlqPtARyRw2ofef8efYG46P6c3kgIiJSzynpioiI2ETNyyIiElB9Zq2goLi01n31rU/WV0q6IiISUAXFpeTO8qFPdt8WmO/i/H1boE1m3YOzmZKuiIiErsxs9/vbZHo+JoTUv6T7PzmOKxt3MrMha5Q98YiISOBkjQqr7/Pwa0jftwW2LA52FCIiIueofzXdm2e53++q3V9ERCTIwq+mKyIiEqLqX01XRET8yt0tPQAp8TGsybnOxojCl5KuiEi42jDfqzEuVx/tzMxZT7vc72reYzl/al4WEQlXWxZ7vttj3xYGRv7LnnhENV0RkbDWJhNGuampzh8Aew7aF08Dp5quiIiITZR0RUREbKLmZRERCZwN81kY9aLrOZbr2dzJvlJNV0REAmfLYrqaPNf769ncyb5STVdERALqWyudnu4GczUgqumKiIjYRDVdEZEwtjH/MIPcTG7R0BaRDzYlXRGRMHbyTIXrBeTBMcDJ3SLxwLDIzoAWk/EHJV0RkYbM0yCmfVsYGKnJM/xFSVdEpCHztEi8ZqzyK48N+caYbGPMu8aYPGNMqTFmmzFmpjEmzo4ARUREwoU3vee/A84AE4GbgOeBXwH/a4xR77uIiIiXvGlevsWyrANV/v2pMeYQ8CpwDbAiEIGJiIiEG4811RoJ96z1lT9T/BuOiIhI+Kpr83Dfyp/f+SsQERGRcHfeSdcYkwJMBT6xLGuDi2N+aYzZYIzZcOBAbRVlERGRhue8kq4xJhZYApwGXI4xtyzrJcuysizLymrVqpWPIYqIiIQHr+/TNcZEAx8C7YG+lmX9ELCoREREwpBXSdcY0xh4F7gCuN6yrC0BjUpERGDDfNiy2P0xmdnuJ7eQkOLN5BgRwBvAfwEDLctaG/CoRETEkXD3uanj7NviOSlLSPGmpvsnYDAwHThujOlZZd8PamYWEQmgNpngai1aN4sU+FNXk+f+tVTb9po3A6lurvw5Cfi8xmN0gOISEZFQkJnNt1a66/2qbZ8XjzVdy7IybIhDRERCUdYohi5OIneUi5quTbXtcKG5k0VERGyipf1ERMStlPgYMnJq71deGHWQqMgIetgcU32lpCsiIm6tybnO9c7581ir9Xa9Vi+Tbp9ZKygoLq11n666REQkVNXLpFtQXEruLFed+rrqEhGR0FQvk66ISEOxMf8wg9SfGjaUdEVEQtjJMxVq2QsjumVIRETEJkq6IiIiNgnL5mXNEyoiIqEo/Gq6midURERCVPjVdDVPqIiIhKjwq+mKiIiEKCVdERERmyjpioiI2ERJV0RExCZKuiIiIjZR0hUREbGJkq6IiIhNlHRFRERsEn6TY4iI2GXDfM8z3GnaWalCNV0RkbrastgxtawrmnZWalBNV0TEF20yYVTti8xr2lmpSTVdERERmyjpioiI2ERJV0RExCZh2aebEh9DRk7tfSwLow4SFRlBD5tjEhERCcukuybnOtc7589j7Z6D9gUjIhJAUZERHisZEjrCMul60tXkuR9VqPvqROo/b+6hBZ8/7xvzDzPIh5a1PrNWUFBc6vZ8d3qkJZA7ysX32fx5bs8V+zW8pJuZzbd7DtLT1f68zxwPdx9WJWWR0Hf2Hto2ma6POXuPrQ+f55NnKsid5TrpeWpZKygudXu+hJeGl3SzRjF0cZLrK0NPV8d++JCKiE3c3UMLuo9WbNfwkq4nWaPcJ1R9SEVEpI7Uwy4iImITr2q6xphUYAKQBXQHYoB2lmXlBi60wHF3S9HZ/W5HQIuIiNSBt83LHYHbgS+B1cANAYvIBp4SqruELCIiUlfeNi+vsiyrtWVZ/YF3AhmQiIhIuPIq6VqWVRHoQERERMKdRi/XQtNIiohIIAQk6Rpjfgn8EiAtLS0QLxFQmkZSREQCISBJ17Ksl4CXALKysqxAvEYwaRpJkfrB3RSNoJYrsZ+al8+Xp2kkNWOVSMhwO0UjqOVKbKeke748TSM5f4Aj8aomLCIiNSjp+ltmtvv9WlBBRM7aMJ+FUS+6XtjA064/vrwAAAvLSURBVIINUu94nXSNMWezyWWVP282xhwADliW9anfIwth7me0SiIlfrzrwVhaUEHEO94szVffL1C3LHaMEaFl7fvbZHq+kJd65XxqujUnxTh7afYpcI1foqknfJrRSgsqiHjH09J8YXKB+q2VTk93KyF54q47SzXlkON10rUsywQyEBGRc7hbmk8XqJ5rwaophxz16YqIuNFn1goKiktr3Xf2lqOg8dRyJiFHSTcAPK1i5I7uGxTxnrv7cP2VEAuKS13fduRqAJSIC0q6AeDTsoDz51GSu9Fz01l9H0Ai4gdu78NVQpQQpEXsQ01mNt9a6e6P2bfF86hOEREJOarphhpPk2+A51pwQ7jVQkSkHlLSDUeBvtVCSV0quRtkNCxyOYOj1tIjLcH1E3j4O7Gjz1bETkq6YWrjyVQGbXug1n0Lo56gW95G4uo6VWUDuX9SPPM0yKgkdw/gIul68XeiPlsJN0q6Ycrtl9WG/az98EW3izZszD/MoMVJte521DBS6aH7Jxs2L6YwdDvxg/5OpAFS0m2IvFi04eSeg25rGFqZRbyZwnDJzs6uL+4kbERFRri8TVLdANUp6YpInXmawvCtnL8x08Z4JDh6pCW4uYhXN0BVuvwQERGxiWq69ZSvozrdzZql5iARkcBQ0q2nfB3V6XbWLDUHeRbs26a8ef1AxxAK6sEKO+rvlKqUdOupriYv5L9swlqwb5vy9Pp2xOAHPrXY1JMVdtTfKVUp6dZHmdl8u+eg61GhIfJlEzChUssL9rJz7l7frhg88KYbo84tNnassOPFbVG6wJXzoaRbH3kzVaSvPDXbkRy41/bEplqeN0u61Xk1qGA3T9uk3ndjeHFbVFhf4HqrHjTzhwol3RDkzdKAKfExgQvAi2a7gN5/6Skhnf0Qe6jluWu6BEcZuksKnmZb8ule5WA3T4vXPN0W1eDVk2b+UKGkG4J8WhrQH7xotvN4/6W7K1/wOM3k0byNbK1wtdpSMkt2duYtNwl1YdRBukXkkdvZdW1q7Z6DMN9FDQYYFtkZqHtrgqf+SkhmqJupOqPyDwd9XeWQXsBdQoMdzfxhRElX/C8zm435hznpoibY1eSxM/8wPdx8ULdWpNNz6lqX+3uC+6S/Yb/H5tuoyAiXtdWuJo/BUYfdnu+JNyPM3Q2w2Zh/2GN/aKCTcsAXcG8IzZIN4T2K15R0pU7cN4EnkRI/zXWNff4ALsrbyNrJtTdQdzV5REW28y1AL66+3Sas+QPo4eHLMioy1W1S7Bbh2whzT6Ne3SXlszHYkZjrrCE0SzaE9yjnRUlX6sSnJvDMbOLATZ9wS3oE+4vIiy/LHpnZ5Ga5XlTCbU3bD1+2bpMyeEzM3iy952sTu1sNoVmyIbxHOS9KumK/+vBF5GuM/niPfmiW9FRb9rT03sBILWwh4k9KuiKhyF/Nkh4S986Idm7XXW4IA6U8TjQTzNvjJOwo6YqEIn/UlH1tIq8P99H6KjObnW4G/UEyn0Zdo+UJxW+UdEXCVYg0cYe0rFFuR9GDu7EHIudPSVdEaqeRtyJ+p6QrIrWrDwPeROqZ8B8lISIiEiKUdEVERGyipCsiImITJV0RERGbKOmKiIjYRElXRETEJl4lXWNMW2PMYmPMEWNMiTHmPWNMWqCDExERCScek64x5gJgBXAxcCcwErgI+KcxpmlgwxMREQkf3kyOcS/QHuhsWdZOAGPM18AO4D7g6cCFJyIiEj68aV6+FVh7NuECWJa1B1gDDAxUYCIiIuHGm5puN2BJLdu3AoP9G46IiIh/uV2+ERzziN88y5ZYvEm6LYDDtWw/hIvVr40xvwR+WfnPY8aYbXULz6VEM5siPz9nQ5MIKkMfqQx9pzL0ncrQK0vd7UuE2f4uw/TaNnq74IFVyzbj8mDLegl4ycvnPm/GmA2WZWUF6vkbApWh71SGvlMZ+k5l6Ds7y9CbPt3DOGq7NSVQew1YREREauFN0t2Ko1+3pq7At/4NR0REJHx5k3Q/BHoaY9qf3WCMyQD6VO4LhoA1XTcgKkPfqQx9pzL0ncrQd7aVobGs2rprqxzgmABjM1AKPIqjf/cJIA64xLKsY4EOUkREJBx4rOlalnUcuA7YDrwGvAHsAa5TwhUREfGex5quiIiI+EfIrDLky6IKxphoY8xTxph/G2NKjTGfG2OuDnTMoaauZWiMyTLGvGSM+d4Yc8IYk2+MecMY086OuEOJvxb3MMY8YoyxjDGfBSLOUOZrGRpjuhhj3jHGFFV+nrcZY8YGMuZQ5ON3Ypox5tXKz/IJY8x2Y8y0hjRfvjEm1Rjz/yrzwYnKz2OGl+cGLKeERNL1w6IKr+CYI3oy8FPg38AyY8ylgYk49PhYhkNxjFB/DrgZyAF6ABuMMW0DFnSI8dfiHpWDDicB+wMRZyjztQyNMVnAOqAJMBroD8wBIgMVcyjypRwr938CXA38HhgAvAyMB/4SwLBDTUfgdhy3tq4+z3MDl1Msywr6AxgLnAE6VtnWDjgNPOTh3O44BneNqrKtEbAN+DDY762elGGrWralAxXA1GC/t/pQhjWeZxnwIrAS+CzY76u+lCGOSsBW4P1gv49gP3wsxxsqvxNvqLF9VuX5FwT7/dlUhhFVfh9dWSYZXpwX0JwSEjVdfFtU4VbgFPB2lXNPAwuBG40xTfwfbkiqcxlalnWglm15wAEgxc9xhjKfF/cwxgzH0UrwSEAiDH2+lOE1OO7/18plvpVjVOXPkhrbi3Fc2LicTTCcWJZVUcdTA5pTQiXpdgO+qWX7VhwfQk/n7rEs60Qt50bhaGJoCHwpw3MYY7oAScB3PsZVn/hUhsaYBOAZ4GHLsg75Obb6wpcyvKryZ7QxZq0x5pQxZr8x5jljTIxfowx9vpTjJziWXp1tjOlqjIk1xlyHo/b8guW4I0VcC2hOCZWke96LKnh57tn9DYEvZViNMaYR8AKOmu4rvodWb/hahk/huLVugR9jqm98KcPkyp9vA/8A+gFP4mgafNNfAdYTdS5Hy7LKcFzAnG2uPwosBz4Gxvg3zLAU0Jzi7YIHdjivRRVqHFPXc8ONv8phLtAbGGBZVkObX7tOZWiM+QlwB9DDquwEasDq+nd4thLwumVZkyt/X2mMiQRmGWO6WpbVkKaerevfYjSOC5ckHAOw8oErcAwKOg38yo8xhqOA5pRQSbq+LKpwCKhtGH1Clf0NgV8WpjDGzMSxLOOdlmX9w0+x1Re+lOGLOFoFfjDGxFduawREVv671LKscr9FGrp8KcODlT//t8b2f+AYBHQpDWe+d1/K8R4c/eMdLcvaVbltlTHmCPCSMeYFy7I2+y3S8BPQnBIqzcu+LKqwFWhXOcS+5rkngZ3nnhKWfF6YwhgzCcftQmMty3rNj7HVF76UYRfgfhxfiGcffYCelb83lNqFr59lOLeWcbaGUdeBMfWRL+WYCRyuknDP+qLyZxcfYwt3Ac0poZJ0fVlU4UOgMTC4yrmNgCHAPxpI7QJ8XJjCGPMbYBowybKs/xegGEOdL2V4bS2PzTgGw1wLLPZ/uCHJlzL8H6AcuKnG9hsrf27wT4j1gi/luA9IMMbUHPBzZeXPAj/FGK4Cm1OCfS9VZfdXUxxXD1twDIe/FccX1m4gtspx6Tj6JCbXOH8hjtrEaOC/cHzBleHoXwv6+wv1MsQxOUYFji+9njUeXYP93upDGbp4vpU0vPt0ff0sP1a5fQZwPY6Wl1JgQbDfW30pRyADx+1C23FMrHEt8N+V2zZQ5f7VcH8A2ZWP53G0oPyq8t99PfwdBiynBL1QqrzJNODdyj+Mo8AH1LiRufKPyQKm1Ngeg+Pevn2VBbMOuCbY76m+lCGO0baWi8fKYL+v+lCGLp6rwSVdX8sQR1PyQ5UJ5ySQB0wFGgf7fdWzcuwKLAL24rho2Q78AUgI9vuyuQzdfq8FI6dowQMRERGbhEqfroiISNhT0hUREbGJkq6IiIhNlHRFRERsoqQrIiJiEyVdERERmyjpioiI2ERJV0RExCb/H2FZRO41i6+PAAAAAElFTkSuQmCC
+"
+>
+</div>
+
+</div>
+
 </div>
 </div>
 
@@ -207,8 +325,7 @@ $$ \big(1 + \alpha w + \beta \ (1-w)\ \big) $$
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span>      
-<span class="n">wg</span> <span class="o">=</span> <span class="n">_WeightGenerator</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">wg</span> <span class="o">=</span> <span class="n">_WeightGenerator</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
 <span class="n">test2</span> <span class="o">=</span> <span class="n">wg</span><span class="o">.</span><span class="n">mean</span><span class="p">,</span>  <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">wg</span><span class="p">(</span><span class="mi">1000</span><span class="p">))</span>
 <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span> <span class="n">test2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">test2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-1</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;Not almost equal: </span><span class="si">{</span><span class="n">test2</span><span class="si">}</span><span class="s1">&#39;</span>
 </pre></div>
@@ -322,14 +439,96 @@ $$ \big(1 + \alpha w + \beta \ (1-w)\ \big) $$
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>Test with alpha=0.1, beta=None
 Generated cell info:
-wtlike.loglike.LogLike:  10422 weights, S 4998.5, B 5001.5
+wtlike.loglike.LogLike:  10402 weights, S 4998.5, B 5001.5
 1-D fit info:
-counts      10422.000
-flux            1.095
+counts      10402.000
+flux            1.092
 sig_flux        0.016
 dtype: float64
 </pre>
 </div>
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">sd</span> <span class="o">=</span> <span class="n">SourceData</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">source</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>photons and exposure for Geminga: Restoring from cache with key &#34;Geminga_weekly_data&#34;
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">sd</span><span class="o">.</span><span class="n">binned_exposure</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Time bins: 4643 intervals of 1 days, from MJD 54683.0(2008-08-05) to 59326.0(2021-04-22))
+Relative exposure per bin:
+count    4643.000
+mean        1.000
+std         0.353
+min         0.000
+50%         0.993
+max         3.664
+dtype: float64
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(array([1.27925282, 1.23016514, 1.19682299, ..., 1.21707418, 1.1495392 ,
+        1.18031339]),
+ array([54683., 54684., 54685., ..., 59324., 59325., 59326.]))</pre>
+</div>
+
 </div>
 
 </div>
@@ -356,10 +555,10 @@ dtype: float64
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="simulate_cells" class="doc_header"><code>simulate_cells</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/simulation.py#L128" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>simulate_cells</code>(<strong><code>config</code></strong>, <strong><code>source</code></strong>, <strong><code>wdist</code></strong>=<em><code>None</code></em>, <strong><code>source_flux</code></strong>=<em><code>'&lt;lambda&gt;'</code></em>)</p>
+<h2 id="simulate_cells" class="doc_header"><code>simulate_cells</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/simulation.py#L128" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>simulate_cells</code>(<strong><code>source_data</code></strong>, <strong><code>wdist</code></strong>=<em><code>None</code></em>, <strong><code>source_flux</code></strong>=<em><code>'&lt;lambda&gt;'</code></em>)</p>
 </blockquote>
 <ul>
-<li><code>source</code> -- a PointSource object, use to get exposure at its position and weight distribution</li>
+<li><a href="wtlike/source_data"><code>source_data</code></a> -- a SourceData object, use to get exposure at its position and weight distribution</li>
 <li><code>wdist</code>   -- a weight function or histogram; if None, get the source distribution</li>
 <li><code>source_flux</code> -- function of MJD time for the counts/day; default 100/day</li>
 </ul>
@@ -459,7 +658,7 @@ dtype: float64
 <p>The deviations from the expected norm divided by each cell's average error:</p>
 <div class="nbdoc_image">
 <figure style="margin-left: 5%" title="Figure 1">  <a href="images/simulation_test_fig_01.png" title="images/simulation_test_fig_01.png">    <img src="images/simulation_test_fig_01.png" alt="Figure 1 at images/simulation_test_fig_01.png" width=300>   </a> </figure>
-</div><p>Mean and STD of this distribution: -0.093, 1.045: for a generated Gaussian distribution these wouild be 0 and 1.</p>
+</div><p>Mean and STD of this distribution: -0.095, 1.038: for a generated Gaussian distribution these wouild be 0 and 1.</p>
 <p>A validation of the shape is to evaluate the cumulative probability of the over-all mean
 for each likelihood function. This uses the <code>poisson.Poisson.cdf</code> function.</p>
 <div class="nbdoc_image">
@@ -492,7 +691,7 @@ for each likelihood function. This uses the <code>poisson.Poisson.cdf</code> fun
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">cells</span><span class="o">=</span><span class="p">[]</span>
-<span class="k">def</span> <span class="nf">simulation_lightcurve_demo</span><span class="p">(</span><span class="n">source_name</span><span class="o">=</span><span class="s1">&#39;Geminga&#39;</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">simulation_lightcurve_demo</span><span class="p">(</span><span class="n">source_data</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    ### Lightcurve generation test</span>
 <span class="sd">    </span>
@@ -504,16 +703,16 @@ for each likelihood function. This uses the <code>poisson.Poisson.cdf</code> fun
 <span class="sd">    {fig}</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">global</span> <span class="n">cells</span>
-    <span class="n">source</span> <span class="o">=</span> <span class="n">PointSource</span><span class="p">(</span><span class="s1">&#39;Geminga&#39;</span><span class="p">)</span>
+    
     <span class="k">with</span> <span class="n">capture_print</span><span class="p">(</span><span class="s1">&#39;Print out&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">output</span><span class="p">:</span>
-        <span class="n">cells</span> <span class="o">=</span>  <span class="n">simulate_cells</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">source_flux</span><span class="o">=</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="mi">100</span><span class="p">)</span>
-        <span class="n">fits</span> <span class="o">=</span> <span class="n">fit_cells</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">cells</span><span class="p">)</span>
+        <span class="n">cells</span> <span class="o">=</span>  <span class="n">simulate_cells</span><span class="p">(</span><span class="n">source_data</span><span class="p">,</span> <span class="n">source_flux</span><span class="o">=</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="mi">100</span><span class="p">)</span>
+        <span class="n">fits</span> <span class="o">=</span>  <span class="n">fit_cells</span><span class="p">(</span><span class="n">source_data</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="n">cells</span><span class="p">)</span>
         <span class="n">fig</span> <span class="o">=</span> <span class="n">figure</span><span class="p">(</span><span class="n">flux_plot</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">fits</span><span class="p">),</span> <span class="n">width</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
     
     <span class="k">return</span> <span class="nb">locals</span><span class="p">()</span>
 
 <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">valid</span><span class="p">:</span>
-    <span class="n">nbdoc</span><span class="p">(</span><span class="n">simulation_lightcurve_demo</span><span class="p">)</span>
+    <span class="n">nbdoc</span><span class="p">(</span><span class="n">simulation_lightcurve_demo</span><span class="p">,</span> <span class="n">SourceData</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">PointSource</span><span class="p">(</span><span class="s1">&#39;Geminga&#39;</span><span class="p">)))</span>
 </pre></div>
 
     </div>
@@ -526,12 +725,20 @@ for each likelihood function. This uses the <code>poisson.Poisson.cdf</code> fun
 
 <div class="output_area">
 
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>photons and exposure for Geminga: Restoring from cache with key &#34;Geminga_weekly_data&#34;
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3 id="Lightcurve-generation-test">Lightcurve generation test<a class="anchor-link" href="#Lightcurve-generation-test"> </a></h3><p>This uses the exposure measured for the source Geminga, and
+<h3 id="Lightcurve-generation-test">Lightcurve generation test<a class="anchor-link" href="#Lightcurve-generation-test"> </a></h3><p>This uses the exposure measured for the source {source_name}, and
 the default time bins to create a light curve assuming a fixed flux
 and a histogram of weights from the data.</p>
-<p><details  class="nbdoc-description" >  <summary> Print out </summary>  <div style="margin-left: 5%"><pre>binned exposure for source Geminga: Restoring from cache with key "binned_exposure_Geminga"<br>Weight histogram for Geminga: Restoring from cache with key "weight_hist_Geminga"<br>Loaded 3873 / 4015 cells with exposure &gt; 0.3 for fitting<br></pre></div> </details></p>
+<p><details  class="nbdoc-description" >  <summary> Print out </summary>  <div style="margin-left: 5%"><pre>Time bins: 4643 intervals of 1 days, from MJD 54683.0(2008-08-05) to 59326.0(2021-04-22))<br>Relative exposure per bin:<br>count    4643.000<br>mean        1.000<br>std         0.353<br>min         0.000<br>50%         0.993<br>max         3.664<br>dtype: float64<br>Loaded 4443 / 4643 cells with exposure &gt; 0.3 for fitting<br></pre></div> </details></p>
 <div class="nbdoc_image">
 <figure style="margin-left: 5%" title="Figure 1">  <a href="images/simulation_lightcurve_demo_fig_01.png" title="images/simulation_lightcurve_demo_fig_01.png">    <img src="images/simulation_lightcurve_demo_fig_01.png" alt="Figure 1 at images/simulation_lightcurve_demo_fig_01.png" width=500>   </a> </figure>
 </div>
@@ -539,6 +746,23 @@ and a histogram of weights from the data.</p>
 
 </div>
 
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cd</span>
+</pre></div>
+
+    </div>
 </div>
 </div>
 

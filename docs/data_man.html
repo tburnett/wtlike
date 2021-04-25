@@ -30,8 +30,8 @@ nb_path: "nbs/01_data_man.ipynb"
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Overview">Overview<a class="anchor-link" href="#Overview"> </a></h3><p>Fermi-LAT data files are extracted from the FTP server 
-<code>https://heasarc.gsfc.nasa.gov/FTP/fermi/data/lat/weekly</code>, with subfolders for the photon data, <code>photon</code> and spacecraft data, <code>spacecraft</code>. It is described <code>http://fermi.gsfc.nasa.gov/ssc/data/access/http://fermi.gsfc.nasa.gov/ssc/data/access/</code></p>
+<h3 id="Overview">Overview<a class="anchor-link" href="#Overview"> </a></h3><p>Fermi-LAT weekly data files are extracted from the <a href="https://heasarc.gsfc.nasa.gov/FTP/fermi/data/lat/weekly">GSFC FTP server </a>, 
+with subfolders for the photon data, <code>photon</code> and spacecraft data, <code>spacecraft</code>. It is <a href="http://fermi.gsfc.nasa.gov/ssc/data/access/http://fermi.gsfc.nasa.gov/ssc/data/access/">described here</a></p>
 <p>The class <a href="wtlike/data_man#WeeklyData"><code>WeeklyData</code></a> downloads these to temporary files and constructs a dict for each week with
 contents</p>
 <ul>
@@ -137,7 +137,7 @@ contents</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="get_ft2_info" class="doc_header"><code>get_ft2_info</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L159" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>get_ft2_info</code>(<strong><code>config</code></strong>, <strong><code>filename</code></strong>, <strong><code>gti</code></strong>=<em><code>'&lt;lambda&gt;'</code></em>)</p>
+<h2 id="get_ft2_info" class="doc_header"><code>get_ft2_info</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L136" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>get_ft2_info</code>(<strong><code>config</code></strong>, <strong><code>filename</code></strong>, <strong><code>gti</code></strong>=<em><code>'&lt;lambda&gt;'</code></em>)</p>
 </blockquote>
 <p>Process a FT2 file, with S/C history data, and return a summary DataFrame</p>
 <p>Parameters:</p>
@@ -206,7 +206,7 @@ contents</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="WeeklyData" class="doc_header"><code>class</code> <code>WeeklyData</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L203" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>WeeklyData</code>(<strong><code>config</code></strong>, <strong><code>week</code></strong>, <strong><code>saveto</code></strong>)</p>
+<h2 id="WeeklyData" class="doc_header"><code>class</code> <code>WeeklyData</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L180" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>WeeklyData</code>(<strong><code>config</code></strong>, <strong><code>week</code></strong>, <strong><code>saveto</code></strong>, <strong><code>overwrite</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 <p>Download and process weekly Fermi-LAT files from GSFC,</p>
 <p>at FTP '<a href="https://heasarc.gsfc.nasa.gov/FTP/fermi/data/lat/weekly">https://heasarc.gsfc.nasa.gov/FTP/fermi/data/lat/weekly</a>'</p>
@@ -221,6 +221,44 @@ contents</p>
 <li>sc_data -- DataFrame with Spacecraft data--see <a href="wtlike/data_man#get_ft2_info"><code>get_ft2_info</code></a></li>
 <li>gti_times -- array of interleaved start/stop times from the photon data</li>
 </ul>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="check-the-weekly-files">check the weekly files<a class="anchor-link" href="#check-the-weekly-files"> </a></h2>
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="get_data_files" class="doc_header"><code>get_data_files</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L260" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_data_files</code>(<strong><code>config</code></strong>)</p>
+</blockquote>
+<p>Return a list of the pickled data files</p>
 
 </div>
 
@@ -266,40 +304,64 @@ contents</p>
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
+<div class="input">
 
-</div>
-    {% endraw %}
-
-    {% raw %}
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># class MonthlyData(object):</span>
+<span class="c1">#     &quot;&quot;&quot;</span>
+<span class="c1">#     &quot;&quot;&quot;</span>
+<span class="c1">#     monthly_path =&#39;/mnt/c/users/thbur/tmp/monthly&#39;</span>
+<span class="c1">#     ft1_pattern = &#39;ft2_20*.fits&#39;</span>
+<span class="c1">#     ft2_pattern = &#39;P305_Source_*_zmax105.fits&#39;</span>
     
-<div class="cell border-box-sizing code_cell rendered">
+<span class="c1">#     def __init__(self, config, saveto):</span>
+<span class="c1">#         &quot;&quot;&quot;</span>
+<span class="c1">#         &quot;&quot;&quot;</span>
+<span class="c1">#         from pathlib import Path</span>
+<span class="c1">#         self.config=config</span>
+<span class="c1">#         folder = Path(self.monthly_path)</span>
+<span class="c1">#         assert folder.is_dir, f&#39;Monthy folder {self.montly_path} not a folder&#39;</span>
+        
+<span class="c1">#         self.saveto=Path(saveto)</span>
+<span class="c1">#         assert self.saveto.is_dir, f&#39;Output folder {self.saveto} is not a folder.&#39;</span>
+<span class="c1">#         os.makedirs(saveto, exist_ok=True)</span>
+<span class="c1">#         self.ft2_files = sorted(folder.glob(self.ft1_pattern))</span>
+<span class="c1">#         self.ft1_files = sorted(folder.glob(self.ft2_pattern))</span>
+<span class="c1">#         print(f&#39;MonthlyData initialized with {len(self.ft1_files)} monthly FT1&#39;\</span>
+<span class="c1">#               f&#39; and {len(self.ft2_files)} yearly FT2 files &#39;\</span>
+<span class="c1">#              f&#39;\n Saving to {saveto}&#39;)</span>
 
-<div class="output_wrapper">
-<div class="output">
+<span class="c1">#     def process(self, month):</span>
+<span class="c1">#         &quot;&quot;&quot;</span>
+<span class="c1">#         month: month index (1..12)</span>
+<span class="c1">#         &quot;&quot;&quot;</span>
+<span class="c1">#         m = month-1</span>
+<span class="c1">#         y = (m+7)//12 # wired-in: data started in August 2008</span>
+<span class="c1">#         f1, f2 = self.ft1_files[m], self.ft2_files[y]</span>
+<span class="c1">#         assert f1.is_file(), f&#39;FT1 file {f1} not found&#39;</span>
+<span class="c1">#         assert f2.is_file(), f&#39;FT2 files {f2} not found&#39;</span>
+<span class="c1">#         tstart, p_df, gti_times = get_ft1_data(config, f1) </span>
+<span class="c1">#         ft2_df = get_ft2_info(config, f2, gti=GTI(gti_times))</span>
+<span class="c1">#         d = dict(tstart = tstart,</span>
+<span class="c1">#             photons = p_df,</span>
+<span class="c1">#             sc_data = ft2_df,</span>
+<span class="c1">#             gti_times = gti_times)</span>
+        
+<span class="c1">#         filename = self.saveto/f&#39;month_{month:04d}.pkl&#39;</span>
+<span class="c1">#         pickle.dump(d, open(filename, &#39;wb&#39;))</span>
+<span class="c1">#         if self.config.verbose&gt;0:</span>
+<span class="c1">#             print(f&#39;Saved to {filename.name}&#39;)</span>
+<span class="c1">#         return d</span>
+</pre></div>
 
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h2 id="MonthlyData" class="doc_header"><code>class</code> <code>MonthlyData</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L288" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>MonthlyData</code>(<strong><code>config</code></strong>, <strong><code>saveto</code></strong>)</p>
-</blockquote>
-
-</div>
-
-</div>
-
+    </div>
 </div>
 </div>
 
 </div>
     {% endraw %}
 
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Develop-montly">Develop montly<a class="anchor-link" href="#Develop-montly"> </a></h2>
-</div>
-</div>
-</div>
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
@@ -328,63 +390,6 @@ contents</p>
 <span class="c1"># list(map( year_sel, range(12)))</span>
 
 <span class="c1"># ft2[0].header[&#39;TSTART&#39;]</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Load-weekly">Load weekly<a class="anchor-link" href="#Load-weekly"> </a></h3>
-</div>
-</div>
-</div>
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># config = Config(verbose=2)</span>
-<span class="c1"># wkfolder = &#39;/home/burnett/weekly&#39;</span>
-
-<span class="c1"># for wk in [669]: #range(532, 668): #59,100):</span>
-<span class="c1">#     wd = WeeklyData(config, wk, wkfolder)</span>
-<span class="c1">#     wd.save()</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="check-the-weekly-files">check the weekly files<a class="anchor-link" href="#check-the-weekly-files"> </a></h2>
-</div>
-</div>
-</div>
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># weekly_folder = Path(wkfolder)</span>
-<span class="c1"># ff = sorted(list(weekly_folder.glob(&#39;*.pkl&#39;)))</span>
-<span class="c1"># wk = list(map(lambda f: int(os.path.splitext(f)[0][-3:]), ff))</span>
-<span class="c1"># lastweek = pickle.load(open(ff[-1],&#39;rb&#39;))</span>
-
-<span class="c1"># print(f&#39;Weekly folder &quot;{weekly_folder}&quot; contains {len(wk)} weeks, from {wk[0]} to {wk[-1]}&#39;)</span>
-<span class="c1"># print(f&#39;Most recent data to UTC {UTC(MJD(lastweek[&quot;tstart&quot;])+7)}&#39;)</span>
 </pre></div>
 
     </div>
@@ -432,28 +437,11 @@ Converted 09_lightcurve.ipynb.
 Converted 10_simulation.ipynb.
 Converted 14_bayesian.ipynb.
 Converted index.ipynb.
-Mon Apr 19 04:58:27 PDT 2021
+Thu Apr 22 06:55:47 PDT 2021
 </pre>
 </div>
 </div>
 
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">searchsorted</span>
-</pre></div>
-
-    </div>
 </div>
 </div>
 
