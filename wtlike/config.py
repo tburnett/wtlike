@@ -111,7 +111,7 @@ class Cache(dict):
         One-line usage interface for cache use
 
         - `key` -- key to use, usually a string. Must be hashable <br>
-            If none, ignore cache and return the function evaluation
+            If None, ignore cache and return the function evaluation
         - `func` -- user function that will return an object that can be pickled
         - `pars`, `kwargs` -- pass to `func`
         - `description` -- optional string that will be printed
@@ -135,7 +135,8 @@ class Cache(dict):
 
         ret = self.get(key)
         if description:
-            print(f'{description}: {"Saving to" if key not in self or overwrite else "Restoring from"} cache with key "{key}"')
+            print(f'{description}: {"Saving to" if key not in self or overwrite else "Restoring from"} cache', end='')
+            print('' if key == description else f' with key "{key}"')
 
         if ret is None or overwrite:
             ret = func(*pars, **kwargs)

@@ -19,7 +19,7 @@ class LightCurve(object):
        - min_exp : minimum fractional exposure allowed
        - rep_name : represention to use
 
-    Generates a DataTable with columns n, ep, fit
+    Generates a DataFrame with columns n, ep, fit
 
     """
 
@@ -39,6 +39,7 @@ class LightCurve(object):
         """
 
         self.source_name = source.name
+        self.config=config
 
         # select the set of cells
 
@@ -77,6 +78,9 @@ class LightCurve(object):
         """return the DataFrame
         """
         return self.ll_fits
+
+    def plot(self, **kwargs):
+        flux_plot(self.config, self, **kwargs)
 
 # Cell
 def fit_cells(config,
@@ -150,7 +154,7 @@ def flux_plot(config, lightcurve, ts_min=9,
               tzero:'time offset'=0,
               colors=('cornflowerblue','sandybrown', 'blue'), fmt=' ',
               **kwargs):
-    """Make a plot of flux vs. MJD
+    """Make a plot of flux vs. time
 
     - lightcurve -- LightCurve object or a lightcurve DataFrame
     - ts_min -- threshold for ploting signal
@@ -161,10 +165,22 @@ def flux_plot(config, lightcurve, ts_min=9,
 
     returns the Figure instance
     """
+    import matplotlib.ticker as ticker
+
+    fig, ax = plt.subplots(figsize=figsize, num=fignum) if ax is None else (ax.figure, ax)
     kw=dict(yscale='linear',
             xlabel='MJD'+ f' - {tzero}' if tzero else '' ,
-            ylabel='relative flux')
+            ylabel='Relative flux')
     kw.update(**kwargs)
+    ax.set(**kw)
+    ax.set_title(title) # or f'{source_name}, rep {self.rep}')
+    ax.grid(alpha=0.5)
+    if kw['yscale']=='log':
+        ax.yaxis.set_major_formatter(ticker.FuncFormatter(
+            lambda val,pos: { 1.0:'1', 10.0:'10', 100.:'100'}.get(val,'')))
+
+
+
     df = lightcurve if isinstance(lightcurve, pd.DataFrame) else lightcurve.dataframe
     rep = config.likelihood_rep
     if rep =='poisson':
@@ -176,38 +192,11 @@ def flux_plot(config, lightcurve, ts_min=9,
                         [df.fit.apply(lambda f: f.flux).values,
                          df.fit.apply(lambda f: f.limit).values],
                        )
-
     else:
         bar=df; lim=[]
 
-    fig, ax = plt.subplots(figsize=figsize, num=fignum) if ax is None else (ax.figure, ax)\
-        if ax is not None else (ax.figure,ax)
 
-    # the points with error bars
-    t = bar.t.values-tzero
-    tw = bar.tw.values
-    fluxmeas = allflux[~limit]
-    upper = bar.fit.apply(lambda f: f.errors[1]).values
-    lower = bar.fit.apply(lambda f: f.errors[0]).values
-    error = np.array([upper-fluxmeas, fluxmeas-lower])
-
-#     if rep=='poisson':
-#         dy = [bar.errors.apply(lambda x: x[i]).clip(0,4) for i in range(2)]
-#     elif rep==='gauss' or rep=='gauss2d':
-#         dy = bar.sig_flux.clip(0,4)
-#     else: assert False, f'Unrecognized likelihood rep: {rep}'
-
-    ax.errorbar(x=t, xerr=tw/2, y=fluxmeas, yerr=error, fmt=fmt, color=colors[0], )#'silver')
-
-    if step:
-        t = df.t.values-tzero
-        xerr = df.tw.values/2;
-        x = np.append(t-xerr, [t[-1]+xerr[-1]]);
-        y = np.append(allflux, [allflux[-1]])
-        ax.step(x, y, color=colors[2], where='post', lw=2)
-
-
-    # now do the limits (only for poisson rep)
+    # do the limits first (only for poisson rep)
     error_size=2
     if len(lim)>0:
         t = lim.t-tzero
@@ -217,11 +206,24 @@ def flux_plot(config, lightcurve, ts_min=9,
         yerr=0.2*(1 if kw['yscale']=='linear' else y)
         ax.errorbar(x=t, y=y, xerr=tw/2,
                 yerr=yerr,  color=colors[2 if step else 1] ,
-                uplims=True, ls='', lw=error_size, capsize=3*error_size, capthick=0,
+                uplims=True, ls='', lw=error_size, capsize=2*error_size, capthick=0,
                )
 
-    #ax.axhline(1., color='grey')
-    ax.set(**kw)
-    ax.set_title(title) # or f'{source_name}, rep {self.rep}')
-    ax.grid(alpha=0.5)
+    # then the points with error bars
+    t = bar.t.values-tzero
+    tw = bar.tw.values
+    fluxmeas = allflux[~limit]
+    upper = bar.fit.apply(lambda f: f.errors[1]).values
+    lower = bar.fit.apply(lambda f: f.errors[0]).values
+    error = np.array([upper-fluxmeas, fluxmeas-lower])
+    ax.errorbar(x=t, xerr=tw/2, y=fluxmeas, yerr=error, lw=2, fmt=fmt, color=colors[0], )#'silver')
+
+    # finally ovelay the step if requested
+    if step:
+        t = df.t.values-tzero
+        xerr = df.tw.values/2;
+        x = np.append(t-xerr, [t[-1]+xerr[-1]]);
+        y = np.append(allflux, [allflux[-1]])
+        ax.step(x, y, color=colors[2], where='post', lw=2)
+
     return fig

@@ -7,6 +7,7 @@ __all__ = ['CountFitness', 'LikelihoodFitness', 'doc_countfitness', 'get_bb_part
 import os
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 from astropy.stats.bayesian_blocks import FitnessFunc
 
 from .config import *
@@ -184,12 +185,14 @@ def get_bb_partition(config, lc, fitness_class=LikelihoodFitness, p0=0.05, key=N
 
     """Perform Bayesian Block partition of the cells found in a light curve
 
-    - lc : input light curve
+    - lc : input LightCurve object or DataFrame with fit cells
     - fitness_class
 
     return edges for partition
     """
     assert issubclass(fitness_class,CountFitness), 'fitness_class wrong'
+    if isinstance(lc, LightCurve):
+        lc = lc.dataframe
     assert 'fit' in lc.columns, 'Expect the dataframe ho have the Poisson representation'
 
 
@@ -210,6 +213,7 @@ def get_bb_partition(config, lc, fitness_class=LikelihoodFitness, p0=0.05, key=N
 def bb_overplot(config, lc, bb_fit, ax=None, **kwargs):
     """Plot light curve: cell fits with BB overplot
     """
+    import matplotlib.pyplot as plt
     colors = kwargs.pop('colors', ('lightblue', 'wheat', 'blue'))
     fig, ax = plt.subplots(1,1, figsize=(12,4)) if not ax else (ax.figure, ax)
     flux_plot(config, lc, ax=ax, colors=colors,**kwargs)
@@ -232,9 +236,9 @@ class BayesianBlockAnalysis(CellData):
         self.lc = LightCurve(config, self.cells, source)
         self.lc_df = self.lc.dataframe
 
-    def partition(self, clear=False):
+    def partition(self,key=None, clear=False):
 
-        key = self.source.data_key.replace('data', 'bb_edges')
+        key = self.source.data_key.replace('data', 'bb_edges') if key is None else key
         self.source.edges_key = key
         bb_edges  = get_bb_partition(self.config, self.lc_df,  key=key, clear=clear)
 
@@ -251,4 +255,5 @@ class BayesianBlockAnalysis(CellData):
         """Concatentate all the cells, return a LogLike object"""
         return LogLike(self.concatenate())
 
+# alias
 BBA = BayesianBlockAnalysis

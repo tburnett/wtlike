@@ -6,7 +6,7 @@ __all__ = ['generate_cell', 'simulate_cells']
 import os
 import numpy as np
 import pandas as pd
-import scipy
+from scipy import stats
 
 from .config import *
 from .loglike import *
@@ -17,7 +17,7 @@ from .weights import get_weight_hist
 
 # Cell
 import numbers
-from scipy.stats import uniform
+
 class _Sampler():
     """ Sample an arbitrary function or histogram
 
@@ -68,7 +68,7 @@ class _Sampler():
         """
         if self.deltafun: return np.full(size, self.deltafun)
 
-        return self._evaluate(uniform.rvs(size=size))
+        return self._evaluate(stats.uniform.rvs(size=size))
 
 # Cell
 class _WeightGenerator(_Sampler):
@@ -101,7 +101,7 @@ def generate_cell(wfun, mu, alpha=0, beta=0):
     - `w` -- array of weights
     - `S, B` -- expected values for $\sum w$ and $\sum(1-w)$, calulated from wfun
     """
-    from scipy import stats
+
 
     wgen_nominal = _WeightGenerator(wfun)
     wgen_cell =wgen_nominal if alpha==0 and beta==0 else _WeightGenerator(wfun, alpha, beta)
@@ -125,18 +125,18 @@ def generate_cell(wfun, mu, alpha=0, beta=0):
     )
 
 # Cell
-def simulate_cells(config, source, wdist=None, source_flux=lambda t: 100):
+def simulate_cells(source_data, wdist=None, source_flux=lambda t: 100):
     """
 
-    - `source` -- a PointSource object, use to get exposure at its position and weight distribution
+    - `source_data` -- a SourceData object, use to get exposure at its position and weight distribution
     - `wdist`   -- a weight function or histogram; if None, get the source distribution
     - `source_flux` -- function of MJD time for the counts/day; default 100/day
 
     """
-    fexp, bins = get_binned_exposure(config, source)
+    fexp, bins = source_data.binned_exposure()
 
     cells=[]
-    wdist = wdist or get_weight_hist(config, source)
+    wdist = wdist or source_data.weight_histogram()
     for i, e in enumerate(fexp):
         a,b = bins[i:i+2]
         t, tw = (a+b)/2, b-a

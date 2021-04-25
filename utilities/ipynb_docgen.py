@@ -17,7 +17,7 @@ nbdev(userdoc,)
 import sys, os, shutil, string, pprint, datetime
 import nbdev
 
-__all__ = ['nbdoc', 'image', 'figure', 'monospace', 'capture_print', 'shell'] #,'show_doc']
+__all__ = ['nbdoc', 'image', 'figure', 'monospace', 'capture_print', 'shell', 'create_file'] #,'show_doc']
 
 def doc_formatter(
         text:'text string to process',
@@ -92,7 +92,7 @@ def image(filename,
             self.width = width
             self.height = height
             self.caption = caption
-            self.fullfilename = fullfilename
+            self.fullfilename = fullfilename #????
 
             if error: 
                 self._html = f'<b>{error}</b><br>'
@@ -386,6 +386,30 @@ def capture_print(summary=None, **kwargs):
             return monospace(self._new.getvalue(), summary=summary, **kwargs)
 
     return Capture_print()
+
+def create_file(func, filename, folder='images'):
+    """
+    Run func to save filename in images and ../docs/images or docs/images
+    return markdown link
+
+    """
+    import shutil
+    from pathlib import Path
+    assert Path('images').is_dir(), 'expect folder {folder} to exist'
+    ifilename = Path('images')/filename
+    
+    try:
+        func(ifilename)
+    except Exception as msg:
+        print(f'Failed to run {func} on {filename}: {msg}')
+        raise
+            
+                
+    assert os.path.isfile(ifilename), f'File {filename} was not created in images .'
+    for p in (Path('../docs'), Path('docs')):
+        if p.is_dir():
+            shutil.copyfile(ifilename, p/ifilename)
+    return f'[{filename}]({ifilename})'    
 
 # convenient interface to show_doc, with disp set to false
 def show_doc(elt, **kwargs):

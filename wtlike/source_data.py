@@ -11,6 +11,7 @@ import pickle
 from pathlib import Path
 
 from .config import *
+from .data_man import *
 from .effective_area import *
 from .weights import *
 
@@ -77,7 +78,8 @@ def _calculate_exposure_for_source(config, source, week):
         dict(
             start=df.start[mask],
             stop=df.stop[mask],
-            exp=_exposure(config, livetime, pcosines[mask])
+            exp=_exposure(config, livetime, pcosines[mask]),
+            cos_theta=pcosines[mask],
         ))
 
 
@@ -290,6 +292,27 @@ class SourceData(object):
         if config.verbose>1:
             print(f'Relative exposure per bin:\n{pd.Series(bexp).describe(percentiles=[])}')
         return bexp, time_bins
+
+    def binned_cos_theta(self, time_bins=None):
+        """ Calculate average cosine of angle with respect to bore axis, per time bin
+        """
+        if time_bins is None:
+            time_bins = get_default_bins(self.config, self.e_df)
+        df = self.e_df.copy()
+        estop =df.stop.values
+        df.loc[:,'tbin'] =np.digitize(estop, time_bins)
+        ct = df.groupby('tbin').mean()['cos_theta']
+        return ct, time_bins
+
+    def weight_histogram(self, nbins=50, key=None):
+        """ return a weight distribution
+        """
+        def doit(nbins):
+            return np.histogram(self.p_df.weight.values, np.linspace(0,1,nbins+1))[0]
+
+        key = f'{self.source.name}_weight_hist' if key=='' else key
+        description = f'Weight histogram for {self.source.name}' if self.config.verbose else ''
+        return self.config.cache(key, doit, nbins, description=description)
 
     def plot(self):
         import matplotlib.pyplot as plt
