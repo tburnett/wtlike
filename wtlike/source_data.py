@@ -304,14 +304,14 @@ class SourceData(object):
         ct = df.groupby('tbin').mean()['cos_theta']
         return ct, time_bins
 
-    def weight_histogram(self, nbins=50, key=None):
+    def weight_histogram(self, nbins=1000, key=''):
         """ return a weight distribution
         """
         def doit(nbins):
             return np.histogram(self.p_df.weight.values, np.linspace(0,1,nbins+1))[0]
 
         key = f'{self.source.name}_weight_hist' if key=='' else key
-        description = f'Weight histogram for {self.source.name}' if self.config.verbose else ''
+        description = f'Weight histogram for {self.source.name}' if self.config.verbose>0 else ''
         return self.config.cache(key, doit, nbins, description=description)
 
     def plot(self):

@@ -19,14 +19,8 @@ entries:
       title: Effective Area
       url: /effective_area
     - output: web,pdf
-      title: GTI, or Good Time Interval
-      url: /gti
-    - output: web,pdf
       title: Source Data management
       url: /source_data
-    - output: web,pdf
-      title: Exposure
-      url: /exposure
     - output: web,pdf
       title: Photon Data
       url: /photon_data
@@ -39,9 +33,6 @@ entries:
     - output: web,pdf
       title: Manage cell data
       url: /cell_data
-    - output: web,pdf
-      title: Cells
-      url: /cells
     - output: web,pdf
       title: Log Likelihood tools
       url: /loglike
