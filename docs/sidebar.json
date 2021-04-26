@@ -2,8 +2,8 @@
   "wtlike": {
     "Overview": "/",
     "Configuration data and basic functions": "/config",
-    "Data management": "/data_man",
     "Effective Area": "/effective_area",
+    "Data management": "/data_man",
     "Source Data management": "/source_data",
     "Photon Data": "/photon_data",
     "Weights": "/weights",
