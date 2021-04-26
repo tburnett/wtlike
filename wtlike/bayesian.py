@@ -191,9 +191,9 @@ def get_bb_partition(config, lc, fitness_class=LikelihoodFitness, p0=0.05, key=N
     return edges for partition
     """
     assert issubclass(fitness_class,CountFitness), 'fitness_class wrong'
-    if isinstance(lc, LightCurve):
+    if not isinstance(lc, pd.DataFrame):
         lc = lc.dataframe
-    assert 'fit' in lc.columns, 'Expect the dataframe ho have the Poisson representation'
+    assert 'fit' in lc.columns, 'Expect the dataframe to have the Poisson fit object'
 
 
     def doit():
