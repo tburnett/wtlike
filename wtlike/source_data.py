@@ -250,6 +250,10 @@ class SourceData(object):
                                     _load_from_weekly_data, config, source,
                                     overwrite=clear,
                                     description=f'photons and exposure for {source.name}')
+        if config.verbose>0:
+            print(SourceData.__repr__(self))
+
+
     def __repr__(self):
         time = self.p_df.time.values
         r = f'{self.__class__.__name__}: Source {self.source.name} with:'\

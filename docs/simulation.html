@@ -34,8 +34,8 @@ nb_path: "nbs/10_simulation.ipynb"
 <p>To account for different levels of signal or background than that represented by the full dataset, the <code>_WeightGenerator</code> class accepts <code>alpha</code>($\alpha$) and <code>beta</code> ($\beta$) parameters, which will be used to weight the weight distribution  by a factor</p>
 $$ \big(1 + \alpha\ w + \beta \ (1-w)\ \big), $$<p>where $w$ represents an array of weight values.</p>
 <p>Generating a cell requires also the expected number of photons. If the average flux and exposure predict a number of events $\mu$, we select the actual number from the Poisson distribution.</p>
-<p>This is done by <a href="wtlike/simulation#generate_cell"><code>generate_cell</code></a>, which creates a list of weights depending on $\alpha$, $\beta$, and $\mu$.</p>
-<p>Finally, <a href="wtlike/simulation#simulate_cells"><code>simulate_cells</code></a> makes a list of cells, based on the actual exposure of a source.</p>
+<p>This is done by <a href="/wtlikesimulation#generate_cell"><code>generate_cell</code></a>, which creates a list of weights depending on $\alpha$, $\beta$, and $\mu$.</p>
+<p>Finally, <a href="/wtlikesimulation#simulate_cells"><code>simulate_cells</code></a> makes a list of cells, based on the actual exposure of a source.</p>
 
 </div>
 </div>
@@ -391,7 +391,7 @@ dtype: float64
 <h2 id="simulate_cells" class="doc_header"><code>simulate_cells</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/simulation.py#L126" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>simulate_cells</code>(<strong><code>source_data</code></strong>, <strong><code>wdist</code></strong>=<em><code>None</code></em>, <strong><code>source_flux</code></strong>=<em><code>'&lt;lambda&gt;'</code></em>)</p>
 </blockquote>
 <ul>
-<li><a href="wtlike/source_data"><code>source_data</code></a> -- a SourceData object, use to get exposure at its position and weight distribution</li>
+<li><a href="/wtlikesource_data"><code>source_data</code></a> -- a SourceData object, use to get exposure at its position and weight distribution</li>
 <li><code>wdist</code>   -- a weight function or histogram; if None, get the source distribution</li>
 <li><code>source_flux</code> -- function of MJD time for the counts/day; default 100/day</li>
 </ul>

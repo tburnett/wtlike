@@ -251,9 +251,6 @@ class BayesianBlockAnalysis(CellData):
         bb_overplot(self.config, self.lc_df, self.bb_fit, ax=ax, **kwargs)
         return fig
 
-    def all_data_likelihood(self, query='' ):
-        """Concatentate all the cells, return a LogLike object"""
-        return LogLike(self.concatenate())
 
 # alias
 BBA = BayesianBlockAnalysis

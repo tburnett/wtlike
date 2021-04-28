@@ -178,10 +178,14 @@ class LogLike(object):
             raise Exception(msg)
         return np.array(ret)
 
-    def plot(self, fix_beta=True, xlim=(0,1.2),ax=None, title=None):
+    def plot(self, fix_beta=True, ax=None, **kwargs):
+        """ Make a plot of the likelihood, with fit"""
         fig, ax = plt.subplots(figsize=(4,2)) if ax is None else (ax.figure, ax)
+        kw = dict(xlim=(0.5,1.5), ylim=(-2,0.1), ylabel='log likelihood', xlabel='flux')
+        kw.update(**kwargs)
+        ax.set(**kw)
 
-        dom = np.linspace(*xlim)
+        dom = np.linspace(*kw['xlim'])
         if fix_beta:
             f = lambda x: self([x])
             beta=0
@@ -197,8 +201,8 @@ class LogLike(object):
             for x in (a-s,a+s):
                 ax.plot([x,x], [f(x)-0.1, f(x)+0.1], '-k',lw=2)
             ax.plot(a, f(a)-0.5, '-ok', ms=10)
-            ax.set(title=title, xlim=xlim, ylim=(f(a)-4, f(a)+0.2),
-               ylabel='log likelihood', xlabel='flux')
+# #             ax.set(title=title, xlim=xlim, ylim=(f(a)-4, f(a)+0.2),
+#                ylabel='log likelihood', xlabel='flux')
         except Exception as msg :
             print(msg)
             ax.set(title=' **failed fit**')

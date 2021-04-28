@@ -8,6 +8,7 @@ import numpy as np
 import pandas as pd
 from .config import *
 from .source_data import *
+from .loglike import LogLike
 
 # Cell
 class CellData(SourceData):
@@ -117,6 +118,19 @@ class CellData(SourceData):
             newcell[col] = cells[col].sum()
         newcell['w'] = np.concatenate(list(cells.w.values))
         return newcell
+
+
+    def all_data_likelihood(self ):
+        """Concatentate all the cells, return a LogLike object"""
+        return LogLike(self.concatenate())
+
+    def plot_concatenated(self, fignum=1, **kwargs):
+        """Likelihood function, with fit for concatenated data"""
+        import matplotlib.pyplot as plt
+        lka = self.all_data_likelihood()
+        fig,ax = plt.subplots(figsize=(4,2), num=fignum)
+        lka.plot(ax=ax, **kwargs)
+        return fig
 
 # Cell
 def concatenate_cells( cells):

@@ -32,16 +32,16 @@ nb_path: "nbs/14_bayesian.ipynb"
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>The functions implemented here are:</p>
 <ul>
-<li><p><a href="wtlike/bayesian#get_bb_partition"><code>get_bb_partition</code></a> to perform a BB partition. It requires a "fitness" function to perform an evaluation of the 
+<li><p><a href="/wtlikebayesian#get_bb_partition"><code>get_bb_partition</code></a> to perform a BB partition. It requires a "fitness" function to perform an evaluation of the 
 likelihoods for a set of sequential cells. There are two such, using the number of counts, and the Kerr likelihood. See the <a href="https://arxiv.org/pdf/1207.5578.pdf">Bayesian Block reference</a>.</p>
 <ul>
-<li><a href="wtlike/bayesian#CountFitness"><code>CountFitness</code></a></li>
-<li><a href="wtlike/bayesian#LikelihoodFitness"><code>LikelihoodFitness</code></a>, the default</li>
+<li><a href="/wtlikebayesian#CountFitness"><code>CountFitness</code></a></li>
+<li><a href="/wtlikebayesian#LikelihoodFitness"><code>LikelihoodFitness</code></a>, the default</li>
 </ul>
 </li>
 </ul>
 <ul>
-<li><a href="wtlike/bayesian#bb_overplot"><code>bb_overplot</code></a> which overplots fits to the partitioned blocks on the original light curve.</li>
+<li><a href="/wtlikebayesian#bb_overplot"><code>bb_overplot</code></a> which overplots fits to the partitioned blocks on the original light curve.</li>
 </ul>
 
 </div>
@@ -99,7 +99,7 @@ Considerably modified to give the <code>fitness function</code> access to the ce
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="LikelihoodFitness" class="doc_header"><code>class</code> <code>LikelihoodFitness</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/bayesian.py#L124" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>LikelihoodFitness</code>(<strong><code>lc</code></strong>, <strong><code>p0</code></strong>=<em><code>0.05</code></em>, <strong><code>npt</code></strong>=<em><code>50</code></em>) :: <a href="wtlike/bayesian#CountFitness"><code>CountFitness</code></a></p>
+<h2 id="LikelihoodFitness" class="doc_header"><code>class</code> <code>LikelihoodFitness</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/bayesian.py#L124" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>LikelihoodFitness</code>(<strong><code>lc</code></strong>, <strong><code>p0</code></strong>=<em><code>0.05</code></em>, <strong><code>npt</code></strong>=<em><code>50</code></em>) :: <a href="/wtlikebayesian#CountFitness"><code>CountFitness</code></a></p>
 </blockquote>
 <p>Fitness function that uses the full likelihood</p>
 
@@ -474,10 +474,10 @@ Considerably modified to give the <code>fitness function</code> access to the ce
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="BayesianBlockAnalysis" class="doc_header"><code>class</code> <code>BayesianBlockAnalysis</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/bayesian.py#L223" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>BayesianBlockAnalysis</code>(<strong><code>config</code></strong>, <strong><code>source</code></strong>, <strong><code>exp_min</code></strong>=<em><code>0.3</code></em>, <strong><code>bins</code></strong>=<em><code>None</code></em>, <strong><code>clear</code></strong>=<em><code>False</code></em>) :: <a href="wtlike/cell_data#CellData"><code>CellData</code></a></p>
+<h2 id="BayesianBlockAnalysis" class="doc_header"><code>class</code> <code>BayesianBlockAnalysis</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/bayesian.py#L223" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>BayesianBlockAnalysis</code>(<strong><code>config</code></strong>, <strong><code>source</code></strong>, <strong><code>exp_min</code></strong>=<em><code>0.3</code></em>, <strong><code>bins</code></strong>=<em><code>None</code></em>, <strong><code>clear</code></strong>=<em><code>False</code></em>) :: <a href="/wtlikecell_data#CellData"><code>CellData</code></a></p>
 </blockquote>
 <p>Full analysis of a source, including Bayesian block analysis
-Inherits from <a href="wtlike/cell_data#CellData"><code>CellData</code></a></p>
+Inherits from <a href="/wtlikecell_data#CellData"><code>CellData</code></a></p>
 <ul>
 <li>source</li>
 <li>exp_min</li>
