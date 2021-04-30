@@ -35,7 +35,7 @@ nb_path: "nbs/index.ipynb"
 <li><a href="https://github.com/tburnett/wtlike">repository</a></li>
 </ul>
 <h2 id="Context">Context<a class="anchor-link" href="#Context"> </a></h2><p>This package has code that was adapted to the <a href="https://nbdev.fast.ai/">nbdev</a> code/tests/documentation environment from the <a href="https://github.com/tburnett/lat-timing">github package lat-timing</a> to manage light curves of Fermi-LAT sources.<br>
-It is based on a <a href="https://arxiv.org/pdf/1910.00140.pdf">paper</a> by Matthew Kerr, which derives the <a href="/loglike.html#The-Kerr-likelihood-formula">weighted likelihood formalism</a> used here, specifically with
+It is based on a <a href="https://arxiv.org/pdf/1910.00140.pdf">paper</a> by Matthew Kerr, which derives the <a href="https://tburnett.github.io/wtlike/loglike#The-Kerr-likelihood-formula">weighted likelihood formalism</a> used here, specifically with
 the <a href="https://arxiv.org/pdf/1207.5578.pdf">Bayesian Block</a> to detect and characterize variability of a gamma-ray source.</p>
 <p>Also, I've ported some code from  my <a href="https://github.com/tburnett/jupydoc">jupydoc</a> documentation package supporting enhanced documentation combining Markdown and code, such that the 
 Markdown reflects execution of the code.</p>
@@ -52,19 +52,13 @@ Markdown reflects execution of the code.</p>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Module-summary">Module summary<a class="anchor-link" href="#Module-summary"> </a></h2><h3 id="Primary-ingredients:">Primary ingredients:<a class="anchor-link" href="#Primary-ingredients:"> </a></h3><ul>
-<li><p><strong>Photon data</strong>: time, energy, and position. This is managed as a <a href="https://parquet.apache.org/">Parquet</a> database, derived from the public <em>Fermi</em>-LAT data. Modules are <a href="/wtlikephoton_data"><code>photon_data</code></a> and <a href="/wtlikedata_man"><code>data_man</code></a>.</p>
-</li>
-<li><p><strong>Exposure</strong>: Need to normalize expected rates as a function of time, position, and energy. Modules: <a href="/wtlikeexposure"><code>exposure</code></a>, <a href="/wtlikeeffective_area"><code>effective_area</code></a>, and <code>gti</code>.</p>
-</li>
-<li><p><strong>Weights</strong>: for each photon, this is the probability that it was from a specific source. This requires an analysis of all the souces in the region about the source, involving <code>gtlike</code> or <code>pointlike</code>. Module <a href="/wtlikeweights"><code>weights</code></a> finds the data for a the source, and adds it to the photon list.</p>
-</li>
-</ul>
-<h3 id="The-light-curve">The light-curve<a class="anchor-link" href="#The-light-curve"> </a></h3><p>The module <code>cells</code> creates a list of "cells", time intervals with a list of the photon weights, and an estimation from the exposure about the expected distribution. 
-Each cell is fit using the modules <a href="/wtlikeloglike"><code>loglike</code></a> and <a href="/wtlikepoisson"><code>poisson</code></a>.
-Finally, <a href="/wtlikelightcurve"><code>lightcurve</code></a> makes a list of the fits.</p>
-<h3 id="Simulation">Simulation<a class="anchor-link" href="#Simulation"> </a></h3><p>A light curve can be also generated with a simulation, see <a href="/wtlikesimulation"><code>simulation</code></a>.</p>
-<h3 id="Bayesian-Blocks">Bayesian Blocks<a class="anchor-link" href="#Bayesian-Blocks"> </a></h3><p>The <a href="/wtlikebayesian"><code>bayesian</code></a> module creates a partition, and refits the blocks.</p>
+<h2 id="Module-summary">Module summary<a class="anchor-link" href="#Module-summary"> </a></h2><h3 id="Configuration-config">Configuration <a href="https://tburnett.github.io/wtlike/config">config</a><a class="anchor-link" href="#Configuration-config"> </a></h3><p>Implements basic configuration information, <a href="https://tburnett.github.io/wtlike/config#Config">Config</a>, a cache system <a href="https://tburnett.github.io/wtlike/config#Cache">Cache</a>, point source info <a href="https://tburnett.github.io/wtlike/config#PointSource">PointSoure</a>, and <a href="https://tburnett.github.io/wtlike/config#Time-conversion">time conversion</a></p>
+<h3 id="Photon-and-Spacecraft-Data--data_man">Photon and Spacecraft Data  <a href="https://tburnett.github.io/wtlike/data_man">data_man</a><a class="anchor-link" href="#Photon-and-Spacecraft-Data--data_man"> </a></h3><p>This module manages conversion of the weekly FT1 (photons) and FT2 (spacecraft) files, downloaded from  <a href="https://heasarc.gsfc.nasa.gov/FTP/fermi/data/lat/weekly">GSFC</a>, to a folder containing  pickled files, each with tables of photons, space craft data, and a list of GTI times derived from the FT1 file. The total size of this is 2.8 GB. A class <a href="https://tburnett.github.io/wtlike/data_man#WeeklyData">WeeklyData</a> exports the results.</p>
+<h3 id="Source-data--source_data">Source data  <a href="https://tburnett.github.io/wtlike/source_data">source_data</a><a class="anchor-link" href="#Source-data--source_data"> </a></h3><p>The module depends on a specific source. It extracts the photons within a disk, and calculates the exposure for this direction. It assumes that a weigtht analysis has been done for this source, which it uses to apply a weight to each photon. This is handled by the class <a href="https://tburnett.github.io/wtlike/source_data#SourceData">SourceData</a>.</p>
+<h3 id="Cell-data-cell_data">Cell data <a href="https://tburnett.github.io/wtlike/cell_data">cell_data</a><a class="anchor-link" href="#Cell-data-cell_data"> </a></h3><p>The next step is to define a set of time bins. This module, implementing the class <a href="https://tburnett.github.io/wtlike/cell_data#CellData">CellData(SourceData)</a>, creates a set of cells.</p>
+<h3 id="The-light-curve--light_curve">The light-curve  <a href="https://tburnett.github.io/wtlike/lightcurve">light_curve</a><a class="anchor-link" href="#The-light-curve--light_curve"> </a></h3><p>The the class <a href="https://tburnett.github.io/wtlike/lightcurve#LightCurve">LightCurve(CellData)</a> uses the set of cell defined by its super class, and evaluates the likelihood for each. This function is represented by a Poisson-like function for further analysis. It creates a table with this information for plotting a light curve.</p>
+<h3 id="Bayesian-Blocks-bayesian">Bayesian Blocks <a href="https://tburnett.github.io/wtlike/bayesian">bayesian</a><a class="anchor-link" href="#Bayesian-Blocks-bayesian"> </a></h3><p>THis module defines the class <a href="https://tburnett.github.io/wtlike/bayesian#BayesianBlockAnalysis">BayesianBlockAnalysis(LIghtCurve)</a> module creates a partition, and refits the blocks.</p>
+<h3 id="Simulation-simulation">Simulation <a href="https://tburnett.github.io/wtlike/simulation">simulation</a><a class="anchor-link" href="#Simulation-simulation"> </a></h3><p>A light curve can be also generated with a simulation.</p>
 
 </div>
 </div>

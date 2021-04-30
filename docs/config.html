@@ -88,7 +88,7 @@ nb_path: "nbs/00_config.ipynb"
 
 <div class="output_markdown rendered_html output_subarea ">
 <h5 id="config.Config----parameters">config.Config -- parameters<a class="anchor-link" href="#config.Config----parameters"> </a></h5><p>for now, but could be obtained from an editable yaml file.</p>
-<p><details  class="nbdoc-description" >  <summary> config parameter list </summary>  <div style="margin-left: 5%"><pre>Configuration parameters <br>  verbose         : 3<br>  data_folder     : None<br>  cachepath       : /tmp/cache<br>  mjd_range       : None<br>  radius          : 7<br>  cos_theta_max   : 0.4<br>  z_max           : 100<br>  time_interval   : 1<br>  use_uint8       : False<br>  nside           : 1024<br>  nest            : True<br>  bins_per_decade : 4<br>  base_spectrum   : lambda E: (E/1000)**-2.1<br>  energy_range    : (100.0, 1000000.0)<br>  likelihood_rep  : poisson<br></pre></div> </details></p>
+<p><details  class="nbdoc-description" >  <summary> config parameter list </summary>  <div style="margin-left: 5%"><pre>Configuration parameters <br>  verbose         : 1<br>  data_folder     : None<br>  cachepath       : /tmp/cache<br>  mjd_range       : None<br>  radius          : 4<br>  cos_theta_max   : 0.4<br>  z_max           : 100<br>  time_interval   : 1<br>  use_uint8       : False<br>  nside           : 1024<br>  nest            : True<br>  bins_per_decade : 4<br>  base_spectrum   : lambda E: (E/1000)**-2.1<br>  energy_range    : (100.0, 1000000.0)<br>  likelihood_rep  : poisson<br></pre></div> </details></p>
 <h5 id="config.Files----default-file-paths">config.Files -- default file paths<a class="anchor-link" href="#config.Files----default-file-paths"> </a></h5><p><details  class="nbdoc-description" >  <summary> file list </summary>  <div style="margin-left: 5%"><pre>File paths for light curves<br>  data       : /home/burnett/data<br>  ft2        : /home/burnett/work/lat-data/ft2<br>  gti        : /home/burnett/work/lat-data/binned<br>  aeff       : /home/burnett/work/lat-data/aeff<br>  weights    : /home/burnett/onedrive/fermi/weight_files<br></pre></div> </details></p>
 <p>These are dataclass classes, and can be initialized with
 parameters. For example, to suppress printout</p>
@@ -96,7 +96,7 @@ parameters. For example, to suppress printout</p>
 <pre><code>config = Config(verbose=0)</code></pre>
 <h5 id="config.cache----a-file-cache">config.cache -- a file cache<a class="anchor-link" href="#config.cache----a-file-cache"> </a></h5><p>The class <code>Cache</code>, available from <code>config.cache</code> implements a file cache in the folder
 <code>config.files.cachepath</code></p>
-<p><details  class="nbdoc-description" >  <summary> cache contents </summary>  <div style="margin-left: 5%"><pre>Cache contents<br> key                          size  time                 name, in folder /tmp/cache<br>  Geminga_data           124045442  2021-04-10 12:26     cache_file_4156b79a8e2ba1bc.pkl<br>  Geminga_weekly_data    124045442  2021-04-13 15:35     cache_file_1575ec07146c9e3.pkl<br>  Geminga_monthly_data   123320753  2021-04-14 05:28     cache_file_cb7faa2281b313b.pkl<br></pre></div> </details></p>
+<p><details  class="nbdoc-description" >  <summary> cache contents </summary>  <div style="margin-left: 5%"><pre>Cache contents<br> key                                    size  time                 name, in folder /tmp/cache<br>  PSR_B1259-63_weekly_data         135243601  2021-04-29 06:21     cache_file_7c410ee6d296af14.pkl<br>  PSR_B1259-63_weekly_bb_edges           412  2021-04-29 06:27     cache_file_6cfe612fe3afde0.pkl<br></pre></div> </details></p>
 
 </div>
 
@@ -258,10 +258,10 @@ Test: Saving to cache with key &#34;four&#34;
 Test: Restoring from cache with key &#34;four&#34;
 Before remove:
 Cache contents
- key                          size  time                 name, in folder /tmp/test_cache
-  one                           13  2021-04-14 08:41     cache_file_4b61d0e24272318.pkl
-  two                           13  2021-04-14 08:41     cache_file_27124095cc958e21.pkl
-  four                          18  2021-04-14 08:41     cache_file_b979530082121c.pkl
+ key                                    size  time                 name, in folder /tmp/test_cache
+  one                                     13  2021-04-29 08:18     cache_file_3a82a7a0042696d1.pkl
+  two                                     13  2021-04-29 08:18     cache_file_fec8a5a5b124593.pkl
+  four                                    18  2021-04-29 08:18     cache_file_afd5aebe8582a57.pkl
 
 </pre>
 </div>
@@ -375,7 +375,7 @@ Cache contents
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="Config" class="doc_header"><code>class</code> <code>Config</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L193" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Config</code>(<strong><code>verbose</code></strong>:<code>int</code>=<em><code>1</code></em>, <strong><code>files</code></strong>:<code>=*`None`*, **`data_folder`**:</code>=<em><code>None</code></em>, <strong><code>cachepath</code></strong>:<code>str</code>=<em><code>'/tmp/cache'</code></em>, <strong><code>mjd_range</code></strong>:<code>Tuple</code>=<em><code>None</code></em>, <strong><code>radius</code></strong>:<code>float</code>=<em><code>7</code></em>, <strong><code>cos_theta_max</code></strong>:<code>float</code>=<em><code>0.4</code></em>, <strong><code>z_max</code></strong>:<code>float</code>=<em><code>100</code></em>, <strong><code>time_interval</code></strong>:<code>int</code>=<em><code>1</code></em>, <strong><code>use_uint8</code></strong>:<code>bool</code>=<em><code>False</code></em>, <strong><code>nside</code></strong>:<code>int</code>=<em><code>1024</code></em>, <strong><code>nest</code></strong>:<code>bool</code>=<em><code>True</code></em>, <strong><code>bins_per_decade</code></strong>:<code>int</code>=<em><code>4</code></em>, <strong><code>base_spectrum</code></strong>:<code>str</code>=<em><code>'lambda E: (E/1000)**-2.1'</code></em>, <strong><code>energy_range</code></strong>:<code>Tuple</code>=<em><code>(100.0, 1000000.0)</code></em>, <strong><code>likelihood_rep</code></strong>:<code>str</code>=<em><code>'poisson'</code></em>)</p>
+<h2 id="Config" class="doc_header"><code>class</code> <code>Config</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L193" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Config</code>(<strong><code>verbose</code></strong>:<code>int</code>=<em><code>1</code></em>, <strong><code>files</code></strong>:<code>=*`None`*, **`data_folder`**:</code>=<em><code>None</code></em>, <strong><code>cachepath</code></strong>:<code>str</code>=<em><code>'/tmp/cache'</code></em>, <strong><code>mjd_range</code></strong>:<code>Tuple</code>=<em><code>None</code></em>, <strong><code>week_range</code></strong>:<code>Tuple</code>=<em><code>None</code></em>, <strong><code>radius</code></strong>:<code>float</code>=<em><code>4</code></em>, <strong><code>cos_theta_max</code></strong>:<code>float</code>=<em><code>0.4</code></em>, <strong><code>z_max</code></strong>:<code>float</code>=<em><code>100</code></em>, <strong><code>time_interval</code></strong>:<code>int</code>=<em><code>1</code></em>, <strong><code>use_uint8</code></strong>:<code>bool</code>=<em><code>False</code></em>, <strong><code>nside</code></strong>:<code>int</code>=<em><code>1024</code></em>, <strong><code>nest</code></strong>:<code>bool</code>=<em><code>True</code></em>, <strong><code>bins_per_decade</code></strong>:<code>int</code>=<em><code>4</code></em>, <strong><code>base_spectrum</code></strong>:<code>str</code>=<em><code>'lambda E: (E/1000)**-2.1'</code></em>, <strong><code>energy_range</code></strong>:<code>Tuple</code>=<em><code>(100.0, 1000000.0)</code></em>, <strong><code>likelihood_rep</code></strong>:<code>str</code>=<em><code>'poisson'</code></em>)</p>
 </blockquote>
 <p>Default light curve configuration parameters</p>
 
@@ -411,11 +411,11 @@ Cache contents
 
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>Configuration parameters 
-  verbose         : 3
+  verbose         : 1
   data_folder     : None
   cachepath       : /tmp/cache
   mjd_range       : None
-  radius          : 7
+  radius          : 4
   cos_theta_max   : 0.4
   z_max           : 100
   time_interval   : 1
@@ -433,10 +433,9 @@ Cache contents
   aeff       : /home/burnett/work/lat-data/aeff
   weights    : /home/burnett/onedrive/fermi/weight_files
  Cache contents
- key                          size  time                 name, in folder /tmp/cache
-  Geminga_data           124045442  2021-04-10 12:26     cache_file_4156b79a8e2ba1bc.pkl
-  Geminga_weekly_data    124045442  2021-04-13 15:35     cache_file_1575ec07146c9e3.pkl
-  Geminga_monthly_data   123320753  2021-04-14 05:28     cache_file_cb7faa2281b313b.pkl
+ key                                    size  time                 name, in folder /tmp/cache
+  PSR_B1259-63_weekly_data         135243601  2021-04-29 06:21     cache_file_7c410ee6d296af14.pkl
+  PSR_B1259-63_weekly_bb_edges           412  2021-04-29 06:27     cache_file_6cfe612fe3afde0.pkl
 
 </pre>
 </div>
@@ -477,7 +476,7 @@ Cache contents
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="MJD" class="doc_header"><code>MJD</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L259" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>MJD</code>(<strong><code>met</code></strong>)</p>
+<h4 id="MJD" class="doc_header"><code>MJD</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L260" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>MJD</code>(<strong><code>met</code></strong>)</p>
 </blockquote>
 <p>convert MET to MJD</p>
 
@@ -502,7 +501,7 @@ Cache contents
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="UTC" class="doc_header"><code>UTC</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L268" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>UTC</code>(<strong><code>mjd</code></strong>)</p>
+<h4 id="UTC" class="doc_header"><code>UTC</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L269" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>UTC</code>(<strong><code>mjd</code></strong>)</p>
 </blockquote>
 <p>convert MJD value to ISO date string</p>
 
@@ -551,7 +550,7 @@ Cache contents
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="PointSource" class="doc_header"><code>class</code> <code>PointSource</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L275" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>PointSource</code>(<strong><code>name</code></strong>, <strong><code>position</code></strong>=<em><code>None</code></em>)</p>
+<h2 id="PointSource" class="doc_header"><code>class</code> <code>PointSource</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L276" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>PointSource</code>(<strong><code>name</code></strong>, <strong><code>position</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <p>Manage the position and name of a point source</p>
 
@@ -576,7 +575,7 @@ Cache contents
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="PointSource.fk5" class="doc_header"><code>PointSource.fk5</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L308" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>PointSource.fk5</code>(<strong><code>name</code></strong>, <strong><code>position</code></strong>)</p>
+<h4 id="PointSource.fk5" class="doc_header"><code>PointSource.fk5</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L309" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>PointSource.fk5</code>(<strong><code>name</code></strong>, <strong><code>position</code></strong>)</p>
 </blockquote>
 <p>position: (ra,dec) tuple</p>
 

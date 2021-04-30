@@ -189,10 +189,16 @@ def _load_from_weekly_data(config, source):
     data_files = sorted(list(data_folder.glob('*.pkl')))
     iname = data_folder.name
 
-    if config.verbose>1:
+    if config.verbose>0:
         print(f"Assembling photon data and exposure for source {source.name} from"\
               f' folder "{data_folder}", with {len(data_files)} files,'\
               f' last={data_files[-1].name}')
+    if config.week_range is not None:
+        if config.verbose>0:
+            print(f'\tUsing weeks {config.week_range}')
+        t = config.week_range
+        data_files= data_files[t[0]:t[1]]
+
 
     verbose, config.verbose=config.verbose, 0
     # list of data framees

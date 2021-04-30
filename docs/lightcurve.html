@@ -74,7 +74,7 @@ nb_path: "nbs/09_lightcurve.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="LightCurve" class="doc_header"><code>class</code> <code>LightCurve</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/lightcurve.py#L14" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>LightCurve</code>(<strong><code>config</code></strong>, <strong><code>all_cells</code></strong>, <strong><code>source</code></strong>, <strong><code>min_exp</code></strong>:<code>minimum exposure factor</code>=<em><code>0.3</code></em>, <strong><code>rep_name</code></strong>:<code>likelihood rep name</code>=<em><code>''</code></em>)</p>
+<h2 id="LightCurve" class="doc_header"><code>class</code> <code>LightCurve</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/lightcurve.py#L14" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>LightCurve</code>(<strong><code>config</code></strong>, <strong><code>all_cells</code></strong>, <strong><code>source</code></strong>, <strong><code>min_exp</code></strong>:<code>minimum exposure factor</code>=<em><code>0.3</code></em>, <strong><code>min_n</code></strong>:<code>minimum number of photos</code>=<em><code>4</code></em>, <strong><code>rep_name</code></strong>:<code>likelihood rep name</code>=<em><code>''</code></em>)</p>
 </blockquote>
 <p>Apply likelihood fits to a set of cells</p>
 <p>parameters:</p>
@@ -113,7 +113,7 @@ nb_path: "nbs/09_lightcurve.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="fit_cells" class="doc_header"><code>fit_cells</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/lightcurve.py#L86" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>fit_cells</code>(<strong><code>config</code></strong>, <strong><code>input_cells</code></strong>, <strong><code>min_exp</code></strong>:<code>minimum exposure factor</code>=<em><code>0.3</code></em>, <strong><code>repcl</code></strong>=<em><code>'PoissonRep'</code></em>)</p>
+<h4 id="fit_cells" class="doc_header"><code>fit_cells</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/lightcurve.py#L87" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>fit_cells</code>(<strong><code>config</code></strong>, <strong><code>input_cells</code></strong>, <strong><code>min_exp</code></strong>:<code>minimum exposure factor</code>=<em><code>0.3</code></em>, <strong><code>repcl</code></strong>=<em><code>'PoissonRep'</code></em>)</p>
 </blockquote>
 <p>Apply fits to the likelihoods for a set of cells
 return light-curve dataframe</p>
@@ -146,7 +146,7 @@ return light-curve dataframe</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="getLightCurve" class="doc_header"><code>getLightCurve</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/lightcurve.py#L114" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>getLightCurve</code>(<strong><code>config</code></strong>, <strong><code>source</code></strong>, <strong><code>cell_query</code></strong>=<em><code>'e&gt;0.3'</code></em>, <strong><code>bin_edges</code></strong>=<em><code>None</code></em>, <strong><code>key</code></strong>=<em><code>''</code></em>)</p>
+<h4 id="getLightCurve" class="doc_header"><code>getLightCurve</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/lightcurve.py#L115" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>getLightCurve</code>(<strong><code>config</code></strong>, <strong><code>source</code></strong>, <strong><code>cell_query</code></strong>=<em><code>'e&gt;0.3'</code></em>, <strong><code>bin_edges</code></strong>=<em><code>None</code></em>, <strong><code>key</code></strong>=<em><code>''</code></em>)</p>
 </blockquote>
 <p>Returns a lightcurve table for the source</p>
 <ul>
@@ -184,7 +184,7 @@ return light-curve dataframe</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="fit_table" class="doc_header"><code>fit_table</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/lightcurve.py#L137" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>fit_table</code>(<strong><code>lc</code></strong>, <strong><code>expect</code></strong>=<em><code>1.0</code></em>)</p>
+<h4 id="fit_table" class="doc_header"><code>fit_table</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/lightcurve.py#L138" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>fit_table</code>(<strong><code>lc</code></strong>, <strong><code>expect</code></strong>=<em><code>1.0</code></em>)</p>
 </blockquote>
 <p>Generate a summary table from a light curve dataframe</p>
 
@@ -216,7 +216,7 @@ return light-curve dataframe</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="flux_plot" class="doc_header"><code>flux_plot</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/lightcurve.py#L151" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>flux_plot</code>(<strong><code>config</code></strong>, <strong><code>lightcurve</code></strong>, <strong><code>ts_min</code></strong>=<em><code>9</code></em>, <strong><code>title</code></strong>=<em><code>None</code></em>, <strong><code>ax</code></strong>=<em><code>None</code></em>, <strong><code>fignum</code></strong>=<em><code>1</code></em>, <strong><code>figsize</code></strong>=<em><code>(12, 4)</code></em>, <strong><code>step</code></strong>=<em><code>False</code></em>, <strong><code>tzero</code></strong>:<code>time offset</code>=<em><code>0</code></em>, <strong><code>colors</code></strong>=<em><code>('cornflowerblue', 'sandybrown', 'blue')</code></em>, <strong><code>fmt</code></strong>=<em><code>' '</code></em>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="flux_plot" class="doc_header"><code>flux_plot</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/lightcurve.py#L152" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>flux_plot</code>(<strong><code>config</code></strong>, <strong><code>lightcurve</code></strong>, <strong><code>ts_min</code></strong>=<em><code>9</code></em>, <strong><code>title</code></strong>=<em><code>None</code></em>, <strong><code>ax</code></strong>=<em><code>None</code></em>, <strong><code>fignum</code></strong>=<em><code>1</code></em>, <strong><code>figsize</code></strong>=<em><code>(12, 4)</code></em>, <strong><code>step</code></strong>=<em><code>False</code></em>, <strong><code>tzero</code></strong>:<code>time offset</code>=<em><code>0</code></em>, <strong><code>colors</code></strong>=<em><code>('cornflowerblue', 'sandybrown', 'blue')</code></em>, <strong><code>fmt</code></strong>=<em><code>' '</code></em>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
 <p>Make a plot of flux vs. time</p>
 <ul>

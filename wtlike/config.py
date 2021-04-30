@@ -203,7 +203,8 @@ class Config:
 
     # photon selection
     mjd_range : Tuple=None
-    radius: float = 7
+    week_range : Tuple=None
+    radius: float = 4
     cos_theta_max:float=0.4
     z_max : float=100
 

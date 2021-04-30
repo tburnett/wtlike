@@ -61,7 +61,7 @@ modules = ["config.py",
            "simulation.py",
            "bayesian.py"]
 
-doc_url = "https://tburnett.github.iowtlike/"
+doc_url = "https://tburnett.github.io/wtlike"
 
 git_url = "https://github.com/tburnett/wtlike/tree/master/"
 

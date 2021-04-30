@@ -30,6 +30,7 @@ class LightCurve(object):
                 all_cells,
                 source,
                 min_exp:  'minimum exposure factor'= 0.3,
+                min_n: 'minimum number of photos'= 4,
                 rep_name: 'likelihood rep name'='',
 
                 ):
@@ -43,7 +44,7 @@ class LightCurve(object):
 
         # select the set of cells
 
-        self.cells = cells = all_cells.query(f'e>{min_exp}').copy()
+        self.cells = cells = all_cells.query(f'e>{min_exp} & n>{min_n}').copy()
 
         # generate a list of LogLike objects for each
         cells.loc[:,'loglike'] = cells.apply(LogLike, axis=1)
