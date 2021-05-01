@@ -8,7 +8,7 @@ import numpy as np
 import pandas as pd
 from .config import *
 from .source_data import *
-from .loglike import LogLike
+from .loglike import LogLike, PoissonRep
 
 # Cell
 class CellData(SourceData):
@@ -17,34 +17,45 @@ class CellData(SourceData):
         Invoke superclass to load photon data and exposure for the source.
         Manage a list of cells
 
-        * config Config instance, with file paths appropriate fo SourceData
+        * config Config instance, with file paths appropriate for SourceData
         * source PointSource instance
         * exp_min minimum relative exposure -- applied to dataframe output
-        * bins time bins: use default otherwise
+        * bins time bins defined by 3-element tuple:
         """
 
-    def __init__(self, config, source, exp_min=0.3, bins=None, clear=False):
+    def __init__(self, config, source, exp_min=0.3, bins=(0,0,1), clear=False):
         """
 
         """
+        #  load phots
         super().__init__(config, source, clear )
 
         self.source_name =source.name
         self.verbose = config.verbose
         self.use_uint8  = config.use_uint8
         self.exp_min = exp_min
+        self.rebin(bins)
+
+    def rebin(self, newbins):
+        """bin, or rebin
+        """
         photon_data = self.p_df
+        edges = time_bin_edges(self.config, self.e_df, newbins)
+        if self.config.verbose>1:
+            print(f'Time bins: {len(edges)-1} {bin_size_name(edges)}'\
+                  f' from {edges[0]} to {edges[-1]}')
 
         # exposure binned as well
-        self.fexposure, bins = self.binned_exposure( time_bins=bins, ) #bins, exposure)
+        self.fexposure, self.expbin= self.binned_exposure( time_bins=edges )
 
         # manage bins
-        self.N = len(bins)-1 # number of bins
-        self.bins = bins
-        self.bin_centers = 0.5*(bins[1:]+bins[:-1])
+        self.N = len(edges)-1 # number of bins
+        self.bins = edges
+        self.bin_centers = 0.5*(edges[1:]+edges[:-1])
+        self.exposure_fator = 1
 
         # restrict photons to range of bin times
-        photons = photon_data.query(f'{bins[0]}<time<{bins[-1]}')
+        photons = photon_data.query(f'{edges[0]}<time<{edges[-1]}')
 
         # get the photon data with good weights, not NaN
         w = photons.weight
@@ -57,7 +68,30 @@ class CellData(SourceData):
         self.B = np.sum(1-w)/self.N
 
         # use photon times to get indices of bin edges
-        self._edges = np.searchsorted(self.photons.time, bins)
+        self._edges = np.searchsorted(self.photons.time, edges)
+
+    def update(self): pass # virtual
+
+    def rebinned_copy(self, newbins):
+        """Return a rebinned copy
+
+        """
+        import copy
+        if self.config.verbose>1:
+            nb = newbins
+            print(f'Making copy with {len(nb)-1} {bin_size_name(nb)} bins from {nb[0]} to {nb[-1]}')
+        r = copy.copy(self)
+        # check to see if new binning is contained
+        r.rebin(newbins)
+        r.df = None # force new set of cells
+        if newbins[0]> self.bins[0] or newbins[-1] < self.bins[1]:
+            factor = self.expbin/r.expbin
+            if self.config.verbose>1:
+                print(f'new range within old--bin exposure factor {factor:.1f}')
+            r.exposure_factor=factor # to apply later
+        r.update()
+        return r
+
 
     def __repr__(self):
         return f'''{self.__class__}:
@@ -97,7 +131,7 @@ class CellData(SourceData):
     def dataframe(self):
         """ combine all cells into a dataframe, applying exposure cut
         """
-        if hasattr(self, 'df'): return self.df
+        if hasattr(self, 'df') and self.df is not None: return self.df
         emin = self.exp_min
         if emin is None: emin=0
         self.df = pd.DataFrame([cell for cell in self if cell['e']>emin ])
@@ -125,7 +159,8 @@ class CellData(SourceData):
         return LogLike(self.concatenate())
 
     def plot_concatenated(self, fignum=1, **kwargs):
-        """Likelihood function, with fit for concatenated data"""
+        """Likelihood function, with fit for concatenated data
+        """
         import matplotlib.pyplot as plt
         lka = self.all_data_likelihood()
         fig,ax = plt.subplots(figsize=(4,2), num=fignum)
