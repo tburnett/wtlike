@@ -24,7 +24,7 @@ Currently in pre-alpha, and must be cloned. This brings up the `nbdev` stuff as 
 ## Module summary
 
 ### Configuration [config](https://tburnett.github.io/wtlike/config)
-Implements basic configuration information, [Config](https://tburnett.github.io/wtlike/config#Config), a cache system [Cache](https://tburnett.github.io/wtlike/config#Cache), point source info [PointSoure](https://tburnett.github.io/wtlike/config#PointSource), and [time conversion](https://tburnett.github.io/wtlike/config#Time-conversion)
+Implements basic configuration information, [Config](https://tburnett.github.io/wtlike/config#Config), a cache system [Cache](https://tburnett.github.io/wtlike/config#Cache), point source info [PointSource](https://tburnett.github.io/wtlike/config#PointSource), and [time conversion](https://tburnett.github.io/wtlike/config#Time-conversion)
 
 ### Photon and Spacecraft Data  [data_man](https://tburnett.github.io/wtlike/data_man)
 This module manages conversion of the weekly FT1 (photons) and FT2 (spacecraft) files, downloaded from  [GSFC](https://heasarc.gsfc.nasa.gov/FTP/fermi/data/lat/weekly), to a folder containing  pickled files, each with tables of photons, space craft data, and a list of GTI times derived from the FT1 file. The total size of this is 2.8 GB. A class [WeeklyData](https://tburnett.github.io/wtlike/data_man#WeeklyData) exports the results.
@@ -39,7 +39,7 @@ The next step is to define a set of time bins. This module, implementing the cla
 The the class [LightCurve(CellData)](https://tburnett.github.io/wtlike/lightcurve#LightCurve) uses the set of cell defined by its super class, and evaluates the likelihood for each. This function is represented by a Poisson-like function for further analysis. It creates a table with this information for plotting a light curve.
 
 ### Bayesian Blocks [bayesian](https://tburnett.github.io/wtlike/bayesian) 
-THis module defines the class [BayesianBlockAnalysis(LIghtCurve)](https://tburnett.github.io/wtlike/bayesian#BayesianBlockAnalysis) module creates a partition, and refits the blocks.
+THis module defines the class [BayesianBlockAnalysis(LightCurve)](https://tburnett.github.io/wtlike/bayesian#BayesianBlockAnalysis) module creates a partition, and refits the blocks.
 
 ### Simulation [simulation](https://tburnett.github.io/wtlike/simulation)
 A light curve can be also generated with a simulation.

@@ -45,6 +45,50 @@ nb_path: "nbs/07_cell_data.ipynb"
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">config</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Available objects for config:
+     AliasManager
+     DisplayFormatter
+     HistoryManager
+     IPCompleter
+     IPKernelApp
+     InlineBackend
+     LoggingMagics
+     MagicsManager
+     OSMagics
+     PrefilterManager
+     ScriptMagics
+     StoreMagics
+     ZMQInteractiveShell
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
 
 <div class="output_wrapper">
 <div class="output">
@@ -53,16 +97,16 @@ nb_path: "nbs/07_cell_data.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="CellData" class="doc_header"><code>class</code> <code>CellData</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/cell_data.py#L14" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>CellData</code>(<strong><code>config</code></strong>, <strong><code>source</code></strong>, <strong><code>exp_min</code></strong>=<em><code>0.3</code></em>, <strong><code>bins</code></strong>=<em><code>None</code></em>, <strong><code>clear</code></strong>=<em><code>False</code></em>) :: <a href="/wtlikesource_data#SourceData"><code>SourceData</code></a></p>
+<h2 id="CellData" class="doc_header"><code>class</code> <code>CellData</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/cell_data.py#L14" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>CellData</code>(<strong><code>config</code></strong>, <strong><code>source</code></strong>, <strong><code>exp_min</code></strong>=<em><code>0.3</code></em>, <strong><code>bins</code></strong>=<em><code>(0, 0, 1)</code></em>, <strong><code>clear</code></strong>=<em><code>False</code></em>) :: <a href="/wtlikesource_data#SourceData"><code>SourceData</code></a></p>
 </blockquote>
 <p>Manage a set of cells generated from a data set</p>
 <p>Invoke superclass to load photon data and exposure for the source.
 Manage a list of cells</p>
 <ul>
-<li>config Config instance, with file paths appropriate fo SourceData</li>
+<li>config Config instance, with file paths appropriate for SourceData</li>
 <li>source PointSource instance</li>
 <li>exp_min minimum relative exposure -- applied to dataframe output</li>
-<li>bins time bins: use default otherwise</li>
+<li>bins time bins defined by 3-element tuple:</li>
 </ul>
 
 </div>
@@ -78,6 +122,94 @@ Manage a list of cells</p>
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">lka</span> <span class="o">=</span> <span class="n">cd</span><span class="o">.</span><span class="n">all_data_likelihood</span><span class="p">();</span> <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span> <span class="n">lka</span><span class="o">.</span><span class="n">fit_info</span><span class="p">()</span><span class="si">}</span><span class="s1">, TS=</span><span class="si">{</span><span class="n">PoissonRep</span><span class="p">(</span><span class="n">lka</span><span class="p">)</span><span class="o">.</span><span class="n">ts</span><span class="si">:</span><span class="s1">.0f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>{&#39;counts&#39;: 1191977, &#39;flux&#39;: 0.9999, &#39;sig_flux&#39;: 0.0012}, TS=2414055
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cd2</span> <span class="o">=</span> <span class="n">cd</span><span class="o">.</span><span class="n">rebinned_copy</span><span class="p">((</span><span class="o">-</span><span class="mi">8</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">));</span> <span class="nb">print</span><span class="p">(</span><span class="n">cd2</span><span class="p">)</span>
+<span class="n">cd2</span><span class="o">.</span><span class="n">plot_concatenated</span><span class="p">(</span><span class="n">xlim</span><span class="o">=</span><span class="p">(</span><span class="mf">0.9</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">),</span> <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">source</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">);</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Making copy with 2 1.1429-week bins from -8 to 1
+Time bins: 8 day from 59299.0 to 59307.0
+Relative exposure per bin:
+count    8.00
+mean     1.00
+std      0.18
+min      0.80
+50%      0.92
+max      1.26
+dtype: float64
+new range within old--bin exposure factor 1.3
+&lt;class &#39;__main__.CellData&#39;&gt;:
+        8 intervals from 59299.0 to 59307.0 for source Geminga
+        S 149.60  B 55.65 
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+
+
+<div class="output_png output_subarea ">
+<img src="data:image/png;base64,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
+"
+>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
 
 </div>
     {% endraw %}
@@ -93,7 +225,7 @@ Manage a list of cells</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="concatenate_cells" class="doc_header"><code>concatenate_cells</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/cell_data.py#L136" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>concatenate_cells</code>(<strong><code>cells</code></strong>)</p>
+<h4 id="concatenate_cells" class="doc_header"><code>concatenate_cells</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/cell_data.py#L171" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>concatenate_cells</code>(<strong><code>cells</code></strong>)</p>
 </blockquote>
 <p>Combine a group of cells to one</p>
 <ul>
@@ -131,7 +263,7 @@ Return a dict with summed n, S, B, and concatenated w</li>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="partition_cells" class="doc_header"><code>partition_cells</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/cell_data.py#L154" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>partition_cells</code>(<strong><code>config</code></strong>, <strong><code>cells</code></strong>, <strong><code>edges</code></strong>)</p>
+<h4 id="partition_cells" class="doc_header"><code>partition_cells</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/cell_data.py#L189" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>partition_cells</code>(<strong><code>config</code></strong>, <strong><code>cells</code></strong>, <strong><code>edges</code></strong>)</p>
 </blockquote>
 <p>Partition a set of cells</p>
 <ul>

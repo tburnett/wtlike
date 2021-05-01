@@ -2,7 +2,6 @@
 
 title: Source Data management
 
-
 keywords: fastai
 sidebar: home_sidebar
 
@@ -29,47 +28,12 @@ nb_path: "nbs/03_source_data.ipynb"
 </div>
     {% endraw %}
 
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">nbdev</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="o">%</span><span class="k">nbdev_default_export</span> source_data
-<span class="o">%</span><span class="k">reload_ext</span> autoreload
-<span class="o">%</span><span class="k">autoreload</span> 2
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>Cells will be exported to wtlike.source_data,
-unless a different module is specified after an export flag: `%nbdev_export special.module`
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Overview">Overview<a class="anchor-link" href="#Overview"> </a></h3><p>Given a point source, the class <code>SourceData</code> manages all data-oriented operations, providing all that is necessary to create a set of cells. It depends on the modules</p>
+<h3 id="Overview">Overview<a class="anchor-link" href="#Overview"> </a></h3><p>Given a point source, the class <a href="/wtlikesource_data#SourceData"><code>SourceData</code></a> manages all data-oriented operations, providing all that is necessary to create a set of cells. It depends on the modules</p>
 <ul>
-<li><p><a href="/wtlikeconfig.html"><code>config</code></a> 
-  This must set up the paths to the data created by <a href="/wtlikedata_man.html"><code>data_man</code></a>, and define paths for the effective area and weight files</p>
+<li><p><a href="/wtlikeconfig"><code>config</code></a> 
+  This must set up the paths to the data created by <a href="/wtlikedata_man"><code>data_man</code></a>, and define paths for the effective area and weight files</p>
 </li>
 <li><p>effective_area</p>
 </li>
@@ -83,27 +47,6 @@ unless a different module is specified after an export flag: `%nbdev_export spec
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="o">%</span><span class="k">nbdev_export</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">healpy</span>
-<span class="kn">import</span> <span class="nn">pickle</span>
-<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-
-<span class="kn">from</span> <span class="nn">wtlike.config</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">wtlike.data_man</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">wtlike.effective_area</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">wtlike.weights</span> <span class="kn">import</span> <span class="o">*</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
 
 </div>
     {% endraw %}
@@ -111,120 +54,6 @@ unless a different module is specified after an export flag: `%nbdev_export spec
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="o">%</span><span class="k">nbdev_hide</span>
-<span class="c1"># check the weekly files</span>
-<span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">(</span><span class="n">data_folder</span><span class="o">=</span><span class="s1">&#39;/home/burnett/weekly&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">valid</span><span class="p">:</span>
-    <span class="n">ff</span> <span class="o">=</span> <span class="n">get_data_files</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
-    <span class="n">source</span> <span class="o">=</span> <span class="n">PointSource</span><span class="p">(</span><span class="s1">&#39;BL Lac&#39;</span><span class="p">)</span> <span class="c1">#Geminga&#39;)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>Weekly folder &#34;/home/burnett/weekly&#34; contains 664 weeks, from 9 to 673
-Most recent data to UTC 2021-04-29 00:47
-Source &#34;BL Lac&#34; at: (l,b)=(92.590,-10.441)
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="o">%</span><span class="k">nbdev_export</span>
-<span class="k">def</span> <span class="nf">_exposure</span><span class="p">(</span><span class="n">config</span><span class="p">,</span>  <span class="n">livetime</span><span class="p">,</span> <span class="n">pcosine</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;return exposure calculated for each pair in livetime and cosines arrays</span>
-
-<span class="sd">    uses effective area</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">from</span> <span class="nn">scipy.integrate</span> <span class="kn">import</span> <span class="n">simps</span>
-    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">livetime</span><span class="p">)</span><span class="o">==</span><span class="nb">len</span><span class="p">(</span><span class="n">pcosine</span><span class="p">),</span> <span class="s1">&#39;expect equal-length arrays&#39;</span>
-
-    <span class="c1"># get a set of energies and associated weights from a trial spectrum</span>
-
-    <span class="n">emin</span><span class="p">,</span><span class="n">emax</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">energy_range</span>
-    <span class="n">loge1</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">emin</span><span class="p">);</span> <span class="n">loge2</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">emax</span><span class="p">)</span>
-
-    <span class="n">edom</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="n">loge1</span><span class="p">,</span> <span class="n">loge2</span><span class="p">,</span> <span class="nb">int</span><span class="p">((</span><span class="n">loge2</span><span class="o">-</span><span class="n">loge1</span><span class="p">)</span><span class="o">*</span><span class="n">config</span><span class="o">.</span><span class="n">bins_per_decade</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
-    <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">verbose</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Calculate exposure using the energy domain&#39;</span>\
-              <span class="sa">f</span><span class="s1">&#39; </span><span class="si">{</span><span class="n">emin</span><span class="si">}</span><span class="s1">-</span><span class="si">{</span><span class="n">emax</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">config</span><span class="o">.</span><span class="n">bins_per_decade</span><span class="si">}</span><span class="s1"> bins/decade&#39;</span> <span class="p">)</span>
-    <span class="n">base_spectrum</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">base_spectrum</span><span class="p">)</span> <span class="c1">#lambda E: (E/1000)**-2.1</span>
-    <span class="k">assert</span> <span class="n">base_spectrum</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span><span class="o">==</span><span class="mf">1.</span>
-    <span class="n">wts</span> <span class="o">=</span> <span class="n">base_spectrum</span><span class="p">(</span><span class="n">edom</span><span class="p">)</span>
-
-    <span class="c1"># effectivee area function from</span>
-    <span class="n">ea</span> <span class="o">=</span> <span class="n">EffectiveArea</span><span class="p">(</span><span class="n">file_path</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">files</span><span class="o">.</span><span class="n">aeff</span><span class="p">)</span>
-
-    <span class="c1"># a table of the weighted for each pair in livetime and pcosine arrays</span>
-    <span class="n">rvals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">wts</span><span class="p">),</span><span class="nb">len</span><span class="p">(</span><span class="n">pcosine</span><span class="p">)])</span>
-    <span class="k">for</span> <span class="n">i</span><span class="p">,(</span><span class="n">en</span><span class="p">,</span><span class="n">wt</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">edom</span><span class="p">,</span><span class="n">wts</span><span class="p">)):</span>
-        <span class="n">faeff</span><span class="p">,</span><span class="n">baeff</span> <span class="o">=</span> <span class="n">ea</span><span class="p">([</span><span class="n">en</span><span class="p">],</span><span class="n">pcosine</span><span class="p">)</span>
-        <span class="n">rvals</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">faeff</span><span class="o">+</span><span class="n">baeff</span><span class="p">)</span><span class="o">*</span><span class="n">wt</span>
-
-    <span class="n">aeff</span> <span class="o">=</span> <span class="n">simps</span><span class="p">(</span><span class="n">rvals</span><span class="p">,</span><span class="n">edom</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">/</span><span class="n">simps</span><span class="p">(</span><span class="n">wts</span><span class="p">,</span><span class="n">edom</span><span class="p">)</span>
-    <span class="k">return</span> <span class="p">(</span><span class="n">aeff</span><span class="o">*</span><span class="n">livetime</span><span class="p">)</span>
-
-<span class="k">def</span> <span class="nf">_calculate_exposure_for_source</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">week</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Calcualate the exposure for the source during the given week</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">df</span> <span class="o">=</span> <span class="n">week</span><span class="p">[</span><span class="s1">&#39;sc_data&#39;</span><span class="p">]</span>
-    
-    <span class="c1"># calculate cosines with respect to sky direction</span>
-    <span class="n">sc</span> <span class="o">=</span> <span class="n">source</span>
-    <span class="n">ra_r</span><span class="p">,</span><span class="n">dec_r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">sc</span><span class="o">.</span><span class="n">ra</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">sc</span><span class="o">.</span><span class="n">dec</span><span class="p">)</span>
-    <span class="n">sdec</span><span class="p">,</span> <span class="n">cdec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">dec_r</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">dec_r</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">cosines</span><span class="p">(</span> <span class="n">ra2</span><span class="p">,</span> <span class="n">dec2</span><span class="p">):</span>
-        <span class="n">ra2_r</span> <span class="o">=</span>  <span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">ra2</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
-        <span class="n">dec2_r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">dec2</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">dec2_r</span><span class="p">)</span><span class="o">*</span><span class="n">cdec</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">ra_r</span><span class="o">-</span><span class="n">ra2_r</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">dec2_r</span><span class="p">)</span><span class="o">*</span><span class="n">sdec</span>
-
-    <span class="n">pcosines</span> <span class="o">=</span> <span class="n">cosines</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">ra_scz</span><span class="p">,</span>    <span class="n">df</span><span class="o">.</span><span class="n">dec_scz</span><span class="p">)</span>
-    <span class="n">zcosines</span> <span class="o">=</span> <span class="n">cosines</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">ra_zenith</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">dec_zenith</span><span class="p">)</span>
-    <span class="c1"># mask out entries too close to zenith, or too far away from ROI center</span>
-    <span class="n">mask</span> <span class="o">=</span>   <span class="p">(</span><span class="n">pcosines</span> <span class="o">&gt;=</span> <span class="n">config</span><span class="o">.</span><span class="n">cos_theta_max</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">zcosines</span><span class="o">&gt;=</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">z_max</span><span class="p">)))</span>
-    <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">verbose</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">Found </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span><span class="si">:</span><span class="s1">,</span><span class="si">}</span><span class="s1"> S/C entries:  </span><span class="si">{</span><span class="nb">sum</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span><span class="si">:</span><span class="s1">,</span><span class="si">}</span><span class="s1"> remain after zenith and theta cuts&#39;</span><span class="p">)</span>
-    <span class="n">dfm</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,:]</span>
-    <span class="n">livetime</span> <span class="o">=</span> <span class="n">dfm</span><span class="o">.</span><span class="n">livetime</span><span class="o">.</span><span class="n">values</span>
-
-    <span class="k">return</span>  <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span> 
-        <span class="nb">dict</span><span class="p">(</span>
-            <span class="n">start</span><span class="o">=</span><span class="n">df</span><span class="o">.</span><span class="n">start</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> 
-            <span class="n">stop</span><span class="o">=</span><span class="n">df</span><span class="o">.</span><span class="n">stop</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> 
-            <span class="n">exp</span><span class="o">=</span><span class="n">_exposure</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">livetime</span><span class="p">,</span> <span class="n">pcosines</span><span class="p">[</span><span class="n">mask</span><span class="p">]),</span>
-            <span class="n">cos_theta</span><span class="o">=</span><span class="n">pcosines</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span>
-        <span class="p">))</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
 
 </div>
     {% endraw %}
@@ -235,49 +64,6 @@ Source &#34;BL Lac&#34; at: (l,b)=(92.590,-10.441)
 </div>
 </div>
 </div>
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="o">%</span><span class="k">nbdev_hide</span>
-<span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">valid</span><span class="p">:</span>
-    <span class="n">filename</span><span class="o">=</span><span class="n">ff</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-    <span class="n">week</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span><span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="p">)</span>
-    <span class="n">e_df</span> <span class="o">=</span> <span class="n">_calculate_exposure_for_source</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">week</span><span class="p">);</span> 
-    <span class="nb">print</span><span class="p">(</span><span class="n">e_df</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>	Found 16,974 S/C entries:  6,463 remain after zenith and theta cuts
-Calculate exposure using the energy domain 100.0-1000000.0 4 bins/decade
-       start      stop       exp  cos_theta
-32  59326.04  59326.04  35659.36       0.42
-33  59326.04  59326.05  39432.62       0.43
-34  59326.05  59326.05  43399.47       0.45
-35  59326.05  59326.05  47433.20       0.47
-36  59326.05  59326.05  51586.01       0.49
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
@@ -358,82 +144,6 @@ Calculate exposure using the energy domain 100.0-1000000.0 4 bins/decade
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="o">%</span><span class="k">nbdev_export</span>
-
-<span class="k">def</span> <span class="nf">_get_photons_near_source</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">week</span><span class="p">):</span> <span class="c1">#tzero, photon_df):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Select the photons near a source</span>
-<span class="sd">    </span>
-<span class="sd">    - source : a PointSource object</span>
-<span class="sd">    - week : dict with </span>
-<span class="sd">        - tzero : start time for the photon</span>
-<span class="sd">        - photon_df : DataFrame with photon data</span>
-<span class="sd">    </span>
-<span class="sd">    Returns a DF with </span>
-<span class="sd">    - `band` index, </span>
-<span class="sd">    - `time` in MJD (added tstart and converted from MET)</span>
-<span class="sd">    - `pixel` index, nest indexing </span>
-<span class="sd">    - `radius` distance in deg from source direction</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    
-    <span class="k">def</span> <span class="nf">_cone</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">nest</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-        <span class="c1"># cone geometry stuff: get corresponding pixels and center vector</span>
-        <span class="n">l</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">radius</span> <span class="o">=</span> <span class="n">source</span><span class="o">.</span><span class="n">l</span><span class="p">,</span> <span class="n">source</span><span class="o">.</span><span class="n">b</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">radius</span>
-        <span class="n">cart</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">l</span><span class="p">,</span><span class="n">b</span><span class="p">:</span> <span class="n">healpy</span><span class="o">.</span><span class="n">dir2vec</span><span class="p">(</span><span class="n">l</span><span class="p">,</span><span class="n">b</span><span class="p">,</span> <span class="n">lonlat</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">conepix</span> <span class="o">=</span> <span class="n">healpy</span><span class="o">.</span><span class="n">query_disc</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">nside</span><span class="p">,</span> <span class="n">cart</span><span class="p">(</span><span class="n">l</span><span class="p">,</span><span class="n">b</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">radius</span><span class="p">),</span> <span class="n">nest</span><span class="o">=</span><span class="n">nest</span><span class="p">)</span>
-        <span class="n">center</span> <span class="o">=</span> <span class="n">healpy</span><span class="o">.</span><span class="n">dir2vec</span><span class="p">(</span><span class="n">l</span><span class="p">,</span><span class="n">b</span><span class="p">,</span> <span class="n">lonlat</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">center</span><span class="p">,</span> <span class="n">conepix</span>
-    
-    <span class="n">center</span><span class="p">,</span> <span class="n">conepix</span> <span class="o">=</span> <span class="n">_cone</span><span class="p">(</span><span class="n">config</span><span class="p">,</span><span class="n">source</span><span class="p">)</span>
-
-    <span class="n">df</span> <span class="o">=</span> <span class="n">week</span><span class="p">[</span><span class="s1">&#39;photons&#39;</span><span class="p">]</span>
-    <span class="n">tstart</span> <span class="o">=</span> <span class="n">week</span><span class="p">[</span><span class="s1">&#39;tstart&#39;</span><span class="p">]</span>
-    <span class="n">allpix</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">nest_index</span><span class="o">.</span><span class="n">values</span>
-
-    <span class="c1"># select by comparing high-order pixels (faster)</span>
-    <span class="n">shift</span><span class="o">=</span><span class="mi">11</span>
-    <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">right_shift</span><span class="p">(</span><span class="n">allpix</span><span class="p">,</span> <span class="n">shift</span><span class="p">)</span>
-    <span class="n">c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">right_shift</span><span class="p">(</span><span class="n">conepix</span><span class="p">,</span> <span class="n">shift</span><span class="p">))</span>
-    <span class="n">incone</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">c</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">verbose</span><span class="o">&gt;</span><span class="mi">2</span><span class="p">:</span>
-        <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">incone</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">allpix</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Select photons for source </span><span class="si">{</span><span class="n">source</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">:</span><span class="se">\n\t</span><span class="s1">Pixel cone cut: select </span><span class="si">{</span><span class="n">a</span><span class="si">}</span><span class="s1"> from </span><span class="si">{</span><span class="n">b</span><span class="si">}</span><span class="s1"> (</span><span class="si">{</span><span class="mi">100</span><span class="o">*</span><span class="n">a</span><span class="o">/</span><span class="n">b</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1">%)&#39;</span><span class="p">)</span>
-
-    <span class="c1"># cut df to entries in the cone</span>
-    <span class="n">dfc</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">incone</span><span class="p">]</span>
-
-    <span class="c1"># distance from center for all accepted photons</span>
-    <span class="n">ll</span><span class="p">,</span><span class="n">bb</span> <span class="o">=</span> <span class="n">healpy</span><span class="o">.</span><span class="n">pix2ang</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">nside</span><span class="p">,</span> <span class="n">dfc</span><span class="o">.</span><span class="n">nest_index</span><span class="p">,</span>  <span class="n">nest</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">lonlat</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">cart</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">l</span><span class="p">,</span><span class="n">b</span><span class="p">:</span> <span class="n">healpy</span><span class="o">.</span><span class="n">dir2vec</span><span class="p">(</span><span class="n">l</span><span class="p">,</span><span class="n">b</span><span class="p">,</span> <span class="n">lonlat</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">t2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="mf">1.</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">center</span><span class="p">,</span> <span class="n">cart</span><span class="p">(</span><span class="n">ll</span><span class="p">,</span><span class="n">bb</span><span class="p">)))</span><span class="o">*</span><span class="mi">2</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">))</span>
-    <span class="n">in_cone</span> <span class="o">=</span> <span class="n">t2</span><span class="o">&lt;</span><span class="n">config</span><span class="o">.</span><span class="n">radius</span>
-
-    <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">verbose</span><span class="o">&gt;</span><span class="mi">2</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">Geometric cone cut: select </span><span class="si">{</span><span class="nb">sum</span><span class="p">(</span><span class="n">in_cone</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-    <span class="c1"># assume all in the GTI (should check)</span>
-
-    <span class="c1"># times: convert to float, add tstart, convert to MJD</span>
-    <span class="n">time</span> <span class="o">=</span> <span class="n">MJD</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">dfc</span><span class="o">.</span><span class="n">time</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span><span class="o">+</span><span class="n">tstart</span><span class="p">)</span>
-
-    <span class="c1"># assemble the DataFrame, remove those outside the radius</span>
-    <span class="n">out_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">rec</span><span class="o">.</span><span class="n">fromarrays</span><span class="p">(</span>
-        <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">dfc</span><span class="o">.</span><span class="n">band</span><span class="p">),</span> <span class="n">time</span><span class="p">,</span> <span class="n">dfc</span><span class="o">.</span><span class="n">nest_index</span><span class="p">,</span> <span class="n">t2</span><span class="p">],</span>
-        <span class="n">names</span><span class="o">=</span><span class="s1">&#39;band time pixel radius&#39;</span><span class="o">.</span><span class="n">split</span><span class="p">()))[</span><span class="n">in_cone</span><span class="p">]</span>
-
-    <span class="c1"># make sure times are monotonic by sorting (needed for most weeks after March 2018)</span>
-    <span class="n">out_df</span> <span class="o">=</span> <span class="n">out_df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">&#39;time&#39;</span><span class="p">)</span>
-    
-    <span class="k">return</span> <span class="n">out_df</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
 
 </div>
     {% endraw %}
@@ -447,38 +157,33 @@ Calculate exposure using the energy domain 100.0-1000000.0 4 bins/decade
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
-<div class="input">
 
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="o">%</span><span class="k">nbdev_hide</span>
-<span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">valid</span><span class="p">:</span>
-    <span class="n">week</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">ff</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="s1">&#39;rb&#39;</span><span class="p">));</span> 
-    <span class="n">tstart</span> <span class="o">=</span> <span class="n">week</span><span class="p">[</span><span class="s1">&#39;tstart&#39;</span><span class="p">]</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;TSTART: MET </span><span class="si">{</span><span class="n">tstart</span><span class="si">}</span><span class="s1">, UTC </span><span class="si">{</span><span class="n">UTC</span><span class="p">(</span><span class="n">MJD</span><span class="p">(</span><span class="n">tstart</span><span class="p">))</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-    <span class="n">p_df</span> <span class="o">=</span> <span class="n">_get_photons_near_source</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">week</span> <span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">p_df</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
-</pre></div>
+</div>
+    {% endraw %}
 
-    </div>
-</div>
-</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
 
 <div class="output_wrapper">
 <div class="output">
 
 <div class="output_area">
 
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>TSTART: MET 239557417.0, UTC 2008-08-04 15:44
-    band      time    pixel  radius
-0      5  54682.69  5466843    2.13
-5      6  54682.70  5457955    2.91
-6      4  54682.77  5468769    3.20
-7      0  54682.77  5466871    2.22
-10     0  54682.77  5459333    3.50
-</pre>
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="time_bin_edges" class="doc_header"><code>time_bin_edges</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/source_data.py#L181" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>time_bin_edges</code>(<strong><code>config</code></strong>, <strong><code>exposure</code></strong>, <strong><code>tbin</code></strong>=<em><code>(0, 0, 1)</code></em>)</p>
+</blockquote>
+<p>Return an array of equally-spaced edges</p>
+<p>tbin: an array (a,b,d), default config.time_bins</p>
+<p>interpretation of a, b:</p>
+
+<pre><code>if &gt; 5000, interpret as MJD
+if &lt;0, back from stop
+otherwise, offset from start</code></pre>
+
 </div>
+
 </div>
 
 </div>
@@ -494,190 +199,79 @@ Calculate exposure using the energy domain 100.0-1000000.0 4 bins/decade
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="o">%</span><span class="k">nbdev_export</span>
-
-<span class="k">def</span> <span class="nf">get_default_bins</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">exposure</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;set up default bins from exposure; and config.mjd_range if set.</span>
-<span class="sd">    </span>
-<span class="sd">    adjust stop to come out even,    round to whole day</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="n">start</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">exposure</span><span class="o">.</span><span class="n">start</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-    <span class="n">stop</span> <span class="o">=</span>  <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">exposure</span><span class="o">.</span><span class="n">stop</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
-    <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">mjd_range</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">config</span><span class="o">.</span><span class="n">mjd_range</span> <span class="o">=</span> <span class="p">(</span><span class="n">start</span><span class="p">,</span><span class="n">stop</span><span class="p">)</span>
-
-    <span class="n">step</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">time_interval</span>
-    <span class="n">nbins</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">((</span><span class="n">stop</span><span class="o">-</span><span class="n">start</span><span class="p">)</span><span class="o">/</span><span class="n">step</span><span class="p">))</span>
-    <span class="n">tb</span> <span class="o">=</span><span class="n">time_bins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="p">,</span> <span class="n">nbins</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">verbose</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
-        <span class="n">a</span><span class="p">,</span><span class="n">b</span> <span class="o">=</span> <span class="n">time_bins</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">time_bins</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Time bins: </span><span class="si">{</span><span class="n">nbins</span><span class="si">}</span><span class="s1"> intervals of </span><span class="si">{</span><span class="n">step</span><span class="si">}</span><span class="s1"> days, &#39;</span>\
-              <span class="sa">f</span><span class="s1">&#39;from MJD </span><span class="si">{</span><span class="n">a</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1">(</span><span class="si">{</span><span class="n">UTC</span><span class="p">(</span><span class="n">a</span><span class="p">)[:</span><span class="mi">10</span><span class="p">]</span><span class="si">}</span><span class="s1">) to </span><span class="si">{</span><span class="n">b</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1">(</span><span class="si">{</span><span class="n">UTC</span><span class="p">(</span><span class="n">b</span><span class="p">)[:</span><span class="mi">10</span><span class="p">]</span><span class="si">}</span><span class="s1">))&#39;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">time_bins</span>        
-
-<span class="k">def</span> <span class="nf">_load_from_weekly_data</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">source</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Generate combinded DataFrames from a list of pickled files</span>
-<span class="sd">    Either weekly or monthly</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    
-    <span class="c1"># check weights</span>
-    <span class="n">weight_file</span> <span class="o">=</span>  <span class="n">check_weights</span><span class="p">(</span><span class="n">config</span><span class="p">,</span>  <span class="n">source</span><span class="p">)</span>
-    <span class="k">assert</span> <span class="n">weight_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-    
-    <span class="n">data_folder</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">data_folder</span><span class="p">)</span>
-    <span class="n">data_files</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">data_folder</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;*.pkl&#39;</span><span class="p">)))</span>
-    <span class="n">iname</span> <span class="o">=</span> <span class="n">data_folder</span><span class="o">.</span><span class="n">name</span>
-    
-    <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">verbose</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Assembling photon data and exposure for source </span><span class="si">{</span><span class="n">source</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> from&quot;</span>\
-              <span class="sa">f</span><span class="s1">&#39; folder &quot;</span><span class="si">{</span><span class="n">data_folder</span><span class="si">}</span><span class="s1">&quot;, with </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">data_files</span><span class="p">)</span><span class="si">}</span><span class="s1"> files,&#39;</span>\
-              <span class="sa">f</span><span class="s1">&#39; last=</span><span class="si">{</span><span class="n">data_files</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">week_range</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">verbose</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">Using weeks </span><span class="si">{</span><span class="n">config</span><span class="o">.</span><span class="n">week_range</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-        <span class="n">t</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">week_range</span>
-        <span class="n">data_files</span><span class="o">=</span> <span class="n">data_files</span><span class="p">[</span><span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span><span class="n">t</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
-            
-
-    <span class="n">verbose</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">verbose</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">verbose</span><span class="p">,</span> <span class="mi">0</span>
-    <span class="c1"># list of data framees</span>
-    <span class="n">pp</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">ee</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">data_files</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">inp</span><span class="p">:</span>
-            <span class="n">week</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">inp</span><span class="p">)</span>
-        <span class="n">pp</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_get_photons_near_source</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">week</span> <span class="p">))</span>
-        <span class="n">ee</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_calculate_exposure_for_source</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">week</span> <span class="p">))</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">);</span>    
-    <span class="n">config</span><span class="o">.</span><span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span>
-    <span class="c1"># concatenate the two lists of DataFrames</span>
-    <span class="n">p_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">pp</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">e_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">ee</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">verbose</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">:</span>
-        <span class="n">times</span> <span class="o">=</span> <span class="n">p_df</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">values</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Loaded </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">p_df</span><span class="p">)</span><span class="si">:</span><span class="s1">,</span><span class="si">}</span><span class="s1"> photons from </span><span class="si">{</span><span class="n">UTC</span><span class="p">(</span><span class="n">times</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="si">}</span><span class="s1"> to  </span><span class="si">{</span><span class="n">UTC</span><span class="p">(</span><span class="n">times</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span><span class="si">}</span><span class="s1"> &#39;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Calculated </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">e_df</span><span class="p">)</span><span class="si">:</span><span class="s1">,</span><span class="si">}</span><span class="s1"> exposure entries&#39;</span><span class="p">)</span>
-        
-    <span class="c1"># add weights to photon data</span>
-    <span class="n">add_weights</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">p_df</span><span class="p">,</span> <span class="n">source</span><span class="p">)</span>
-        
-    <span class="k">return</span> <span class="n">p_df</span><span class="p">,</span> <span class="n">e_df</span>
-
-<span class="k">class</span> <span class="nc">SourceData</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Load the photon data near the source and associated exposure. </span>
-<span class="sd">    </span>
-<span class="sd">    Either from:</span>
-<span class="sd">      1. `config.data_folder`, the Path to folder with list of pickle files with weekly or monthly data</span>
-<span class="sd">      2. the cache, with key `{source.name}_data`</span>
-<span class="sd">    </span>
-<span class="sd">    * `config` : basic configuration: expect `config.data_folder` to be set</span>
-<span class="sd">    * `source` : PointSource object</span>
-<span class="sd">    * `clear` : if set, overwrite the cached results</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">clear</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; </span>
-
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">verbose</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">verbose</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="n">source</span>
-        <span class="n">dname</span> <span class="o">=</span>  <span class="n">config</span><span class="o">.</span><span class="n">data_folder</span><span class="o">.</span><span class="n">name</span> <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">data_folder</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span>
-        <span class="n">key</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">source</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">dname</span><span class="si">}</span><span class="s1">_data&#39;</span>
-        <span class="n">source</span><span class="o">.</span><span class="n">data_key</span> <span class="o">=</span> <span class="n">key</span>
-        
-        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">data_folder</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">cache</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Data for </span><span class="si">{</span><span class="n">source</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1"> is not cached, and config.data_folder is not set&#39;</span><span class="p">)</span>
-        
-        <span class="bp">self</span><span class="o">.</span><span class="n">p_df</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">e_df</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">cache</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> 
-                                    <span class="n">_load_from_weekly_data</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> 
-                                    <span class="n">overwrite</span><span class="o">=</span><span class="n">clear</span><span class="p">,</span>
-                                    <span class="n">description</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;photons and exposure for </span><span class="si">{</span><span class="n">source</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">verbose</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">SourceData</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
-    
-
-    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">p_df</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">values</span>
-        <span class="n">r</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s1">: Source </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1"> with:&#39;</span>\
-            <span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n\t</span><span class="s1"> data:     </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">p_df</span><span class="p">)</span><span class="si">:</span><span class="s1">9,</span><span class="si">}</span><span class="s1"> photons from   </span><span class="si">{</span><span class="n">UTC</span><span class="p">(</span><span class="n">time</span><span class="p">[</span><span class="mi">0</span><span class="p">])[:</span><span class="mi">10</span><span class="p">]</span><span class="si">}</span><span class="s1"> to </span><span class="si">{</span><span class="n">UTC</span><span class="p">(</span><span class="n">time</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])[:</span><span class="mi">10</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span>\
-            <span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n\t</span><span class="s1"> exposure: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">e_df</span><span class="p">)</span><span class="si">:</span><span class="s1">9,</span><span class="si">}</span><span class="s1"> intervals from </span><span class="si">{</span><span class="n">UTC</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">e_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">start</span><span class="p">)[:</span><span class="mi">10</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span>\
-            <span class="sa">f</span><span class="s1">&#39; to </span><span class="si">{</span><span class="n">UTC</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">e_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">stop</span><span class="p">)[:</span><span class="mi">10</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span>
-        <span class="k">return</span> <span class="n">r</span>
-    
-    <span class="k">def</span> <span class="nf">binned_exposure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time_bins</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Bin the exposure</span>
-<span class="sd">        </span>
-<span class="sd">        - time_bins: list of edges. if None, construct from exposure time limits and config.time_iterval </span>
-<span class="sd">        </span>
-<span class="sd">        returns tuple with      </span>
-<span class="sd">        - bexp: array of exposure integrated over each time bin, normalized to total</span>
-<span class="sd">        - expbin average exposure/bin</span>
-<span class="sd">      </span>
-
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
-
-        <span class="c1"># get exposure calculation</span>
-        <span class="n">exp</span>   <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">e_df</span><span class="o">.</span><span class="n">exp</span><span class="o">.</span><span class="n">values</span>
-        <span class="n">estart</span><span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">e_df</span><span class="o">.</span><span class="n">start</span><span class="o">.</span><span class="n">values</span>
-        <span class="n">estop</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">e_df</span><span class="o">.</span><span class="n">stop</span><span class="o">.</span><span class="n">values</span>
-
-        <span class="c1"># determine bins, using config.time_interval, range of times</span>
-
-        <span class="c1">#use cumulative exposure to integrate over larger periods</span>
-        <span class="n">cumexp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(([</span><span class="mi">0</span><span class="p">],</span><span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">exp</span><span class="p">))</span> <span class="p">)</span>
-
-        <span class="c1"># get index into tstop array of the bin edges</span>
-        <span class="n">edge_index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">searchsorted</span><span class="p">(</span><span class="n">estop</span><span class="p">,</span> <span class="n">time_bins</span><span class="p">)</span>
-        <span class="c1"># return the exposure integrated over the intervals</span>
-        <span class="n">cum</span> <span class="o">=</span> <span class="n">cumexp</span><span class="p">[</span><span class="n">edge_index</span><span class="p">]</span>
-        <span class="n">expbin</span> <span class="o">=</span> <span class="p">(</span><span class="n">cum</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">cum</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">/</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">time_bins</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> 
-        <span class="n">bexp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">cum</span><span class="p">)</span> <span class="o">/</span> <span class="n">expbin</span> 
-        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">verbose</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Relative exposure per bin:</span><span class="se">\n</span><span class="si">{</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">bexp</span><span class="p">)</span><span class="o">.</span><span class="n">describe</span><span class="p">(</span><span class="n">percentiles</span><span class="o">=</span><span class="p">[])</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">bexp</span><span class="p">,</span> <span class="n">expbin</span>
-    
-    <span class="k">def</span> <span class="nf">binned_cos_theta</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time_bins</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Calculate average cosine of angle with respect to bore axis, per time bin</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">time_bins</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">time_bins</span> <span class="o">=</span> <span class="n">get_default_bins</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">e_df</span><span class="p">)</span>
-        <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">e_df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-        <span class="n">estop</span> <span class="o">=</span><span class="n">df</span><span class="o">.</span><span class="n">stop</span><span class="o">.</span><span class="n">values</span>
-        <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="s1">&#39;tbin&#39;</span><span class="p">]</span> <span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">digitize</span><span class="p">(</span><span class="n">estop</span><span class="p">,</span> <span class="n">time_bins</span><span class="p">)</span>
-        <span class="n">ct</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;tbin&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()[</span><span class="s1">&#39;cos_theta&#39;</span><span class="p">]</span>
-        <span class="k">return</span> <span class="n">ct</span><span class="p">,</span> <span class="n">time_bins</span>
-    
-    <span class="k">def</span> <span class="nf">weight_histogram</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nbins</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; return a weight distribution</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">def</span> <span class="nf">doit</span><span class="p">(</span><span class="n">nbins</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">p_df</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">nbins</span><span class="o">+</span><span class="mi">1</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
-
-        <span class="n">key</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">_weight_hist&#39;</span> <span class="k">if</span> <span class="n">key</span><span class="o">==</span><span class="s1">&#39;&#39;</span> <span class="k">else</span> <span class="n">key</span>
-        <span class="n">description</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Weight histogram for </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">verbose</span><span class="o">&gt;</span><span class="mi">0</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">cache</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">doit</span><span class="p">,</span> <span class="n">nbins</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="n">description</span><span class="p">)</span>
-        
-    <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-        <span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span><span class="n">ax2</span><span class="p">,</span> <span class="n">ax3</span><span class="p">,</span><span class="n">ax4</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
-        <span class="n">ax1</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">p_df</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="n">histtype</span><span class="o">=</span><span class="s1">&#39;step&#39;</span><span class="p">);</span>
-        <span class="n">ax1</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;Time (MJD)&#39;</span><span class="p">)</span>
-        <span class="n">ax2</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">p_df</span><span class="o">.</span><span class="n">radius</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="n">histtype</span><span class="o">=</span><span class="s1">&#39;step&#39;</span><span class="p">);</span>
-        <span class="n">ax2</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;Radius (deg)&#39;</span><span class="p">);</span>
-        
-        <span class="n">ax3</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">p_df</span><span class="o">.</span><span class="n">band</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="n">histtype</span><span class="o">=</span><span class="s1">&#39;step&#39;</span><span class="p">,</span> <span class="n">log</span><span class="o">=</span><span class="kc">True</span><span class="p">);</span>
-        <span class="n">ax3</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;Band index&#39;</span><span class="p">)</span>
-        <span class="n">ax4</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">p_df</span><span class="o">.</span><span class="n">weight</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="n">histtype</span><span class="o">=</span><span class="s1">&#39;step&#39;</span><span class="p">)</span>
-        <span class="n">ax4</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;weight&#39;</span><span class="p">);</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">exposure</span> <span class="o">=</span> <span class="n">e_df</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">time_bin_edges</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">exposure</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">time_bin_edges</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">exposure</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.5</span><span class="p">))</span> <span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">time_bin_edges</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">exposure</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span> <span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">time_bin_edges</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">exposure</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mf">0.25</span><span class="p">))</span> <span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">time_bin_edges</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">exposure</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span><span class="mf">0.25</span><span class="p">))</span> <span class="p">)</span>   
+<span class="nb">print</span><span class="p">(</span><span class="n">time_bin_edges</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">exposure</span><span class="p">,</span> <span class="p">(</span><span class="mi">59326</span><span class="p">,</span> <span class="mi">59330</span><span class="p">,</span><span class="mf">0.5</span><span class="p">))</span> <span class="p">)</span>    
+ 
 </pre></div>
 
     </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[59326. 59327. 59328. 59329. 59330. 59331. 59332. 59333.]
+[59326.  59326.5 59327.  59327.5 59328.  59328.5 59329.  59329.5 59330.
+ 59330.5 59331.  59331.5 59332.  59332.5 59333. ]
+[59328. 59330. 59332.]
+[59326.   59326.25 59326.5  59326.75 59327.  ]
+[59328.   59328.25 59328.5  59328.75 59329.  ]
+[59326.  59326.5 59327.  59327.5 59328.  59328.5 59329.  59329.5 59330. ]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h2 id="SourceData" class="doc_header"><code>class</code> <code>SourceData</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/source_data.py#L269" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>SourceData</code>(<strong><code>config</code></strong>, <strong><code>source</code></strong>, <strong><code>clear</code></strong>=<em><code>False</code></em>)</p>
+</blockquote>
+<p>Load the photon data near the source and associated exposure.</p>
+<p>Either from:</p>
+<ol>
+<li><code>config.data_folder</code>, the Path to folder with list of pickle files with weekly or monthly data</li>
+<li>the cache, with key <code>{source.name}_data</code></li>
+</ol>
+<ul>
+<li><a href="/wtlikeconfig"><code>config</code></a> : basic configuration: expect <code>config.data_folder</code> to be set</li>
+<li><code>source</code> : PointSource object</li>
+<li><code>clear</code> : if set, overwrite the cached results</li>
+</ul>
+
+</div>
+
+</div>
+
 </div>
 </div>
 
@@ -697,50 +291,11 @@ Calculate exposure using the energy domain 100.0-1000000.0 4 bins/decade
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">config2</span> <span class="o">=</span> <span class="n">Config</span><span class="p">(</span><span class="n">data_folder</span><span class="o">=</span><span class="s1">&#39;/home/burnett/weekly&#39;</span><span class="p">,</span> <span class="n">week_range</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="kc">None</span><span class="p">),</span> <span class="n">time_interval</span><span class="o">=</span><span class="mi">15</span><span class="o">/</span><span class="p">(</span><span class="mi">24</span><span class="o">*</span><span class="mi">60</span><span class="p">),</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<span class="n">sd2</span> <span class="o">=</span> <span class="n">SourceData</span><span class="p">(</span><span class="n">config2</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">clear</span><span class="o">=</span><span class="kc">True</span><span class="p">);</span> 
-<span class="n">sd2</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># sd2 = SourceData(config2, source, clear=True); </span>
+<span class="c1"># sd2.plot()</span>
 </pre></div>
 
     </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>photons and exposure for BL Lac: Saving to cache with key &#34;BL Lac_weekly_data&#34;
-Assembling photon data and exposure for source BL Lac from folder &#34;/home/burnett/weekly&#34;, with 664 files, last=week_673.pkl
-	Using weeks (-1, None)
-.
-Loaded 2,986 photons from 2021-04-22 01:04 to  2021-04-28 23:40 
-Calculated 6,463 exposure entries
-Load weights from file /mnt/c/users/thbur/OneDrive/fermi/weight_files/BL_Lac_weights.pkl
-	Found: P88Y6076 at (92.60, -10.44)
-	Applyng weights: 0 / 2986 photon pixels are outside weight region
-	561 weights set to NaN
-SourceData: Source BL Lac with:
-	 data:         2,986 photons from   2021-04-22 to 2021-04-28
-	 exposure:     6,463 intervals from 2021-04-22 to 2021-04-28
-</pre>
-</div>
-</div>
-
-<div class="output_area">
-
-
-
-<div class="output_png output_subarea ">
-<img src="data:image/png;base64,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
-"
->
-</div>
-
-</div>
-
 </div>
 </div>
 
@@ -753,55 +308,6 @@ SourceData: Source BL Lac with:
 </div>
 </div>
 </div>
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="o">%</span><span class="k">nbdev_hide</span>
-<span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">valid</span><span class="p">:</span>
-    <span class="n">sd</span> <span class="o">=</span> <span class="n">SourceData</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">clear</span><span class="o">=</span><span class="kc">False</span><span class="p">);</span> 
-    <span class="n">sd</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>photons and exposure for BL Lac: Restoring from cache with key &#34;BL Lac_weekly_data&#34;
-SourceData: Source BL Lac with:
-	 data:         2,986 photons from   2021-04-22 to 2021-04-28
-	 exposure:     6,463 intervals from 2021-04-22 to 2021-04-28
-</pre>
-</div>
-</div>
-
-<div class="output_area">
-
-
-
-<div class="output_png output_subarea ">
-<img src="data:image/png;base64,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
-"
->
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Development of code to summarize cos theta</p>
@@ -809,142 +315,6 @@ SourceData: Source BL Lac with:
 </div>
 </div>
 </div>
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="o">%</span><span class="k">nbdev_hide</span>
-<span class="n">sd</span><span class="o">.</span><span class="n">e_df</span><span class="o">.</span><span class="n">cos_theta</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">bins</span><span class="o">=</span><span class="mi">100</span><span class="p">);</span>
-
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">sd</span><span class="o">.</span><span class="n">weight_histogram</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span><span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">),</span> <span class="s1">&#39;.&#39;</span><span class="p">)</span>
-
-<span class="bp">self</span> <span class="o">=</span> <span class="n">sd</span>
-<span class="n">time_bins</span> <span class="o">=</span> <span class="kc">None</span>
-<span class="k">if</span> <span class="n">time_bins</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="n">time_bins</span> <span class="o">=</span> <span class="n">get_default_bins</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">e_df</span><span class="p">)</span>
-
-<span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">e_df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-<span class="n">estop</span> <span class="o">=</span><span class="n">df</span><span class="o">.</span><span class="n">stop</span><span class="o">.</span><span class="n">values</span>
-<span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="s1">&#39;tbin&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">digitize</span><span class="p">(</span><span class="n">estop</span><span class="p">,</span> <span class="n">time_bins</span><span class="p">)</span>
-<span class="n">ct</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;tbin&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()[</span><span class="s1">&#39;cos_theta&#39;</span><span class="p">]</span>
-<span class="n">ct</span><span class="p">,</span> <span class="n">bins</span> <span class="o">=</span> <span class="n">sd</span><span class="o">.</span><span class="n">binned_cos_theta</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ct</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">time_bins</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">ct</span><span class="p">)</span>
-
-<span class="n">ctx</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;tbin&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">agg</span><span class="p">({</span><span class="s1">&#39;cos_theta&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;count&#39;</span><span class="p">,</span><span class="s1">&#39;mean&#39;</span><span class="p">,</span> <span class="s1">&#39;min&#39;</span><span class="p">,</span> <span class="s1">&#39;max&#39;</span><span class="p">]})</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span>
-
-<span class="n">ct</span><span class="p">,</span> <span class="n">bins</span> <span class="o">=</span> <span class="n">sd</span><span class="o">.</span><span class="n">binned_cos_theta</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ct</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">bins</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ct</span><span class="o">.</span><span class="n">index</span><span class="p">[:</span><span class="mi">100</span><span class="p">],</span> <span class="n">ct</span><span class="p">[:</span><span class="mi">100</span><span class="p">],</span><span class="s1">&#39;.&#39;</span><span class="p">);</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>Time bins: 7 intervals of 1 days, from MJD 59326.0(2021-04-22) to 59333.0(2021-04-29))
-Time bins: 7 intervals of 1 days, from MJD 59326.0(2021-04-22) to 59333.0(2021-04-29))
-7 8
-tbin
-1    0.68
-2    0.69
-3    0.70
-4    0.72
-5    0.73
-6    0.75
-7    0.76
-Name: cos_theta, dtype: float32
-     cos_theta                 
-         count  mean  min   max
-tbin                           
-1          894  0.68  0.4  0.93
-2          918  0.69  0.4  0.95
-3          940  0.70  0.4  0.96
-4          938  0.72  0.4  0.97
-5          935  0.73  0.4  0.98
-6          950  0.75  0.4  0.98
-7          888  0.76  0.4  0.98
-Time bins: 7 intervals of 1 days, from MJD 59326.0(2021-04-22) to 59333.0(2021-04-29))
-7 8
-</pre>
-</div>
-</div>
-
-<div class="output_area">
-
-
-
-<div class="output_png output_subarea ">
-<img src="data:image/png;base64,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
-"
->
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="o">%</span><span class="k">nbdev_hide</span>
-<span class="kn">from</span> <span class="nn">nbdev.export</span> <span class="kn">import</span> <span class="n">notebook2script</span>
-<span class="n">notebook2script</span><span class="p">()</span>
-<span class="o">!</span>date
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>Converted 00_config.ipynb.
-Converted 01_effective_area.ipynb.
-Converted 02_data_man.ipynb.
-Converted 03_source_data.ipynb.
-Converted 03_weights.ipynb.
-Converted 04_photon_data.ipynb.
-Converted 06_poisson.ipynb.
-Converted 07_cell_data.ipynb.
-Converted 08_loglike.ipynb.
-Converted 09_lightcurve.ipynb.
-Converted 10_simulation.ipynb.
-Converted 14_bayesian.ipynb.
-Converted index.ipynb.
-Fri Apr 30 14:59:18 PDT 2021
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
 </div>
  
 

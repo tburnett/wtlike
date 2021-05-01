@@ -32,7 +32,7 @@ nb_path: "nbs/02_data_man.ipynb"
 <div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Overview">Overview<a class="anchor-link" href="#Overview"> </a></h3><p>Fermi-LAT weekly data files are extracted from the <a href="https://heasarc.gsfc.nasa.gov/FTP/fermi/data/lat/weekly">GSFC FTP server </a>, 
 with subfolders for the photon data, <code>photon</code> and spacecraft data, <code>spacecraft</code>. It is <a href="http://fermi.gsfc.nasa.gov/ssc/data/access/http://fermi.gsfc.nasa.gov/ssc/data/access/">described here</a></p>
-<p>The class <a href="/wtlikedata_man#WeeklyData"><code>WeeklyData</code></a> downloads these to temporary files and constructs a dict for each week with
+<p>The class <code>WeeklyData</code> downloads these to temporary files and constructs a dict for each week with
 contents</p>
 <ul>
 <li>photons: a table, entry per selected photon with columns <ul>
@@ -217,8 +217,8 @@ contents</p>
 <p>Creates a pickled file as  dict with</p>
 <ul>
 <li>tstart--start time (MJD)</li>
-<li>photons -- DataFrame with photon data--see <a href="/wtlikedata_man#get_ft1_data"><code>get_ft1_data</code></a></li>
-<li>sc_data -- DataFrame with Spacecraft data--see <a href="/wtlikedata_man#get_ft2_info"><code>get_ft2_info</code></a></li>
+<li>photons -- DataFrame with photon data--see <code>get_ft1_data</code></li>
+<li>sc_data -- DataFrame with Spacecraft data--see <code>get_ft2_info</code></li>
 <li>gti_times -- array of interleaved start/stop times from the photon data</li>
 </ul>
 
@@ -308,9 +308,7 @@ contents</p>
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">nbdev.export</span> <span class="kn">import</span> <span class="n">notebook2script</span>
-<span class="n">notebook2script</span><span class="p">()</span>
-<span class="o">!</span>date
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">notebook2script</span><span class="p">()</span>
 </pre></div>
 
     </div>
@@ -324,22 +322,18 @@ contents</p>
 
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>Converted 00_config.ipynb.
-Converted 01_data_man.ipynb.
 Converted 01_effective_area.ipynb.
-Converted 02_gti.ipynb.
-Converted 02_source_data.ipynb.
-Converted 03_exposure.ipynb.
+Converted 02_data_man.ipynb.
+Converted 03_source_data.ipynb.
+Converted 03_weights.ipynb.
 Converted 04_photon_data.ipynb.
-Converted 05_weights.ipynb.
 Converted 06_poisson.ipynb.
 Converted 07_cell_data.ipynb.
-Converted 07_cells.ipynb.
 Converted 08_loglike.ipynb.
 Converted 09_lightcurve.ipynb.
 Converted 10_simulation.ipynb.
 Converted 14_bayesian.ipynb.
 Converted index.ipynb.
-Thu Apr 22 06:55:47 PDT 2021
 </pre>
 </div>
 </div>
