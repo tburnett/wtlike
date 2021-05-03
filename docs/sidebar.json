@@ -6,7 +6,6 @@
     "Data management": "/data_man",
     "Source Data management": "/source_data",
     "Weights": "/weights",
-    "Photon Data": "/photon_data",
     "Poisson-like likelihood function": "/poisson",
     "Manage cell data": "/cell_data",
     "Log Likelihood tools": "/loglike",

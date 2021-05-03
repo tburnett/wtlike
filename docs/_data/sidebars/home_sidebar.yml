@@ -25,9 +25,6 @@ entries:
       title: Weights
       url: /weights
     - output: web,pdf
-      title: Photon Data
-      url: /photon_data
-    - output: web,pdf
       title: Poisson-like likelihood function
       url: /poisson
     - output: web,pdf

@@ -32,7 +32,7 @@ nb_path: "nbs/02_data_man.ipynb"
 <div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Overview">Overview<a class="anchor-link" href="#Overview"> </a></h3><p>Fermi-LAT weekly data files are extracted from the <a href="https://heasarc.gsfc.nasa.gov/FTP/fermi/data/lat/weekly">GSFC FTP server </a>, 
 with subfolders for the photon data, <code>photon</code> and spacecraft data, <code>spacecraft</code>. It is <a href="http://fermi.gsfc.nasa.gov/ssc/data/access/http://fermi.gsfc.nasa.gov/ssc/data/access/">described here</a></p>
-<p>The class <code>WeeklyData</code> downloads these to temporary files and constructs a dict for each week with
+<p>The class <a href="/wtlikedata_man#WeeklyData"><code>WeeklyData</code></a> downloads these to temporary files and constructs a dict for each week with
 contents</p>
 <ul>
 <li>photons: a table, entry per selected photon with columns <ul>
@@ -206,7 +206,7 @@ contents</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="WeeklyData" class="doc_header"><code>class</code> <code>WeeklyData</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L180" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>WeeklyData</code>(<strong><code>config</code></strong>, <strong><code>week</code></strong>, <strong><code>saveto</code></strong>, <strong><code>overwrite</code></strong>=<em><code>False</code></em>)</p>
+<h2 id="WeeklyData" class="doc_header"><code>class</code> <code>WeeklyData</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L180" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>WeeklyData</code>(<strong><code>config</code></strong>, <strong><code>week</code></strong>, <strong><code>overwrite</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 <p>Download and process weekly Fermi-LAT files from GSFC,</p>
 <p>at FTP '<a href="https://heasarc.gsfc.nasa.gov/FTP/fermi/data/lat/weekly">https://heasarc.gsfc.nasa.gov/FTP/fermi/data/lat/weekly</a>'</p>
@@ -217,8 +217,8 @@ contents</p>
 <p>Creates a pickled file as  dict with</p>
 <ul>
 <li>tstart--start time (MJD)</li>
-<li>photons -- DataFrame with photon data--see <code>get_ft1_data</code></li>
-<li>sc_data -- DataFrame with Spacecraft data--see <code>get_ft2_info</code></li>
+<li>photons -- DataFrame with photon data--see <a href="/wtlikedata_man#get_ft1_data"><code>get_ft1_data</code></a></li>
+<li>sc_data -- DataFrame with Spacecraft data--see <a href="/wtlikedata_man#get_ft2_info"><code>get_ft2_info</code></a></li>
 <li>gti_times -- array of interleaved start/stop times from the photon data</li>
 </ul>
 
@@ -288,7 +288,7 @@ contents</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="GTI" class="doc_header"><code>class</code> <code>GTI</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L278" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>GTI</code>(<strong><code>gti_times</code></strong>)</p>
+<h2 id="GTI" class="doc_header"><code>class</code> <code>GTI</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L281" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>GTI</code>(<strong><code>gti_times</code></strong>)</p>
 </blockquote>
 
 </div>
