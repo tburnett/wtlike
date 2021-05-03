@@ -6,7 +6,7 @@ __all__ = ['check_weights', 'add_weights', 'get_weight_hist']
 import os, sys,  pickle, healpy
 import numpy as np
 from .config import *
-from .photon_data import *
+#from wtlike.photon_data import *
 
 
 
@@ -19,12 +19,13 @@ def check_weights(config, source):
 
     Returns the filepath to the file if successful, otherwise, print a message abount available files
     """
-    files = config.files
-    weight_file = files.weights / (source.filename+'_weights.pkl')
+    weight_files = config.wtlike_data/'weight_files'
+    assert weight_files.is_dir(), f'Expect {weight_files} to be a directory'
+    weight_file = weight_files/ (source.filename+'_weights.pkl')
     if not weight_file.exists():
         available = np.array(list(map(lambda p: p.name[:p.name.find('_weights')],
-                          files.weights.glob('*_weights.pkl'))))
-        print(f'{source} not found in list of weight files at\n\t {files.weights}.\n Available:\n{available}',
+                          weight_files.glob('*_weights.pkl'))))
+        print(f'{source} not found in list of weight files at\n\t {weight_files}.\n Available:\n{available}',
              file = sys.stderr)
         return None
     return weight_file

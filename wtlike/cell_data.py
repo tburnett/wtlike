@@ -19,34 +19,42 @@ class CellData(SourceData):
 
         * config Config instance, with file paths appropriate for SourceData
         * source PointSource instance
-        * exp_min minimum relative exposure -- applied to dataframe output
         * bins time bins defined by 3-element tuple:
         """
 
-    def __init__(self, config, source, exp_min=0.3, bins=(0,0,1), clear=False):
+    def __init__(self, *pars, **kwargs): #config, source,  bins=(0,0,1), clear=False)):
         """
 
         """
+        bins = kwargs.pop('bins', (0,0,1))
         #  load phots
-        super().__init__(config, source, clear )
+        super().__init__(*pars, **kwargs )
 
-        self.source_name =source.name
-        self.verbose = config.verbose
-        self.use_uint8  = config.use_uint8
-        self.exp_min = exp_min
+        self.use_uint8  = self.config.use_uint8
+#
         self.rebin(bins)
+        self.get_cells()
+
+    def get_cells(self):
+        if not hasattr(self, 'df') or self.df is None:
+            self.df = pd.DataFrame([cell for cell in self if cell['e']>0  and cell['n']>0 ])
+        return self.df
 
     def rebin(self, newbins):
         """bin, or rebin
         """
         photon_data = self.p_df
         edges = time_bin_edges(self.config, self.e_df, newbins)
-        if self.config.verbose>1:
-            print(f'Time bins: {len(edges)-1} {bin_size_name(edges)}'\
+        if self.config.verbose>0:
+            print(f'Rebin with {len(edges)-1} {bin_size_name(newbins[2])}'\
                   f' from {edges[0]} to {edges[-1]}')
 
         # exposure binned as well
-        self.fexposure, self.expbin= self.binned_exposure( time_bins=edges )
+        self.fexposure, self.expbin = self.binned_exposure( time_bins=edges )
+
+        ### fix normalization
+        self.fexposure /= (len(edges)-1)
+        print(f'renormalizing exposure to fraction of total: total, sum: {self.expbin:.0f} {sum(self.fexposure):.0f}')
 
         # manage bins
         self.N = len(edges)-1 # number of bins
@@ -63,9 +71,9 @@ class CellData(SourceData):
         self.photons = photons.loc[good]
         self.weights = w = self.photons.weight.values
 
-        # estimates for averate signal and background per cell
-        self.S = np.sum(w)/self.N
-        self.B = np.sum(1-w)/self.N
+        # estimates for signal and background per cell ???
+        self.S = np.sum(w) #/self.N
+        self.B = np.sum(1-w)#/self.N
 
         # use photon times to get indices of bin edges
         self._edges = np.searchsorted(self.photons.time, edges)
@@ -78,16 +86,15 @@ class CellData(SourceData):
         """
         import copy
         if self.config.verbose>1:
-            nb = newbins
-            print(f'Making copy with {len(nb)-1} {bin_size_name(nb)} bins from {nb[0]} to {nb[-1]}')
+            print(f'Making copy of rebinned class {self.__class__}')
         r = copy.copy(self)
         # check to see if new binning is contained
         r.rebin(newbins)
         r.df = None # force new set of cells
         if newbins[0]> self.bins[0] or newbins[-1] < self.bins[1]:
             factor = self.expbin/r.expbin
-            if self.config.verbose>1:
-                print(f'new range within old--bin exposure factor {factor:.1f}')
+            if self.config.verbose>0:
+                print(f'The new range is within old--bin exposure factor {factor:.1f}')
             r.exposure_factor=factor # to apply later
         r.update()
         return r
@@ -100,11 +107,11 @@ class CellData(SourceData):
 
     def __getitem__(self, i):
         """ get info for ith time bin and return dict with
-            t : MJD
+            t : MJD time of center
             tw: bin width,
-            e: exposure as fraction of total,
+            e : exposure as fraction of total,
             n : number of photons in bin
-            w : list of weights as uint8 integers<=255
+            w : list of weights in float32 or uint8 integers<=255
             S,B:  value
         """
         k   = self._edges
@@ -117,33 +124,26 @@ class CellData(SourceData):
         return dict(
                 t=self.bin_centers[i], # time
                 tw = tw,  # bin width
-                e=e, # moving to this name
+                e=e,
                 n=n, # number of photons in bin
                 w=wts,
-                S= e *self.S,
-                B= e *self.B,
+                S= e * self.S,
+                B= e * self.B,
                 )
 
     def __len__(self):
         return self.N
-
-    @property
-    def dataframe(self):
-        """ combine all cells into a dataframe, applying exposure cut
-        """
-        if hasattr(self, 'df') and self.df is not None: return self.df
-        emin = self.exp_min
-        if emin is None: emin=0
-        self.df = pd.DataFrame([cell for cell in self if cell['e']>emin ])
-        return self.df
 
     def concatenate( self ):
         """
         Combine this set of cells to one
         Return a dict with summed n, S, B, and concatenated w
         """
+        self.get_cells()
+        cells = self.df
+
         newcell = dict()
-        cells = self.dataframe
+
         if 't' in cells:
             ca, cb =cells.iloc[0], cells.iloc[-1]
             newcell.update(dict(t= 0.5*(ca.t-ca.tw/2 + cb.t+cb.tw/2), tw=cb.t-ca.t ))
@@ -154,15 +154,16 @@ class CellData(SourceData):
         return newcell
 
 
-    def all_data_likelihood(self ):
-        """Concatentate all the cells, return a LogLike object"""
+    def full_likelihood(self ):
+        """Concatentate all the cells, return a LogLike object
+        """
         return LogLike(self.concatenate())
 
     def plot_concatenated(self, fignum=1, **kwargs):
         """Likelihood function, with fit for concatenated data
         """
         import matplotlib.pyplot as plt
-        lka = self.all_data_likelihood()
+        lka = self.full_likelihood()
         fig,ax = plt.subplots(figsize=(4,2), num=fignum)
         lka.plot(ax=ax, **kwargs)
         return fig
@@ -189,20 +190,37 @@ def concatenate_cells( cells):
 def partition_cells(config, cells, edges):
     """ Partition a set of cells
      - cells -- A DataFrame of cells
-     - edges  -- a list of edges delimiting boundaries between cells
+     - edges  -- a list of edge times delimiting boundaries between cells
+
+    Returns a DataFrame of combined cells, with times and widths adjusted to account for missing cells
+
     """
-    # should check limitsk
+    # get indices of  cell idexes just beyond each edge time
     ii = np.searchsorted(cells.t, edges)
 
+    # Get the appropriate boundary times to apply to combined cells
+    # this is complicated by missing cells, need to put boundary in gaps if ncessary
+    ileft = ii[:-1]
+    cleft = cells.iloc[ileft ]
+    tleft =  (cleft.t - cleft.tw/2).values
+    iright = ii[1:]-1
+    cright = cells.iloc[iright ]
+    tright = (cright.t+cright.tw/2).values
+    betweens = 0.5*(tleft[1:] + tright[:-1])
+    tboundary = np.append(np.insert(betweens, 0, tleft[0]), tright[-1])
+
+    # now combine the cells,
     newcells = []
     for k in range(len(ii)-1):
         a,b = ii[k:k+2]
         subset = cells.iloc[a:b];
 
-        ca, cb = subset.iloc[0], subset.iloc[-1]
-        newcell = dict(t= 0.5*(ca.t-ca.tw/2 + cb.t+cb.tw/2)  )
+#         ca, cb = subset.iloc[0], subset.iloc[-1]
+#         newcell = dict(t= 0.5*(ca.t-ca.tw/2 + cb.t+cb.tw/2)  )
+        tl, tr = tboundary[k:k+2]
+        newcell = dict(t=0.5*(tl+tr), tw=tr-tl)
 
-        for col in 'tw e n S B'.split():
+        for col in 'e n S B'.split():
             newcell[col] = subset[col].sum()
         newcell['e'] /= len(subset)
         newcell['w'] = np.concatenate(list(subset.w.values)) #np.array(w, np.uint8)

@@ -196,7 +196,7 @@ class WeeklyData(object):
     ftp = 'https://heasarc.gsfc.nasa.gov/FTP/fermi/data/lat/weekly'
     tmp = Path('/tmp/from_gsfc')
 
-    def __init__(self, config, week, saveto, overwrite=False):
+    def __init__(self, config, week,  overwrite=False):
         """
         * week: a mission week number, starting at 9
         * saveto: path to save the files
@@ -204,7 +204,7 @@ class WeeklyData(object):
         """
         import wget
         self.config= config
-        self.saveto=Path(saveto)
+        self.saveto=Path(config.data_folder)
         os.makedirs(self.saveto, exist_ok=True)
         assert week>8
         self.wk = week
@@ -262,8 +262,11 @@ def get_data_files(config):
     Return a list of the pickled data files
     """
     if config.valid:
-        weekly_folder = config.data_folder
+        weekly_folder = config.wtlike_data/'data_files'
         ff = sorted(list(weekly_folder.glob('*.pkl')))
+        if len(ff)==0:
+            print(f'No .pkl files found in {weekly_folder}', file=sys.stderr)
+            return
         wk = list(map(lambda f: int(os.path.splitext(f)[0][-3:]), ff))
         lastweek = pickle.load(open(ff[-1],'rb'))
         if config.verbose>0:

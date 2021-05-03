@@ -27,11 +27,10 @@ class LogLike(object):
         """
         """
         self.__dict__.update(cell)
-        assert self.n>0, f'No data for cell {cell}'
-        if type(self.w[0])==np.uint8:
+#         assert self.n>0, f'No data for cell {cell}'
+        if len(self.w)>0 and type(self.w[0])==np.uint8:
             self.w = np.array(self.w, np.float)/256
         self.verbose=0
-
 
 
     def fit_info(self, fix_beta=True):
@@ -324,6 +323,14 @@ class PoissonRep(object):
     def cl(self, x):
         """Confidence level"""
         return self.poiss.cdfc(x)
+
+    def info(self):
+        """ Return a dict with useful info"""
+        flux = self.flux
+        return dict(flux=round(flux, 4),
+                    ts=round(self.ts,1),
+                    errors=tuple(np.array(self.errors-flux)[::-1].round(4)),
+                    limit=round(self.limit,4))
 
     def create_table(self, npts=100, support=1e-6):
         # make a table of evently-spaced points between limits

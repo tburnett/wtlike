@@ -38,7 +38,7 @@ def _exposure(config,  livetime, pcosine):
     wts = base_spectrum(edom)
 
     # effectivee area function from
-    ea = EffectiveArea(file_path=config.files.aeff)
+    ea = EffectiveArea(file_path=config.wtlike_data/'aeff_files')
 
     # a table of the weighted for each pair in livetime and pcosine arrays
     rvals = np.empty([len(wts),len(pcosine)])
@@ -159,25 +159,6 @@ def _get_photons_near_source(config, source, week): #tzero, photon_df):
 
 # Cell
 
-# def get_default_bins(config, exposure):
-#     """set up default bins from exposure; and config.mjd_range if set.
-
-#     adjust stop to come out even,    round to whole day
-#     """
-
-#     start = np.round(exposure.start.values[0])
-#     stop =  np.round(exposure.stop.values[-1])
-
-
-#     step = config.time_interval
-#     nbins = int(round((stop-start)/step))
-#     tb =time_bins = np.linspace(start, stop, nbins+1)
-#     if config.verbose>0:
-#         a,b = time_bins[0], time_bins[-1]
-#         print(f'Time bins: {nbins} intervals of {step} days, '\
-#               f'from MJD {a:.1f}({UTC(a)[:10]}) to {b:.1f}({UTC(b)[:10]}))')
-#     return time_bins
-
 def time_bin_edges(config, exposure, tbin=(0,0,1)):
     """Return an array of equally-spaced edges
 
@@ -225,7 +206,7 @@ def _load_from_weekly_data(config, source):
     weight_file =  check_weights(config,  source)
     assert weight_file is not None
 
-    data_folder = Path(config.data_folder)
+    data_folder = config.wtlike_data/'data_files'
     data_files = sorted(list(data_folder.glob('*.pkl')))
     iname = data_folder.name
 
@@ -270,33 +251,40 @@ class SourceData(object):
     """ Load the photon data near the source and associated exposure.
 
     Either from:
-      1. `config.data_folder`, the Path to folder with list of pickle files with weekly or monthly data
+      1. `config.wtlike_data/'data_files'`, the Path to folder with list of pickle files with weekly or monthly data
       2. the cache, with key `{source.name}_data`
 
-    * `config` : basic configuration: expect `config.data_folder` to be set
-    * `source` : PointSource object
+    * source_name : if specified, create a PointSource object
+    * `config` : basic configuration
+    * `source` : PointSource object if specified
     * `clear` : if set, overwrite the cached results
     """
 
-    def __init__(self, config, source, clear=False):
+    def __init__(self, source_name, config=None, source=None, clear=False):
         """
 
         """
-        verbose = config.verbose
-        self.config = config
-        self.source = source
-        dname =  config.data_folder.name if config.data_folder is not None else ''
-        key = f'{source.name}_{dname}_data'
-        source.data_key = key
 
-        if config.data_folder is None and key not in config.cache:
-            raise Exception(f'Data for {source.name} is not cached, and config.data_folder is not set')
+        self.config = config if config else Config()
+        if not (source_name or source):
+            print('Must specify either the source name or a PointSource object', file=sys.stderr)
+            return
 
-        self.p_df, self.e_df = config.cache(key,
-                                    _load_from_weekly_data, config, source,
+        self.source = PointSource(source_name) if source_name else source
+        self.source_name = self.source.name
+        self.verbose = self.config.verbose
+
+        key = f'{self.source.name}__data'
+        self.source.data_key = key
+
+        if self.config.wtlike_data/'data_files' is None and key not in config.cache:
+            raise Exception(f'Data for {source.name} is not cached, and config.wtlike_data/"data_files" is not set')
+
+        self.p_df, self.e_df = self.config.cache(key,
+                                    _load_from_weekly_data, self.config, self.source,
                                     overwrite=clear,
-                                    description=f'photons and exposure for {source.name}')
-        if config.verbose>0:
+                                    description=f'photons and exposure for {self.source.name}')
+        if self.verbose>0:
             print(SourceData.__repr__(self))
 
 
@@ -311,7 +299,7 @@ class SourceData(object):
     def binned_exposure(self, time_bins):
         """Bin the exposure
 
-        - time_bins: list of edges. if None, construct from exposure time limits and config.time_iterval
+        - time_bins: list of edges.
 
         returns tuple with
         - bexp: array of exposure integrated over each time bin, normalized to total
@@ -362,7 +350,7 @@ class SourceData(object):
         description = f'Weight histogram for {self.source.name}' if self.config.verbose>0 else ''
         return self.config.cache(key, doit, nbins, description=description)
 
-    def plot(self):
+    def plot_data(self):
         import matplotlib.pyplot as plt
         fig, (ax1,ax2, ax3,ax4) = plt.subplots(1,4, figsize=(15,4))
         ax1.hist(self.p_df.time.values, 500, histtype='step');
