@@ -46,15 +46,14 @@ class CellData(SourceData):
         photon_data = self.p_df
         edges = time_bin_edges(self.config, self.e_df, newbins)
         if self.config.verbose>0:
-            print(f'Rebin with {len(edges)-1} {bin_size_name(newbins[2])}'\
-                  f' from {edges[0]} to {edges[-1]}')
+            print(f'Bin photon data into {len(edges)-1} {bin_size_name(newbins[2])}'\
+                  f' bins from {edges[0]} to {edges[-1]}')
 
         # exposure binned as well
         self.fexposure, self.expbin = self.binned_exposure( time_bins=edges )
 
         ### fix normalization
         self.fexposure /= (len(edges)-1)
-        print(f'renormalizing exposure to fraction of total: total, sum: {self.expbin:.0f} {sum(self.fexposure):.0f}')
 
         # manage bins
         self.N = len(edges)-1 # number of bins
