@@ -100,7 +100,10 @@ class Cache(dict):
             print(f'Cache: key {key} not found', file=sys.stderr)
             return
         filename = self[key]
-        filename.unlink()
+        try:
+            filename.unlink()
+        except:
+            print(f'Failed to unlink file {filename}')
         super().pop(key)
         self._dump_index()
 
@@ -150,10 +153,13 @@ class Cache(dict):
         s = f'{title}\n {"key":30}   {"size":>10}  {"time":20} {"name"}, in folder {self.path}\n'
         for name, value in self.items():
             if name is None or not name.startswith(starts_with) : continue
-            stat = value.stat()
-            size = stat.st_size
-            mtime= str(datetime.datetime.fromtimestamp(stat.st_mtime))[:16]
-            s += f'  {name:30s}  {size:10}  {mtime:20} {value.name}\n'
+            try:
+                stat = value.stat()
+                size = stat.st_size
+                mtime= str(datetime.datetime.fromtimestamp(stat.st_mtime))[:16]
+                s += f'  {name:30s}  {size:10}  {mtime:20} {value.name}\n'
+            except Exception as msg:
+                s += f'{name} -- file not found'
         return s
 
     def __str__(self):
@@ -182,6 +188,8 @@ class Config:
     etypes = (0,1)
 
     week_range: Tuple=(None,None)
+
+    time_bins: Tuple=(0,0,7)
 
     use_uint8: bool=False  # for weights
 

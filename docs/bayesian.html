@@ -243,7 +243,7 @@ Considerably modified to give the <code>fitness function</code> access to the ce
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="BBanalysis" class="doc_header"><code>class</code> <code>BBanalysis</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/bayesian.py#L224" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>BBanalysis</code>(<strong>*<code>pars</code></strong>, <strong>**<code>kwargs</code></strong>) :: <a href="/wtlikelightcurve#LightCurve"><code>LightCurve</code></a></p>
+<h2 id="BBanalysis" class="doc_header"><code>class</code> <code>BBanalysis</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/bayesian.py#L225" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>BBanalysis</code>(<strong>*<code>pars</code></strong>, <strong>**<code>kwargs</code></strong>) :: <a href="/wtlikelightcurve#LightCurve"><code>LightCurve</code></a></p>
 </blockquote>
 
 </div>
@@ -296,26 +296,28 @@ Considerably modified to give the <code>fitness function</code> access to the ce
         <span class="n">bba</span> <span class="o">=</span> <span class="n">BBA</span><span class="p">(</span><span class="s1">&#39;3C 279&#39;</span><span class="p">)</span>
     
     <span class="n">fig1</span> <span class="o">=</span> <span class="n">figure</span><span class="p">(</span>
-        <span class="n">bba</span><span class="o">.</span><span class="n">plot_flux</span><span class="p">(</span><span class="n">yscale</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">,</span> <span class="n">ylim</span><span class="o">=</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span><span class="mi">80</span><span class="p">),</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span> <span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;MJD&#39;</span><span class="p">,</span> <span class="n">fignum</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+        <span class="n">bba</span><span class="o">.</span><span class="n">plot_flux</span><span class="p">(</span><span class="n">yscale</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">,</span> <span class="n">ylim</span><span class="o">=</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span><span class="mi">20</span><span class="p">),</span> <span class="n">ts_min</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span> <span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;MJD&#39;</span><span class="p">,</span> <span class="n">fignum</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
         <span class="n">width</span><span class="o">=</span><span class="mi">600</span><span class="p">)</span>  
     
     <span class="n">fig2</span> <span class="o">=</span> <span class="n">figure</span><span class="p">(</span>
-        <span class="n">bba</span><span class="o">.</span><span class="n">plot_flux</span><span class="p">(</span>  <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span> <span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;MJD&#39;</span><span class="p">,</span> <span class="n">fignum</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="n">bba</span><span class="o">.</span><span class="n">plot_flux</span><span class="p">(</span>  <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span> <span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;MJD&#39;</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">fignum</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
             <span class="n">xlim</span><span class="o">=</span><span class="p">(</span><span class="mi">57100</span><span class="p">,</span> <span class="mi">57300</span><span class="p">),),</span>
         <span class="n">width</span><span class="o">=</span><span class="mi">600</span><span class="p">)</span>  
     
     <span class="k">with</span> <span class="n">capture_print</span><span class="p">(</span><span class="s1">&#39;Define subset around large flare at MJD 57189&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">out3</span><span class="p">:</span>
-        <span class="n">bba2</span> <span class="o">=</span> <span class="n">bba</span><span class="o">.</span><span class="n">rebinned_copy</span><span class="p">((</span><span class="mi">57186</span><span class="p">,</span> <span class="mi">57191</span><span class="p">,</span> <span class="mf">0.25</span><span class="o">/</span><span class="mi">24</span><span class="p">))</span>
+        <span class="n">bba2</span> <span class="o">=</span> <span class="n">bba</span><span class="o">.</span><span class="n">view</span><span class="p">((</span><span class="mi">57186</span><span class="p">,</span> <span class="mi">57191</span><span class="p">,</span> <span class="mf">0.25</span><span class="o">/</span><span class="mi">24</span><span class="p">))</span>
     <span class="n">fig3</span> <span class="o">=</span> <span class="n">figure</span><span class="p">(</span>
-        <span class="n">bba2</span><span class="o">.</span><span class="n">plot_flux</span><span class="p">(</span><span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">tzero</span><span class="o">=</span><span class="mi">57186</span><span class="p">,</span> <span class="n">ylim</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span><span class="mi">250</span><span class="p">),</span> 
-                          <span class="n">flux_factor</span><span class="o">=</span><span class="n">bba2</span><span class="o">.</span><span class="n">exposure_factor</span><span class="p">,</span> <span class="n">fignum</span><span class="o">=</span><span class="mi">3</span> <span class="p">),</span>
+        <span class="n">bba2</span><span class="o">.</span><span class="n">plot_flux</span><span class="p">(</span><span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">tzero</span><span class="o">=</span><span class="mi">57186</span><span class="p">,</span>  <span class="n">ts_min</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+                       <span class="c1">#   flux_factor=bba2.exposure_factor,</span>
+                       <span class="n">fignum</span><span class="o">=</span><span class="mi">3</span> <span class="p">),</span>
             <span class="n">width</span><span class="o">=</span><span class="mi">600</span><span class="p">)</span>
     
     <span class="k">with</span> <span class="n">capture_print</span><span class="p">(</span><span class="s1">&#39;Apply BB to subset and replot&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">out4</span><span class="p">:</span>
         <span class="n">bba2</span><span class="o">.</span><span class="n">applyBB</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="s1">&#39;flare&#39;</span><span class="p">,</span> <span class="n">clear</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">fig4</span> <span class="o">=</span> <span class="n">figure</span><span class="p">(</span>
-        <span class="n">bba2</span><span class="o">.</span><span class="n">plot_BB</span><span class="p">(</span><span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">tzero</span><span class="o">=</span><span class="mi">57186</span><span class="p">,</span> <span class="n">ylim</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span><span class="mi">250</span><span class="p">),</span> <span class="n">ts_min</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> 
-                         <span class="n">flux_factor</span><span class="o">=</span><span class="n">bba2</span><span class="o">.</span><span class="n">exposure_factor</span><span class="p">,</span> <span class="n">fignum</span><span class="o">=</span><span class="mi">4</span><span class="p">),</span>
+        <span class="n">bba2</span><span class="o">.</span><span class="n">plot_BB</span><span class="p">(</span><span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">tzero</span><span class="o">=</span><span class="mi">57186</span><span class="p">,</span>  <span class="n">ts_min</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> 
+                     <span class="c1">#    flux_factor=bba2.exposure_factor, </span>
+                     <span class="n">fignum</span><span class="o">=</span><span class="mi">4</span><span class="p">),</span>
                 <span class="n">width</span><span class="o">=</span><span class="mi">600</span><span class="p">)</span>
     
     <span class="n">bb_table</span> <span class="o">=</span> <span class="n">bba2</span><span class="o">.</span><span class="n">bb_table</span><span class="p">()</span>
@@ -338,16 +340,16 @@ Considerably modified to give the <code>fitness function</code> access to the ce
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3 id="3C-279-Demonstration">3C 279 Demonstration<a class="anchor-link" href="#3C-279-Demonstration"> </a></h3><p><details  class="nbdoc-description" >  <summary> Create full light curve </summary>  <div style="margin-left: 5%"><pre>photons and exposure for 3C 279: Saving to cache with key "3C 279__data"<br>Assembling photon data and exposure for source 3C 279 from folder "/home/burnett/wtlike_data/data_files", with 664 files, last=week_673.pkl<br>  Using weeks (None, None)<br>.................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................<br>Week at 2018-09-20 00:40 has only 0 photons<br>..............................<br>Week at 2019-04-18 00:41 has only 0 photons<br>....................................................<br>Week at 2020-04-16 01:11 has only 0 photons<br>.<br>Week at 2020-04-23 01:07 has only 0 photons<br>....................................................<br>Week at 2021-04-22 00:47 has only 1 photons<br><br>Load weights from file /mnt/c/Users/thbur/OneDrive/fermi/wtlike-data/weight_files/3C_279_weights.pkl<br> Found: P88Y3243 at (305.10, 57.07)<br>  Applyng weights: 0 / 235326 photon pixels are outside weight region<br> 55631 weights set to NaN<br>BBanalysis: Source 3C 279 with:<br>  data:       235,326 photons from   2008-08-04 to 2021-04-21<br>     exposure: 2,817,749 intervals from 2008-08-04 to 2021-04-20<br>Rebin with 4642 1-day from 54683.0 to 59325.0<br>renormalizing exposure to fraction of total: total, sum: 53201579 1<br>Loaded 4483 / 4484 cells with exposure &gt; 1e-06 for light curve analysis<br></pre></div> </details>    <div class="nbdoc_image"></p>
+<h3 id="3C-279-Demonstration">3C 279 Demonstration<a class="anchor-link" href="#3C-279-Demonstration"> </a></h3><p><details  class="nbdoc-description" >  <summary> Create full light curve </summary>  <div style="margin-left: 5%"><pre>photons and exposure for 3C 279: Restoring from cache with key "3C 279__data"<br>BBanalysis: Source 3C 279 with:<br>  data:       179,695 photons from   2008-08-04 to 2021-04-21<br>     exposure: 2,817,749 intervals from 2008-08-04 to 2021-04-20<br>Bin photon data into 663 1-week bins from 54683.0 to 59324.0<br>Loaded 656 / 663 cells with at least 1 photons and exposure &gt; 1e-06 for light curve analysis<br></pre></div> </details>    <div class="nbdoc_image"></p>
 <p><figure style="margin-left: 5%" title="Figure 1">  <a href="images/demo_fig_01.png" title="images/demo_fig_01.png">    <img src="images/demo_fig_01.png" alt="Figure 1 at images/demo_fig_01.png" width=600>   </a> </figure>
 &lt;/div&gt;</p>
 <p>Expand to see position of a flare:</p>
 <div class="nbdoc_image">
 <figure style="margin-left: 5%" title="Figure 2">  <a href="images/demo_fig_02.png" title="images/demo_fig_02.png">    <img src="images/demo_fig_02.png" alt="Figure 2 at images/demo_fig_02.png" width=600>   </a> </figure>
-</div><p><details  class="nbdoc-description" >  <summary> Define subset around large flare at MJD 57189 </summary>  <div style="margin-left: 5%"><pre>Rebin with 480 15-min from 57186.0 to 57191.0<br>renormalizing exposure to fraction of total: total, sum: 926117 1<br>The new range is within old--bin exposure factor 57.4<br>Loaded 172 / 172 cells with exposure &gt; 1e-06 for light curve analysis<br></pre></div> </details>    <div class="nbdoc_image"></p>
+</div><p><details  class="nbdoc-description" >  <summary> Define subset around large flare at MJD 57189 </summary>  <div style="margin-left: 5%"><pre>Bin photon data into 480 15-min bins from 57186.0 to 57191.0<br>Loaded 165 / 480 cells with at least 1 photons and exposure &gt; 1e-06 for light curve analysis<br></pre></div> </details>    <div class="nbdoc_image"></p>
 <p><figure style="margin-left: 5%" title="Figure 3">  <a href="images/demo_fig_03.png" title="images/demo_fig_03.png">    <img src="images/demo_fig_03.png" alt="Figure 3 at images/demo_fig_03.png" width=600>   </a> </figure>
 &lt;/div&gt;</p>
-<p><details  class="nbdoc-description" >  <summary> Apply BB to subset and replot </summary>  <div style="margin-left: 5%"><pre>flare: Saving to cache<br>Partitioned 172 cells into 10 blocks, using LikelihoodFitness <br>Loaded 10 / 10 cells for fitting<br></pre></div> </details>    <div class="nbdoc_image"></p>
+<p><details  class="nbdoc-description" >  <summary> Apply BB to subset and replot </summary>  <div style="margin-left: 5%"><pre>flare: Saving to cache<br>Partitioned 165 cells into 9 blocks, using LikelihoodFitness <br>Loaded 9 / 9 cells for fitting<br></pre></div> </details>    <div class="nbdoc_image"></p>
 <p><figure style="margin-left: 5%" title="Figure 4">  <a href="images/demo_fig_04.png" title="images/demo_fig_04.png">    <img src="images/demo_fig_04.png" alt="Figure 4 at images/demo_fig_04.png" width=600>   </a> </figure>
 &lt;/div&gt;</p>
 <p>The bb fits</p>
@@ -379,31 +381,31 @@ Considerably modified to give the <code>fitness function</code> access to the ce
   </thead>
   <tbody>
     <tr>
-      <td>57186.630</td>
-      <td>1.031</td>
+      <td>57186.641</td>
+      <td>1.052</td>
       <td>45</td>
-      <td>0.000</td>
-      <td>0.000</td>
-      <td>(0, 0.007)</td>
-      <td>0.043</td>
+      <td>1.863</td>
+      <td>77.500</td>
+      <td>(-0.367, 0.405)</td>
+      <td>2.592</td>
     </tr>
     <tr>
-      <td>57187.724</td>
-      <td>1.156</td>
-      <td>452</td>
-      <td>1.019</td>
-      <td>819.900</td>
-      <td>(-0.064, 0.066)</td>
-      <td>1.131</td>
+      <td>57187.891</td>
+      <td>1.448</td>
+      <td>642</td>
+      <td>24.765</td>
+      <td>4346.900</td>
+      <td>(-0.996, 1.023)</td>
+      <td>26.489</td>
     </tr>
     <tr>
-      <td>57188.435</td>
-      <td>0.266</td>
-      <td>185</td>
-      <td>1.488</td>
-      <td>418.400</td>
-      <td>(-0.135, 0.141)</td>
-      <td>1.732</td>
+      <td>57188.812</td>
+      <td>0.396</td>
+      <td>284</td>
+      <td>18.307</td>
+      <td>1816.700</td>
+      <td>(-1.109, 1.154)</td>
+      <td>20.276</td>
     </tr>
     <tr>
       <td>...</td>
@@ -415,31 +417,31 @@ Considerably modified to give the <code>fitness function</code> access to the ce
       <td>...</td>
     </tr>
     <tr>
-      <td>57189.630</td>
-      <td>0.073</td>
+      <td>57189.646</td>
+      <td>0.083</td>
       <td>146</td>
-      <td>1.141</td>
-      <td>319.900</td>
-      <td>(-0.115, 0.122)</td>
-      <td>1.352</td>
+      <td>23.384</td>
+      <td>1058.600</td>
+      <td>(-1.922, 2.031)</td>
+      <td>26.899</td>
     </tr>
     <tr>
-      <td>57189.927</td>
+      <td>57189.948</td>
       <td>0.521</td>
       <td>259</td>
-      <td>0.468</td>
-      <td>273.200</td>
-      <td>(-0.045, 0.047)</td>
-      <td>0.548</td>
+      <td>12.211</td>
+      <td>1440.700</td>
+      <td>(-0.782, 0.815)</td>
+      <td>13.605</td>
     </tr>
     <tr>
-      <td>57190.578</td>
-      <td>0.781</td>
+      <td>57190.589</td>
+      <td>0.760</td>
       <td>212</td>
-      <td>0.046</td>
-      <td>16.700</td>
-      <td>(-0.013, 0.014)</td>
-      <td>0.072</td>
+      <td>3.677</td>
+      <td>660.900</td>
+      <td>(-0.291, 0.304)</td>
+      <td>4.199</td>
     </tr>
   </tbody>
 </table>
@@ -466,7 +468,7 @@ Considerably modified to give the <code>fitness function</code> access to the ce
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="BBanalysis" class="doc_header"><code>class</code> <code>BBanalysis</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/bayesian.py#L224" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>BBanalysis</code>(<strong>*<code>pars</code></strong>, <strong>**<code>kwargs</code></strong>) :: <a href="/wtlikelightcurve#LightCurve"><code>LightCurve</code></a></p>
+<h2 id="BBanalysis" class="doc_header"><code>class</code> <code>BBanalysis</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/bayesian.py#L225" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>BBanalysis</code>(<strong>*<code>pars</code></strong>, <strong>**<code>kwargs</code></strong>) :: <a href="/wtlikelightcurve#LightCurve"><code>LightCurve</code></a></p>
 </blockquote>
 
 </div>

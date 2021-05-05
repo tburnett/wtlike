@@ -17,128 +17,98 @@ class CellData(SourceData):
         Invoke superclass to load photon data and exposure for the source.
         Manage a list of cells
 
-        * config Config instance, with file paths appropriate for SourceData
-        * source PointSource instance
-        * bins time bins defined by 3-element tuple:
+         kwarg managed her: time_bins, default config.time_bins
+        * bins  time bins defined by 3-element tuple:
         """
 
-    def __init__(self, *pars, **kwargs): #config, source,  bins=(0,0,1), clear=False)):
+    def __init__(self, *pars, **kwargs):
         """
 
         """
-        bins = kwargs.pop('bins', (0,0,1))
+        bins = kwargs.pop('bins', kwargs.pop('time_bins', Config().time_bins))
         #  load phots
         super().__init__(*pars, **kwargs )
-
         self.use_uint8  = self.config.use_uint8
-#
         self.rebin(bins)
-        self.get_cells()
-
-    def get_cells(self):
-        if not hasattr(self, 'df') or self.df is None:
-            self.df = pd.DataFrame([cell for cell in self if cell['e']>0  and cell['n']>0 ])
-        return self.df
 
     def rebin(self, newbins):
         """bin, or rebin
         """
         photon_data = self.p_df
-        edges = time_bin_edges(self.config, self.e_df, newbins)
+        self.cell_edges = edges = time_bin_edges(self.config, self.e_df, newbins)
         if self.config.verbose>0:
-            print(f'Bin photon data into {len(edges)-1} {bin_size_name(newbins[2])}'\
-                  f' bins from {edges[0]} to {edges[-1]}')
+            step = newbins[2]
+            self.step_name = 'orbit-based' if step<=0 else bin_size_name(step)
+            print(f'Bin photon data into {int(len(edges)/2)} {self.step_name}'\
+                  f' bins from {edges[0]:.1f} to {edges[-1]:.1f}')
 
-        # exposure binned as well
-        self.fexposure, self.expbin = self.binned_exposure( time_bins=edges )
+        # note need to take care of interleave
+        expose = self.binned_exposure( edges ) [0::2]
+        self.fexposure=(expose/self.exptot).astype(np.float32)
+        self.get_cells()
 
-        ### fix normalization
-        self.fexposure /= (len(edges)-1)
+    def get_cells(self):
+        """
+        Generate the cell DataFrame
+        """
 
-        # manage bins
-        self.N = len(edges)-1 # number of bins
-        self.bins = edges
-        self.bin_centers = 0.5*(edges[1:]+edges[:-1])
-        self.exposure_fator = 1
 
         # restrict photons to range of bin times
-        photons = photon_data.query(f'{edges[0]}<time<{edges[-1]}')
+        photons = self.photons.query(f'{self.cell_edges[0]}<time<{self.cell_edges[-1]}')
 
-        # get the photon data with good weights, not NaN
-        w = photons.weight
-        good = np.logical_not(np.isnan(w))
-        self.photons = photons.loc[good]
-        self.weights = w = self.photons.weight.values
+        # use photon times to get indices into photon list
+        edges = np.searchsorted(photons.time, self.cell_edges)
 
-        # estimates for signal and background per cell ???
-        self.S = np.sum(w) #/self.N
-        self.B = np.sum(1-w)#/self.N
+        wts = photons.weight.values
+        start,stop = self.cell_edges[0::2], self.cell_edges[1::2]
+        center = (start+stop)/2
+        width = (stop-start)
+        cells = []
+        ek = np.append(edges[0::2], edges[-1])
 
-        # use photon times to get indices of bin edges
-        self._edges = np.searchsorted(self.photons.time, edges)
+        for k, (t, tw, e) in enumerate( zip(center, width, self.fexposure) ):
+            w = wts[ek[k]:ek[k+1]]
+            n = len(w)
+            cells.append(dict(t=t, tw=tw,
+                              e=e,
+                              n=n,
+                              w=w,
+                              S=e*self.S,
+                              B=e*self.B,
+                             )
+                        )
+        self.df = self.cells =  pd.DataFrame(cells)
+        return self.df
 
     def update(self): pass # virtual
 
-    def rebinned_copy(self, newbins):
-        """Return a rebinned copy
+    def view(self, newbins):
+        """Return a "view": a new instance of this class with a different set of cells
 
         """
         import copy
         if self.config.verbose>1:
-            print(f'Making copy of rebinned class {self.__class__}')
+            print(f'Making a view of the class {self.__class__}')
         r = copy.copy(self)
         # check to see if new binning is contained
         r.rebin(newbins)
-        r.df = None # force new set of cells
-        if newbins[0]> self.bins[0] or newbins[-1] < self.bins[1]:
-            factor = self.expbin/r.expbin
-            if self.config.verbose>0:
-                print(f'The new range is within old--bin exposure factor {factor:.1f}')
-            r.exposure_factor=factor # to apply later
+
         r.update()
         return r
 
 
     def __repr__(self):
         return f'''{self.__class__}:
-        {len(self.fexposure)} intervals from {self.bins[0]:.1f} to {self.bins[-1]:.1f} for source {self.source_name}
+        {len(self.fexposure)} intervals from {self.cell_edges[0]:.1f} to {self.cell_edges[-1]:.1f} for source {self.source_name}
         S {self.S:.2f}  B {self.B:.2f} '''
 
-    def __getitem__(self, i):
-        """ get info for ith time bin and return dict with
-            t : MJD time of center
-            tw: bin width,
-            e : exposure as fraction of total,
-            n : number of photons in bin
-            w : list of weights in float32 or uint8 integers<=255
-            S,B:  value
-        """
-        k   = self._edges
-        w = self.weights[k[i]:k[i+1]]
-        wts = np.array(w*256, np.uint8) if self.use_uint8 else w
-        n = len(wts)
-        e = self.fexposure[i]
-        tw  = self.bins[i+1]-self.bins[i]
-
-        return dict(
-                t=self.bin_centers[i], # time
-                tw = tw,  # bin width
-                e=e,
-                n=n, # number of photons in bin
-                w=wts,
-                S= e * self.S,
-                B= e * self.B,
-                )
-
-    def __len__(self):
-        return self.N
 
     def concatenate( self ):
         """
         Combine this set of cells to one
         Return a dict with summed n, S, B, and concatenated w
         """
-        self.get_cells()
+
         cells = self.df
 
         newcell = dict()

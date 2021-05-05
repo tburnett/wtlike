@@ -30,7 +30,7 @@ class _LightCurve(object):
                 all_cells,
                 source,
                 min_exp:  'minimum exposure factor'= 1e-6,
-                min_n: 'minimum number of photos'= 0,
+                min_n: 'minimum number of photos'= 1,
                 rep_name: 'likelihood rep name'='',
 
                 ):
@@ -50,7 +50,7 @@ class _LightCurve(object):
         # generate a list of LogLike objects for each
         cells.loc[:,'loglike'] = cells.apply(LogLike, axis=1)
         if config.verbose>0:
-            print(f'Loaded {len(cells)} / {len(all_cells)} cells with exposure >'\
+            print(f'Loaded {len(cells)} / {len(all_cells)} cells with at least {min_n} photons and exposure >'\
                   f' {min_exp} for light curve analysis')
             if config.verbose>1:
                 print(f'first cell: {cells.iloc[0]}')
@@ -67,7 +67,12 @@ class _LightCurve(object):
 
         # making output with reduced columns
         self.ll_fits = cells['t tw n e'.split()].copy()
-        self.ll_fits.loc[:,'fit'] = cells.loglike.apply(repcl)
+        try:
+            self.ll_fits.loc[:,'fit'] = cells.loglike.apply(repcl)
+        except Exception as e:
+            print(f'Failed a fit: \n{e}', file=sys.sterr)
+            raise
+
 
     def __repr__(self):
         return f'{self.__class__.__name__}: source "{self.source_name}" fit with {len(self.ll_fits)} cells'
@@ -81,8 +86,8 @@ class _LightCurve(object):
         """
         return self.ll_fits
 
-    def plot(self, **kwargs):
-        flux_plot(self.config, self, **kwargs)
+#     def plot(self, **kwargs):
+#         flux_plot(self.config, self, **kwargs)
 
 # Cell
 def fit_cells(config,
@@ -150,7 +155,7 @@ def fit_table(lc, expect=1.0):
     return df
 
 # Cell
-def flux_plot(config, lightcurve, ts_min=2,  ts_bar_min=1,
+def flux_plot(config, lightcurve, ts_min=4,  ts_bar_min=4,
               title=None, ax=None, fignum=1, figsize=(12,4),
               step=False,
               tzero:'time offset'=0,
@@ -266,14 +271,16 @@ class LightCurve(CellData):
         # invoked by current, again if a copy
         # get the cells from superclass
 
-        self.cells = self.get_cells()
+        self.cells = self.df
         self.lc = _LightCurve(self.config, self.cells, self.source)
         self.lc_df = self.lc.dataframe
 
     def plot_flux(self, **kwargs):
         source_name = kwargs.pop('source_name', self.source_name)
 
-        fig = flux_plot(self.config, self.lc_df, source_name=source_name, **kwargs)
+        fig = flux_plot(self.config, self.lc_df, source_name=source_name, label=self.step_name+' bins',
+                        #flux_factor=getattr(self, 'exposure_factor',1) ,
+                        **kwargs)
         fig.set_facecolor('white')
         return fig
 

@@ -219,6 +219,7 @@ def bb_overplot(config, lc, bb_fit, ax=None, source_name=None, **kwargs):
     fig, ax = plt.subplots(1,1, figsize=(12,4)) if not ax else (ax.figure, ax)
     flux_plot(config, lc, ax=ax, colors=colors, source_name=source_name,  **kwargs)
     flux_plot(config, bb_fit, ax=ax, step=True, step_label='BB overlay', zorder=10,**kwargs)
+    fig.set_facecolor('white')
 
 # Cell
 class BBanalysis(LightCurve):
@@ -229,11 +230,10 @@ class BBanalysis(LightCurve):
         """ Apply the Bayesian Blocks algorithm to partition the current set of cells into blocks,
         then create a new set of cells and fit them
 
-        - key : cache key. None is a default
+        - key : cache key. None, defaul to not use the cache
         - clear : if True, clear the cache for this key
         """
-        key = self.source.data_key.replace('data', 'bb_edges') if key is None else key
-        self.source.edges_key = key
+
         self.bb_edges  = get_bb_partition(self.config, self.lc_df,  key=key, clear=clear)
 
         self.bb_cells = partition_cells(self.config, self.cells, self.bb_edges)

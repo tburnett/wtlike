@@ -29,12 +29,33 @@ wtl = WtLike('BL Lac', bins=(0,0,7)) # how to define 7-day bins for the full dat
 wtl.plot_flux();
 ```
 
-    photons and exposure for BL Lac: Restoring from cache with key "BL Lac__data"
+    photons and exposure for BL Lac: Saving to cache with key "BL Lac__data"
+    Assembling photon data and exposure for source BL Lac from folder "/home/burnett/wtlike_data/data_files", with 664 files, last=week_673.pkl
+    	Using weeks (None, None)
+    ........................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................
+    Week at 2018-04-03 14:23 has only 0 photons
+    .
+    Week at 2018-04-05 01:08 has only 0 photons
+    .
+    Week at 2018-04-12 01:05 has only 0 photons
+    .
+    Week at 2018-04-19 01:05 has only 0 photons
+    ..........
+    Week at 2018-06-28 00:56 has only 0 photons
+    .......
+    Week at 2018-08-16 00:58 has only 0 photons
+    ........
+    Week at 2018-10-11 00:59 has only 0 photons
+    ....................................................................................................................................
+    Load weights from file /mnt/c/Users/thbur/OneDrive/fermi/wtlike-data/weight_files/BL_Lac_weights.pkl
+    	Found: P88Y6076 at (92.60, -10.44)
+    	Applyng weights: 0 / 404789 photon pixels are outside weight region
+    	95324 weights set to NaN
     BBanalysis: Source BL Lac with:
     	 data:       404,789 photons from   2008-08-04 to 2021-04-28
     	 exposure: 3,171,944 intervals from 2008-08-04 to 2021-04-28
-    Bin photon data into 664 1-week bins from 54683.0 to 59331.0
-    Loaded 656 / 656 cells with exposure > 1e-06 for light curve analysis
+    Bin photon data into 664.0 1-week bins from 54683.0 to 59331.0
+    Loaded 656 / 664 cells with at least 1 photons and exposure > 1e-06 for light curve analysis
 
 
 
@@ -45,13 +66,12 @@ The variable `wtl` has lots of capabilities.
 To examine a subset of the data at the end of the current data, we create a new `WtLike` object and plot it.
 
 ```python
-wtl2 = wtl.rebinned_copy((-5,0, 1/24)) # for the last 5 days, 1-hour bins
+wtl2 = wtl.view((-5,0, 1/24)) # for the last 5 days, 1-hour bins
 wtl2.plot_flux(fmt='o'); # Accepts plt.plot args, e.g. xlim, ylim, etc.
 ```
 
-    Bin photon data into 120 1-hour bins from 59328.0 to 59333.0
-    The new range is within old--bin exposure factor 127.4
-    Loaded 107 / 107 cells with exposure > 1e-06 for light curve analysis
+    Bin photon data into 120.0 1-hour bins from 59328.0 to 59333.0
+    Loaded 107 / 120 cells with at least 1 photons and exposure > 1e-06 for light curve analysis
 
 
 
@@ -64,7 +84,6 @@ Or, to do a Bayesian Block partiton with these 1-hour bins, perform fits, and ov
 wtl2.plot_BB(fmt='o');
 ```
 
-    BL Lac__bb_edges: Restoring from cache
     Partitioned 107 cells into 8 blocks, using LikelihoodFitness 
     Loaded 8 / 8 cells for fitting
 
@@ -116,19 +135,19 @@ wtl2.bb_table()
       <td>1.46</td>
       <td>312</td>
       <td>0.33</td>
-      <td>89.9</td>
-      <td>(-0.05, 0.051)</td>
-      <td>0.42</td>
+      <td>88.3</td>
+      <td>(-0.049, 0.051)</td>
+      <td>0.41</td>
     </tr>
     <tr>
       <th>1</th>
       <td>59330.02</td>
       <td>1.12</td>
       <td>362</td>
-      <td>0.78</td>
-      <td>236.7</td>
-      <td>(-0.079, 0.082)</td>
-      <td>0.92</td>
+      <td>0.76</td>
+      <td>231.8</td>
+      <td>(-0.078, 0.08)</td>
+      <td>0.90</td>
     </tr>
     <tr>
       <th>2</th>
@@ -176,9 +195,9 @@ wtl2.bb_table()
       <td>0.79</td>
       <td>213</td>
       <td>0.48</td>
-      <td>88.4</td>
-      <td>(-0.076, 0.079)</td>
-      <td>0.62</td>
+      <td>87.9</td>
+      <td>(-0.075, 0.079)</td>
+      <td>0.61</td>
     </tr>
     <tr>
       <th>7</th>
