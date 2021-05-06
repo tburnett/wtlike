@@ -46,7 +46,7 @@ index = {"Cache": "00_config.ipynb",
          "doc_countfitness": "14_bayesian.ipynb",
          "get_bb_partition": "14_bayesian.ipynb",
          "bb_overplot": "14_bayesian.ipynb",
-         "BBanalysis": "14_bayesian.ipynb",
+         "WtLike": "14_bayesian.ipynb",
          "BBA": "14_bayesian.ipynb"}
 
 modules = ["config.py",

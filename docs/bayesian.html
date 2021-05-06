@@ -72,7 +72,7 @@ likelihoods for a set of sequential cells. There are two such, using the number 
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="CountFitness" class="doc_header"><code>class</code> <code>CountFitness</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/bayesian.py#L21" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>CountFitness</code>(<strong><code>lc</code></strong>, <strong><code>p0</code></strong>=<em><code>0.05</code></em>) :: <code>FitnessFunc</code></p>
+<h2 id="CountFitness" class="doc_header"><code>class</code> <code>CountFitness</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/bayesian.py#L20" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>CountFitness</code>(<strong><code>lc</code></strong>, <strong><code>p0</code></strong>=<em><code>0.05</code></em>) :: <code>FitnessFunc</code></p>
 </blockquote>
 <p>Adapted version of a astropy.stats.bayesian_blocks.FitnessFunc
 Considerably modified to give the <code>fitness function</code> access to the cell data.</p>
@@ -99,7 +99,7 @@ Considerably modified to give the <code>fitness function</code> access to the ce
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="LikelihoodFitness" class="doc_header"><code>class</code> <code>LikelihoodFitness</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/bayesian.py#L125" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>LikelihoodFitness</code>(<strong><code>lc</code></strong>, <strong><code>p0</code></strong>=<em><code>0.05</code></em>, <strong><code>npt</code></strong>=<em><code>50</code></em>) :: <a href="/wtlikebayesian#CountFitness"><code>CountFitness</code></a></p>
+<h2 id="LikelihoodFitness" class="doc_header"><code>class</code> <code>LikelihoodFitness</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/bayesian.py#L124" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>LikelihoodFitness</code>(<strong><code>lc</code></strong>, <strong><code>p0</code></strong>=<em><code>0.05</code></em>, <strong><code>npt</code></strong>=<em><code>50</code></em>) :: <a href="/wtlikebayesian#CountFitness"><code>CountFitness</code></a></p>
 </blockquote>
 <p>Fitness function that uses the full likelihood</p>
 
@@ -131,7 +131,7 @@ Considerably modified to give the <code>fitness function</code> access to the ce
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="doc_countfitness" class="doc_header"><code>doc_countfitness</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/bayesian.py#L160" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>doc_countfitness</code>(<strong><code>fitness</code></strong>, <strong><code>light_curve_dict</code></strong>, <strong><code>source_name</code></strong>)</p>
+<h4 id="doc_countfitness" class="doc_header"><code>doc_countfitness</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/bayesian.py#L159" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>doc_countfitness</code>(<strong><code>fitness</code></strong>, <strong><code>light_curve_dict</code></strong>, <strong><code>source_name</code></strong>)</p>
 </blockquote>
 <h4 id="{class_name}-test-with-source-{source_name}">{class_name} test with source {source_name}<a class="anchor-link" href="#{class_name}-test-with-source-{source_name}"> </a></h4><p>Create object: <code>bbfitter = {class_name}(lc)</code></p>
 <p>Object description:   {bbfitter}</p>
@@ -167,7 +167,7 @@ Considerably modified to give the <code>fitness function</code> access to the ce
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="get_bb_partition" class="doc_header"><code>get_bb_partition</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/bayesian.py#L185" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>get_bb_partition</code>(<strong><code>config</code></strong>, <strong><code>lc</code></strong>, <strong><code>fitness_class</code></strong>=<em><code>'LikelihoodFitness'</code></em>, <strong><code>p0</code></strong>=<em><code>0.05</code></em>, <strong><code>key</code></strong>=<em><code>None</code></em>, <strong><code>clear</code></strong>=<em><code>False</code></em>)</p>
+<h2 id="get_bb_partition" class="doc_header"><code>get_bb_partition</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/bayesian.py#L184" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>get_bb_partition</code>(<strong><code>config</code></strong>, <strong><code>lc</code></strong>, <strong><code>fitness_class</code></strong>=<em><code>'LikelihoodFitness'</code></em>, <strong><code>p0</code></strong>=<em><code>0.05</code></em>, <strong><code>key</code></strong>=<em><code>None</code></em>, <strong><code>clear</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 <p>Perform Bayesian Block partition of the cells found in a light curve</p>
 <ul>
@@ -204,7 +204,7 @@ Considerably modified to give the <code>fitness function</code> access to the ce
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="bb_overplot" class="doc_header"><code>bb_overplot</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/bayesian.py#L214" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>bb_overplot</code>(<strong><code>config</code></strong>, <strong><code>lc</code></strong>, <strong><code>bb_fit</code></strong>, <strong><code>ax</code></strong>=<em><code>None</code></em>, <strong><code>source_name</code></strong>=<em><code>None</code></em>, <strong><code>step_name</code></strong>=<em><code>None</code></em>, <strong>**<code>kwargs</code></strong>)</p>
+<h2 id="bb_overplot" class="doc_header"><code>bb_overplot</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/bayesian.py#L213" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>bb_overplot</code>(<strong><code>config</code></strong>, <strong><code>lc</code></strong>, <strong><code>bb_fit</code></strong>, <strong><code>ax</code></strong>=<em><code>None</code></em>, <strong><code>source_name</code></strong>=<em><code>None</code></em>, <strong><code>step_name</code></strong>=<em><code>None</code></em>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
 <p>Plot light curve: cell fits with BB overplot</p>
 
@@ -243,7 +243,7 @@ Considerably modified to give the <code>fitness function</code> access to the ce
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="BBanalysis" class="doc_header"><code>class</code> <code>BBanalysis</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/bayesian.py#L227" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>BBanalysis</code>(<strong>*<code>pars</code></strong>, <strong>**<code>kwargs</code></strong>) :: <a href="/wtlikelightcurve#LightCurve"><code>LightCurve</code></a></p>
+<h2 id="WtLike" class="doc_header"><code>class</code> <code>WtLike</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/bayesian.py#L226" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>WtLike</code>(<strong>*<code>pars</code></strong>, <strong>**<code>kwargs</code></strong>) :: <a href="/wtlikelightcurve#LightCurve"><code>LightCurve</code></a></p>
 </blockquote>
 
 </div>
@@ -277,23 +277,24 @@ Considerably modified to give the <code>fitness function</code> access to the ce
 <span class="k">def</span> <span class="nf">demo</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    ### 3C 279 Demonstration</span>
+<span class="sd">    First, the weekly light curve:</span>
 <span class="sd">    {out1}    {fig1}</span>
 <span class="sd">    </span>
-<span class="sd">    Expand to see position of a flare:</span>
+<span class="sd">    Replot the figure with an expanded scale to see position of a flare:</span>
 <span class="sd">    {fig2}</span>
 <span class="sd">    {out3}    {fig3}</span>
 <span class="sd">    {out4}    {fig4}</span>
 <span class="sd">    </span>
-<span class="sd">    The bb fits</span>
+<span class="sd">    Table of BB fits</span>
 <span class="sd">    {bb_table}</span>
 <span class="sd">    </span>
-<span class="sd">    Figure 4 From [Kerr paper](https://arxiv.org/pdf/1910.00140.pdf)</span>
+<span class="sd">    This can be compaared with Figure 4 from the [Kerr paper](https://arxiv.org/pdf/1910.00140.pdf)</span>
 <span class="sd">    {kerr_fig4}</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">global</span> <span class="n">full</span>
     
     <span class="k">with</span> <span class="n">capture_print</span><span class="p">(</span><span class="s1">&#39;Create full weekly light curve&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">out1</span><span class="p">:</span>
-        <span class="n">full</span> <span class="o">=</span> <span class="n">BBA</span><span class="p">(</span><span class="s1">&#39;3C 279&#39;</span><span class="p">)</span>
+        <span class="n">full</span> <span class="o">=</span> <span class="n">WtLike</span><span class="p">(</span><span class="s1">&#39;3C 279&#39;</span><span class="p">)</span>
     
     <span class="n">fig1</span> <span class="o">=</span> <span class="n">figure</span><span class="p">(</span>
         <span class="n">full</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">yscale</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">,</span> <span class="n">ylim</span><span class="o">=</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span><span class="mi">20</span><span class="p">),</span> <span class="n">ts_min</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span> <span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;MJD&#39;</span><span class="p">,</span> <span class="n">fignum</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
@@ -309,7 +310,7 @@ Considerably modified to give the <code>fitness function</code> access to the ce
         <span class="n">orbit</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">tzero</span><span class="o">=</span><span class="mi">57186</span><span class="p">,</span>  <span class="n">ts_min</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>   <span class="n">fignum</span><span class="o">=</span><span class="mi">3</span> <span class="p">),</span>
             <span class="n">width</span><span class="o">=</span><span class="mi">600</span><span class="p">)</span>
     
-    <span class="k">with</span> <span class="n">capture_print</span><span class="p">(</span><span class="s1">&#39;Apply BB to subset and replot&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">out4</span><span class="p">:</span>
+    <span class="k">with</span> <span class="n">capture_print</span><span class="p">(</span><span class="s1">&#39;Apply BB and replot&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">out4</span><span class="p">:</span>
         <span class="n">orbit</span><span class="o">.</span><span class="n">applyBB</span><span class="p">()</span>
     <span class="n">fig4</span> <span class="o">=</span> <span class="n">figure</span><span class="p">(</span>
         <span class="n">orbit</span><span class="o">.</span><span class="n">plot_BB</span><span class="p">(</span><span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">tzero</span><span class="o">=</span><span class="mi">57186</span><span class="p">,</span>  <span class="n">ts_min</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>   <span class="n">fignum</span><span class="o">=</span><span class="mi">4</span><span class="p">),</span>
@@ -317,7 +318,7 @@ Considerably modified to give the <code>fitness function</code> access to the ce
     
     <span class="n">bb_table</span> <span class="o">=</span> <span class="n">orbit</span><span class="o">.</span><span class="n">bb_table</span><span class="p">()</span>
     
-    <span class="n">kerr_fig4</span> <span class="o">=</span> <span class="n">image</span><span class="p">(</span><span class="s1">&#39;kerr_fig4.png&#39;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">caption</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="n">kerr_fig4</span> <span class="o">=</span> <span class="n">image</span><span class="p">(</span><span class="s1">&#39;kerr_fig4.png&#39;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">600</span><span class="p">,</span> <span class="n">caption</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
     <span class="k">return</span> <span class="nb">locals</span><span class="p">()</span>
 
 <span class="n">nbdoc</span><span class="p">(</span><span class="n">demo</span><span class="p">)</span>
@@ -335,19 +336,20 @@ Considerably modified to give the <code>fitness function</code> access to the ce
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3 id="3C-279-Demonstration">3C 279 Demonstration<a class="anchor-link" href="#3C-279-Demonstration"> </a></h3><p><details  class="nbdoc-description" >  <summary> Create full weekly light curve </summary>  <div style="margin-left: 5%"><pre>photons and exposure for 3C 279: Restoring from cache with key "3C 279__data"<br>BBanalysis: Source 3C 279 with:<br>   data:       179,695 photons from   2008-08-04 to 2021-04-21<br>     exposure: 2,817,749 intervals from 2008-08-04 to 2021-04-20<br>Bin photon data into 663 1-week bins from 54683.0 to 59324.0<br>Loaded 656 / 663 cells with at least 1 photons and exposure &gt; 1e-06 for light curve analysis<br></pre></div> </details>    <div class="nbdoc_image"></p>
+<h3 id="3C-279-Demonstration">3C 279 Demonstration<a class="anchor-link" href="#3C-279-Demonstration"> </a></h3><p>First, the weekly light curve:</p>
+<p><details  class="nbdoc-description" >  <summary> Create full weekly light curve </summary>  <div style="margin-left: 5%"><pre>photons and exposure for 3C 279: Restoring from cache with key "3C 279__data"<br>WtLike: Source 3C 279 with:<br>   data:       179,695 photons from   2008-08-04 to 2021-04-21<br>     exposure: 2,817,749 intervals from 2008-08-04 to 2021-04-20<br>Bin photon data into 663 1-week bins from 54683.0 to 59324.0<br>Loaded 656 / 663 cells with at least 1 photons and exposure &gt; 1e-06 for light curve analysis<br></pre></div> </details>    <div class="nbdoc_image"></p>
 <p><figure style="margin-left: 5%" title="Figure 1">  <a href="images/demo_fig_01.png" title="images/demo_fig_01.png">    <img src="images/demo_fig_01.png" alt="Figure 1 at images/demo_fig_01.png" width=600>   </a> </figure>
 &lt;/div&gt;</p>
-<p>Expand to see position of a flare:</p>
+<p>Replot the figure with an expanded scale to see position of a flare:</p>
 <div class="nbdoc_image">
 <figure style="margin-left: 5%" title="Figure 2">  <a href="images/demo_fig_02.png" title="images/demo_fig_02.png">    <img src="images/demo_fig_02.png" alt="Figure 2 at images/demo_fig_02.png" width=600>   </a> </figure>
 </div><p><details  class="nbdoc-description" >  <summary> Define orbit-based subset around large flare at MJD 57189 </summary>  <div style="margin-left: 5%"><pre>Bin photon data into 80 orbit-based bins from 57186.1 to 57191.0<br>Loaded 70 / 80 cells with at least 1 photons and exposure &gt; 1e-06 for light curve analysis<br></pre></div> </details>    <div class="nbdoc_image"></p>
 <p><figure style="margin-left: 5%" title="Figure 3">  <a href="images/demo_fig_03.png" title="images/demo_fig_03.png">    <img src="images/demo_fig_03.png" alt="Figure 3 at images/demo_fig_03.png" width=600>   </a> </figure>
 &lt;/div&gt;</p>
-<p><details  class="nbdoc-description" >  <summary> Apply BB to subset and replot </summary>  <div style="margin-left: 5%"><pre>Partitioned 70 cells into 10 blocks, using LikelihoodFitness <br>Loaded 10 / 10 cells for fitting<br></pre></div> </details>    <div class="nbdoc_image"></p>
+<p><details  class="nbdoc-description" >  <summary> Apply BB and replot </summary>  <div style="margin-left: 5%"><pre>Partitioned 70 cells into 10 blocks, using LikelihoodFitness <br>Loaded 10 / 10 cells for fitting<br></pre></div> </details>    <div class="nbdoc_image"></p>
 <p><figure style="margin-left: 5%" title="Figure 4">  <a href="images/demo_fig_04.png" title="images/demo_fig_04.png">    <img src="images/demo_fig_04.png" alt="Figure 4 at images/demo_fig_04.png" width=600>   </a> </figure>
 &lt;/div&gt;</p>
-<p>The bb fits</p>
+<p>Table of BB fits</p>
 <div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
@@ -440,34 +442,10 @@ Considerably modified to give the <code>fitness function</code> access to the ce
     </tr>
   </tbody>
 </table>
-</div><p>Figure 4 From <a href="https://arxiv.org/pdf/1910.00140.pdf">Kerr paper</a></p>
+</div><p>This can be compaared with Figure 4 from the <a href="https://arxiv.org/pdf/1910.00140.pdf">Kerr paper</a></p>
 <div class="nbdoc_image">
-<figure style="margin-left: 5%" title="Figure 5">  <a href="images/demo_fig_05.png" title="images/demo_fig_05.png">    <img src="images/demo_fig_05.png" alt="Figure 5 at images/demo_fig_05.png" width=200>   </a> </figure>
+<figure style="margin-left: 5%" title="Figure 5">  <a href="images/demo_fig_05.png" title="images/demo_fig_05.png">    <img src="images/demo_fig_05.png" alt="Figure 5 at images/demo_fig_05.png" width=600>   </a> </figure>
 </div>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h2 id="BBanalysis" class="doc_header"><code>class</code> <code>BBanalysis</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/bayesian.py#L227" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>BBanalysis</code>(<strong>*<code>pars</code></strong>, <strong>**<code>kwargs</code></strong>) :: <a href="/wtlikelightcurve#LightCurve"><code>LightCurve</code></a></p>
-</blockquote>
-
 </div>
 
 </div>
