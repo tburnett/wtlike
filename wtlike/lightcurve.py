@@ -145,7 +145,7 @@ def fit_table(lc, expect=1.0):
     """Generate a summary table from a light curve dataframe"""
     fits = lc.fit
     flux = fits.apply(lambda f: f.flux)
-    errors = fits.apply(lambda f: (round(f.errors[0]-f.flux,3), round(f.errors[1]-f.flux ,3) ) )
+    errors = fits.apply(lambda f: (round(f.errors[0]-f.flux,3), rorebinnedund(f.errors[1]-f.flux ,3) ) )
     sigma_dev = fits.apply(lambda f: round(f.poiss.sigma_dev(expect),1) )
     df = lc['t tw n'.split()].copy() # maybe fix warnings?
     df.loc[:,'flux'] = flux.values.round(4)
@@ -193,8 +193,6 @@ def flux_plot(config, lightcurve, ts_min=4,  ts_bar_min=4,
     if kw['yscale']=='log':
         ax.yaxis.set_major_formatter(ticker.FuncFormatter(
             lambda val,pos: { 1.0:'1', 10.0:'10', 100.:'100'}.get(val,'')))
-
-
 
     df = lightcurve.copy() #if isinstance(lightcurve, pd.DataFrame) else lightcurve.dataframe
     df.loc[:,'ts'] = df.fit.apply(lambda f: f.ts)
@@ -283,6 +281,10 @@ class LightCurve(CellData):
                         **kwargs)
         fig.set_facecolor('white')
         return fig
+
+    def plot(self, **kwargs):
+        """Make a light curve plot"""
+        return self.plot_flux(**kwargs)
 
     def flux_table(self, lc=None, expect=1):
 

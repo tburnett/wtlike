@@ -211,14 +211,16 @@ def get_bb_partition(config, lc, fitness_class=LikelihoodFitness, p0=0.05, key=N
     return edges
 
 # Cell
-def bb_overplot(config, lc, bb_fit, ax=None, source_name=None, **kwargs):
+def bb_overplot(config, lc, bb_fit, ax=None, source_name=None, step_name=None, **kwargs):
     """Plot light curve: cell fits with BB overplot
     """
     import matplotlib.pyplot as plt
     colors = kwargs.pop('colors', ('lightblue', 'wheat', 'blue'))
     fig, ax = plt.subplots(1,1, figsize=(12,4)) if not ax else (ax.figure, ax)
-    flux_plot(config, lc, ax=ax, colors=colors, source_name=source_name,  **kwargs)
-    flux_plot(config, bb_fit, ax=ax, step=True, step_label='BB overlay', zorder=10,**kwargs)
+    flux_plot(config, lc, ax=ax, colors=colors, source_name=source_name,
+              label=step_name+' bins', **kwargs)
+    flux_plot(config, bb_fit, ax=ax, step=True,
+              label='BB overlay', zorder=10,**kwargs)
     fig.set_facecolor('white')
 
 # Cell
@@ -250,8 +252,16 @@ class BBanalysis(LightCurve):
         ts_min = kwargs.pop('ts_min',-1)
         source_name =kwargs.pop('source_name', self.source_name)
         fig, ax = ig, ax = plt.subplots(figsize=figsize, num=fignum) if ax is None else (ax.figure, ax)
-        bb_overplot(self.config, self.lc_df, self.bb_fit, ax=ax, ts_min=ts_min,
-                    source_name=source_name, **kwargs)
+
+#         bb_overplot(self.config, self.lc_df, self.bb_fit, ax=ax, ts_min=ts_min,
+#                     source_name=source_name, step_name=self.step_name, **kwargs)
+        colors = kwargs.pop('colors', ('lightblue', 'wheat', 'blue') )
+        #fig, ax = plt.subplots(1,1, figsize=(12,4)) if not ax else (ax.figure, ax)
+        flux_plot(self.config, self.lc_df, ax=ax, colors=colors, source_name=source_name,
+                  label=self.step_name+' bins', **kwargs)
+        flux_plot(self.config, self.bb_fit, ax=ax, step=True,
+                  label='BB overlay', zorder=10,**kwargs)
+
         fig.set_facecolor('white')
         return fig
 

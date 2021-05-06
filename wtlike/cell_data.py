@@ -15,10 +15,9 @@ class CellData(SourceData):
     """Manage a set of cells generated from a data set
 
         Invoke superclass to load photon data and exposure for the source.
-        Manage a list of cells
 
-         kwarg managed her: time_bins, default config.time_bins
-        * bins  time bins defined by 3-element tuple:
+        * time_bins, default config.time_bins
+
         """
 
     def __init__(self, *pars, **kwargs):

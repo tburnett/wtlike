@@ -108,11 +108,9 @@ dtype: object
 <h2 id="CellData" class="doc_header"><code>class</code> <code>CellData</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/cell_data.py#L14" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>CellData</code>(<strong>*<code>pars</code></strong>, <strong>**<code>kwargs</code></strong>) :: <a href="/wtlikesource_data#SourceData"><code>SourceData</code></a></p>
 </blockquote>
 <p>Manage a set of cells generated from a data set</p>
-<p>Invoke superclass to load photon data and exposure for the source.
-Manage a list of cells</p>
-<p>kwarg managed her: time_bins, default config.time_bins</p>
+<p>Invoke superclass to load photon data and exposure for the source.</p>
 <ul>
-<li>bins  time bins defined by 3-element tuple:</li>
+<li>time_bins, default config.time_bins</li>
 </ul>
 
 </div>
@@ -143,7 +141,7 @@ Manage a list of cells</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="concatenate_cells" class="doc_header"><code>concatenate_cells</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/cell_data.py#L141" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>concatenate_cells</code>(<strong><code>cells</code></strong>)</p>
+<h4 id="concatenate_cells" class="doc_header"><code>concatenate_cells</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/cell_data.py#L140" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>concatenate_cells</code>(<strong><code>cells</code></strong>)</p>
 </blockquote>
 <p>Combine a group of cells to one</p>
 <ul>
@@ -181,7 +179,7 @@ Return a dict with summed n, S, B, and concatenated w</li>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="partition_cells" class="doc_header"><code>partition_cells</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/cell_data.py#L159" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>partition_cells</code>(<strong><code>config</code></strong>, <strong><code>cells</code></strong>, <strong><code>edges</code></strong>)</p>
+<h4 id="partition_cells" class="doc_header"><code>partition_cells</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/cell_data.py#L158" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>partition_cells</code>(<strong><code>config</code></strong>, <strong><code>cells</code></strong>, <strong><code>edges</code></strong>)</p>
 </blockquote>
 <p>Partition a set of cells</p>
 <ul>
