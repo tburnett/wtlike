@@ -289,7 +289,11 @@ class PointSource():
         """
         self.name=name
         if position is None:
-            skycoord = SkyCoord.from_name(name)
+            try:
+                skycoord = SkyCoord.from_name(name)
+            except Exception as e:
+                print(f'PointSource: a source "{name}" was not recognized by SkyCoord: {e}', file=sys.stderr)
+                raise
             gal = skycoord.galactic
             self.l,self.b = (gal.l.value, gal.b.value)
         else:

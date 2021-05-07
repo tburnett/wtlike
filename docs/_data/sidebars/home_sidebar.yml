@@ -19,11 +19,11 @@ entries:
       title: Data management
       url: /data_man
     - output: web,pdf
-      title: Source Data management
-      url: /source_data
-    - output: web,pdf
       title: Weights
       url: /weights
+    - output: web,pdf
+      title: Source Data management
+      url: /source_data
     - output: web,pdf
       title: Poisson-like likelihood function
       url: /poisson

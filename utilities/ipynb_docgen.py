@@ -2,7 +2,7 @@
 Extracted from jupydoc to support single-cell output with nbdev
 Usage:
 
-from utilities import nbdoc
+from utilities.ipynb.docgen import *
 
 def userdoc():
     '''
@@ -11,11 +11,11 @@ def userdoc():
     # (code)
     # 
     return locals()
-nbdev(userdoc,)
-
+    
+nbdoc(userdoc,)
 """
 import sys, os, shutil, string, pprint, datetime
-import nbdev
+import nbdev # only for a show_doc
 
 __all__ = ['nbdoc', 'image', 'figure', 'monospace', 'capture_print', 'shell', 'create_file'] #,'show_doc']
 
@@ -406,9 +406,11 @@ def create_file(func, filename, folder='images'):
             
                 
     assert os.path.isfile(ifilename), f'File {filename} was not created in images .'
-    for p in (Path('../docs'), Path('docs')):
-        if p.is_dir():
-            shutil.copyfile(ifilename, p/ifilename)
+    ## make sure only goes to folder above this
+    #     for p in (Path('../docs'), Path('docs')):
+    #         if p.is_dir():
+    #             shutil.copyfile(ifilename, p/ifilename)
+    shutil.copyfile(ifilename, Path('../docs'/ifilename))
     return f'[{filename}]({ifilename})'    
 
 # convenient interface to show_doc, with disp set to false
