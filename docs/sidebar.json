@@ -2,13 +2,13 @@
   "wtlike": {
     "Overview": "/",
     "Configuration data and basic functions": "/config",
-    "Effective Area": "/effective_area",
     "Data management": "/data_man",
+    "Effective Area": "/effective_area",
     "Weights": "/weights",
     "Source Data management": "/source_data",
     "Poisson-like likelihood function": "/poisson",
-    "Manage cell data": "/cell_data",
     "Log Likelihood tools": "/loglike",
+    "Manage cell data": "/cell_data",
     "Light Curve Generation": "/lightcurve",
     "Simulation": "/simulation",
     "Bayesian Blocks": "/bayesian"

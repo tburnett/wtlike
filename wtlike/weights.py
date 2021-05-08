@@ -107,8 +107,6 @@ def add_weights(config,  photon_data, source, nbins=50):
 
     Return the weight value histogram
     """
-    files = config.files
-
     weight_file =  check_weights(config,  source)
     if weight_file is None:
         raise Exception(f'Weight file not found for {source}')

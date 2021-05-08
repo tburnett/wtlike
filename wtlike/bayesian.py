@@ -225,6 +225,7 @@ def bb_overplot(config, lc, bb_fit, ax=None, source_name=None, step_name=None, *
 # Cell
 class WtLike(LightCurve):
     """
+    Inherit from `LightCurve` and add Bayesian Block capability
     """
 
     def applyBB(self, key=None, clear=False):
@@ -235,7 +236,7 @@ class WtLike(LightCurve):
         - clear : if True, clear the cache for this key
         """
 
-        self.bb_edges  = get_bb_partition(self.config, self.lc_df,  key=key, clear=clear)
+        self.bb_edges  = get_bb_partition(self.config, self.fits,  key=key, clear=clear)
 
         self.bb_cells = partition_cells(self.config, self.cells, self.bb_edges)
         self.bb_fit = fit_cells(self.config, self.bb_cells, )
@@ -252,11 +253,11 @@ class WtLike(LightCurve):
         source_name =kwargs.pop('source_name', self.source_name)
         fig, ax = ig, ax = plt.subplots(figsize=figsize, num=fignum) if ax is None else (ax.figure, ax)
 
-#         bb_overplot(self.config, self.lc_df, self.bb_fit, ax=ax, ts_min=ts_min,
+#         bb_overplot(self.config, self.fits, self.bb_fit, ax=ax, ts_min=ts_min,
 #                     source_name=source_name, step_name=self.step_name, **kwargs)
         colors = kwargs.pop('colors', ('lightblue', 'wheat', 'blue') )
         #fig, ax = plt.subplots(1,1, figsize=(12,4)) if not ax else (ax.figure, ax)
-        flux_plot(self.config, self.lc_df, ax=ax, colors=colors, source_name=source_name,
+        flux_plot(self.config, self.fits, ax=ax, colors=colors, source_name=source_name,
                   label=self.step_name+' bins', **kwargs)
         flux_plot(self.config, self.bb_fit, ax=ax, step=True,
                   label='BB overlay', zorder=10,**kwargs)

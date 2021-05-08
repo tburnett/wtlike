@@ -16,7 +16,7 @@ class _LightCurve(object):
 
     parameters:
        - cells : a table with index t, columns  tw, n, e, w, S, B
-       - min_exp : minimum fractional exposure allowed
+       - exp_min : minimum fractional exposure allowed
        - rep_name : represention to use
 
     Generates a DataFrame with columns n, ep, fit
@@ -27,10 +27,8 @@ class _LightCurve(object):
     rep_list =   'gauss gauss2d poisson poissontable'.split()
 
     def __init__(self, config,
-                all_cells,
+                cells,
                 source,
-                min_exp:  'minimum exposure factor'= 1e-6,
-                min_n: 'minimum number of photos'= 1,
                 rep_name: 'likelihood rep name'='',
 
                 ):
@@ -44,18 +42,11 @@ class _LightCurve(object):
 
         # select the set of cells
 
-        self.cells = cells = all_cells.query(f'e>{min_exp} & n>={min_n}').copy()
-        assert len(cells)>0, 'No cells left?'
+        self.cells = cells
 
         # generate a list of LogLike objects for each
         cells.loc[:,'loglike'] = cells.apply(LogLike, axis=1)
-        if config.verbose>0:
-            print(f'Loaded {len(cells)} / {len(all_cells)} cells with at least {min_n} photons and exposure >'\
-                  f' {min_exp} for light curve analysis')
-            if config.verbose>1:
-                print(f'first cell: {cells.iloc[0]}')
-
-        # analyze using selected rep
+         # analyze using selected rep
         rep_name = rep_name or config.likelihood_rep
 
         if rep_name not in self.rep_list:
@@ -106,7 +97,7 @@ def fit_cells(config,
     # generate a list of LogLike objects for each
     cells.loc[:,'loglike'] = cells.apply(LogLike, axis=1)
     if config.verbose>0:
-        print(f'Loaded {len(cells)} / {len(input_cells)} cells for fitting')
+        print(f'LightCurve: Loaded {len(cells)} / {len(input_cells)} cells for fitting')
 
     # making output with reduced columns
     ll_fits = cells['t tw n e'.split()].copy()
@@ -155,12 +146,13 @@ def fit_table(lc, expect=1.0):
     return df
 
 # Cell
-def flux_plot(config, lightcurve, ts_min=4,  ts_bar_min=4,
+def flux_plot(config, lightcurve, ts_min=0,  ts_bar_min=2,
               title=None, ax=None, fignum=1, figsize=(12,4),
               step=False,
               tzero:'time offset'=0,
               flux_factor=1,
-              colors=('cornflowerblue','sandybrown', 'blue'), fmt=' ',
+              colors=('cornflowerblue','sandybrown', 'blue'),
+              fmt='',
               source_name=None,
               zorder=0,
               **kwargs):
@@ -185,7 +177,7 @@ def flux_plot(config, lightcurve, ts_min=4,  ts_bar_min=4,
     fig, ax = plt.subplots(figsize=figsize, num=fignum) if ax is None else (ax.figure, ax)
     kw=dict(yscale='linear',
             xlabel='MJD'+ f' - {tzero} [{UTC(tzero)[:10]}]' if tzero else '' ,
-            ylabel='Relative flux')
+            ylabel='Relative flux',)
     kw.update(**kwargs)
     ax.set(**kw)
     ax.set_title(title) # or f'{source_name}, rep {self.rep}')
@@ -194,10 +186,12 @@ def flux_plot(config, lightcurve, ts_min=4,  ts_bar_min=4,
         ax.yaxis.set_major_formatter(ticker.FuncFormatter(
             lambda val,pos: { 1.0:'1', 10.0:'10', 100.:'100'}.get(val,'')))
 
-    df = lightcurve.copy() #if isinstance(lightcurve, pd.DataFrame) else lightcurve.dataframe
+    df = lightcurve.copy()
     df.loc[:,'ts'] = df.fit.apply(lambda f: f.ts)
     df = df.query(f'ts>={ts_min}')
 
+    if fmt=='':
+        fmt='.' if len(df)>200 else 'o'
     rep = config.likelihood_rep
     if rep =='poisson':
 
@@ -233,8 +227,8 @@ def flux_plot(config, lightcurve, ts_min=4,  ts_bar_min=4,
     upper = bar.fit.apply(lambda f: f.errors[1]).values * flux_factor
     lower = bar.fit.apply(lambda f: f.errors[0]).values * flux_factor
     error = np.array([upper-fluxmeas, fluxmeas-lower])
-    if label is None:
-        label = f'{bin_size_name(round(tw.mean(),4))} bins' if np.std(tw)<1e-6 else ''
+#     if label is None:
+#         label = f'{bin_size_name(round(tw.mean(),4))} bins' if np.std(tw)<1e-6 else ''
     ax.errorbar(x=t, xerr=tw/2, y=fluxmeas, yerr=error, lw=2, fmt=fmt, color=colors[0], label=label,
                zorder=zorder+1)
 
@@ -253,7 +247,9 @@ def flux_plot(config, lightcurve, ts_min=4,  ts_bar_min=4,
 
     if source_name is not None:
         ax.text(0.99, 0.9, source_name, transform=ax.transAxes, ha='right' )
+
     return fig
+
 
 # Cell
 class LightCurve(CellData):
@@ -262,6 +258,10 @@ class LightCurve(CellData):
 
     """
     def __init__(self, *pars, **kwargs):
+
+        self.exp_min = kwargs.pop('e_min', 0.5) # corresponds to ~2counts
+        self.n_min = kwargs.pop('n_min', 2)
+        self.lc_key = kwargs.pop('key', None)
         super().__init__(*pars, **kwargs)
         self.update()
 
@@ -269,14 +269,28 @@ class LightCurve(CellData):
         # invoked by current, again if a copy
         # get the cells from superclass
 
-        self.cells = self.df
-        self.lc = _LightCurve(self.config, self.cells, self.source)
-        self.lc_df = self.lc.dataframe
+
+        def doit():
+            # fit the subset that have enought exposure and counts
+            query_string = f'e>{self.exp_min} & n>{self.n_min}'
+            fit_cells = self.cells.query(query_string).copy()
+            if self.config.verbose>0:
+                print(f'LightCurve: select {len(fit_cells)} cells for fitting with {query_string}' )
+            assert len(fit_cells)>0, 'No cells from CellData after query'
+            # the local workhorse
+            return _LightCurve(self.config, fit_cells, self.source).dataframe
+
+        # use cache only with default bins?
+        key = f'lightcurve_{source.name}' if self.lc_key=='' else  self.lc_key
+        description = f'Light curve with {cell_query} for {source.name}' if self.config.verbose>0 and key is not None else ''
+        self.lc = self.fits =  self.config.cache(key, doit, description=description)
 
     def plot_flux(self, **kwargs):
         source_name = kwargs.pop('source_name', self.source_name)
 
-        fig = flux_plot(self.config, self.lc_df, source_name=source_name, label=self.step_name+' bins',
+        e_min = kwargs.pop('e_min', None)
+        fits = self.fits if e_min is None else self.fits.query(f'e>{e_min}')
+        fig = flux_plot(self.config, fits, source_name=source_name, label=self.step_name+' bins',
                         #flux_factor=getattr(self, 'exposure_factor',1) ,
                         **kwargs)
         fig.set_facecolor('white')
@@ -290,9 +304,9 @@ class LightCurve(CellData):
 
         """Generate a summary table from the light curve
 
-        - lc -- A light curve dataframe; use current one if not specified
+        - lc -- A light curve fits dataframe; use current one if not specified
         """
-        if lc is None: lc=self.lc_df
+        if lc is None: lc=self.fits
 
         fits = lc.fit
         flux = fits.apply(lambda f: f.flux)

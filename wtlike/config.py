@@ -171,13 +171,12 @@ class Cache(dict):
 class Config:
     """Default light curve configuration parameters"""
     verbose : int = 1
-    files :'' =  None
 
     # data source: if set, expect all data files here
-    wtlike_data:  '' = '~/wtlike_data' # wired in for convenience
+    wtlike_data:  str = '~/wtlike_data' # wired in for convenience
 
     # cache
-    cachepath: str = '/tmp/cache'
+    cachepath: str = '~/wtlike_cache'
 
     radius: float = 4
     cos_theta_max:float=0.4
@@ -209,8 +208,10 @@ class Config:
         # set up data
         if self.wtlike_data is None:
             raise Exception('wtlike_data must be set')
-
+        if self.cachepath is None:
+            raise Exception('wtlike_cache must be set')
         self.wtlike_data = df = Path(self.wtlike_data).expanduser()
+        self.cachepath =  Path(self.cachepath).expanduser()
         if not self.wtlike_data.is_dir():
             raise Exception(f'data_folder {df} not a directory')
         subs = 'aeff_files weight_files data_files'.split()
@@ -228,7 +229,7 @@ class Config:
 
     @property
     def valid(self):
-        return True # now checking for folder at least
+        return self.wtlike_data.is_dir()  #True # now checking for folder at least
 
     def __str__(self):
         s = 'Configuration parameters \n'

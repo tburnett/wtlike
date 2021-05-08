@@ -17,85 +17,79 @@ Also, I've ported some code from  my [jupydoc](https://github.com/tburnett/jupyd
 Markdown reflects execution of the code.
 
 ## Installation
-Currently in pre-alpha, and must be cloned. This includes the `nbdev` support as well. 
+Istall from pip:
+
+```
+pip install wtlike
+```
 
 ## Demo
 
-The following code cell loads the data for the BL Lac blazar, and plots by default, a daily light curve for the full *fermi* mission
+The following code cell loads the data for the BL Lac blazar, and plots by default, a weekly light curve for the full *fermi* mission
 
 ```python
 from wtlike import *
-wtl = WtLike('BL Lac', bins=(0,0,7)) # how to define 7-day bins for the full dataset. Default is (0,0,1).
-wtl.plot_flux();
+weekly = WtLike('BL Lac') # how to define 7-day bins for the full dataset.
+weekly.plot(ylim=(-0.8,15)); #plot takes plt.plot args.
 ```
 
-    photons and exposure for BL Lac: Saving to cache with key "BL Lac__data"
-    Assembling photon data and exposure for source BL Lac from folder "/home/burnett/wtlike_data/data_files", with 664 files, last=week_673.pkl
-    	Using weeks (None, None)
-    ........................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................
-    Week at 2018-04-03 14:23 has only 0 photons
-    .
-    Week at 2018-04-05 01:08 has only 0 photons
-    .
-    Week at 2018-04-12 01:05 has only 0 photons
-    .
-    Week at 2018-04-19 01:05 has only 0 photons
-    ..........
-    Week at 2018-06-28 00:56 has only 0 photons
-    .......
-    Week at 2018-08-16 00:58 has only 0 photons
-    ........
-    Week at 2018-10-11 00:59 has only 0 photons
-    ....................................................................................................................................
-    Load weights from file /mnt/c/Users/thbur/OneDrive/fermi/wtlike-data/weight_files/BL_Lac_weights.pkl
-    	Found: P88Y6076 at (92.60, -10.44)
-    	Applyng weights: 0 / 404789 photon pixels are outside weight region
-    	95324 weights set to NaN
-    BBanalysis: Source BL Lac with:
-    	 data:       404,789 photons from   2008-08-04 to 2021-04-28
-    	 exposure: 3,171,944 intervals from 2008-08-04 to 2021-04-28
-    Bin photon data into 664.0 1-week bins from 54683.0 to 59331.0
-    Loaded 656 / 664 cells with at least 1 photons and exposure > 1e-06 for light curve analysis
+    SourceData: photons and exposure for BL Lac: Restoring from cache with key "BL Lac_data"
+    WtLike: Source BL Lac with:
+    	 data:       310,969 photons from   2008-08-04 to 2021-05-06
+    	 exposure: 3,177,752 intervals from 2008-08-04 to 2021-05-06
+    CellData: Bin photon data into 665 1-week bins from 54683.0 to 59338.0
+    LightCurve: select 656 cells for fitting with e>0.5 & n>2
 
 
 
 ![png](docs/images/output_2_1.png)
 
 
-The variable `wtl` has lots of capabilities.
-To examine a subset of the data at the end of the current data, we create a new `WtLike` object and plot it.
+The variable `weekly` has lots of capabilities.
+To examine a subset of the data at the end of the current data, we use `view` to create a new `WtLike` object and plot it.
 
 ```python
-wtl2 = wtl.view((-5,0, 1/24)) # for the last 5 days, 1-hour bins
-wtl2.plot_flux(fmt='o'); # Accepts plt.plot args, e.g. xlim, ylim, etc.
+len(weekly.cells)
 ```
 
-    Bin photon data into 120.0 1-hour bins from 59328.0 to 59333.0
-    Loaded 107 / 120 cells with at least 1 photons and exposure > 1e-06 for light curve analysis
 
 
 
-![png](docs/images/output_4_1.png)
+    665
 
 
-Or, to do a Bayesian Block partiton with these 1-hour bins, perform fits, and overplot the result, just run the following.
 
 ```python
-wtl2.plot_BB(fmt='o');
+hourly_at_end = weekly.view((-5,0, 1/24)) # for the last 5 days, 1-hour bins
+hourly_at_end.plot(); # Accepts plt.plot args, e.g. xlim, ylim, etc.
 ```
 
-    Partitioned 107 cells into 8 blocks, using LikelihoodFitness 
-    Loaded 8 / 8 cells for fitting
+    CellData: Bin photon data into 120 1-hour bins from 59335.0 to 59340.0
+    LightCurve: select 81 cells for fitting with e>0.5 & n>2
 
 
 
-![png](docs/images/output_6_1.png)
+![png](docs/images/output_5_1.png)
+
+
+Or, to do a Bayesian Block partition with these 1-hour bins, perform fits, and overplot the result, just run the following.
+
+```python
+hourly_at_end.plot_BB(fmt='o');
+```
+
+    Partitioned 81 cells into 4 blocks, using LikelihoodFitness 
+    LightCurve: Loaded 4 / 4 cells for fitting
+
+
+
+![png](docs/images/output_7_1.png)
 
 
 Finally, let's look at the values plotted above:
 
 ```python
-wtl2.bb_table()
+hourly_at_end.bb_table()
 ```
 
 
@@ -131,83 +125,43 @@ wtl2.bb_table()
   <tbody>
     <tr>
       <th>0</th>
-      <td>59328.73</td>
-      <td>1.46</td>
-      <td>312</td>
-      <td>0.33</td>
-      <td>88.3</td>
-      <td>(-0.049, 0.051)</td>
-      <td>0.41</td>
+      <td>59335.42</td>
+      <td>0.83</td>
+      <td>178</td>
+      <td>6.70</td>
+      <td>404.1</td>
+      <td>(-0.655, 0.689)</td>
+      <td>7.89</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>59330.02</td>
-      <td>1.12</td>
-      <td>362</td>
-      <td>0.76</td>
-      <td>231.8</td>
-      <td>(-0.078, 0.08)</td>
-      <td>0.90</td>
+      <td>59336.69</td>
+      <td>1.71</td>
+      <td>205</td>
+      <td>2.38</td>
+      <td>170.0</td>
+      <td>(-0.308, 0.323)</td>
+      <td>2.93</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>59330.83</td>
-      <td>0.50</td>
-      <td>290</td>
-      <td>1.83</td>
-      <td>439.6</td>
-      <td>(-0.155, 0.162)</td>
-      <td>2.10</td>
+      <td>59338.02</td>
+      <td>0.96</td>
+      <td>222</td>
+      <td>8.70</td>
+      <td>573.6</td>
+      <td>(-0.734, 0.767)</td>
+      <td>10.01</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>59331.17</td>
-      <td>0.17</td>
-      <td>229</td>
-      <td>7.32</td>
-      <td>727.3</td>
-      <td>(-0.563, 0.588)</td>
-      <td>8.33</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>59331.31</td>
-      <td>0.12</td>
-      <td>103</td>
-      <td>3.67</td>
-      <td>242.3</td>
-      <td>(-0.445, 0.475)</td>
-      <td>4.50</td>
-    </tr>
-    <tr>
-      <th>5</th>
-      <td>59331.67</td>
-      <td>0.58</td>
-      <td>236</td>
-      <td>1.01</td>
-      <td>200.0</td>
-      <td>(-0.116, 0.121)</td>
-      <td>1.22</td>
-    </tr>
-    <tr>
-      <th>6</th>
-      <td>59332.35</td>
-      <td>0.79</td>
-      <td>213</td>
-      <td>0.48</td>
-      <td>87.9</td>
-      <td>(-0.075, 0.079)</td>
-      <td>0.61</td>
-    </tr>
-    <tr>
-      <th>7</th>
-      <td>59332.88</td>
-      <td>0.25</td>
-      <td>101</td>
-      <td>1.56</td>
-      <td>130.9</td>
-      <td>(-0.222, 0.238)</td>
-      <td>1.97</td>
+      <td>59339.23</td>
+      <td>1.46</td>
+      <td>217</td>
+      <td>4.48</td>
+      <td>369.4</td>
+      <td>(-0.434, 0.454)</td>
+      <td>5.25</td>
     </tr>
   </tbody>
 </table>
