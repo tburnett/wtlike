@@ -91,12 +91,12 @@ nb_path: "nbs/99-main.ipynb"
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">global</span> <span class="n">full</span>
     
-    <span class="k">with</span> <span class="n">capture_print</span><span class="p">(</span><span class="s1">&#39;Create full weekly light curve&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">out1</span><span class="p">:</span>
-        <span class="n">full</span> <span class="o">=</span> <span class="n">WtLike</span><span class="p">(</span><span class="s1">&#39;3C 279&#39;</span><span class="p">)</span>
+    <span class="c1">#with capture_print(&#39;Create full weekly light curve&#39;) as out1:</span>
+    <span class="n">full</span> <span class="o">=</span> <span class="n">WtLike</span><span class="p">(</span><span class="s1">&#39;3C 279&#39;</span><span class="p">)</span>
     
     <span class="n">fig1</span> <span class="o">=</span> <span class="n">figure</span><span class="p">(</span>
         <span class="n">full</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">yscale</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">,</span> <span class="n">ylim</span><span class="o">=</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span><span class="mi">20</span><span class="p">),</span> <span class="n">ts_min</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span> <span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;MJD&#39;</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">fignum</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
-        <span class="n">width</span><span class="o">=</span><span class="mi">600</span><span class="p">)</span>  
+        <span class="n">caption</span><span class="o">=</span><span class="s1">&#39;Full scale&#39;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">600</span><span class="p">)</span>  
     
     <span class="n">fig2</span> <span class="o">=</span> <span class="n">figure</span><span class="p">(</span>
         <span class="n">full</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>  <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span> <span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;MJD&#39;</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">fignum</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>  <span class="n">xlim</span><span class="o">=</span><span class="p">(</span><span class="mi">57100</span><span class="p">,</span> <span class="mi">57300</span><span class="p">),),</span>
@@ -131,24 +131,29 @@ nb_path: "nbs/99-main.ipynb"
 
 <div class="output_area">
 
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>SourceData: photons and exposure for 3C 279: Restoring from cache with key &#34;3C 279_data&#34;
+WtLike: Source 3C 279 with:
+	 data:       179,712 photons from   2008-08-04 to 2021-05-05
+	 exposure: 2,818,132 intervals from 2008-08-04 to 2021-05-06
+CellData: Bin photon data into 665 1-week bins from 54683.0 to 59338.0
+LightCurve: select 656 cells for fitting with e&gt;0.5 &amp; n&gt;2
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
 
 <div class="output_markdown rendered_html output_subarea ">
 <h2 id="Test/Demonstration-with-3C-279">Test/Demonstration with 3C 279<a class="anchor-link" href="#Test/Demonstration-with-3C-279"> </a></h2><blockquote><p>Note that this also demonstrates using <code>nbdoc</code> to have a single Jupyterlab cell generate a document</p>
 </blockquote>
-<p>First, the weekly light curve:</p>
-<p><details  class="nbdoc-description" >  <summary> Create full weekly light curve </summary>  <div style="margin-left: 5%"><pre>SourceData: photons and exposure for 3C 279: Restoring from cache with key "3C 279_data"<br>WtLike: Source 3C 279 with:<br>    data:       179,712 photons from   2008-08-04 to 2021-05-05<br>     exposure: 2,818,132 intervals from 2008-08-04 to 2021-05-06<br>CellData: Bin photon data into 665 1-week bins from 54683.0 to 59338.0<br>LightCurve: select 656 cells for fitting with e&gt;0.5 & n&gt;2<br></pre></div> </details>    <div class="nbdoc_image"></p>
-<p><figure style="margin-left: 5%" title="Figure 1">  <a href="images/demo_fig_01.png" title="images/demo_fig_01.png">    <img src="images/demo_fig_01.png" alt="Figure 1 at images/demo_fig_01.png" width=600>   </a> </figure>
-&lt;/div&gt;</p>
+<p>First, the weekly light curve:
+{out1}    <figure style="margin-left: 5%" title="Figure 1">  <a href="images/demo_fig_01.png" title="images/demo_fig_01.png">    <img src="images/demo_fig_01.png" alt="Figure 1 at images/demo_fig_01.png" width=600>   </a>  <figcaption><b>Figure 1</b>. Full scale</figcaption></figure></p>
 <p>Replot the figure with an expanded scale to see position of a flare:</p>
-<div class="nbdoc_image">
 <figure style="margin-left: 5%" title="Figure 2">  <a href="images/demo_fig_02.png" title="images/demo_fig_02.png">    <img src="images/demo_fig_02.png" alt="Figure 2 at images/demo_fig_02.png" width=600>   </a> </figure>
-</div><p><details  class="nbdoc-description" >  <summary> Define orbit-based subset around large flare at MJD 57189 </summary>  <div style="margin-left: 5%"><pre>CellData: Bin photon data into 80 orbit-based bins from 57186.1 to 57191.0<br>LightCurve: select 61 cells for fitting with e&gt;0.5 & n&gt;2<br></pre></div> </details>    <div class="nbdoc_image"></p>
-<p><figure style="margin-left: 5%" title="Figure 3">  <a href="images/demo_fig_03.png" title="images/demo_fig_03.png">    <img src="images/demo_fig_03.png" alt="Figure 3 at images/demo_fig_03.png" width=600>   </a> </figure>
-&lt;/div&gt;</p>
-<p><details  class="nbdoc-description" >  <summary> Apply BB and overplot it with the cells on which it is based </summary>  <div style="margin-left: 5%"><pre>LightCurve: select 61 cells for fitting with e&gt;0.5 & n&gt;2<br>Partitioned 61 cells into 10 blocks, using LikelihoodFitness <br>LightCurve: Loaded 10 / 10 cells for fitting<br></pre></div> </details>    <div class="nbdoc_image"></p>
-<p><figure style="margin-left: 5%" title="Figure 4">  <a href="images/demo_fig_04.png" title="images/demo_fig_04.png">    <img src="images/demo_fig_04.png" alt="Figure 4 at images/demo_fig_04.png" width=600>   </a> </figure>
-&lt;/div&gt;</p>
-<p>Table of BB fits</p>
+<details  class="nbdoc-description" >  <summary> Define orbit-based subset around large flare at MJD 57189 </summary>  <div style="margin-left: 5%"><pre>CellData: Bin photon data into 80 orbit-based bins from 57186.1 to 57191.0<br>LightCurve: select 61 cells for fitting with e&gt;0.5 & n&gt;2<br></pre></div> </details>    <figure style="margin-left: 5%" title="Figure 3">  <a href="images/demo_fig_03.png" title="images/demo_fig_03.png">    <img src="images/demo_fig_03.png" alt="Figure 3 at images/demo_fig_03.png" width=600>   </a> </figure>
+<details  class="nbdoc-description" >  <summary> Apply BB and overplot it with the cells on which it is based </summary>  <div style="margin-left: 5%"><pre>LightCurve: select 61 cells for fitting with e&gt;0.5 & n&gt;2<br>Partitioned 61 cells into 10 blocks, using LikelihoodFitness <br>LightCurve: Loaded 10 / 10 cells for fitting<br></pre></div> </details>    <figure style="margin-left: 5%" title="Figure 4">  <a href="images/demo_fig_04.png" title="images/demo_fig_04.png">    <img src="images/demo_fig_04.png" alt="Figure 4 at images/demo_fig_04.png" width=600>   </a> </figure><p>Table of BB fits</p>
 <div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
@@ -242,9 +247,7 @@ nb_path: "nbs/99-main.ipynb"
   </tbody>
 </table>
 </div><p>This can be compared with Figure 4 from the <a href="https://arxiv.org/pdf/1910.00140.pdf">Kerr paper</a></p>
-<div class="nbdoc_image">
 <figure style="margin-left: 5%" title="Figure 5">  <a href="images/demo_fig_05.png" title="images/demo_fig_05.png">    <img src="images/demo_fig_05.png" alt="Figure 5 at images/demo_fig_05.png" width=600>   </a> </figure>
-</div>
 </div>
 
 </div>

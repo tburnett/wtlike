@@ -201,15 +201,22 @@ class FigureWrapper(Wrapper):
             img_width = f'width={fig.width}' if hasattr(fig,'width') else ''
 
             # add the HTML as an attribute, to insert the image, including  caption
+#             self._html =\
+#                 f'<div class="{self.fig_class}">\n'\
+#                     f'<figure style="margin-left: {self.indent}" title="Figure {n}">'\
+#                     f'  <a href="{browser_fn}" title="{browser_fn}">'\
+#                     f'    <img src="{browser_fn}" alt="Figure {n} at {browser_fn}" {img_width}>'\
+#                      '   </a>'\
+#                     f' {figcaption}' \
+#                      '</figure>'\
+#                 '</div>\n'
             self._html =\
-                f'<div class="{self.fig_class}">\n'\
                     f'<figure style="margin-left: {self.indent}" title="Figure {n}">'\
                     f'  <a href="{browser_fn}" title="{browser_fn}">'\
                     f'    <img src="{browser_fn}" alt="Figure {n} at {browser_fn}" {img_width}>'\
                      '   </a>'\
                     f' {figcaption}' \
-                     '</figure>\n'\
-                '</div>\n'
+                     '</figure>'\
             #print(f'HTML:\n{self._html}')
         return self._html
 
