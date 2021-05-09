@@ -73,10 +73,7 @@ class _LightCurve(object):
 
     @property
     def dataframe(self):
-        """return the DataFrame
-        """
         return self.ll_fits
-
 #     def plot(self, **kwargs):
 #         flux_plot(self.config, self, **kwargs)
 
@@ -156,11 +153,11 @@ def flux_plot(config, lightcurve, ts_min=0,  ts_bar_min=2,
               source_name=None,
               zorder=0,
               **kwargs):
-    """Make a plot of flux vs. time
+    """Make a plot of flux vs. time. This is invoked by the `plot` function of `LightCurve`
 
     - lightcurve -- lightcurve DataFrame
     - ts_min -- threshold for ploting point
-    - ts_bar_min -- threshold for plotting as bar
+    - ts_bar_min -- threshold for plotting as bar vs limit
     - colors -- tuple of colors for signal, limit, step
     - tzero -- time offset, in MJD
     - kwargs -- apply to the Axis object
@@ -300,11 +297,12 @@ class LightCurve(CellData):
         """Make a light curve plot"""
         return self.plot_flux(**kwargs)
 
-    def flux_table(self, lc=None, expect=1):
+    def flux_table(self, lc=None, include_e=False):
 
         """Generate a summary table from the light curve
 
         - lc -- A light curve fits dataframe; use current one if not specified
+        - includ_e -- include the exposure
         """
         if lc is None: lc=self.fits
 
@@ -315,11 +313,16 @@ class LightCurve(CellData):
         #sigma_dev = fits.apply(lambda f: round(f.poiss.sigma_dev(expect),1) )
 
         df = lc['t tw n'.split()].copy() # maybe fix warnings?
-        df.loc[:,'flux'] = flux.values.round(4)
+        if include_e:
+            df.loc[:,'e'] = self.fits.e
         df.loc[:, 'ts'] =  fits.apply(lambda f: f.ts).round(1)
+        df.loc[:,'flux'] = flux.values.round(4)
         df.loc[:, 'errors'] = errors.values
         #df.loc[:, 'sigma_dev'] = sigma_dev.values
         df.loc[:, 'limit'] =  fits.apply(lambda f: f.limit)
-
-
         return df
+
+    @property
+    def fluxes(self):
+        """A DataFrame table of the flux measurements"""
+        return self.flux_table()

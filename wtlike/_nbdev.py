@@ -44,9 +44,7 @@ index = {"Cache": "00_config.ipynb",
          "LikelihoodFitness": "14_bayesian.ipynb",
          "doc_countfitness": "14_bayesian.ipynb",
          "get_bb_partition": "14_bayesian.ipynb",
-         "bb_overplot": "14_bayesian.ipynb",
-         "WtLike": "14_bayesian.ipynb",
-         "BBA": "14_bayesian.ipynb"}
+         "WtLike": "99-main.ipynb"}
 
 modules = ["config.py",
            "data_man.py",
@@ -58,7 +56,8 @@ modules = ["config.py",
            "cell_data.py",
            "lightcurve.py",
            "simulation.py",
-           "bayesian.py"]
+           "bayesian.py",
+           "main.py"]
 
 doc_url = "https://tburnett.github.io/wtlike"
 

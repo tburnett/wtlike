@@ -11,6 +11,7 @@ from .source_data import *
 from .loglike import LogLike, PoissonRep
 
 # Cell
+
 class CellData(SourceData):
     """Manage a set of cells generated from a data set
 
@@ -33,6 +34,7 @@ class CellData(SourceData):
 
         self.exp_totexposure_factor=1e-6
         self.rebin(bins)
+        self.parent = None
 
     def rebin(self, newbins):
         """bin, or rebin
@@ -94,25 +96,29 @@ class CellData(SourceData):
 
     def update(self): pass # virtual
 
-    def view(self, newbins):
-        """Return a "view": a new instance of this class with a different set of cells
+    def view(self, newbins=None):
+        """Return a "view": a new instance of this class with a perhaps a different set of cells
 
+        - newbins -- a tuple (start, stop, step) to define new binning.
+          - start and stop are either MJD values, or offsets from the start or stop.
+          - step -- the cell size in days, or if zero, orbit-based binning
         """
         import copy
         if self.config.verbose>1:
             print(f'Making a view of the class {self.__class__}')
         r = copy.copy(self)
 
-        r.rebin(newbins)
-
+        if newbins is not None:
+            r.rebin(newbins)
+        r.parent = self
         r.update()
         return r
 
-
-    def __repr__(self):
-        return f'''{self.__class__}:
-        {len(self.fexposure)} intervals from {self.cell_edges[0]:.1f} to {self.cell_edges[-1]:.1f} for source {self.source_name}
-        S {self.S:.2f}  B {self.B:.2f} '''
+#### needs fixxing
+#     def __repr__(self):
+#         return f'''{self.__class__}:
+#         {len(self.fexposure)} intervals from {self.cell_edges[0]:.1f} to {self.cell_edges[-1]:.1f} for source {self.source_name}
+#         S {self.S:.2f}  B {self.B:.2f} '''
 
 
     def concatenate( self ):

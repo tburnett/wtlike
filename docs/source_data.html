@@ -2,6 +2,7 @@
 
 title: Source Data management
 
+
 keywords: fastai
 sidebar: home_sidebar
 
@@ -30,16 +31,16 @@ nb_path: "nbs/04_source_data.ipynb"
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Overview">Overview<a class="anchor-link" href="#Overview"> </a></h3><p>Given a point source, the class <a href="/wtlikesource_data#SourceData"><code>SourceData</code></a> manages all data-oriented operations, providing all that is necessary to create a set of cells. It depends on the modules</p>
+<h3 id="Overview">Overview<a class="anchor-link" href="#Overview"> </a></h3><p>Given a point source, the class <a href="/wtlikesource_data.html#SourceData"><code>SourceData</code></a> manages all data-oriented operations, providing all that is necessary to create a set of cells. It depends on the modules</p>
 <ul>
-<li><p><a href="/wtlikeconfig"><code>config</code></a> 
-  This must set up the paths to the data created by <a href="/wtlikedata_man"><code>data_man</code></a>, and define paths for the effective area and weight files</p>
+<li><p><a href="/wtlikeconfig.html"><code>config</code></a> 
+  This must set up the paths to the data created by <a href="/wtlikedata_man.html"><code>data_man</code></a>, and define paths for the effective area and weight files</p>
 </li>
 <li><p>effective_area</p>
 </li>
 <li>weights</li>
 </ul>
-<p>It implements <a href="/wtlikesource_data#binned_exposure"><code>binned_exposure</code></a></p>
+<p>It implements <a href="/wtlikesource_data.html#binned_exposure"><code>binned_exposure</code></a></p>
 
 </div>
 </div>
@@ -105,13 +106,6 @@ nb_path: "nbs/04_source_data.ipynb"
     
 <div class="cell border-box-sizing code_cell rendered">
 
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
 <div class="output_wrapper">
 <div class="output">
 
@@ -165,6 +159,13 @@ otherwise, offset from start
 
 </div>
 </div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
 
 </div>
     {% endraw %}
@@ -263,13 +264,6 @@ otherwise, offset from start
     
 <div class="cell border-box-sizing code_cell rendered">
 
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
 <div class="output_wrapper">
 <div class="output">
 
@@ -306,6 +300,13 @@ it is interleaved, client must apply [0::2] selection.</p>
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 
 <div class="inner_cell">
@@ -317,13 +318,6 @@ it is interleaved, client must apply [0::2] selection.</p>
     </div>
 </div>
 </div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
 
 </div>
     {% endraw %}
@@ -349,7 +343,7 @@ it is interleaved, client must apply [0::2] selection.</p>
 </ol>
 <ul>
 <li>source_name : if specified, create a PointSource object</li>
-<li><a href="/wtlikeconfig"><code>config</code></a> : basic configuration</li>
+<li><code>config</code> : basic configuration</li>
 <li><code>source</code> : PointSource object if specified</li>
 <li><code>clear</code> : if set, overwrite the cached results</li>
 </ul>
@@ -365,6 +359,13 @@ it is interleaved, client must apply [0::2] selection.</p>
 
 </div>
 </div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
 
 </div>
     {% endraw %}
@@ -443,7 +444,7 @@ SourceData: Source Geminga with:
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># %nbdev_hide</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># #  hide</span>
 <span class="c1"># sd = SourceData(&#39;Geminga&#39;) </span>
 <span class="c1"># sd.plot_data()</span>
 </pre></div>

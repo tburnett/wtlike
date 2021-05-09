@@ -1,5 +1,5 @@
-__version__ = "0.1.5"
+__version__ = "0.1.6"
 
-from .bayesian import WtLike
+from .main import WtLike
 from .config import Config, PointSource, UTC, MJD
 from .loglike import PoissonRep
