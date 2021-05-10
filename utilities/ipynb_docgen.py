@@ -1,21 +1,38 @@
 """
-Extracted from jupydoc to support single-cell output with nbdev
-Usage:
+Support single-cell documents in jupyter
 
-from utilities.ipynb.docgen import *
+Usage: Wtih code like this in a cell
 
-def userdoc():
-    '''
-    text to show, with {} strings.
-    '''
-    # (code)
-    # 
-    return locals()
-    
-nbdoc(userdoc,)
+    from utilities.ipynb.docgen import *
+
+    def userdoc():
+        '''
+        Markdown text  with {} strings.
+        '''
+        # (code)
+        # 
+        return locals()
+
+    nbdoc(userdoc,)
+
+will display the text, with the {} strings replaceed by representations of the variables, like an f-string.
+
+Useful routines:
+
+- image 
+- figure
+- monospace
+- capture_print
+- shell
+- create_file
+
+Names that are recognized:
+
+- date
 """
 import sys, os, shutil, string, pprint, datetime
-import nbdev # only for a show_doc
+
+#import nbdev # only for a show_doc
 
 __all__ = ['nbdoc', 'image', 'figure', 'monospace', 'capture_print', 'shell', 'create_file'] #,'show_doc']
 
@@ -420,10 +437,10 @@ def create_file(func, filename, folder='images'):
     shutil.copyfile(ifilename, Path('../docs'/ifilename))
     return f'[{filename}]({ifilename})'    
 
-# convenient interface to show_doc, with disp set to false
-def show_doc(elt, **kwargs):
-    kwargs.update(disp=False)
-    return nbdev.showdoc.show_doc(elt,  **kwargs)
+# # convenient interface to show_doc, with disp set to false
+# def show_doc(elt, **kwargs):
+#     kwargs.update(disp=False)
+#     return nbdev.showdoc.show_doc(elt,  **kwargs)
 
 def nbdoc(fun, *pars, name=None, **kwargs):
     """Format the output from an IPython notebook cell using the functon's docstring and computed variables.

@@ -2,7 +2,6 @@
 
 title: Log Likelihood tools
 
-
 keywords: fastai
 sidebar: home_sidebar
 
@@ -57,6 +56,13 @@ where $n$ is the the number of photons.</p>
     
 <div class="cell border-box-sizing code_cell rendered">
 
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
 <div class="output_wrapper">
 <div class="output">
 
@@ -79,13 +85,6 @@ where $n$ is the the number of photons.</p>
 
 </div>
 </div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
 
 </div>
     {% endraw %}
@@ -151,6 +150,13 @@ where $n$ is the the number of photons.</p>
     
 <div class="cell border-box-sizing code_cell rendered">
 
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
 <div class="output_wrapper">
 <div class="output">
 
@@ -168,13 +174,6 @@ where $n$ is the the number of photons.</p>
 
 </div>
 </div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
 
 </div>
     {% endraw %}
@@ -226,6 +225,13 @@ dtype: float64</pre>
     
 <div class="cell border-box-sizing code_cell rendered">
 
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
 <div class="output_wrapper">
 <div class="output">
 
@@ -242,13 +248,6 @@ dtype: float64</pre>
 
 </div>
 </div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
 
 </div>
     {% endraw %}
@@ -364,6 +363,13 @@ and $ k(s-b)= k^2 v = n$.</p>
     
 <div class="cell border-box-sizing code_cell rendered">
 
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
 <div class="output_wrapper">
 <div class="output">
 
@@ -373,13 +379,13 @@ and $ k(s-b)= k^2 v = n$.</p>
 <div class="output_markdown rendered_html output_subarea ">
 <h2 id="PoissonRep" class="doc_header"><code>class</code> <code>PoissonRep</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/loglike.py#L232" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>PoissonRep</code>(<strong><code>loglike</code></strong>, <strong><code>tol</code></strong>=<em><code>0.2</code></em>, <strong><code>ts_min</code></strong>=<em><code>25</code></em>)</p>
 </blockquote>
-<p>Manage the representation of the log likelihood of a cell by a <a href="/wtlikepoisson.html#Poisson"><code>Poisson</code></a>.</p>
+<p>Manage the representation of the log likelihood of a cell by a <a href="/wtlikepoisson#Poisson"><code>Poisson</code></a>.</p>
 <ul>
 <li>loglike: a LogLike object</li>
 <li>ts_min : tolerance for if use fitter</li>
 <li>thresh: sigma threshold to assume no Bayesian restriction</li>
 </ul>
-<p>Constructor takes a <a href="/wtlikeloglike.html#LogLike"><code>LogLike</code></a> object, fits it to the poisson-like function (see <a href="/wtlikepoisson.html#Poisson"><code>Poisson</code></a>), and
+<p>Constructor takes a <a href="/wtlikeloglike#LogLike"><code>LogLike</code></a> object, fits it to the poisson-like function (see <a href="/wtlikepoisson#Poisson"><code>Poisson</code></a>), and
 defines a function to evaluate that.</p>
 <p>Note that beta is set to zero.</p>
 <p>If the rate is significant, more than 5 $\sigma$, so that the likelihood is not truncated by the
@@ -399,13 +405,6 @@ and $ k(s-b)= k^2 v = n$.</p>
 
 </div>
 </div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
 
 </div>
     {% endraw %}
@@ -485,6 +484,13 @@ Poisson: mu,beta= 1000.0, 209.4 [1.0, 790.5694150420948, 0.2649110640673519]
     
 <div class="cell border-box-sizing code_cell rendered">
 
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
 <div class="output_wrapper">
 <div class="output">
 
@@ -492,7 +498,7 @@ Poisson: mu,beta= 1000.0, 209.4 [1.0, 790.5694150420948, 0.2649110640673519]
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="PoissonRepTable" class="doc_header"><code>class</code> <code>PoissonRepTable</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/loglike.py#L369" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>PoissonRepTable</code>(<strong><code>loglike</code></strong>) :: <a href="/wtlikeloglike.html#PoissonRep"><code>PoissonRep</code></a></p>
+<h2 id="PoissonRepTable" class="doc_header"><code>class</code> <code>PoissonRepTable</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/loglike.py#L369" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>PoissonRepTable</code>(<strong><code>loglike</code></strong>) :: <a href="/wtlikeloglike#PoissonRep"><code>PoissonRep</code></a></p>
 </blockquote>
 <p>Create a table, then interpolate it</p>
 
@@ -502,13 +508,6 @@ Poisson: mu,beta= 1000.0, 209.4 [1.0, 790.5694150420948, 0.2649110640673519]
 
 </div>
 </div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
 
 </div>
     {% endraw %}

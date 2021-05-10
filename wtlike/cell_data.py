@@ -30,9 +30,8 @@ class CellData(SourceData):
         bins = kwargs.pop('bins', kwargs.pop('time_bins', Config().time_bins))
         #  load source data
         super().__init__(*pars, **kwargs )
-        self.use_uint8  = self.config.use_uint8
 
-        self.exp_totexposure_factor=1e-6
+
         self.rebin(bins)
         self.parent = None
 
@@ -48,7 +47,7 @@ class CellData(SourceData):
                   f' bins from {edges[0]:.1f} to {edges[-1]:.1f}')
 
         # note need to take care of interleave
-        # recast exposure as cm^2 * Ms,
+
         self.binexp = self.binned_exposure( edges ) [0::2]
 
 
@@ -61,7 +60,9 @@ class CellData(SourceData):
         """
         Generate the cell DataFrame
 
-        Note that the `e`  cell entry is the actual exposure for the cell in units $cm^2\ s$, times $10^{-6}$.
+        - exposure_factor --  recast exposure as cm^2 * Ms if $10^{-6}$
+
+        Thus the `e`  cell entry is the actual exposure for the cell in units $cm^2\ Ms$.
         """
         # restrict photons to range of bin times
         photons = self.photons.query(f'{self.cell_edges[0]}<time<{self.cell_edges[-1]}')

@@ -28,7 +28,7 @@ class _LightCurve(object):
 
     def __init__(self, config,
                 cells,
-                source,
+                source_name,
                 rep_name: 'likelihood rep name'='',
 
                 ):
@@ -37,7 +37,7 @@ class _LightCurve(object):
 
         """
 
-        self.source_name = source.name
+        self.source_name = source_name
         self.config=config
 
         # select the set of cells
@@ -122,8 +122,8 @@ def get_LightCurve(config,  source, cell_query='e>1e-6',  key=''):
 
 #     if bin_edges is None:
         # use cache only with default bins
-    key = f'lightcurve_{source.name}' if key=='' else  key
-    description = f'Light curve with {cell_query} for {source.name}' if config.verbose>0 and key is not None else ''
+    key = f'lightcurve_{source_name}' if key=='' else  key
+    description = f'Light curve with {cell_query} for {source_name}' if config.verbose>0 and key is not None else ''
     return config.cache(key, doit, description=description)
 #     else:
 #         return doit()
@@ -275,11 +275,11 @@ class LightCurve(CellData):
                 print(f'LightCurve: select {len(fit_cells)} cells for fitting with {query_string}' )
             assert len(fit_cells)>0, 'No cells from CellData after query'
             # the local workhorse
-            return _LightCurve(self.config, fit_cells, self.source).dataframe
+            return _LightCurve(self.config, fit_cells, self.source_name).dataframe
 
         # use cache only with default bins?
-        key = f'lightcurve_{source.name}' if self.lc_key=='' else  self.lc_key
-        description = f'Light curve with {cell_query} for {source.name}' if self.config.verbose>0 and key is not None else ''
+        key = f'lightcurve_{source_name}' if self.lc_key=='' else  self.lc_key
+        description = f'Light curve with {cell_query} for {source_name}' if self.config.verbose>0 and key is not None else ''
         self.lc = self.fits =  self.config.cache(key, doit, description=description)
 
     def plot_flux(self, **kwargs):
