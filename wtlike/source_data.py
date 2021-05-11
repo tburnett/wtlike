@@ -375,10 +375,10 @@ class SourceData(object):
         if type(source)==str:
 
             try:
-                self.source = PointSource(source_name) if source_name else source
+                self.source = PointSource(source)
             except Exception as e:
                 print(f'{e}', file=sys.stderr)
-                return
+                raise
 
             self.source_name = self.source.name
 
