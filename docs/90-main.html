@@ -48,7 +48,44 @@ nb_path: "nbs/90-main.ipynb"
 <div class="output_markdown rendered_html output_subarea ">
 <h2 id="WtLike" class="doc_header"><code>class</code> <code>WtLike</code><a href="" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>WtLike</code>(<strong>*<code>pars</code></strong>, <strong>**<code>kwargs</code></strong>) :: <a href="/wtlikelightcurve#LightCurve"><code>LightCurve</code></a></p>
 </blockquote>
-<p>Inherit from <a href="/wtlikelightcurve#LightCurve"><code>LightCurve</code></a> and add Bayesian Block capability</p>
+<h2 id="Summary">Summary<a class="anchor-link" href="#Summary"> </a></h2><p>There are three layers of initialization, implemented in superclasses,
+each with parameters. The classnames, associated parameters and data members set:</p>
+<p>SourceData -- load photons and exposure
+    parameters:</p>
+
+<pre><code>  - source : name, a PointSource object, or a Simulation object
+  - config [Config()] : basic configuration
+  - week_range [None] : range of weeks to load
+  - key [''] : the cache key: '' means construct one with the source name, None to disable
+  - clear [False] : if using cache, clear the contents first
+sets:
+  - photons
+  - exposure
+
+</code></pre>
+<p>CellData -- create cells
+    parameters:</p>
+
+<pre><code>  - time_bins [Config().time_bins] : binning: start, stop, binsize
+sets:
+  - cells
+
+</code></pre>
+<p>LightCurve -- likelihood analysis of the cells
+    parameters:</p>
+
+<pre><code>  - e_min [10] -- threshold for exposure (cm^2 units)
+  - n_min [2]  -- likelihood has trouble with this few
+  - lc_key [None] -- possible cache for light curve
+sets:
+  - fits, fluxes
+
+</code></pre>
+<p>WtLike (this class) -- no parameters (may add BB-specific ones)
+    Implements:  bb_view, plot_BB
+    sets:</p>
+
+<pre><code>  - bb_flux  (only if bb_view invoked)</code></pre>
 
 </div>
 
@@ -134,9 +171,9 @@ nb_path: "nbs/90-main.ipynb"
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>SourceData: photons and exposure for 3C 279: Restoring from cache with key &#34;3C 279_data&#34;
 WtLike: Source 3C 279 with:
-	 data:       179,695  photons   from 2008-08-04 to 2021-04-21
-	 exposure: 2,817,749 intervals  from 2008-08-04 to 2021-04-20
-	 est. rates from weights: source 4.03e-07/s, background 3.25e-07/s, S/N ratio 1.24
+	 data:       179,695 photons from 2008-08-04 to 2021-04-21
+	 exposure: 2,817,749 intervals,  average rate 2935 cm^2 for 84.1 Ms
+	 rates:  source 4.03e-07/s, background 3.25e-07/s, S/N ratio 1.24
 CellData: Bin photon data into 663 1-week bins from 54683.0 to 59324.0
 LightCurve: select 655 cells for fitting with e&gt;0.5 &amp; n&gt;2
 </pre>
