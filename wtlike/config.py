@@ -204,18 +204,19 @@ class Config:
 
     def __post_init__(self):
         # set up data
+        self.errors=[]
         if self.wtlike_data is None:
-            raise Exception('wtlike_data must be set')
+            self.errors.append('wtlike_data must be set')
         if self.cachepath is None:
-            raise Exception('wtlike_cache must be set')
+            self.errors.appnd('wtlike_cache must be set')
         self.wtlike_data = df = Path(self.wtlike_data).expanduser()
         self.cachepath =  Path(self.cachepath).expanduser()
         if not self.wtlike_data.is_dir() and not self.wtlike_data.is_symlink():
-            raise Exception(f'data_folder {df} not a directory or symlink')
+            self.errors.append(f'data_folder {df} not a directory or symlink')
         subs = 'aeff_files weight_files data_files'.split()
         for sub in subs:
             if not (df/sub).is_dir() and (df/sub).is_symlink() :
-                raise Exception(f'{df/sub} is not a directory or symlink')
+                self.errors.append(f'{df/sub} is not a directory or symlink')
         if self.verbose>1:
             print(self)
 
@@ -227,7 +228,7 @@ class Config:
 
     @property
     def valid(self):
-        return True #self.wtlike_data.is_dir()  #True # now checking for folder at least
+        return len(self.errors)==0
 
     def __str__(self):
         s = 'Configuration parameters \n'

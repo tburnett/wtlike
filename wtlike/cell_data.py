@@ -47,7 +47,6 @@ class CellData(SourceData):
                   f' bins from {edges[0]:.1f} to {edges[-1]:.1f}')
 
         # note need to take care of interleave
-
         self.binexp = self.binned_exposure( edges ) [0::2]
 
 

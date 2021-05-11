@@ -256,9 +256,9 @@ class LightCurve(CellData):
     """
     def __init__(self, *pars, **kwargs):
 
-        self.exp_min = kwargs.pop('e_min', 0.5) # corresponds to ~2counts
+        self.exp_min = kwargs.pop('e_min', 10) # corresponds to ~2counts
         self.n_min = kwargs.pop('n_min', 2)
-        self.lc_key = kwargs.pop('key', None)
+        self.lc_key = kwargs.pop('lc_key', None)
         super().__init__(*pars, **kwargs)
         self.update()
 
@@ -326,3 +326,7 @@ class LightCurve(CellData):
     def fluxes(self):
         """A DataFrame table of the flux measurements"""
         return self.flux_table()
+
+    def __init_subclass__(cls):
+        if cls.__doc__ is None:
+          raise AttributeError("No docstring")

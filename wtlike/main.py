@@ -9,7 +9,41 @@ from .cell_data import partition_cells
 
 class WtLike(LightCurve):
     """
-    Inherit from `LightCurve` and add Bayesian Block capability
+    Summary
+    ---------
+    There are three layers of initialization, implemented in superclasses,
+    each with parameters. The classnames, associated parameters and data members set:
+
+    SourceData -- load photons and exposure
+        parameters:
+          - source : name, a PointSource object, or a Simulation object
+          - config [Config()] : basic configuration
+          - week_range [None] : range of weeks to load
+          - key [''] : the cache key: '' means construct one with the source name, None to disable
+          - clear [False] : if using cache, clear the contents first
+        sets:
+          - photons
+          - exposure
+
+    CellData -- create cells
+        parameters:
+          - time_bins [Config().time_bins] : binning: start, stop, binsize
+        sets:
+          - cells
+
+    LightCurve -- likelihood analysis of the cells
+        parameters:
+          - e_min [10] -- threshold for exposure (cm^2 units)
+          - n_min [2]  -- likelihood has trouble with this few
+          - lc_key [None] -- possible cache for light curve
+        sets:
+          - fits, fluxes
+
+    WtLike (this class) -- no parameters (may add BB-specific ones)
+        Implements:  bb_view, plot_BB
+        sets:
+          - bb_flux  (only if bb_view invoked)
+
     """
     def bb_view(self, key=None, clear=False, **kwargs):
         """Return a view with the BB analysis applied

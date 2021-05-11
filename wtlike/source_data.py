@@ -371,6 +371,7 @@ class SourceData(object):
         """
 
         self.config = config if config else Config()
+        assert self.config.valid
         self.verbose = self.config.verbose
         self.simulated=False
 
