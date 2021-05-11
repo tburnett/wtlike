@@ -93,7 +93,7 @@ def _add_weights(config, wts, wt_pix, nside_wt, photon_data):
 
     # final grand lookup -- isn't numpy wonderful!
     photon_data.loc[:,'weight'] = wts[tuple([band_index, weight_index])]
-    if config.verbose>0:
+    if config.verbose>1:
         print(f'\t{sum(np.isnan(photon_data.weight.values))} weights set to NaN')
 
 

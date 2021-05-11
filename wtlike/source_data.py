@@ -6,7 +6,10 @@ __all__ = ['contiguous_bins', 'time_bin_edges', 'binned_exposure', 'SourceData']
 import os, sys
 import numpy as np
 import pandas as pd
-import healpy
+try: # make conda-build happy?
+    import healpy
+except:
+    pass
 import pickle
 from pathlib import Path
 
@@ -204,7 +207,7 @@ def time_bin_edges(config, exposure, tbin=None):
 
     interpretation of a, b:
 
-        if > 5000, interpret as MJD
+        if > 50000, interpret as MJD
         if <0, back from stop
         otherwise, offset from start
 
@@ -225,7 +228,7 @@ def time_bin_edges(config, exposure, tbin=None):
     else : start += a
 
 
-    if b>5000: stop=b
+    if b>50000: stop=b
     elif b>0: stop = start+b
     else: stop += b
 
@@ -432,18 +435,22 @@ class SourceData(object):
 
     def __repr__(self):
         time = self.photons.time.values
+
+        exp = self.exposure
+        days  = np.sum(exp.stop-exp.start); secs = days*24*3600
+        exp_text = f' average rate {self.exptot/secs:.0f} cm^2 for {secs/1e6:.1f} Ms'
+
         if not self.simulated:
-            photon_text = f' photons   from {UTC(time[0])[:10]} to {UTC(time[-1])[:10]}'
-            exp_text = f' from {UTC(self.exposure.iloc[0].start)[:10]} to {UTC(self.exposure.iloc[-1].stop)[:10]}'
+            photon_text = f'photons from {UTC(time[0])[:10]} to {UTC(time[-1])[:10]}'
         else:
-            photon_text = f' simulated photons'
-            exp_text = f'over {self.exposure.iloc[-1].stop-self.exposure.iloc[0].start} days.'
+            photon_text = f'simulated photons over {days:.1f} days.'
+
         r = f'{self.__class__.__name__}: Source {self.source_name} with:'\
             f'\n\t data:     {len(self.photons):9,} {photon_text}'\
-            f'\n\t exposure: {len(self.exposure):9,} intervals {exp_text}'
+            f'\n\t exposure: {len(self.exposure):9,} intervals, {exp_text}'
 
         src_rate, bkg_rate =self.S/self.exptot,  self.B/self.exptot
-        r+= f'\n\t est. rates from weights: source {src_rate:.2e}/s, background {bkg_rate:.2e}/s, S/N ratio {src_rate/bkg_rate:.2f}'
+        r+= f'\n\t rates:  source {src_rate:.2e}/s, background {bkg_rate:.2e}/s, S/N ratio {src_rate/bkg_rate:.2f}'
 
         return r
 

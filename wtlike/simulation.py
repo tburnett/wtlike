@@ -111,7 +111,7 @@ class WeightFunction(object):
 # Cell
 def make_exposure(fexp, start, stop, interval=300):
     """
-    - fexp -- exposure/s, a value or a function of time in day units
+    - fexp -- exposure in cm^2, a value or a function of time in day units
     - start, stop -- range of time in day units
     - interval [300] -- 5-min interval (fermi data is 30 s)
 
@@ -130,18 +130,22 @@ def make_exposure(fexp, start, stop, interval=300):
     exp = fexp(starts) * interval
     return pd.DataFrame.from_dict(dict(start=starts, stop=stops, exp=exp))
 
-# df  = make_exposure(500, 0, 30 )
-# df
+# exp  = make_exposure(500, 0, 1 )
+# days  = np.sum(exp.stop-exp.start); secs = days*24*3600
+# exptot=np.sum(exp.exp)
+# exp_text = f' average {exptot/secs:.0f} cm^2 for {secs/1e6:.1f} Ms'
+# print(exp_text)
+# exp.head()
 
 # Cell
 class Simulation(object):
 
-    def __init__(self, name, src_flux, tstart, tstop, bkg_flux=1e-6,   efun=500, wt_signif=0.1):
+    def __init__(self, name, src_flux, tstart, tstop, bkg_flux=1e-6,  efun=3000, wt_signif=0.1):
         """
         - src_flux : source flux, scalar or function of days, typically around 1e-7
         - tstart, tstop :(days)
         - bkg_flux : background flux, scalar or function of day, typicaly 1e-6 for 4-deg cone
-        - efun : scalar, function (in days) of the exposure/s. Typically 500 for fermi
+        - efun : scalar, function (of time in days) of the exposure/s. Typically 3000 cm^2 for fermi
 
         - wt_signif : now the width of the PSF in (r/rmax)**2 coordinates
 

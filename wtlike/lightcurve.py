@@ -143,7 +143,7 @@ def fit_table(lc, expect=1.0):
     return df
 
 # Cell
-def flux_plot(config, lightcurve, ts_min=0,  ts_bar_min=2,
+def flux_plot(config, lightcurve, ts_min=0,  ts_bar_min=4,
               title=None, ax=None, fignum=1, figsize=(12,4),
               step=False,
               tzero:'time offset'=0,
