@@ -72,7 +72,7 @@ class WtLike(LightCurve):
         """Plot the light curve with BB overplot
         """
         import matplotlib.pyplot as plt
-
+        self.check_plot_kwargs(kwargs)
         figsize = kwargs.pop('figsize', (12,4))
         fignum = kwargs.pop('fignum', 1)
         ts_min = kwargs.pop('ts_min',-1)

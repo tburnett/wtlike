@@ -152,10 +152,11 @@ def flux_plot(config, lightcurve, ts_min=0,  ts_bar_min=4,
               fmt='',
               source_name=None,
               zorder=0,
+              errorbar_args={},
               **kwargs):
     """Make a plot of flux vs. time. This is invoked by the `plot` function of `LightCurve`
 
-    - lightcurve -- lightcurve DataFrame
+    - lightcurve -- cell fits DataFrame
     - ts_min -- threshold for ploting point
     - ts_bar_min -- threshold for plotting as bar vs limit
     - colors -- tuple of colors for signal, limit, step
@@ -170,6 +171,7 @@ def flux_plot(config, lightcurve, ts_min=0,  ts_bar_min=4,
     import matplotlib.ticker as ticker
     label = kwargs.pop('label', None)
     step_label = kwargs.pop('step_label', None)
+    limit_fmt = kwargs.pop('limit_fmt', None)
 
     fig, ax = plt.subplots(figsize=figsize, num=fignum) if ax is None else (ax.figure, ax)
     kw=dict(yscale='linear',
@@ -204,18 +206,25 @@ def flux_plot(config, lightcurve, ts_min=0,  ts_bar_min=4,
 
 
     # do the limits first (only for poisson rep)
-    error_size=2
+    error_size=errorbar_args.pop('error_size', 2)
     if len(lim)>0:
         t = lim.t-tzero
         tw = lim.tw
+        color = colors[2 if step else 1]
 
         y = allflux[limit]
-        yerr=0.2*(1 if kw['yscale']=='linear' else y)*flux_factor
-        ax.errorbar(x=t, y=y, xerr=tw/2,
-                yerr=yerr,  color=colors[2 if step else 1] ,
-                uplims=True, ls='', lw=error_size, capsize=2*error_size, capthick=0,
-                zorder=zorder,
-               )
+        if limit_fmt is None:
+            # try to draw an error bar, hard to determine size
+            yerr=0.2*(1 if kw['yscale']=='linear' else y)*flux_factor
+            ax.errorbar(x=t, y=y, xerr=tw/2,
+                    yerr=yerr,  color=color ,
+                    uplims=True, ls='', lw=error_size, capsize=2*error_size, capthick=0,
+                    zorder=zorder, label='95% limit', **errorbar_args)
+
+        else:
+            # just a symbol, like 'v'
+            ax.errorbar(x=t,xerr=tw/2, y=y, fmt=limit_fmt, color=color,
+                       zorder=zorder, label='95% limit', **errorbar_args)
 
     # then the points with error bars
     t = bar.t.values-tzero
@@ -226,8 +235,11 @@ def flux_plot(config, lightcurve, ts_min=0,  ts_bar_min=4,
     error = np.array([upper-fluxmeas, fluxmeas-lower])
 #     if label is None:
 #         label = f'{bin_size_name(round(tw.mean(),4))} bins' if np.std(tw)<1e-6 else ''
-    ax.errorbar(x=t, xerr=tw/2, y=fluxmeas, yerr=error, lw=2, fmt=fmt, color=colors[0], label=label,
-               zorder=zorder+1)
+    ax.errorbar(
+        x=t, xerr=tw/2,
+                y=fluxmeas, yerr=error, lw=2, fmt=fmt,
+                color=colors[0],
+                label=label, zorder=zorder+1, **errorbar_args)
 
     # finally ovelay the step if requested
     if step:
@@ -235,12 +247,13 @@ def flux_plot(config, lightcurve, ts_min=0,  ts_bar_min=4,
         xerr = df.tw.values/2;
         x = np.append(t-xerr, [t[-1]+xerr[-1]]);
         y = np.append(allflux, [allflux[-1]])
-        ax.step(x, y, color=colors[2], where='post', lw=2, label=step_label,
-               zorder=zorder+2)
+        ax.step(x, y,
+                color=colors[2], where='post', lw=2, label=step_label,  zorder=zorder+2)
 
     # the legend: if added overplot, make sure it is below
     handles, labels = ax.get_legend_handles_labels()
-    ax.legend(handles[::-1], labels[::-1],loc='upper left', fontsize=12, frameon=False)
+    ax.legend(handles[::-1], labels[::-1],loc='upper left', fontsize=10, frameon=False)
+    #ax.legend()
 
     if source_name is not None:
         ax.text(0.99, 0.9, source_name, transform=ax.transAxes, ha='right' )
@@ -282,20 +295,28 @@ class LightCurve(CellData):
         description = f'Light curve with {cell_query} for {source_name}' if self.config.verbose>0 and key is not None else ''
         self.lc = self.fits =  self.config.cache(key, doit, description=description)
 
-    def plot_flux(self, **kwargs):
-        source_name = kwargs.pop('source_name', self.source_name)
-
-        e_min = kwargs.pop('e_min', None)
-        fits = self.fits if e_min is None else self.fits.query(f'e>{e_min}')
-        fig = flux_plot(self.config, fits, source_name=source_name, label=self.step_name+' bins',
-                        #flux_factor=getattr(self, 'exposure_factor',1) ,
-                        **kwargs)
-        fig.set_facecolor('white')
-        return fig
+    def check_plot_kwargs(self, kwargs):
+        tzero = kwargs.get('tzero', None)
+        xlim = kwargs.pop('xlim', None)
+        if xlim is not None and tzero is None: # scale from start, stop times if less than start
+            a,b = xlim
+            if a<self.start: a = self.start+a if a>0 else self.stop+a
+            if b<self.start: b = self.start+b if b>0 else self.stop+b
+            kwargs['xlim'] = (a,b)
+        log = kwargs.pop('log', None)
+        if log is not None and log:
+            kwargs['yscale'] = 'log'
 
     def plot(self, **kwargs):
         """Make a light curve plot"""
-        return self.plot_flux(**kwargs)
+        source_name = kwargs.pop('source_name', self.source_name)
+
+        # special treatment for log and xlim
+        self.check_plot_kwargs(kwargs)
+        fig = flux_plot(self.config, self.fits, source_name=source_name,
+                        label=self.step_name+' bins',  **kwargs)
+        fig.set_facecolor('white')
+        return fig
 
     def flux_table(self, lc=None, include_e=False):
 

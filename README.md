@@ -45,23 +45,18 @@ The following code cell loads the data for the BL Lac blazar, and plots by defau
 
 ```python
 from wtlike import *
-weekly = WtLike('BL Lac') # how to define 7-day bins for the full dataset.
-weekly.plot(ylim=(-0.8,15)); #plot takes plt.plot args.
+if Config().valid:
+    weekly = WtLike('BL Lac') # how to define 7-day bins for the full dataset.
+    weekly.plot(ylim=(-0.8,15)); #plot takes plt.plot args.
 ```
 
-    SourceData: photons and exposure for BL Lac: Saving to cache with key "BL Lac_data"
-    	Assembling photon data and exposure for source BL Lac from folder "/home/burnett/wtlike_data/data_files",
-    	 with 665 files, last file:  week_674.pkl: loading all files
-    .........................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................
-    Load weights from file /mnt/d/wtlike/wtlike_data/weight_files/BL_Lac_weights.pkl
-    	Found: P88Y6076 at (92.60, -10.44)
-    	Applyng weights: 0 / 406640 photon pixels are outside weight region
-    	95671 weights set to NaN
+    SourceData: photons and exposure for BL Lac: Restoring from cache with key "BL Lac_data"
     WtLike: Source BL Lac with:
-    	 data:       310,969 photons from   2008-08-04 to 2021-05-06
-    	 exposure: 3,177,752 intervals from 2008-08-04 to 2021-05-06
+    	 data:       310,969 photons from 2008-08-04 to 2021-05-06
+    	 exposure: 3,177,752 intervals,  average rate 3548 cm^2 for 95.0 Ms
+    	 rates:  source 2.30e-07/s, background 6.92e-07/s, S/N ratio 0.33
     CellData: Bin photon data into 665 1-week bins from 54683.0 to 59338.0
-    LightCurve: select 656 cells for fitting with e>0.5 & n>2
+    LightCurve: select 656 cells for fitting with e>10 & n>2
 
 
 
@@ -72,116 +67,35 @@ The variable `weekly` has lots of capabilities.
 To examine a subset of the data at the end of the current data, we use `view` to create a new `WtLike` object and plot it.
 
 ```python
-hourly_at_end = weekly.view((-5,0, 1/24)) # for the last 5 days, 1-hour bins
-hourly_at_end.plot(); # Accepts plt.plot args, e.g. xlim, ylim, etc.
+# hourly_at_end = weekly.view((-5,0, 1/24)) # for the last 5 days, 1-hour bins
+# hourly_at_end.plot(); # Accepts plt.plot args, e.g. xlim, ylim, etc.
 ```
-
-    CellData: Bin photon data into 120 1-hour bins from 59335.0 to 59340.0
-    LightCurve: select 81 cells for fitting with e>0.5 & n>2
-
-
-
-![png](docs/images/output_4_1.png)
-
 
 Or, to do a Bayesian Block partition with these 1-hour bins, perform fits, and overplot the result, just run the following.
 
 ```python
-bb_hourly = hourly_at_end.bb_view()
-bb_hourly.plot();
+# bb_hourly = hourly_at_end.bb_view()
+# bb_hourly.plot();
 ```
 
-    LightCurve: select 81 cells for fitting with e>0.5 & n>2
-    Partitioned 81 cells into 4 blocks, using LikelihoodFitness 
-    LightCurve: Loaded 4 / 4 cells for fitting
+
+    ---------------------------------------------------------------------------
+
+    NameError                                 Traceback (most recent call last)
+
+    <ipython-input-4-fb6fa2dba4e3> in <module>
+    ----> 1 bb_hourly = hourly_at_end.bb_view()
+          2 bb_hourly.plot();
 
 
-
-![png](docs/images/output_6_1.png)
+    NameError: name 'hourly_at_end' is not defined
 
 
 Finally, let's look at the values plotted above:
 
 ```python
-bb_hourly.fluxes
+#bb_hourly.fluxes
 ```
-
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>t</th>
-      <th>tw</th>
-      <th>n</th>
-      <th>ts</th>
-      <th>flux</th>
-      <th>errors</th>
-      <th>limit</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>59335.42</td>
-      <td>0.83</td>
-      <td>178</td>
-      <td>404.1</td>
-      <td>6.70</td>
-      <td>(-0.655, 0.689)</td>
-      <td>7.89</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>59336.69</td>
-      <td>1.71</td>
-      <td>205</td>
-      <td>170.0</td>
-      <td>2.38</td>
-      <td>(-0.308, 0.323)</td>
-      <td>2.93</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>59338.02</td>
-      <td>0.96</td>
-      <td>222</td>
-      <td>573.6</td>
-      <td>8.70</td>
-      <td>(-0.734, 0.767)</td>
-      <td>10.01</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>59339.23</td>
-      <td>1.46</td>
-      <td>217</td>
-      <td>369.4</td>
-      <td>4.48</td>
-      <td>(-0.434, 0.454)</td>
-      <td>5.25</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-
 
 ## Input data
 

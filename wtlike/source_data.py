@@ -172,7 +172,7 @@ def contiguous_bins(exposure, min_gap=20, min_duration=600):
     stop = exposure.stop.values
     start = exposure.start.values
 
-    # interleave  the starts ane stops
+    # interleave  the starts and stops
     ssint = np.empty(2*len(start))
     ssint[0::2] = start
     ssint[1::2] = stop
@@ -419,8 +419,9 @@ class SourceData(object):
         else: #TODO
             pass
 
-
-
+        # make range of MJD or days available
+        self.start = self.exposure.start[0]
+        self.stop =  self.exposure.stop.values[-1]
         self.exptot = self.exposure.exp.sum()
 
         # estimates for signal and background counts in total exposure

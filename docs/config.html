@@ -208,7 +208,9 @@ result = mycache('mykey', myfun, x=99,  description='My data')
    
     
     <span class="n">c</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
-<span class="n">cache_test</span><span class="p">(</span><span class="s1">&#39;/tmp/test_cache&#39;</span><span class="p">)</span>
+
+<span class="n">test_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;/tmp/cache_test&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="c1">#??cache_test(test_path)</span>
 <span class="c1"># disabled should ignore</span>
 <span class="c1">#cache_test(None)</span>
 </pre></div>
@@ -218,37 +220,6 @@ result = mycache('mykey', myfun, x=99,  description='My data')
 </div>
 
     </details>
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>Clearing cache!
-Test: Saving to cache with key &#34;four&#34;
-Test: Restoring from cache with key &#34;four&#34;
-Before remove:
-Cache contents
- key                                    size  time                 name, in folder /tmp/test_cache
-  one                                     13  2021-05-08 17:28     cache_file_173532f865bb3057.pkl
-  two                                     13  2021-05-08 17:28     cache_file_5a805d8cbd1892a6.pkl
-  four                                    18  2021-05-08 17:28     cache_file_e27a06170a4baf7.pkl
-
-</pre>
-</div>
-</div>
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stderr output_text">
-<pre>Warning: cached object for key &#34;two&#34; exists
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
 </div>
     {% endraw %}
 
@@ -276,88 +247,6 @@ Cache contents
 
 </div>
 
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="o">!</span>ls ~/wtlike_data
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>aeff_files  data_files	weight_files
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
-<span class="nb">print</span> <span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">cache</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>Configuration parameters 
-  verbose         : 1
-  wtlike_data     : /home/burnett/wtlike_data
-  cachepath       : /home/burnett/wtlike_cache
-  radius          : 4
-  cos_theta_max   : 0.4
-  z_max           : 100
-  week_range      : (None, None)
-  time_bins       : (0, 0, 7)
-  use_uint8       : False
-  nside           : 1024
-  nest            : True
-  bins_per_decade : 4
-  base_spectrum   : lambda E: (E/1000)**-2.1
-  energy_range    : (100.0, 1000000.0)
-  likelihood_rep  : poisson
- Cache contents
- key                                    size  time                 name, in folder /home/burnett/wtlike_cache
-  3C 279_data                       84793416  2021-05-08 15:09     cache_file_e80d1c899f32358.pkl
-
-</pre>
-</div>
 </div>
 
 </div>
@@ -501,30 +390,6 @@ Cache contents
 </pre></div>
 
     </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>[&#39;6-hour&#39;, &#39;1-day&#39;, &#39;2-day&#39;, &#39;1-hour&#39;, &#39;2-hour&#39;, &#39;2-min&#39;, &#39;2-week&#39;]
-</pre>
-</div>
-</div>
-
-<div class="output_area">
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>&#39;5-day&#39;</pre>
-</div>
-
-</div>
-
 </div>
 </div>
 

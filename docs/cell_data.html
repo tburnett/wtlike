@@ -28,6 +28,25 @@ nb_path: "nbs/08_cell_data.ipynb"
 </div>
     {% endraw %}
 
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Creating-cells">Creating cells<a class="anchor-link" href="#Creating-cells"> </a></h2><p>As set out in Kerr, we choose binning in time to group photons into "cells". For each cell, we determine its likelihood function, which is then used to estimate the signal rate for that duration.</p>
+<p>Eqn. 2 of Kerr shows the log likelihood as a sum of cells of the log likelihoods of the cells, where the $k^{th}$ cell's likelihood,  (with $\beta=0$), is</p>
+<p>{% raw %}
+$$ \displaystyle\log\mathcal{L}_k(\alpha)\ = \sum_{w}  \log \big( 1 + \alpha\ w \big) - \alpha\ f_k\ S   $$
+{% endraw %}</p>
+<p>The sum is over the weights $w$ in that cell, and $S$ is an estimate of the signal rate, and $f_k$ is the total exposure for that $k^{th}$ cell. Note that $f_k$ can be expressed as the sum of the exposure per photon, accumulated over the live time, that from the start of the run or the previous photon.</p>
+<p><em>Fermi</em> data is broken into distinct runs, corresponding at most to a single orbit. The exposure rate, $\frac{df}{dt}$ varies by a factor of 2 or 3 for each 90-min orbit, is typically  $ 3 000\ \mathrm{cm}^2$, or $0.3\ \mathrm{m^2}$ for $fermi$. This is measured in 30-s intervals.</p>
+<p>We'll call the exposure per photon $\tau$ to emphasize that it plays the role of time.</p>
+<p>So for the $i^{th}$ photon,<br>
+{% raw %}
+$$\displaystyle\log\mathcal{L}_i(\alpha) = \log( 1 + \alpha\ w_i) - \alpha\  \tau_i\ S  $$
+{% endraw %}</p>
+<p>Note that this corresponds to an exponential distribution in $\tau$.</p>
+
+</div>
+</div>
+</div>
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">

@@ -140,11 +140,11 @@ def make_exposure(fexp, start, stop, interval=300):
 # Cell
 class Simulation(object):
 
-    def __init__(self, name, src_flux, tstart, tstop, bkg_flux=1e-6,  efun=3000, wt_signif=0.1):
+    def __init__(self, name, src_rate, tstart, tstop, bkg_rate=1e-6,  efun=3000, wt_signif=0.1):
         """
-        - src_flux : source flux, scalar or function of days, typically around 1e-7
+        - src_rate : source flux, scalar or function of days, typically around 1e-7
         - tstart, tstop :(days)
-        - bkg_flux : background flux, scalar or function of day, typicaly 1e-6 for 4-deg cone
+        - bkg_rate : background flux, scalar or function of day, typicaly 1e-6 for 4-deg cone
         - efun : scalar, function (of time in days) of the exposure/s. Typically 3000 cm^2 for fermi
 
         - wt_signif : now the width of the PSF in (r/rmax)**2 coordinates
@@ -156,8 +156,8 @@ class Simulation(object):
                 return lambda t: fval
             return f
         self.name = name
-        self.src_fun = check_scalar(src_flux)
-        self.bkg_fun = check_scalar(bkg_flux)
+        self.src_fun = check_scalar(src_rate)
+        self.bkg_fun = check_scalar(bkg_rate)
         self.flux_fun = lambda t: src_fun(t)+bkg_fun(t)
         self.wt_signif=wt_signif
 
