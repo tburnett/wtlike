@@ -38,8 +38,9 @@ nb_path: "nbs/05_source_data.ipynb"
 <li><p>effective_area</p>
 </li>
 <li>weights</li>
+<li>exposure</li>
 </ul>
-<p>It implements <a href="/wtlikesource_data#binned_exposure"><code>binned_exposure</code></a></p>
+<p>It implements the class <a href="/wtlikesource_data#SourceData"><code>SourceData</code></a></p>
 
 </div>
 </div>
@@ -119,10 +120,19 @@ nb_path: "nbs/05_source_data.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="contiguous_bins" class="doc_header"><code>contiguous_bins</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/source_data.py#L165" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>contiguous_bins</code>(<strong><code>exposure</code></strong>, <strong><code>min_gap</code></strong>=<em><code>20</code></em>, <strong><code>min_duration</code></strong>=<em><code>600</code></em>)</p>
+<h4 id="time_bin_edges" class="doc_header"><code>time_bin_edges</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/source_data.py#L173" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>time_bin_edges</code>(<strong><code>config</code></strong>, <strong><code>exposure</code></strong>, <strong><code>tbin</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
-<p>return a dataframe with start and stop columns that
-denote contiguous intervals</p>
+<p>Return an interleaved array of start/stop values</p>
+<p>tbin: an array (a,b,d), default config.time_bins</p>
+<p>interpretation of a, b:</p>
+
+<pre><code>if &gt; 50000, interpret as MJD
+if &lt;0, back from stop
+otherwise, offset from start
+
+</code></pre>
+<p>d : if positive, the day bin size
+    if 0; return contiguous bins</p>
 
 </div>
 
@@ -138,6 +148,13 @@ denote contiguous intervals</p>
     
 <div class="cell border-box-sizing code_cell rendered">
 
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
 <div class="output_wrapper">
 <div class="output">
 
@@ -145,19 +162,10 @@ denote contiguous intervals</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="time_bin_edges" class="doc_header"><code>time_bin_edges</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/source_data.py#L203" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>time_bin_edges</code>(<strong><code>config</code></strong>, <strong><code>exposure</code></strong>, <strong><code>tbin</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="contiguous_bins" class="doc_header"><code>contiguous_bins</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/source_data.py#L221" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>contiguous_bins</code>(<strong><code>exposure</code></strong>, <strong><code>min_gap</code></strong>=<em><code>20</code></em>, <strong><code>min_duration</code></strong>=<em><code>600</code></em>)</p>
 </blockquote>
-<p>Return an interleaved array of start/stop values</p>
-<p>tbin: an array (a,b,d), default config.time_bins</p>
-<p>interpretation of a, b:</p>
-
-<pre><code>if &gt; 50000, interpret as MJD
-if &lt;0, back from stop
-otherwise, offset from start
-
-</code></pre>
-<p>d : if positive, the day bin size
-    if 0; return contiguous bins</p>
+<p>return a dataframe with start and stop columns that
+denote contiguous intervals</p>
 
 </div>
 
@@ -257,7 +265,7 @@ otherwise, offset from start
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="binned_exposure" class="doc_header"><code>binned_exposure</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/source_data.py#L251" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>binned_exposure</code>(<strong><code>config</code></strong>, <strong><code>exposure</code></strong>, <strong><code>time_edges</code></strong>)</p>
+<h4 id="binned_exposure" class="doc_header"><code>binned_exposure</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/source_data.py#L254" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>binned_exposure</code>(<strong><code>config</code></strong>, <strong><code>exposure</code></strong>, <strong><code>time_edges</code></strong>)</p>
 </blockquote>
 <p>Bin the exposure</p>
 <ul>

@@ -22,6 +22,9 @@ entries:
       title: Weights
       url: /weights
     - output: web,pdf
+      title: Exposure processing
+      url: /exposure
+    - output: web,pdf
       title: Simulation
       url: /simulation
     - output: web,pdf

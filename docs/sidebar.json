@@ -5,6 +5,7 @@
     "Data management": "/data_man",
     "Effective Area": "/effective_area",
     "Weights": "/weights",
+    "Exposure processing": "/exposure",
     "Simulation": "/simulation",
     "Source Data management": "/source_data",
     "Poisson-like likelihood function": "/poisson",

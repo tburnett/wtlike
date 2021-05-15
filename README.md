@@ -78,19 +78,6 @@ Or, to do a Bayesian Block partition with these 1-hour bins, perform fits, and o
 # bb_hourly.plot();
 ```
 
-
-    ---------------------------------------------------------------------------
-
-    NameError                                 Traceback (most recent call last)
-
-    <ipython-input-4-fb6fa2dba4e3> in <module>
-    ----> 1 bb_hourly = hourly_at_end.bb_view()
-          2 bb_hourly.plot();
-
-
-    NameError: name 'hourly_at_end' is not defined
-
-
 Finally, let's look at the values plotted above:
 
 ```python
