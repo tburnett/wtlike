@@ -2,11 +2,11 @@
 > Quickly create a light curve for any 4FGL source, on any time scale, with optional Bayesian Block analysis 
 
 
-#### github links
-- [this document](https://tburnett.github.io/wtlike/)
--  [repository](https://github.com/tburnett/wtlike)
+#### github links:  
+[this document](https://tburnett.github.io/wtlike/),   [the repository](https://github.com/tburnett/wtlike)
 
-`wtlike`(Pronounced "DUB-Tee-like"), is a library intended to be used in a [Jupyter notebook](https://jupyter.org/) to access all Fermi-LAT data, and analyze the time dependence of any source in the
+## Introduction
+`wtlike`(Pronounced "DUB-Tee-like"), is a library optimized for interactive exploration in a [Jupyter notebook](https://jupyter.org/) to access all Fermi-LAT data, and analyze the time dependence of any source in the
 4FGL catalog on any time scale, with the option of performing a [Bayesian Block](https://arxiv.org/pdf/1207.5578.pdf)  partition to select optimal time intervals. The source can be identified by the 4FGL name, or any equivalent common name.
 
 Here is a minimal demo:
@@ -32,9 +32,9 @@ wtl.plot();
 
 This assumes that the name for the source, in this case the historically famous first [quasar](https://en.wikipedia.org/wiki/Quasar#Background) to be discovered, can be associated with a 4FGL catalog source. The plot shows, as a function of the MJD time, weekly measurements of deviations of the flux relative to the average of the 12-year interval used to define the 4FGL-DR3 catalog.
 
-### GitHub Links
+The first stage, extracting data for the source, takes ~10 min, but, using an included [cache system](https://tburnett.github.io/wtlike/config.html#Cache), only has to be done once.
 
-## Introduction
+## Overview
 
 This package has code that was developed with the [nbdev](https://nbdev.fast.ai/) code/tests/documentation environment from the [github package lat-timing](https://github.com/tburnett/lat-timing) to generate light curves of Fermi-LAT sources.  
 It is based on a [paper](https://arxiv.org/pdf/1910.00140.pdf) by Matthew Kerr, which derives the [weighted likelihood formalism](https://tburnett.github.io/wtlike/loglike#The-Kerr-likelihood-formula) used here, specifically with
@@ -60,8 +60,8 @@ each time interval.
 2. Or, for very bright flares, for example GRBs, one can simply count the number of photons within a
 circular region, that is, aperture photometry.
 
-Matthew Kerr has [introduced](https://arxiv.org/pdf/1910.00140.pdf) a third method, basically counting photons but using information from a static
-likelihood analysis to assign a "weight" to each photon the probability for being from the source in question, then optimizing this likelihood. This assumes that the only thing changing is the flux of
+Matthew Kerr [introduced](https://arxiv.org/pdf/1910.00140.pdf) a third method, basically counting photons but using information from a static
+likelihood analysis to assign a "weight" to each photon, the probability for being from the source in question, then optimizing this likelihood. This assumes that the only thing changing is the flux of
 the source.  He calls it "retrospective", since the analysis for the full time is then applied back to the individual photons.
 
 ### Individual photon Likelihood ("unbinned")
@@ -252,8 +252,28 @@ implememted in the module [`main`](https://tburnett.github.io/wtlike/90-main.htm
 There we have two subclasses of `astropy.stats.bayesian_blocks`, [`CountFitness`](https://tburnett.github.io/wtlike/bayesian.html#CountFitness) and the default [`LikelihoodFitness`](https://tburnett.github.io/wtlike/bayesian.html#LikelihoodFitness).
     
 This code creates partitions between boundaries of a set of cells. Usage is via a special view, 
-[bb_view`]()
+[bb_view`](https://tburnett.github.io/wtlike/main#WtLike.bb_view)
                      
+
+```python
+bb = wtl.bb_view()
+bb.plot();
+```
+
+    LightCurve: select 656 cells for fitting with e>10 & n>2
+    Partitioned 656 cells into 91 blocks, using LikelihoodFitness 
+    LightCurve: Loaded 91 / 91 cells for fitting
+
+
+
+![png](docs/images/output_12_1.png)
+
+
+As you see, this made 91 blocks from the 656 weeks, fit each, and overplotted in on the weekly light curve.
+
+### Simulation
+
+Finally, a simulation option is available. See the [tutorial](https://tburnett.github.io/wtlike/tutorial/)  for an example
 
 ## Installation
 
@@ -279,51 +299,6 @@ A standard *Fermi* instrument response file (IRF) defining the effective area as
 
 A set of these is available as a 1.6 GB zip file.
 
-## Quick Demo
-
-The following code cell loads the data for the BL Lac blazar, and plots by default, a weekly light curve for the full *Fermi* mission.
-
-```python
-from wtlike import *
-if Config().valid:
-    weekly = WtLike('BL Lac') # how to define 7-day bins for the full dataset.
-    weekly.plot(ylim=(-0.8,15)); #plot takes plt.plot args.
-```
-
-    SourceData: photons and exposure for BL Lac: Restoring from cache with key "BL Lac_data"
-    SourceData: Source BL Lac with:
-    	 data:       310,969 photons from 2008-08-04 to 2021-05-06
-    	 exposure: 3,177,752 intervals,  average rate 3548 cm^2 for 95.0 Ms
-    	 rates:  source 2.30e-07/s, background 6.92e-07/s, S/N ratio 0.33
-    CellData: Bin photon data into 665 1-week bins from 54683.0 to 59338.0
-    LightCurve: select 656 cells for fitting with e>10 & n>2
-
-
-
-![png](docs/images/output_14_1.png)
-
-
-The variable `weekly` has lots of capabilities.
-To examine a subset of the data at the end of the current data, we use `view` to create a new `WtLike` object and plot it.
-
-```python
-# hourly_at_end = weekly.view((-5,0, 1/24)) # for the last 5 days, 1-hour bins
-# hourly_at_end.plot(); # Accepts plt.plot args, e.g. xlim, ylim, etc.
-```
-
-Or, to do a Bayesian Block partition with these 1-hour bins, perform fits, and overplot the result, just run the following.
-
-```python
-# bb_hourly = hourly_at_end.bb_view()
-# bb_hourly.plot();
-```
-
-Finally, let's look at the values plotted above:
-
-```python
-#bb_hourly.fluxes
-```
-
 ## Input data
 
 There are three data sources which `wtlike` needs to function:
@@ -334,29 +309,3 @@ There are three data sources which `wtlike` needs to function:
 -	An effective area IRF table 
 
 These must be found under a folder, which by default is `~/wtlike_data`. In that folder there must be (perhaps links to) three folders named `data_files`, `weight_files`, `aeff_files`.  A copy of what I'm using is at `/afs/slac/g/glast/users/burnett/wtlike_data`
-
-## Module summary
-
-### Configuration [config](https://tburnett.github.io/wtlike/config)
-Implements basic configuration information, [Config](https://tburnett.github.io/wtlike/config#Config), a cache system [Cache](https://tburnett.github.io/wtlike/config#Cache), point source info [PointSource](https://tburnett.github.io/wtlike/config#PointSource), and [time conversion](https://tburnett.github.io/wtlike/config#Time-conversion)
-
-### Photon and Spacecraft Data  [data_man](https://tburnett.github.io/wtlike/data_man)
-This module manages conversion of the weekly FT1 (photons) and FT2 (spacecraft) files, downloaded from  [GSFC](https://heasarc.gsfc.nasa.gov/FTP/fermi/data/lat/weekly), to a folder containing  pickled files, each with tables of photons, space craft data, and a list of GTI times derived from the FT1 file. A class [WeeklyData](https://tburnett.github.io/wtlike/data_man#WeeklyData) exports the results.
-
-### Source data  [source_data](https://tburnett.github.io/wtlike/source_data)
-The module depends on a specific source. It extracts the photons within a disk, and calculates the exposure for this direction. It assumes that a weigtht analysis has been done for this source, which it uses to apply a weight to each photon. This is handled by the class [SourceData](https://tburnett.github.io/wtlike/source_data#SourceData). It depends on [weights](https://tburnett.github.io/wtlike/weights) and [effective_ares](https://tburnett.github.io/wtlike/effective_area) to evaluate exposure.
-
-### Cell data [cell_data](https://tburnett.github.io/wtlike/cell_data)
-The next step is to define a set of time bins, or "cells". This module, implementing the class [CellData(SourceData)](https://tburnett.github.io/wtlike/cell_data#CellData), creates a set of cells.
-
-### The light-curve  [lightcurve](https://tburnett.github.io/wtlike/lightcurve)
-The the class [LightCurve(CellData)](https://tburnett.github.io/wtlike/lightcurve#LightCurve) uses the set of cells created by its super class, and generates a likelihood function for each according to Kerr Eqn 2. These functions are represented by 3-parameter Poisson-like (see [poisson](https://tburnett.github.io/wtlike/poisson)) functions for further analysis. It creates a table with this information for plotting a light curve.
-
-### Bayesian Blocks [bayesian](https://tburnett.github.io/wtlike/bayesian) 
-This module contains the code implementing the  Bayesian block capability. 
-
-### Simulation [simulation](https://tburnett.github.io/wtlike/simulation)
-A light curve can be also generated with a simulation.
-
-### Main [main](https://tburnett.github.io/wtlike/main)
-Implements [WtLike(LightCurve)](https://tburnett.github.io/wtlike/main#WtLike/), a subclass of `LightCurve`, to which it adds the function `bb_view`, returning a new object with BB cells. Its `plot` function generates a light-curve plot showing the cells of its parent, over-plotted with the BB points.

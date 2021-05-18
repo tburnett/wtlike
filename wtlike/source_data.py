@@ -460,8 +460,9 @@ class SourceData(object):
             f'\n\t data:     {len(self.photons):9,} {photon_text}'\
             f'\n\t exposure: {len(self.exposure):9,} intervals, {exp_text}'
 
-        src_rate, bkg_rate = self.S/self.exptot,  self.B/self.exptot
-        r+= f'\n\t rates:  source {src_rate:.2e}/s, background {bkg_rate:.2e}/s, S/N ratio {src_rate/bkg_rate:.2f}'
+        self.src_rate, self.bkg_rate = self.S/self.exptot,  self.B/self.exptot
+        r+= f'\n\t rates:  source {self.src_rate:.2e}/s, background {self.bkg_rate:.2e}/s,'\
+            f' S/N ratio {self.src_rate/self.bkg_rate:.2e}'
 
         return r
 

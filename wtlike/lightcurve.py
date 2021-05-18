@@ -144,24 +144,27 @@ def fit_table(lc, expect=1.0):
 
 # Cell
 def flux_plot(cell_fits,
+              query='',
               ax=None, fignum=1, figsize=(12,4),
               title=None,
               step=False,
               tzero:'time offset'=0,
+              flux_factor=1,
               colors=('cornflowerblue','sandybrown', 'blue'),
               fmt='', ms=None, error_size=2,
               source_name=None,
-              ts_min=0,  ts_bar_min=4,
+              ts_bar_min=4,
               zorder=0,
               errorbar_args={},
               **kwargs):
     """Make a plot of flux vs. time. This is invoked by the `plot` function of `LightCurve`
 
     - cell_fits -- cell fits DataFrame
-    - ts_min -- threshold for ploting point
+    - query ['']-- DataFrame query to select subset
     - ts_bar_min -- threshold for plotting as bar vs limit
     - tzero -- time offset, in MJD
     - source_name -- draw text in top left
+    - flux_factor [1]
 
     - ax [None] -- a matplotlib.axes._subplots.AxesSubplot object returned from plt.subplots<br>
     if None, create one using subplots with fignum [1] and figsize [(12,4)]
@@ -190,13 +193,14 @@ def flux_plot(cell_fits,
     ax.set(**kw)
     ax.set_title(title) # or f'{source_name}, rep {self.rep}')
     ax.grid(alpha=0.5)
-    if kw['yscale']=='log':
+    if kw['yscale']=='log' and flux_factor==1:
         ax.yaxis.set_major_formatter(ticker.FuncFormatter(
             lambda val,pos: { 1.0:'1', 10.0:'10', 100.:'100'}.get(val,'')))
 
     df = cell_fits.copy()
     df.loc[:,'ts'] = df.fit.apply(lambda f: f.ts)
-    df = df.query(f'ts>={ts_min}')
+    if query:
+        df = df.query(query)
 
     if fmt=='':
         fmt='.' if len(df)>200 else 'o'
@@ -207,7 +211,7 @@ def flux_plot(cell_fits,
     allflux= np.select([~limit, limit],
                     [df.fit.apply(lambda f: f.flux).values,
                      df.fit.apply(lambda f: f.limit).values],
-                   )
+                   ) * flux_factor
 
     # do the limits first (only for poisson rep)
     if len(lim)>0:
@@ -218,7 +222,7 @@ def flux_plot(cell_fits,
         y = allflux[limit]
         if limit_fmt is None:
             # try to draw an error bar, hard to determine size
-            yerr=0.2*(1 if kw['yscale']=='linear' else y)
+            yerr=0.2*(1 if kw['yscale']=='linear' else y)*flux_factor
             ax.errorbar(x=t, y=y, xerr=tw/2,
                     yerr=yerr,  color=color ,
                     uplims=True, ls='',
@@ -234,8 +238,8 @@ def flux_plot(cell_fits,
     t = bar.t.values-tzero
     tw = bar.tw.values.astype(float)
     fluxmeas = allflux[~limit]
-    upper = bar.fit.apply(lambda f: f.errors[1]).values
-    lower = bar.fit.apply(lambda f: f.errors[0]).values
+    upper = bar.fit.apply(lambda f: f.errors[1]).values * flux_factor
+    lower = bar.fit.apply(lambda f: f.errors[0]).values * flux_factor
     error = np.array([upper-fluxmeas, fluxmeas-lower])
 #     if label is None:
 #         label = f'{bin_size_name(round(tw.mean(),4))} bins' if np.std(tw)<1e-6 else ''

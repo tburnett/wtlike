@@ -53,7 +53,7 @@ index = {"Cache": "00_config.ipynb",
          "LikelihoodFitness": "14_bayesian.ipynb",
          "doc_countfitness": "14_bayesian.ipynb",
          "get_bb_partition": "14_bayesian.ipynb",
-         "WtLike": "90-main.ipynb"}
+         "WtLike": "90_main.ipynb"}
 
 modules = ["config.py",
            "data_man.py",
