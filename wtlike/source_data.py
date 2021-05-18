@@ -17,6 +17,7 @@ from .config import *
 from .data_man import *
 from .effective_area import *
 from .weights import *
+from .exposure import *
 
 # Cell
 def _exposure(config,  livetime, pcosine):
@@ -311,7 +312,7 @@ def _load_from_weekly_data(config, source, week_range=None):
     w1,w2 = week_range or  config.week_range
     if w1 is not None or w2 is not None:
         if config.verbose>0:
-            print(f'\tLoading weeks {t}')
+            print(f'\tLoading weeks {w1}:{w2}')
         data_files= data_files[w1:w2]
     else:
         if config.verbose>0: print('loading all files')
@@ -328,14 +329,18 @@ def _load_from_weekly_data(config, source, week_range=None):
             week = pickle.load(inp)
 
         photons = _get_photons_near_source(config, source, week )
-        if photons is not None:
-            pp.append(photons)
-        ee.append(_calculate_exposure_for_source(config, source, week ))
+        exposure = _calculate_exposure_for_source(config, source, week )
+        if photons is not None:  pp.append(photons)
+        ee.append(exposure)
+
     print('');
     config.verbose=verbose
     # concatenate the two lists of DataFrames
     p_df = pd.concat(pp, ignore_index=True)
     e_df = pd.concat(ee, ignore_index=True)
+
+    # process exposure to find runs, and add tau column to photons
+    runs = add_exposure_to_events(config, e_df, p_df)
 
     if config.verbose>1:
         times = p_df.time.values
@@ -345,7 +350,7 @@ def _load_from_weekly_data(config, source, week_range=None):
     # add weights to photon data
     add_weights(config, p_df, source)
 
-    return p_df, e_df
+    return p_df, e_df, runs
 
 # Cell
 from .simulation import *
@@ -410,11 +415,12 @@ class SourceData(object):
             if self.config.wtlike_data/'data_files' is None and key not in config.cache:
                 raise Exception(f'Data for {self.source_name} is not cached, and config.wtlike_data/"data_files" is not set')
 
-            photons, self.exposure = self.config.cache(key,
+            r = self.config.cache(key,
                             _load_from_weekly_data, self.config, self.source, week_range,
                             overwrite=clear,
                             description=f'SourceData: photons and exposure for {self.source_name}')
-
+            photons, self.exposure = r[:2]
+            self.runs = r[2] if len(r)==3 else None
             # get the photon data with good weights, not NaN (maybe remove small weigts, too)
             good = np.logical_not(np.isnan(photons.weight))
             self.photons = photons.loc[good]
@@ -450,11 +456,11 @@ class SourceData(object):
         else:
             photon_text = f'simulated photons over {days:.1f} days.'
 
-        r = f'{self.__class__.__name__}: Source {self.source_name} with:'\
+        r = f'SourceData: Source {self.source_name} with:'\
             f'\n\t data:     {len(self.photons):9,} {photon_text}'\
             f'\n\t exposure: {len(self.exposure):9,} intervals, {exp_text}'
 
-        src_rate, bkg_rate =self.S/self.exptot,  self.B/self.exptot
+        src_rate, bkg_rate = self.S/self.exptot,  self.B/self.exptot
         r+= f'\n\t rates:  source {src_rate:.2e}/s, background {bkg_rate:.2e}/s, S/N ratio {src_rate/bkg_rate:.2f}'
 
         return r

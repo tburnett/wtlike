@@ -39,6 +39,7 @@ class CellData(SourceData):
         """bin, or rebin
         """
         photon_data = self.photons
+        self.time_bins = newbins
         self.cell_edges = edges = time_bin_edges(self.config, self.exposure, newbins)
         if self.config.verbose>0:
             step = newbins[2]
@@ -96,17 +97,30 @@ class CellData(SourceData):
 
     def update(self): pass # virtual
 
-    def view(self, newbins=None):
+    def view(self, *pars):
         """Return a "view": a new instance of this class with a perhaps a different set of cells
 
-        - newbins -- a tuple (start, stop, step) to define new binning.
-          - start and stop are either MJD values, or offsets from the start or stop.
-          - step -- the cell size in days, or if zero, orbit-based binning
+        - pars -- start, stop, step  to define new binning. Or start, step, or just step
+           start and stop are either MJD values, or offsets from the start or stop.
+           step -- the cell size in days, or if zero, orbit-based binning
         """
         import copy
         if self.config.verbose>1:
             print(f'Making a view of the class {self.__class__}')
         r = copy.copy(self)
+
+
+        if len(pars)==3:
+            newbins = pars
+        elif len(pars)==2: # new limits, same interval
+            newbins = (pars[0], pars[1], self.time_bins[0])
+        elif len(pars)==1:
+            if type(pars[0])==tuple:
+                newbins = pars[0]
+            else:
+                newbins = (self.time_bins[0], self.time_bins[1], pars[0])
+        else:
+            newbins=None
 
         if newbins is not None:
             r.rebin(newbins)
@@ -114,11 +128,12 @@ class CellData(SourceData):
         r.update()
         return r
 
-#### needs fixxing
-#     def __repr__(self):
-#         return f'''{self.__class__}:
-#         {len(self.fexposure)} intervals from {self.cell_edges[0]:.1f} to {self.cell_edges[-1]:.1f} for source {self.source_name}
-#         S {self.S:.2f}  B {self.B:.2f} '''
+
+    #### needs fixxing
+    #     def __repr__(self):
+    #         return f'''{self.__class__}:
+    #         {len(self.fexposure)} intervals from {self.cell_edges[0]:.1f} to {self.cell_edges[-1]:.1f} for source {self.source_name}
+    #         S {self.S:.2f}  B {self.B:.2f} '''
 
 
     def concatenate( self ):

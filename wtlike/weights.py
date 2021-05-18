@@ -67,8 +67,9 @@ def _load_weights(config, filename, ):
 
 # Cell
 def _add_weights(config, wts, wt_pix, nside_wt, photon_data):
-    # get the photon pixel ids, convert to NEST (if not already) and right shift them
-
+    """ get the photon pixel ids, convert to NEST (if not already) and right shift them
+        add 'weight', remove 'band', 'pixel'
+    """
     if not config.nest:
         # data are RING
         photon_pix = healpy.ring2nest(config.nside, photon_data.pixel.values)
@@ -77,8 +78,8 @@ def _add_weights(config, wts, wt_pix, nside_wt, photon_data):
     to_shift = 2*int(np.log2(config.nside/nside_wt));
     shifted_pix =   np.right_shift(photon_pix, to_shift)
     bad = np.logical_not(np.isin(shifted_pix, wt_pix))
-    if config.verbose>0:
-        print(f'\tApplyng weights: {sum(bad)} / {len(bad)} photon pixels are outside weight region')
+    if config.verbose>0 & sum(bad)>0:
+        print(f'\tApplying weights: {sum(bad)} / {len(bad)} photon pixels are outside weight region')
     if sum(bad)==len(bad):
         a = np.array(healpy.pix2ang(nside_wt, wt_pix, nest=True, lonlat=True)).mean(axis=1).round(1)
         b = np.array(healpy.pix2ang(nside_wt, shifted_pix, nest=True, lonlat=True)).mean(axis=1).round(1)
@@ -93,8 +94,12 @@ def _add_weights(config, wts, wt_pix, nside_wt, photon_data):
 
     # final grand lookup -- isn't numpy wonderful!
     photon_data.loc[:,'weight'] = wts[tuple([band_index, weight_index])]
+
+    # don't need these columns now (add flag to config to control??)
+    photon_data.drop(['band', 'pixel'], axis=1)
+
     if config.verbose>1:
-        print(f'\t{sum(np.isnan(photon_data.weight.values))} weights set to NaN')
+        print(f'\t{sum(np.isnan(photon_data.weight.values))} events without weight')
 
 
 # Cell

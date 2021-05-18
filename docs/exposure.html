@@ -2,7 +2,6 @@
 
 title: Exposure processing
 
-
 keywords: fastai
 sidebar: home_sidebar
 
@@ -29,26 +28,18 @@ nb_path: "nbs/04_exposure.ipynb"
 </div>
     {% endraw %}
 
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>For a given source, his module takes the exposure derived from the source direction and the spacecraft data, and a list of photons, both as DataFrames. 
+It adds a column "tau" to the data, which is the exposure per photon in units of $\mathrm{m^2 s}$</p>
+<p>It also identifies the runs from gaps in the exposure, and returns a set of runs.</p>
+
+</div>
+</div>
+</div>
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4 id="contiguous" class="doc_header"><code>contiguous</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/exposure.py#L6" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>contiguous</code>(<strong><code>start</code></strong>, <strong><code>stop</code></strong>, <strong><code>min_gap</code></strong>=<em><code>2</code></em>)</p>
-</blockquote>
-
-</div>
-
-</div>
-
-</div>
-</div>
 
 </div>
     {% endraw %}
@@ -71,8 +62,10 @@ nb_path: "nbs/04_exposure.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="add_exposure_to_events" class="doc_header"><code>add_exposure_to_events</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/exposure.py#L30" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>add_exposure_to_events</code>(<strong><code>config</code></strong>, <strong><code>exposure</code></strong>, <strong><code>photons</code></strong>)</p>
+<h4 id="add_exposure_to_events" class="doc_header"><code>add_exposure_to_events</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/exposure.py#L36" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>add_exposure_to_events</code>(<strong><code>config</code></strong>, <strong><code>exposure</code></strong>, <strong><code>photons</code></strong>)</p>
 </blockquote>
+<p>Modifies photons to add column "tau"
+Returns DataFrame runs</p>
 
 </div>
 
@@ -80,23 +73,72 @@ nb_path: "nbs/04_exposure.ipynb"
 
 </div>
 </div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
 
 </div>
     {% endraw %}
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Test">Test<a class="anchor-link" href="#Test"> </a></h3>
+<h3 id="Test?-cannot-do-the-following-since-this-is-imported-by-SourceData">Test? cannot do the following since this is imported by SourceData<a class="anchor-link" href="#Test?-cannot-do-the-following-since-this-is-imported-by-SourceData"> </a></h3>
 </div>
 </div>
 </div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># from wtlike.source_data import *</span>
+<span class="c1"># from wtlike.config import *</span>
+<span class="c1"># wtl = SourceData(&#39;3C 279&#39;)</span>
+
+<span class="c1"># exposure = wtl.exposure</span>
+<span class="c1"># photons = wtl.photons</span>
+<span class="c1"># source_name = wtl.source_name</span>
+<span class="c1"># verbose = wtl.config.verbose = 2</span>
+
+<span class="c1"># runs = add_exposure_to_events(wtl.config, wtl.exposure, wtl.photons)</span>
+<span class="c1"># run_start_exp = runs.exp.values</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># fig, (ax1,ax2) = plt.subplots(1,2, figsize=(10,3))</span>
+
+<span class="c1"># ax1.hist(np.diff(run_start_exp), bins = 100)</span>
+<span class="c1"># ax1.set(xlabel = r&#39;Per run $\mathrm{(m^2 s)}$&#39;)</span>
+<span class="c1"># ax1.grid(alpha=0.5);</span>
+<span class="c1"># ax = ax2</span>
+<span class="c1"># hkw = dict(bins = 100, histtype=&#39;step&#39;, log=True) #np.linspace(0,2000,100)</span>
+<span class="c1"># ax.hist(photons.tau[photons.weight&gt;0.5], **hkw, label=&#39;weight&gt;0.5&#39;);</span>
+<span class="c1"># ax.hist(photons.tau[photons.weight&lt;0.5], **hkw, label=&#39;weight&lt;0.5&#39;);</span>
+<span class="c1"># ax.legend(fontsize=12)</span>
+<span class="c1"># ax.set(xlabel=r&#39;Per event, $\mathrm{(m^2 s)}$&#39;, ylim=(5,None))</span>
+<span class="c1"># ax.grid(alpha=0.5);</span>
+<span class="c1"># fig.suptitle(f&#39;{source_name} exposure analysis&#39;);</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
 </div>
  
 

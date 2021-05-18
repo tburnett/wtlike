@@ -66,9 +66,9 @@ class WtLike(LightCurve):
         if getattr(self, 'isBB',  None) is None:
             return super().plot(*pars, **kwargs)
         else:
-            return self.plot_BB(*pars, **kwargs)
+            return self.plot_bb(*pars, **kwargs)
 
-    def plot_BB(self, ax=None, **kwargs):
+    def plot_bb(self, ax=None, **kwargs):
         """Plot the light curve with BB overplot
         """
         import matplotlib.pyplot as plt
@@ -81,9 +81,9 @@ class WtLike(LightCurve):
 
 
         colors = kwargs.pop('colors', ('lightblue', 'wheat', 'blue') )
-        flux_plot(self.config, self.parent.fits, ax=ax, colors=colors, source_name=source_name,
+        flux_plot(self.parent.fits, ax=ax, colors=colors, source_name=source_name,
                   label=self.step_name+' bins', **kwargs)
-        flux_plot(self.config, self.fits, ax=ax, step=True,
+        flux_plot(self.fits, ax=ax, step=True,
                   label='BB overlay', zorder=10,**kwargs)
 
         fig.set_facecolor('white')
