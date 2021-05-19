@@ -135,13 +135,15 @@ the source.  He calls it "retrospective", since the analysis for the full time i
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Individual-photon-Likelihood-(&quot;unbinned&quot;)">Individual photon Likelihood ("unbinned")<a class="anchor-link" href="#Individual-photon-Likelihood-(&quot;unbinned&quot;)"> </a></h3><p>Assumptions:</p>
+<h3 id="Individual-photon-Likelihood-(&quot;unbinned&quot;)">Individual photon Likelihood ("unbinned")<a class="anchor-link" href="#Individual-photon-Likelihood-(&quot;unbinned&quot;)"> </a></h3><p>We use  a version of the Kerr likelihood where the fundamental "cell" is a single photon. The likelihood for any group of photons 
+is easily determined by adding the photons.</p>
+<p>Assumptions:</p>
 <ul>
 <li>Source photons are completely contained in the dataset boundaries (the "ROI").</li>
 <li>The instrument response is constant with time.</li>
 <li>The background pattern is constant. (Clearly violated if a neighboring source varies!)</li>
 </ul>
-<p>For a photon $i$ with weight $w_i$ and live-time $\tau_i$,</p>
+<p>For a photon $i$ with weight $w_i$ and exposure $\tau_i$,</p>
 <p>{% raw %}
 $$ \displaystyle\log\mathcal{L}_i(\alpha) = \log (1 + \alpha \ w_i ) - \alpha \ w_i\ R\ \tau_i $$
 {% endraw %}</p>
@@ -150,9 +152,12 @@ $$ \displaystyle\log\mathcal{L}_i(\alpha) = \log (1 + \alpha \ w_i ) - \alpha \ 
 <li>$\alpha$ -- fractional deviation of the source flux from the average as measured by the catalog analysis </li>
 <li>$w_i$ -- probability, for the nominal source rate, that photon $i$ is from the source.</li>
 <li>$R$ -- expected source rate in $\mathrm{cm^{-2}\ s^{-1}}$ units. </li>
-<li>$\tau_i$ -- integrated exposure, in $\mathrm{cm^2}$ units, for the actual live time prior to detection. 
-This behaves like a time, but accounts for variation of the exposure rate.</li>
+<li>$\tau_i$ -- integration of the exposure rate for the live time preceding this detection in $\mathrm{cm^2} s$ units. 
+Live time, the time since the start of a run, or the previous photon. It is equivalent to time.<br>
+This behaves like a time, but accounts for variation of the exposure rate, often rapid with respect to event rates.</li>
 </ul>
+<p>(A note about "exposure": It has units $\mathrm{cm^2\ s}$ and is the integral of the "exposure rate" over a time interval.
+For <em>Fermi</em>, the rate is typically $\mathrm{3000 cm^2}$ but varies as much as a factor of three over a single orbit.)</p>
 <p>This is evaluated in the module  <a href="https://tburnett.github.io/wtlike/loglike">loglike</a>.</p>
 
 </div>
@@ -171,14 +176,14 @@ with subfolders for the photon data, <code>photon</code> and spacecraft data, <c
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Select-Data-for-a-source">Select Data for a source<a class="anchor-link" href="#Select-Data-for-a-source"> </a></h3><p>All further processing uses a subset of the photons within a cone, currently $4^\circ$, about the selected source, and 
-evaluates the exposure for this direction.  In the class
+evaluates the exposure during 30-s intervals for this direction.  In the class
 <a href="/wtlikesource_data#SourceData"><code>SourceData</code></a>, implemented in the module 
 <a href="/wtlikesource_data"><code>source_data</code></a> we</p>
 <ol>
 <li>Extract photons</li>
 <li>Evaluate exposure, using the effective area tables and a spectral assumption.</li>
 <li>Determine the weight for each photon, using the table for the source. See the module <a href="https://tburnett.github.io/wtlike/weights">weights</a> for details.</li>
-<li>For each photon's livetime, determine the integrated exposure $\tau$. </li>
+<li>For each photon's livetime, determine the exposure $\tau$. </li>
 </ol>
 <p>The result is a photon DataFrame, containing for each photon, the time $t$ in MJD units, $w$,  and $\tau$.</p>
 <p>This class is a superclass of the user interface class <a href="/wtlikemain#WtLike"><code>WtLike</code></a> introduced above.</p>
@@ -204,7 +209,7 @@ The default binning is simply <code>(0, 0, 7)</code> for weekly bins with the fu
 <ul>
 <li><code>t</code> -- MJD time at cell center</li>
 <li><code>tw</code> -- cell width in days</li>
-<li><code>e</code> -- exposure, for reference </li>
+<li><code>e</code> -- cell exposure, for reference </li>
 <li><code>n</code> -- the number of photons</li>
 <li><code>w</code> -- a list of <code>n</code> weights</li>
 <li><code>S</code> -- expected number source photons, the nominal source rate times the sum of $\tau$ values.</li>

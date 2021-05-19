@@ -65,13 +65,15 @@ likelihood analysis to assign a "weight" to each photon, the probability for bei
 the source.  He calls it "retrospective", since the analysis for the full time is then applied back to the individual photons.
 
 ### Individual photon Likelihood ("unbinned")
+We use  a version of the Kerr likelihood where the fundamental "cell" is a single photon. The likelihood for any group of photons 
+is easily determined by adding the photons.
 
 Assumptions:
 * Source photons are completely contained in the dataset boundaries (the "ROI").
 * The instrument response is constant with time.
 * The background pattern is constant. (Clearly violated if a neighboring source varies!)
 
-For a photon $i$ with weight $w_i$ and live-time $\tau_i$,
+For a photon $i$ with weight $w_i$ and exposure $\tau_i$,
 
 {% raw %}
 $$ \displaystyle\log\mathcal{L}_i(\alpha) = \log (1 + \alpha \ w_i ) - \alpha \ w_i\ R\ \tau_i $$
@@ -81,8 +83,12 @@ where:
 * $\alpha$ -- fractional deviation of the source flux from the average as measured by the catalog analysis 
 * $w_i$ -- probability, for the nominal source rate, that photon $i$ is from the source.
 * $R$ -- expected source rate in $\mathrm{cm^{-2}\ s^{-1}}$ units. 
-* $\tau_i$ -- integrated exposure, in $\mathrm{cm^2}$ units, for the actual live time prior to detection. 
-This behaves like a time, but accounts for variation of the exposure rate.
+* $\tau_i$ -- integration of the exposure rate for the live time preceding this detection in $\mathrm{cm^2} s$ units. 
+Live time, the time since the start of a run, or the previous photon. It is equivalent to time.  
+This behaves like a time, but accounts for variation of the exposure rate, often rapid with respect to event rates.
+
+(A note about "exposure": It has units $\mathrm{cm^2\ s}$ and is the integral of the "exposure rate" over a time interval.
+For *Fermi*, the rate is typically $\mathrm{3000 cm^2}$ but varies as much as a factor of three over a single orbit.)
 
 This is evaluated in the module  [loglike](https://tburnett.github.io/wtlike/loglike).
 
@@ -98,13 +104,13 @@ The entire data set in this format occupies <2 GB.
 ### Select Data for a source
 
 All further processing uses a subset of the photons within a cone, currently $4^\circ$, about the selected source, and 
-evaluates the exposure for this direction.  In the class
+evaluates the exposure during 30-s intervals for this direction.  In the class
 [`SourceData`](https://tburnett.github.io/wtlike/source_data#SourceData), implemented in the module 
 [`source_data`](https://tburnett.github.io/wtlike/source_data) we
 1. Extract photons
 2. Evaluate exposure, using the effective area tables and a spectral assumption.
 3. Determine the weight for each photon, using the table for the source. See the module [weights](https://tburnett.github.io/wtlike/weights) for details.
-4. For each photon's livetime, determine the integrated exposure $\tau$. 
+4. For each photon's livetime, determine the exposure $\tau$. 
 
 The result is a photon DataFrame, containing for each photon, the time $t$ in MJD units, $w$,  and $\tau$.
 
@@ -129,7 +135,7 @@ A DataFrame table of the cells is created as a data member `cells`, with content
 
 * `t` -- MJD time at cell center
 * `tw` -- cell width in days
-* `e` -- exposure, for reference 
+* `e` -- cell exposure, for reference 
 * `n` -- the number of photons
 * `w` -- a list of `n` weights
 * `S` -- expected number source photons, the nominal source rate times the sum of $\tau$ values.
