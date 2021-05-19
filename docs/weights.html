@@ -30,15 +30,33 @@ nb_path: "nbs/03_weights.ipynb"
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>We use the full-sky, catalog analysis model to evaluate the predicted flux from a source of interest with respect to the
+<p>We use the full-sky catalog analysis model to evaluate the predicted flux from a source of interest with respect to the
 background, the combined fluxes from all other sources. We choose the following binning:</p>
 <ul>
 <li>energy:  4/decade from 100 MeV to 1 TeV </li>
 <li>event type: Front and Back  </li>
 <li>Angular position: HEALPix, currently nside=64, for 1 degree-square pixels,</li>
 </ul>
-<p>We plan to increase nside to 128 in the near future.</p>
-<p>A procedure, currently only for pointlike, packs this table with the source name and position, into a pickled dict.</p>
+<h3 id="Plan">Plan<a class="anchor-link" href="#Plan"> </a></h3><ul>
+<li>increase nside to 128</li>
+<li>add source spectral info </li>
+</ul>
+<h3 id="Pointlike-generation">Pointlike generation<a class="anchor-link" href="#Pointlike-generation"> </a></h3><p>A procedure, currently only for pointlike, <a href="https://github.com/tburnett/pointlike/blob/master/python/uw/like2/source_weights.py">see source_weighsts</a> packs this table with the source name and position, into a pickled dict.</p>
+
+<pre><code>        outdict = dict(
+            model_name = '/'.join(os.getcwd().split('/')[-2:]),
+            radius=self.radius,
+            nside=self.nside,
+            order='NEST',
+            energy_bins=self.energy_bins,
+            source_name= self.source.name,
+            source_lb=galactic(self.source.skydir),
+            roi_lb  = galactic(self.roi.roi_dir),
+            roi_name=self.roi.name,
+            pixels= pixels,
+            weights = weights,
+        )</code></pre>
+<p>This is unpacked by <a href="/wtlikeweights#load_weights"><code>load_weights</code></a></p>
 <p>This table is used with the data, as a simple lookup: A weight is assigned to each photon according to which energy, event type or HEALPix pixel it lands in.</p>
 
 </div>
@@ -128,6 +146,32 @@ background, the combined fluxes from all other sources. We choose the following 
     
 <div class="cell border-box-sizing code_cell rendered">
 
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="load_weights" class="doc_header"><code>load_weights</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/weights.py#L34" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>load_weights</code>(<strong><code>config</code></strong>, <strong><code>filename</code></strong>)</p>
+</blockquote>
+<p>Load the weight informaton</p>
+<p>filename: pickled dict with map info</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
 </div>
     {% endraw %}
 
@@ -173,56 +217,6 @@ background, the combined fluxes from all other sources. We choose the following 
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_weight_hist" class="doc_header"><code>get_weight_hist</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/weights.py#L125" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_weight_hist</code>(<strong><code>config</code></strong>, <strong><code>source</code></strong>, <strong><code>nbins</code></strong>=<em><code>50</code></em>, <strong><code>key</code></strong>=<em><code>''</code></em>)</p>
-</blockquote>
-<p>return a weight distribution</p>
-<ul>
-<li>photon_data -- DataFrame with photon data</li>
-<li>source -- <a href="/wtlikeconfig#PointSource"><code>PointSource</code></a> object</li>
-</ul>
-<p>Uses <a href="/wtlikeweights#add_weights"><code>add_weights</code></a>.</p>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># if config.valid:</span>
-<span class="c1">#     source = PointSource(&#39;Geminga&#39;)</span>
-<span class="c1">#     h = get_weight_hist(config, source, key=&#39;&#39;)</span>
-<span class="c1">#     print(h)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
 
 </div>
     {% endraw %}
