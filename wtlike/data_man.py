@@ -270,8 +270,9 @@ def get_data_files(config):
         wk = list(map(lambda f: int(os.path.splitext(f)[0][-3:]), ff))
         lastweek = pickle.load(open(ff[-1],'rb'))
         if config.verbose>0:
+            gti = lastweek['gti_times'];
             print(f'Weekly folder "{weekly_folder}" contains {len(wk)} weeks,  {wk[0]} to {wk[-1]},'\
-            f' end at {UTC(MJD(lastweek["tstart"])+7)[:10]}')
+            f' end at {UTC(MJD(gti[-1]))[:10]}' )
         return ff
     else:
         print(f'Config not valid, {config.errors} no files found', file=sys.stderr)

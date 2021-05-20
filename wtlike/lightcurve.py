@@ -146,16 +146,19 @@ def fit_table(lc, expect=1.0):
 def flux_plot(cell_fits,
               query='',
               ax=None, fignum=1, figsize=(12,4),
+              log=False,
               title=None,
               step=False,
               tzero:'time offset'=0,
               flux_factor=1,
               colors=('cornflowerblue','sandybrown', 'blue'),
-              fmt='', ms=None, error_size=2,
+              fmt='', ms=None, error_pixsize=10,
               source_name=None,
+              error_lw=2,
               ts_bar_min=4,
               zorder=0,
               errorbar_args={},
+              axline={},
               **kwargs):
     """Make a plot of flux vs. time. This is invoked by the `plot` function of `LightCurve`
 
@@ -170,7 +173,6 @@ def flux_plot(cell_fits,
     if None, create one using subplots with fignum [1] and figsize [(12,4)]
     - fmt [''] -- marker symbol -- if not specifed, will use '.' if many bins, else 'o'
     - ms [None] -- for marker size
-    - error_size [2] -- apply to error bars
     - colors -- tuple of colors for signal, limit, step
     - step   -- add a "step" plot
     - zorder -- set to different number to order successive calls with same Axis object
@@ -178,25 +180,40 @@ def flux_plot(cell_fits,
 
     returns the Figure instance
     """
+    def error_size(ax, x,y, ):
+        topix = ax.transData.transform
+        frompix = ax.transData.inverted().transform
+        sizes = []
+        for a,b in zip(x,y):
+            sx, sy = topix((a,b))
+            c,d = frompix((sx, sy-error_pixsize))
+            sizes.append(b-d)
+        return  np.array(sizes)
+
     import matplotlib.ticker as ticker
     label = kwargs.pop('label', None)
     step_label = kwargs.pop('step_label', None)
     limit_fmt = kwargs.pop('limit_fmt', None)
-    ms = kwargs.pop('ms', None)
-    error_size=kwargs.pop('error_size', 2)
 
+    #error_size=kwargs.pop('error_size', 2)
+    # errorbar_args.update(error_size=kwargs.pop('error_size', 2))
     fig, ax = plt.subplots(figsize=figsize, num=fignum) if ax is None else (ax.figure, ax)
-    kw=dict(yscale='linear',
-            xlabel='MJD'+ f' - {tzero} [{UTC(tzero)[:10]}]' if tzero else 'MJD' ,
-            ylabel='Relative flux',)
+    kw=dict(xlabel='MJD'+ f' - {tzero} [{UTC(tzero)[:10]}]' if tzero else 'MJD' ,
+            ylabel='Relative flux',
+            yscale='log' if log else 'linear',
+           )
+
     kw.update(**kwargs)
     ax.set(**kw)
     ax.set_title(title) # or f'{source_name}, rep {self.rep}')
     ax.grid(alpha=0.5)
+
+    # potential yaxis formatting
     if kw['yscale']=='log' and flux_factor==1:
         ax.yaxis.set_major_formatter(ticker.FuncFormatter(
             lambda val,pos: { 1.0:'1', 10.0:'10', 100.:'100'}.get(val,'')))
 
+    # select data to plot
     df = cell_fits.copy()
     df.loc[:,'ts'] = df.fit.apply(lambda f: f.ts)
     if query:
@@ -221,14 +238,15 @@ def flux_plot(cell_fits,
 
         y = allflux[limit]
         if limit_fmt is None:
+
             # try to draw an error bar, hard to determine size
-            yerr=0.2*(1 if kw['yscale']=='linear' else y)*flux_factor
+            yerr = error_size(ax, t, y) #0.2*(1 if kw['yscale']=='linear' else y)#*flux_factor
+
             ax.errorbar(x=t, y=y, xerr=tw/2,
                     yerr=yerr,  color=color ,
                     uplims=True, ls='',
-                    ms=ms, lw=error_size, capsize=2*error_size, capthick=0,
+                    ms=ms, lw=error_lw, capsize=2*error_lw, capthick=0,
                     zorder=zorder, label='95% limit', **errorbar_args)
-
         else:
             # just a symbol, like 'v'
             ax.errorbar(x=t,xerr=tw/2, y=y, fmt=limit_fmt, color=color,
@@ -244,10 +262,11 @@ def flux_plot(cell_fits,
 #     if label is None:
 #         label = f'{bin_size_name(round(tw.mean(),4))} bins' if np.std(tw)<1e-6 else ''
     ax.errorbar(
-        x=t, xerr=tw/2,
+        x=t, xerr=tw/2, ms=ms,
                 y=fluxmeas, yerr=error, lw=2, fmt=fmt,
                 color=colors[0],
-                label=label, zorder=zorder+1, **errorbar_args)
+                label=label, zorder=zorder+1,
+                **errorbar_args)
 
     # finally ovelay the step if requested
     if step:
@@ -277,7 +296,7 @@ class LightCurve(CellData):
     """
     def __init__(self, *pars, **kwargs):
 
-        self.exp_min = kwargs.pop('e_min', 10) # corresponds to ~2counts
+        self.exp_min = kwargs.pop('e_min', 1) # corresponds to ~2counts
         self.n_min = kwargs.pop('n_min', 2)
         self.lc_key = kwargs.pop('lc_key', None)
         super().__init__(*pars, **kwargs)

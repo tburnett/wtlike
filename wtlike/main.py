@@ -45,8 +45,10 @@ class WtLike(LightCurve):
           - bb_flux  (only if bb_view invoked)
 
     """
-    def bb_view(self, key=None, clear=False, **kwargs):
+    def bb_view(self, p0=0.05, key=None, clear=False):
         """Return a view with the BB analysis applied
+
+        - p0 -- false positive probability parameter
 
         Its `plot` function will by default show an overplot on the parent's data points.
         """
@@ -54,11 +56,12 @@ class WtLike(LightCurve):
         r = self.view()
 
         # bb analysis on this to make new  set of cells and poisson fits
-        bb_edges  = get_bb_partition(self.config, self.fits,  key=key, clear=clear)
+        bb_edges  = get_bb_partition(self.config, self.fits,  p0=p0, key=key, clear=clear)
         r.cells = partition_cells(self.config, self.cells, bb_edges)
 
         r.fits = fit_cells(self.config, r.cells, )
         r.isBB = True
+        r.bayes_p0 = p0
         return r
 
     def plot(self, *pars, **kwargs):
@@ -84,7 +87,7 @@ class WtLike(LightCurve):
         flux_plot(self.parent.fits, ax=ax, colors=colors, source_name=source_name,
                   label=self.step_name+' bins', **kwargs)
         flux_plot(self.fits, ax=ax, step=True,
-                  label='BB overlay', zorder=10,**kwargs)
+                  label=f'BB (p0={100*self.bayes_p0:.0f}%)', zorder=10,**kwargs)
 
         fig.set_facecolor('white')
         return fig

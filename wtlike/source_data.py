@@ -221,8 +221,7 @@ def time_bin_edges(config, exposure, tbin=None):
 # Cell
 def contiguous_bins(exposure, min_gap=20, min_duration=600):
 
-    """ return a dataframe with start and stop columns that
-    denote contiguous intervals
+    """ return a start/stop interleaved array for contiguous intervals
 
     """
 
