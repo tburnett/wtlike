@@ -42,9 +42,10 @@ class LogLike(object):
             #return None
             raise RuntimeError(f'Fit failure: {self}')
         hess = self.hessian(pars)
-        outdict = dict( counts=len(self.w), flux=round(pars[0],4))
+        outdict = dict( counts=len(self.w),
+                       flux=np.float32(round(pars[0],4)) )
         if len(pars)==1:
-            outdict.update( sig_flux=round(np.sqrt(1/hess[0]),4),
+            outdict.update( sig_flux=np.float32(round(np.sqrt(1/hess[0]),4)),
                       )
         else:
             beta = pars[1]
@@ -54,7 +55,7 @@ class LogLike(object):
                 sig_flux=err[0]
                 sig_beta=err[1]
                 corr = var[0,1]/(err[0]*err[1])
-                outdict.update(flux=pars[0], beta=beta,
+                outdict.update(flux=1+pars[0], beta=beta,
                             sig_flux=sig_flux, sig_beta=sig_beta,corr=corr)
             except LinAlgError as e:
                 # flag as nan
@@ -221,12 +222,18 @@ class GaussianRep(object):
         return None # TODO if needed
 
     def __repr__(self):
-        return f'{self.__class__.__module__}.{self.__class__.__name__}:\n{pd.Series(self.fit)}'
+        fit = self.fit
+        beta_fit = f"\n\tbeta: {fit['beta']:.3f} +/- {fit['sig_beta']:.3f}" if not self.fix_beta else ''
+        r = f"{self.__class__.__name__}: {fit['counts']:,} counts"\
+            f"\n\tflux: {1+fit['flux']:.3f} +/- {fit['sig_flux']:.3f} {beta_fit}"
+        return r
+
 
 # Cell
-class Gaussian2dRep(object):
-    def __init__(self, loglike):
-        super(Gaussian2dRep, self).__init__(loglike, fix_beta=False)
+class Gaussian2dRep(GaussianRep):
+    def __init__(self, ll):
+        super().__init__( ll, fix_beta=False)
+        ll.solve(fix_beta=False)
 
 # Cell
 class PoissonRep(object):

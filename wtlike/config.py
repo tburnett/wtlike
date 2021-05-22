@@ -57,6 +57,7 @@ class Cache(dict):
 
     def add(self, key, object, exist_ok=False):
         if not self.path: return
+        assert type(key)==str, f'Expect key to be a string, got {key}'
         if key  in self:
             if not exist_ok:
                 print(f'Warning: cached object for key "{key}" exists', file=sys.stderr)
@@ -195,7 +196,7 @@ class Config:
     nest: bool=True
 
     # exposure calculation
-    bins_per_decade: int=4
+    bins_per_decade: int=5
     base_spectrum: str='lambda E: (E/1000)**-2.1'
     energy_range: Tuple = (100.,1e6)
 

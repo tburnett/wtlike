@@ -182,8 +182,144 @@ otherwise, offset from start
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">exposure</span> <span class="o">=</span> <span class="n">e_df</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">time_bin_edges</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">exposure</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span> <span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">exposure</span> <span class="o">=</span> <span class="n">e_df</span><span class="p">;</span> <span class="n">e_df</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>start</th>
+      <th>stop</th>
+      <th>exp</th>
+      <th>cos_theta</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>33</th>
+      <td>59354.03</td>
+      <td>59354.03</td>
+      <td>49990.39</td>
+      <td>0.48</td>
+    </tr>
+    <tr>
+      <th>34</th>
+      <td>59354.03</td>
+      <td>59354.03</td>
+      <td>71704.66</td>
+      <td>0.58</td>
+    </tr>
+    <tr>
+      <th>35</th>
+      <td>59354.03</td>
+      <td>59354.03</td>
+      <td>90833.62</td>
+      <td>0.66</td>
+    </tr>
+    <tr>
+      <th>36</th>
+      <td>59354.03</td>
+      <td>59354.03</td>
+      <td>107517.35</td>
+      <td>0.74</td>
+    </tr>
+    <tr>
+      <th>37</th>
+      <td>59354.03</td>
+      <td>59354.03</td>
+      <td>122104.60</td>
+      <td>0.81</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>3158</th>
+      <td>59355.35</td>
+      <td>59355.35</td>
+      <td>139768.19</td>
+      <td>0.95</td>
+    </tr>
+    <tr>
+      <th>3159</th>
+      <td>59355.35</td>
+      <td>59355.35</td>
+      <td>140303.71</td>
+      <td>0.96</td>
+    </tr>
+    <tr>
+      <th>3160</th>
+      <td>59355.35</td>
+      <td>59355.35</td>
+      <td>139789.75</td>
+      <td>0.95</td>
+    </tr>
+    <tr>
+      <th>3161</th>
+      <td>59355.35</td>
+      <td>59355.35</td>
+      <td>139497.31</td>
+      <td>0.95</td>
+    </tr>
+    <tr>
+      <th>3162</th>
+      <td>59355.35</td>
+      <td>59355.35</td>
+      <td>7206.64</td>
+      <td>0.95</td>
+    </tr>
+  </tbody>
+</table>
+<p>953 rows × 4 columns</p>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">time_bin_edges</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">exposure</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span> <span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">time_bin_edges</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">exposure</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)))</span>
 <span class="c1"># print(time_bin_edges(config, exposure, (0,0,0.5)) )</span>
 <span class="c1"># print(time_bin_edges(config, exposure, (-5,0,2)) )</span>
@@ -203,15 +339,15 @@ otherwise, offset from start
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>[59340. 59341. 59341. 59342. 59342. 59343. 59343. 59344. 59344. 59345.
- 59345. 59346. 59346. 59347.]
-[59346.01487111 59346.02841185 59346.09395583 59346.11860861
- 59346.15631779 59346.16048361 59346.22603917 59346.25069194
- 59346.36363255 59346.38272898 59346.40877065 59346.41633413
- 59346.50116727 59346.51505537 59346.54109704 59346.55631099
- 59346.62261324 59346.64720815 59346.67324981 59346.68956926
- 59346.75489333 59346.77959241 59346.80563407 59346.82195352
- 59346.88727759 59346.91162944 59346.93801833 59346.95399056]
+<pre>[59354. 59355.]
+[59354.02536787 59354.04709241 59354.08307695 59354.09314565
+ 59354.1562012  59354.17911787 59354.22090107 59354.22541417
+ 59354.28974364 59354.31127065 59354.34252065 59354.34411191
+ 59354.42092416 59354.44349287 59354.47474287 59354.49015954
+ 59354.55300676 59354.5756225  59354.60721972 59354.62219657
+ 59354.6850438  59354.70765954 59354.73925676 59354.75458083
+ 59354.81728917 59354.83951139 59354.87166417 59354.88694194
+ 59354.94969657 59354.9719188 ]
 </pre>
 </div>
 </div>
@@ -313,11 +449,88 @@ it is interleaved, client must apply [0::2] selection.</p>
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># len(ff), ff[-132]</span>
-<span class="c1"># _load_from_weekly_data(config, source, week_range=(-132, -100))</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">load_photons</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">clear</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+    
+    <span class="n">key</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">source</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">_data&#39;</span> <span class="k">if</span> <span class="n">key</span><span class="o">==</span><span class="s1">&#39;&#39;</span> <span class="k">else</span> <span class="n">key</span>
+    <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">wtlike_data</span><span class="o">/</span><span class="s1">&#39;data_files&#39;</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">cache</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Data for </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">source_name</span><span class="si">}</span><span class="s1"> is not cached, and config.wtlike_data/&quot;data_files&quot; is not set&#39;</span><span class="p">)</span>
+
+    <span class="n">r</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">cache</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> 
+                    <span class="n">_load_from_weekly_data</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> 
+                    <span class="n">overwrite</span><span class="o">=</span><span class="n">clear</span><span class="p">,</span>
+                    <span class="n">description</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;SourceData: photons and exposure for </span><span class="si">{</span><span class="n">source</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">photons</span><span class="p">,</span> <span class="n">exposure</span> <span class="o">=</span> <span class="n">r</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">runs</span> <span class="o">=</span> <span class="n">r</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">r</span><span class="p">)</span><span class="o">==</span><span class="mi">3</span> <span class="k">else</span> <span class="kc">None</span>
+    <span class="c1"># get the photon data with good weights, not NaN (maybe remove small weigts, too)</span>
+    <span class="n">good</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_not</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">photons</span><span class="o">.</span><span class="n">weight</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">photons</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">good</span><span class="p">],</span> <span class="n">exposure</span><span class="p">,</span> <span class="n">runs</span>
 </pre></div>
 
     </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">src</span><span class="p">,</span> <span class="n">exp</span><span class="p">,</span> <span class="n">runs</span> <span class="o">=</span> <span class="n">load_photons</span><span class="p">(</span><span class="n">Config</span><span class="p">(),</span> <span class="n">PointSource</span><span class="p">(</span><span class="s1">&#39;Geminga&#39;</span><span class="p">),</span> <span class="n">clear</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>SourceData: photons and exposure for Geminga: Restoring from cache with key &#34;Geminga_data&#34;
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">UTC</span><span class="p">(</span><span class="n">runs</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>&#39;2021-05-21 07:04&#39;</pre>
+</div>
+
+</div>
+
 </div>
 </div>
 

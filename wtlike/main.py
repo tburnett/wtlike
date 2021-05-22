@@ -80,7 +80,7 @@ class WtLike(LightCurve):
         fignum = kwargs.pop('fignum', 1)
         ts_min = kwargs.pop('ts_min',-1)
         source_name =kwargs.pop('source_name', self.source_name)
-        fig, ax = ig, ax = plt.subplots(figsize=figsize, num=fignum) if ax is None else (ax.figure, ax)
+        fig, ax = plt.subplots(figsize=figsize, num=fignum) if ax is None else (ax.figure, ax)
 
 
         colors = kwargs.pop('colors', ('lightblue', 'wheat', 'blue') )

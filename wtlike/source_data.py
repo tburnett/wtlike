@@ -208,7 +208,7 @@ def time_bin_edges(config, exposure, tbin=None):
 
     # adjust stop
     nbins = int((stop-start)/step)
-    assert nbins>1, 'Bad binning: no bins'
+    assert nbins>0, 'Bad binning: no bins'
     stop = start+(nbins)*step
     u =  np.linspace(start,stop, nbins+1 )
 
@@ -316,12 +316,12 @@ def _load_from_weekly_data(config, source, week_range=None):
     else:
         if config.verbose>0: print('loading all files')
 
-
-
     verbose, config.verbose=config.verbose, 0
+
     # list of data framees
     pp = []
     ee = []
+    runs = []
     for f in data_files:
         print('.', end='')
         with open(f, 'rb') as inp:
@@ -329,7 +329,11 @@ def _load_from_weekly_data(config, source, week_range=None):
 
         photons = _get_photons_near_source(config, source, week )
         exposure = _calculate_exposure_for_source(config, source, week )
-        if photons is not None:  pp.append(photons)
+        if photons is not None:
+            add_weights(config, photons, source)
+            pp.append(photons)
+            runs.append( add_exposure_to_events(config, exposure, photons,)
+                       )
         ee.append(exposure)
 
     print('');
@@ -339,7 +343,7 @@ def _load_from_weekly_data(config, source, week_range=None):
     e_df = pd.concat(ee, ignore_index=True)
 
     # process exposure to find runs, and add tau column to photons
-    runs = add_exposure_to_events(config, e_df, p_df)
+    ### runs = add_exposure_to_events(config, e_df, p_df)
 
     if config.verbose>1:
         times = p_df.time.values
@@ -347,7 +351,7 @@ def _load_from_weekly_data(config, source, week_range=None):
         print(f'Calculated {len(e_df):,} exposure entries')
 
     # add weights to photon data
-    add_weights(config, p_df, source)
+    ### add_weights(config, p_df, source)
 
     return p_df, e_df, runs
 
@@ -441,14 +445,14 @@ class SourceData(object):
             print(SourceData.__repr__(self))
 
     def rates(self):
-        print(f'Average rates for {self.source_name}: signal {self.S/self.exptot:.2e}/s, background {self.B/self.exptot:.2e}/s')
+        print(f'Average fluxes for {self.source_name}: signal {self.S/self.exptot:.2e}/s, background {self.B/self.exptot:.2e}/s')
 
     def __repr__(self):
         time = self.photons.time.values
 
         exp = self.exposure
         days  = np.sum(exp.stop-exp.start); secs = days*24*3600
-        exp_text = f' average rate {self.exptot/secs:.0f} cm^2 for {secs/1e6:.1f} Ms'
+        exp_text = f' average flux {self.exptot/secs:.0f} cm^2 for {secs/1e6:.1f} Ms'
 
         if not self.simulated:
             photon_text = f'photons from {UTC(time[0])[:10]} to {UTC(time[-1])[:10]}'
@@ -459,9 +463,9 @@ class SourceData(object):
             f'\n\t data:     {len(self.photons):9,} {photon_text}'\
             f'\n\t exposure: {len(self.exposure):9,} intervals, {exp_text}'
 
-        self.src_rate, self.bkg_rate = self.S/self.exptot,  self.B/self.exptot
-        r+= f'\n\t rates:  source {self.src_rate:.2e}/s, background {self.bkg_rate:.2e}/s,'\
-            f' S/N ratio {self.src_rate/self.bkg_rate:.2e}'
+        self.src_flux, self.bkg_flux = self.S/self.exptot,  self.B/self.exptot
+        r+= f'\n\t rates:  source {self.src_flux:.2e}/s, background {self.bkg_flux:.2e}/s,'\
+            f' S/N ratio {self.src_flux/self.bkg_flux:.2e}'
 
         return r
 
