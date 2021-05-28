@@ -410,8 +410,12 @@ class SourceData(object):
             self.photons = source.photons
             self.exposure = source.exposure
 
-        key = f'{self.source_name}_data' if key=='' else key
-        #self.source.data_key = key
+        if self.source is not None:
+            key = f'{self.source.filename}_data' if key=='' else key
+            self.source.data_key = key
+        else: # no cache for sim, yet
+            key=None
+
 
         if not self.simulated:
             # either load from data, or from a chache

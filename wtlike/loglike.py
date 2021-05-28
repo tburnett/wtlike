@@ -181,11 +181,22 @@ class LogLike(object):
     def plot(self, fix_beta=True, ax=None, **kwargs):
         """ Make a plot of the likelihood, with fit"""
         fig, ax = plt.subplots(figsize=(4,2)) if ax is None else (ax.figure, ax)
-        kw = dict(xlim=(0.5,1.5), ylim=(-2,0.1), ylabel='log likelihood', xlabel='flux')
+        kw = dict( ylim=(-2,0.1), ylabel='log likelihood', xlabel='relative flux')
         kw.update(**kwargs)
         ax.set(**kw)
 
-        dom = np.linspace(*kw['xlim'])
+        try:
+            a, s, ts = self.rate(fix_beta=fix_beta, debug=True)
+            fit = self.fit_info()
+            ts = PoissonRep(self).ts
+
+        except Exception as msg :
+            print(f'Failed fit: {msg}', file=sys.stderr)
+            ax.set(title=' **failed fit**')
+            return
+
+        xlim = kw.get('xlim', (a-4*s, a+4*s) )
+        dom = np.linspace(*xlim)
         if fix_beta:
             f = lambda x: self([x])
             beta=0
@@ -194,19 +205,16 @@ class LogLike(object):
             f = lambda x: self([x, beta])
         ax.plot(dom, list(map(f,dom)) )
 
-        try:
-            a, s, ts = self.rate(fix_beta=fix_beta, debug=True)
-            ax.plot(a, f(a), 'or')
-            ax.plot([a-s, a+s], [f(a-s), f(a+s)], '-k',lw=2)
-            for x in (a-s,a+s):
-                ax.plot([x,x], [f(x)-0.1, f(x)+0.1], '-k',lw=2)
-            ax.plot(a, f(a)-0.5, '-ok', ms=10)
-# #             ax.set(title=title, xlim=xlim, ylim=(f(a)-4, f(a)+0.2),
-#                ylabel='log likelihood', xlabel='flux')
-        except Exception as msg :
-            print(msg)
-            ax.set(title=' **failed fit**')
-        ax.grid()
+
+        ax.plot(a, f(a), 'or')
+        ax.plot([a-s, a+s], [f(a-s), f(a+s)], '-k',lw=2)
+        for x in (a-s,a+s):
+            ax.plot([x,x], [f(x)-0.1, f(x)+0.1], '-k',lw=2)
+        ax.plot(a, f(a)-0.5, '-ok', ms=10,
+                label=rf"{fit['flux']:.3f} $\pm$ {fit['sig_flux']:.3f}, TS={ts:.1f}]")
+
+        ax.legend(loc='lower center', fontsize=12)
+        ax.grid(alpha=0.5)
 
 # Cell
 class GaussianRep(object):

@@ -104,7 +104,7 @@ nb_path: "nbs/00_config.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="Cache" class="doc_header"><code>class</code> <code>Cache</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L16" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Cache</code>(<strong><code>path</code></strong>, <strong><code>clear</code></strong>:<code>bool</code>=<em><code>False</code></em>) :: <code>dict</code></p>
+<h2 id="Cache" class="doc_header"><code>class</code> <code>Cache</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L17" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Cache</code>(<strong><code>path</code></strong>, <strong><code>clear</code></strong>:<code>bool</code>=<em><code>False</code></em>) :: <code>dict</code></p>
 </blockquote>
 <p>Manage a file cache</p>
 <ul>
@@ -174,7 +174,7 @@ p.mkdir<span class="o">?</span>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="Cache.__call__" class="doc_header"><code>Cache.__call__</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L111" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Cache.__call__</code>(<strong><code>key</code></strong>, <strong><code>func</code></strong>, <strong>*<code>pars</code></strong>, <strong><code>description</code></strong>=<em><code>''</code></em>, <strong><code>overwrite</code></strong>=<em><code>False</code></em>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="Cache.__call__" class="doc_header"><code>Cache.__call__</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L112" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Cache.__call__</code>(<strong><code>key</code></strong>, <strong><code>func</code></strong>, <strong>*<code>pars</code></strong>, <strong><code>description</code></strong>=<em><code>''</code></em>, <strong><code>overwrite</code></strong>=<em><code>False</code></em>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
 <p>One-line usage interface for cache use</p>
 <ul>
@@ -279,7 +279,7 @@ result = mycache('mykey', myfun, x=99,  description='My data')
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="Config" class="doc_header"><code>class</code> <code>Config</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L170" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Config</code>(<strong><code>verbose</code></strong>:<code>int</code>=<em><code>1</code></em>, <strong><code>wtlike_data</code></strong>:<code>str</code>=<em><code>'~/wtlike_data'</code></em>, <strong><code>cachepath</code></strong>:<code>str</code>=<em><code>'~/wtlike_cache'</code></em>, <strong><code>radius</code></strong>:<code>float</code>=<em><code>4</code></em>, <strong><code>cos_theta_max</code></strong>:<code>float</code>=<em><code>0.4</code></em>, <strong><code>z_max</code></strong>:<code>float</code>=<em><code>100</code></em>, <strong><code>week_range</code></strong>:<code>Tuple</code>=<em><code>(None, None)</code></em>, <strong><code>time_bins</code></strong>:<code>Tuple</code>=<em><code>(0, 0, 7)</code></em>, <strong><code>use_uint8</code></strong>:<code>bool</code>=<em><code>False</code></em>, <strong><code>nside</code></strong>:<code>int</code>=<em><code>1024</code></em>, <strong><code>nest</code></strong>:<code>bool</code>=<em><code>True</code></em>, <strong><code>bins_per_decade</code></strong>:<code>int</code>=<em><code>5</code></em>, <strong><code>base_spectrum</code></strong>:<code>str</code>=<em><code>'lambda E: (E/1000)**-2.1'</code></em>, <strong><code>energy_range</code></strong>:<code>Tuple</code>=<em><code>(100.0, 1000000.0)</code></em>, <strong><code>likelihood_rep</code></strong>:<code>str</code>=<em><code>'poisson'</code></em>)</p>
+<h2 id="Config" class="doc_header"><code>class</code> <code>Config</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L171" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Config</code>(<strong><code>verbose</code></strong>:<code>int</code>=<em><code>1</code></em>, <strong><code>wtlike_data</code></strong>:<code>str</code>=<em><code>'~/wtlike_data'</code></em>, <strong><code>cachepath</code></strong>:<code>str</code>=<em><code>'~/wtlike_cache'</code></em>, <strong><code>radius</code></strong>:<code>float</code>=<em><code>4</code></em>, <strong><code>cos_theta_max</code></strong>:<code>float</code>=<em><code>0.4</code></em>, <strong><code>z_max</code></strong>:<code>float</code>=<em><code>100</code></em>, <strong><code>week_range</code></strong>:<code>Tuple</code>=<em><code>(None, None)</code></em>, <strong><code>time_bins</code></strong>:<code>Tuple</code>=<em><code>(0, 0, 7)</code></em>, <strong><code>use_uint8</code></strong>:<code>bool</code>=<em><code>False</code></em>, <strong><code>nside</code></strong>:<code>int</code>=<em><code>1024</code></em>, <strong><code>nest</code></strong>:<code>bool</code>=<em><code>True</code></em>, <strong><code>bins_per_decade</code></strong>:<code>int</code>=<em><code>5</code></em>, <strong><code>base_spectrum</code></strong>:<code>str</code>=<em><code>'lambda E: (E/1000)**-2.1'</code></em>, <strong><code>energy_range</code></strong>:<code>Tuple</code>=<em><code>(100.0, 1000000.0)</code></em>, <strong><code>likelihood_rep</code></strong>:<code>str</code>=<em><code>'poisson'</code></em>)</p>
 </blockquote>
 <p>Default light curve configuration parameters</p>
 
@@ -322,9 +322,8 @@ result = mycache('mykey', myfun, x=99,  description='My data')
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="MJD" class="doc_header"><code>MJD</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L248" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>MJD</code>(<strong><code>met</code></strong>)</p>
+<h4 id="MJD" class="doc_header"><code>MJD</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L254" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>MJD</code>(<strong><code>arg</code></strong>)</p>
 </blockquote>
-<p>convert MET to MJD</p>
 
 </div>
 
@@ -347,7 +346,7 @@ result = mycache('mykey', myfun, x=99,  description='My data')
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="UTC" class="doc_header"><code>UTC</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L257" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>UTC</code>(<strong><code>mjd</code></strong>)</p>
+<h4 id="UTC" class="doc_header"><code>UTC</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L266" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>UTC</code>(<strong><code>mjd</code></strong>)</p>
 </blockquote>
 <p>convert MJD value to ISO date string</p>
 
@@ -368,7 +367,41 @@ result = mycache('mykey', myfun, x=99,  description='My data')
 
 <div class="inner_cell">
     <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">UTC</span><span class="p">(</span><span class="mi">50000</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>&#39;1995-10-10 00:00&#39;</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">assert</span> <span class="n">UTC</span><span class="p">(</span><span class="n">MJD</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span><span class="o">==</span><span class="s1">&#39;2001-01-01 00:01&#39;</span>
+<span class="k">assert</span> <span class="n">MJD</span><span class="p">(</span><span class="s1">&#39;2008&#39;</span><span class="p">)</span><span class="o">==</span><span class="mi">54466</span>
 </pre></div>
 
     </div>
@@ -402,7 +435,7 @@ result = mycache('mykey', myfun, x=99,  description='My data')
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="bin_size_name" class="doc_header"><code>bin_size_name</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L264" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>bin_size_name</code>(<strong><code>bins</code></strong>)</p>
+<h4 id="bin_size_name" class="doc_header"><code>bin_size_name</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L273" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>bin_size_name</code>(<strong><code>bins</code></strong>)</p>
 </blockquote>
 <p>Provide a nice name, e.g., 'day' for a time interval</p>
 
@@ -452,7 +485,7 @@ result = mycache('mykey', myfun, x=99,  description='My data')
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="PointSource" class="doc_header"><code>class</code> <code>PointSource</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L285" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>PointSource</code>(<strong><code>name</code></strong>, <strong><code>position</code></strong>=<em><code>None</code></em>)</p>
+<h2 id="PointSource" class="doc_header"><code>class</code> <code>PointSource</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L294" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>PointSource</code>(<strong><code>name</code></strong>, <strong><code>position</code></strong>=<em><code>None</code></em>, <strong><code>nickname</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <p>Manage the position and name of a point source</p>
 
@@ -477,7 +510,7 @@ result = mycache('mykey', myfun, x=99,  description='My data')
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="PointSource.fk5" class="doc_header"><code>PointSource.fk5</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L322" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>PointSource.fk5</code>(<strong><code>name</code></strong>, <strong><code>position</code></strong>)</p>
+<h4 id="PointSource.fk5" class="doc_header"><code>PointSource.fk5</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L336" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>PointSource.fk5</code>(<strong><code>name</code></strong>, <strong><code>position</code></strong>)</p>
 </blockquote>
 <p>position: (ra,dec) tuple</p>
 
@@ -503,9 +536,26 @@ result = mycache('mykey', myfun, x=99,  description='My data')
                   <span class="p">(</span> <span class="n">PointSource</span><span class="o">.</span><span class="n">fk5</span><span class="p">(</span><span class="s1">&#39;fk5_source&#39;</span><span class="p">,(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)),</span><span class="s1">&#39;Source &quot;fk5_source&quot; at: (l,b)=(96.337,-60.189)&#39;</span><span class="p">,)</span>
                    <span class="p">]:</span>    
     <span class="k">assert</span> <span class="nb">str</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="o">==</span><span class="n">expect</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;expected </span><span class="si">{</span><span class="n">expect</span><span class="si">}</span><span class="s1">, got </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span>
+<span class="n">PointSource</span><span class="p">(</span><span class="s1">&#39;3C 273&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span> <span class="n">PointSource</span><span class="p">(</span><span class="s1">&#39;3C 273&#39;</span><span class="p">,</span> <span class="n">nickname</span><span class="o">=</span><span class="s1">&#39;3Cxxx&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">filename</span>
 </pre></div>
 
     </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(&#39;3C_273&#39;, &#39;3Cxxx&#39;)</pre>
+</div>
+
+</div>
+
 </div>
 </div>
 
@@ -530,92 +580,11 @@ result = mycache('mykey', myfun, x=99,  description='My data')
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="decorate_with" class="doc_header"><code>decorate_with</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L330" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>decorate_with</code>(<strong><code>other_func</code></strong>)</p>
+<h4 id="decorate_with" class="doc_header"><code>decorate_with</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L344" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>decorate_with</code>(<strong><code>other_func</code></strong>)</p>
 </blockquote>
 
 </div>
 
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Cache-is-a-mixin-for-a-class-?">Cache is a mixin for a class ?<a class="anchor-link" href="#Cache-is-a-mixin-for-a-class-?"> </a></h3>
-</div>
-</div>
-</div>
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># import pickle</span>
-<span class="c1"># config = Config(cachepath=&#39;/tmp/cache&#39;)</span>
-<span class="c1"># config.cache</span>
-
-<span class="c1"># !ls -l /tmp/cache</span>
-<span class="c1"># ! rm -f /tmp/cache/index.pkl</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#     def __init__(self, cache):</span>
-<span class="c1">#         self.cache = cache</span>
-
-<span class="c1"># class TestCache(CacheMixin):</span>
-<span class="c1">#     def __init__(self,  config):</span>
-<span class="c1">#         Path(&#39;/tmp/cache&#39;).mkdir(exist_ok=True)</span>
-<span class="c1">#         CacheMixin.__init__(config.cache)</span>
-       
-<span class="c1"># tc = TestCache(config)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-<div class="output_subarea output_text output_error">
-<pre>
-<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
-<span class="ansi-red-fg">TypeError</span>                                 Traceback (most recent call last)
-<span class="ansi-green-fg">&lt;ipython-input-49-48aa60fb940a&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
-<span class="ansi-green-intense-fg ansi-bold">      8</span>         CacheMixin<span class="ansi-blue-fg">.</span>__init__<span class="ansi-blue-fg">(</span>config<span class="ansi-blue-fg">.</span>cache<span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">      9</span> 
-<span class="ansi-green-fg">---&gt; 10</span><span class="ansi-red-fg"> </span>tc <span class="ansi-blue-fg">=</span> TestCache<span class="ansi-blue-fg">(</span>config<span class="ansi-blue-fg">)</span>
-
-<span class="ansi-green-fg">&lt;ipython-input-49-48aa60fb940a&gt;</span> in <span class="ansi-cyan-fg">__init__</span><span class="ansi-blue-fg">(self, config)</span>
-<span class="ansi-green-intense-fg ansi-bold">      6</span>     <span class="ansi-green-fg">def</span> __init__<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">,</span>  config<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
-<span class="ansi-green-intense-fg ansi-bold">      7</span>         Path<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">&#39;/tmp/cache&#39;</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">.</span>mkdir<span class="ansi-blue-fg">(</span>exist_ok<span class="ansi-blue-fg">=</span><span class="ansi-green-fg">True</span><span class="ansi-blue-fg">)</span>
-<span class="ansi-green-fg">----&gt; 8</span><span class="ansi-red-fg">         </span>CacheMixin<span class="ansi-blue-fg">.</span>__init__<span class="ansi-blue-fg">(</span>config<span class="ansi-blue-fg">.</span>cache<span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">      9</span> 
-<span class="ansi-green-intense-fg ansi-bold">     10</span> tc <span class="ansi-blue-fg">=</span> TestCache<span class="ansi-blue-fg">(</span>config<span class="ansi-blue-fg">)</span>
-
-<span class="ansi-red-fg">TypeError</span>: __init__() missing 1 required positional argument: &#39;cache&#39;</pre>
-</div>
 </div>
 
 </div>
