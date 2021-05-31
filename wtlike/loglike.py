@@ -27,14 +27,12 @@ class LogLike(object):
         """
         """
         self.__dict__.update(cell)
-#         assert self.n>0, f'No data for cell {cell}'
-        if len(self.w)>0 and type(self.w[0])==np.uint8:
-            self.w = np.array(self.w, np.float)/256
         self.verbose=0
 
 
     def fit_info(self, fix_beta=True):
-        """Perform fits, return a dict with cell info"""
+        """Perform fits, return a dict with cell info
+        """
         pars = self.solve(fix_beta)
         if pars is None:
             if self.verbose>0:
@@ -71,10 +69,10 @@ class LogLike(object):
     def __call__(self, pars ):
         """ evaluate the log likelihood
             pars: array or float
-                if array with len>1, expect (rate, beta)
+                if array with len>1, expect (relative rate, beta)
         """
         pars = np.atleast_1d(pars)
-        if len(pars)>1:      alpha, beta = pars - np.array([-1,0])
+        if len(pars)>1:      alpha, beta = pars - np.array([1,0])
         else:                alpha, beta = max(-1, pars[0]-1), 0
 
         tmp =  1 + alpha*self.w + beta*(1-self.w)
@@ -149,7 +147,7 @@ class LogLike(object):
         f = lambda pars: -self(pars)
         return optimize.fmin_cg(f, estimate[0:1] if fix_beta else estimate, **kw)
 
-    def solve(self, fix_beta=True, debug=True, estimate=[0.1,0],**fit_kw):
+    def solve(self, fix_beta=True, debug=True, estimate=[1,0],**fit_kw):
         """Solve non-linear equation(s) from setting gradient to zero
         note that the hessian is a jacobian
         """
@@ -179,7 +177,8 @@ class LogLike(object):
         return np.array(ret)
 
     def plot(self, fix_beta=True, ax=None, **kwargs):
-        """ Make a plot of the likelihood, with fit"""
+        """ Make a plot of the likelihood, with fit
+        """
         fig, ax = plt.subplots(figsize=(4,2)) if ax is None else (ax.figure, ax)
         kw = dict( ylim=(-2,0.1), ylabel='log likelihood', xlabel='relative flux')
         kw.update(**kwargs)
@@ -198,7 +197,7 @@ class LogLike(object):
         xlim = kw.get('xlim', (a-4*s, a+4*s) )
         dom = np.linspace(*xlim)
         if fix_beta:
-            f = lambda x: self([x])
+            f = lambda x: self([x])-self(a)
             beta=0
         else:
             a, beta = self.solve(fix_beta, debug=True)

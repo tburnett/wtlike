@@ -1,19 +1,19 @@
 {
   "wtlike": {
     "Overview": "/",
-    "Configuration data and basic functions": "/config",
-    "Data management": "/data_man",
-    "Effective Area": "/effective_area",
-    "Weights": "/weights",
-    "Exposure processing": "/exposure",
-    "Simulation": "/simulation",
-    "Source Data management": "/source_data",
-    "Poisson-like likelihood function": "/poisson",
-    "Log Likelihood tools": "/loglike",
-    "Manage cell data": "/cell_data",
-    "Light Curve Generation": "/lightcurve",
-    "Bayesian Blocks": "/bayesian",
-    "wtlike interface": "/main",
-    "wtlike tutorial": "/tutorial"
+    "Configuration data and basic functions": "config.html",
+    "Data management": "data_man.html",
+    "Effective Area": "effective_area.html",
+    "Weights": "weights.html",
+    "Exposure processing": "exposure.html",
+    "Simulation": "simulation.html",
+    "Source Data management": "source_data.html",
+    "Poisson-like likelihood function": "poisson.html",
+    "Log Likelihood tools": "loglike.html",
+    "Manage cell data": "cell_data.html",
+    "Light Curve Generation": "lightcurve.html",
+    "Bayesian Blocks": "bayesian.html",
+    "wtlike interface": "main.html",
+    "wtlike tutorial": "tutorial.html"
   }
 }

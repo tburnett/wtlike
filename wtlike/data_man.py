@@ -223,6 +223,7 @@ class WeeklyData(object):
                 if config.verbose>1:
                     print(f'{url.split("/")[-1]} -> {fname}')
                 try:
+                    if fname.exists(): os.remove(fname)
                     wget.download(str(url), str(fname))
                 except Exception as msg:
                     print(f'Failed to download {url}: {msg}')
@@ -295,9 +296,12 @@ def update_recent(config=None, test=False):
         print(f'Will load next week, # {last_wk+1} ...')
     if not test:
         WeeklyData(config, wk, overwrite=True).save()
-        _,last_wk, days = data_check(config)
+        _,last_wk, new_days = data_check(config)
         #print(f'Now {days}')
-    else: print('... but testing')
+        return new_days!=days
+    else:
+        print('... but testing')
+        return False
 
 # Cell
 def get_data_files(config=None):
