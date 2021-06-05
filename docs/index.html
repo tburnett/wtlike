@@ -2,6 +2,7 @@
 
 title: Making FermiLAT gamma-ray Light curves with wtlike 
 
+
 keywords: fastai
 sidebar: home_sidebar
 
@@ -59,7 +60,7 @@ nb_path: "nbs/index.ipynb"
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>SourceData: photons and exposure for 3C 273: Saving to cache with key &#34;3C_273_data&#34;
+<pre>SourceData: photons and exposure for 3C 273: Saving to cache with key &#34;3C 273_data&#34;
 	Assembling photon data and exposure for source 3C 273 from folder &#34;/home/burnett/wtlike_data/data_files&#34;,
 	 with 669 files, last file:  week_678.pkl: loading all files
 ....................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................</pre>
@@ -69,7 +70,7 @@ nb_path: "nbs/index.ipynb"
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stderr output_text">
-<pre>/mnt/c/users/thbur/OneDrive/work/wtlike/wtlike/weights.py:203: RuntimeWarning: Mean of empty slice.
+<pre>/mnt/c/users/thbur/OneDrive/work/wtlike/wtlike/weights.py:204: RuntimeWarning: Mean of empty slice.
   b = np.array(healpy.pix2ang(nside, shifted_pix, nest=True, lonlat=True)).mean(axis=1).round(1)
 /home/burnett/miniconda3/lib/python3.7/site-packages/numpy/core/_methods.py:163: RuntimeWarning: invalid value encountered in true_divide
   ret, rcount, out=ret, casting=&#39;unsafe&#39;, subok=False)
@@ -102,18 +103,18 @@ nb_path: "nbs/index.ipynb"
 <span class="ansi-green-intense-fg ansi-bold">     34</span> 
 
 <span class="ansi-green-fg">/mnt/c/users/thbur/OneDrive/work/wtlike/wtlike/source_data.py</span> in <span class="ansi-cyan-fg">__init__</span><span class="ansi-blue-fg">(self, source, config, clear, week_range, key)</span>
-<span class="ansi-green-intense-fg ansi-bold">    426</span>                             _load_from_weekly_data<span class="ansi-blue-fg">,</span> self<span class="ansi-blue-fg">.</span>config<span class="ansi-blue-fg">,</span> self<span class="ansi-blue-fg">.</span>source<span class="ansi-blue-fg">,</span> week_range<span class="ansi-blue-fg">,</span>
-<span class="ansi-green-intense-fg ansi-bold">    427</span>                             overwrite<span class="ansi-blue-fg">=</span>clear<span class="ansi-blue-fg">,</span>
-<span class="ansi-green-fg">--&gt; 428</span><span class="ansi-red-fg">                             description=f&#39;SourceData: photons and exposure for {self.source_name}&#39;)
-</span><span class="ansi-green-intense-fg ansi-bold">    429</span>             photons<span class="ansi-blue-fg">,</span> self<span class="ansi-blue-fg">.</span>exposure <span class="ansi-blue-fg">=</span> r<span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">:</span><span class="ansi-cyan-fg">2</span><span class="ansi-blue-fg">]</span>
-<span class="ansi-green-intense-fg ansi-bold">    430</span>             self<span class="ansi-blue-fg">.</span>runs <span class="ansi-blue-fg">=</span> r<span class="ansi-blue-fg">[</span><span class="ansi-cyan-fg">2</span><span class="ansi-blue-fg">]</span> <span class="ansi-green-fg">if</span> len<span class="ansi-blue-fg">(</span>r<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">==</span><span class="ansi-cyan-fg">3</span> <span class="ansi-green-fg">else</span> <span class="ansi-green-fg">None</span>
+<span class="ansi-green-intense-fg ansi-bold">    422</span>                             _load_from_weekly_data<span class="ansi-blue-fg">,</span> self<span class="ansi-blue-fg">.</span>config<span class="ansi-blue-fg">,</span> self<span class="ansi-blue-fg">.</span>source<span class="ansi-blue-fg">,</span> week_range<span class="ansi-blue-fg">,</span>
+<span class="ansi-green-intense-fg ansi-bold">    423</span>                             overwrite<span class="ansi-blue-fg">=</span>clear<span class="ansi-blue-fg">,</span>
+<span class="ansi-green-fg">--&gt; 424</span><span class="ansi-red-fg">                             description=f&#39;SourceData: photons and exposure for {self.source_name}&#39;)
+</span><span class="ansi-green-intense-fg ansi-bold">    425</span>             photons<span class="ansi-blue-fg">,</span> self<span class="ansi-blue-fg">.</span>exposure <span class="ansi-blue-fg">=</span> r<span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">:</span><span class="ansi-cyan-fg">2</span><span class="ansi-blue-fg">]</span>
+<span class="ansi-green-intense-fg ansi-bold">    426</span>             self<span class="ansi-blue-fg">.</span>runs <span class="ansi-blue-fg">=</span> r<span class="ansi-blue-fg">[</span><span class="ansi-cyan-fg">2</span><span class="ansi-blue-fg">]</span> <span class="ansi-green-fg">if</span> len<span class="ansi-blue-fg">(</span>r<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">==</span><span class="ansi-cyan-fg">3</span> <span class="ansi-green-fg">else</span> <span class="ansi-green-fg">None</span>
 
 <span class="ansi-green-fg">/mnt/c/users/thbur/OneDrive/work/wtlike/wtlike/config.py</span> in <span class="ansi-cyan-fg">__call__</span><span class="ansi-blue-fg">(self, key, func, description, overwrite, *pars, **kwargs)</span>
-<span class="ansi-green-intense-fg ansi-bold">    144</span> 
-<span class="ansi-green-intense-fg ansi-bold">    145</span>         <span class="ansi-green-fg">if</span> ret <span class="ansi-green-fg">is</span> <span class="ansi-green-fg">None</span> <span class="ansi-green-fg">or</span> overwrite<span class="ansi-blue-fg">:</span>
-<span class="ansi-green-fg">--&gt; 146</span><span class="ansi-red-fg">             </span>ret <span class="ansi-blue-fg">=</span> func<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">*</span>pars<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">**</span>kwargs<span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">    147</span>             self<span class="ansi-blue-fg">.</span>add<span class="ansi-blue-fg">(</span>key<span class="ansi-blue-fg">,</span> ret<span class="ansi-blue-fg">,</span> exist_ok<span class="ansi-blue-fg">=</span>overwrite<span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">    148</span>         <span class="ansi-green-fg">return</span> ret
+<span class="ansi-green-intense-fg ansi-bold">    143</span> 
+<span class="ansi-green-intense-fg ansi-bold">    144</span>         <span class="ansi-green-fg">if</span> ret <span class="ansi-green-fg">is</span> <span class="ansi-green-fg">None</span> <span class="ansi-green-fg">or</span> overwrite<span class="ansi-blue-fg">:</span>
+<span class="ansi-green-fg">--&gt; 145</span><span class="ansi-red-fg">             </span>ret <span class="ansi-blue-fg">=</span> func<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">*</span>pars<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">**</span>kwargs<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    146</span>             self<span class="ansi-blue-fg">.</span>add<span class="ansi-blue-fg">(</span>key<span class="ansi-blue-fg">,</span> ret<span class="ansi-blue-fg">,</span> exist_ok<span class="ansi-blue-fg">=</span>overwrite<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    147</span>         <span class="ansi-green-fg">return</span> ret
 
 <span class="ansi-green-fg">/mnt/c/users/thbur/OneDrive/work/wtlike/wtlike/source_data.py</span> in <span class="ansi-cyan-fg">_load_from_weekly_data</span><span class="ansi-blue-fg">(config, source, week_range)</span>
 <span class="ansi-green-intense-fg ansi-bold">    331</span>         exposure <span class="ansi-blue-fg">=</span> _calculate_exposure_for_source<span class="ansi-blue-fg">(</span>config<span class="ansi-blue-fg">,</span> source<span class="ansi-blue-fg">,</span> week <span class="ansi-blue-fg">)</span>
@@ -123,25 +124,25 @@ nb_path: "nbs/index.ipynb"
 <span class="ansi-green-intense-fg ansi-bold">    335</span>             runs.append( add_exposure_to_events(config, exposure, photons,)
 
 <span class="ansi-green-fg">/mnt/c/users/thbur/OneDrive/work/wtlike/wtlike/weights.py</span> in <span class="ansi-cyan-fg">add_weights</span><span class="ansi-blue-fg">(config, photon_data, source)</span>
-<span class="ansi-green-intense-fg ansi-bold">    116</span>     <span class="ansi-red-fg">## NEW</span>
-<span class="ansi-green-intense-fg ansi-bold">    117</span>     wtman <span class="ansi-blue-fg">=</span> WeightMan<span class="ansi-blue-fg">(</span>config<span class="ansi-blue-fg">,</span> filename<span class="ansi-blue-fg">=</span>weight_file<span class="ansi-blue-fg">)</span>
-<span class="ansi-green-fg">--&gt; 118</span><span class="ansi-red-fg">     </span>photon_data <span class="ansi-blue-fg">=</span> wtman<span class="ansi-blue-fg">.</span>add_weights<span class="ansi-blue-fg">(</span>photon_data<span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">    119</span> 
-<span class="ansi-green-intense-fg ansi-bold">    120</span>     <span class="ansi-red-fg">## OLD</span>
+<span class="ansi-green-intense-fg ansi-bold">    117</span>     <span class="ansi-red-fg">## NEW</span>
+<span class="ansi-green-intense-fg ansi-bold">    118</span>     wtman <span class="ansi-blue-fg">=</span> WeightMan<span class="ansi-blue-fg">(</span>config<span class="ansi-blue-fg">,</span> filename<span class="ansi-blue-fg">=</span>weight_file<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-fg">--&gt; 119</span><span class="ansi-red-fg">     </span>photon_data <span class="ansi-blue-fg">=</span> wtman<span class="ansi-blue-fg">.</span>add_weights<span class="ansi-blue-fg">(</span>photon_data<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    120</span> 
+<span class="ansi-green-intense-fg ansi-bold">    121</span>     <span class="ansi-red-fg">## OLD</span>
 
 <span class="ansi-green-fg">/mnt/c/users/thbur/OneDrive/work/wtlike/wtlike/weights.py</span> in <span class="ansi-cyan-fg">add_weights</span><span class="ansi-blue-fg">(self, photons)</span>
-<span class="ansi-green-intense-fg ansi-bold">    268</span>         &#34;&#34;&#34;
-<span class="ansi-green-intense-fg ansi-bold">    269</span>         <span class="ansi-green-fg">if</span> self<span class="ansi-blue-fg">.</span>format<span class="ansi-blue-fg">==</span><span class="ansi-cyan-fg">0</span><span class="ansi-blue-fg">:</span>
-<span class="ansi-green-fg">--&gt; 270</span><span class="ansi-red-fg">             </span>self<span class="ansi-blue-fg">.</span>_old_format<span class="ansi-blue-fg">(</span>photons<span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">    271</span>         <span class="ansi-green-fg">else</span><span class="ansi-blue-fg">:</span>
-<span class="ansi-green-intense-fg ansi-bold">    272</span>             photons <span class="ansi-blue-fg">=</span> self<span class="ansi-blue-fg">.</span>_new_format<span class="ansi-blue-fg">(</span>photons<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    269</span>         &#34;&#34;&#34;
+<span class="ansi-green-intense-fg ansi-bold">    270</span>         <span class="ansi-green-fg">if</span> self<span class="ansi-blue-fg">.</span>format<span class="ansi-blue-fg">==</span><span class="ansi-cyan-fg">0</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-fg">--&gt; 271</span><span class="ansi-red-fg">             </span>self<span class="ansi-blue-fg">.</span>_old_format<span class="ansi-blue-fg">(</span>photons<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    272</span>         <span class="ansi-green-fg">else</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">    273</span>             photons <span class="ansi-blue-fg">=</span> self<span class="ansi-blue-fg">.</span>_new_format<span class="ansi-blue-fg">(</span>photons<span class="ansi-blue-fg">)</span>
 
 <span class="ansi-green-fg">/mnt/c/users/thbur/OneDrive/work/wtlike/wtlike/weights.py</span> in <span class="ansi-cyan-fg">_old_format</span><span class="ansi-blue-fg">(self, photons)</span>
-<span class="ansi-green-intense-fg ansi-bold">    203</span>             b <span class="ansi-blue-fg">=</span> np<span class="ansi-blue-fg">.</span>array<span class="ansi-blue-fg">(</span>healpy<span class="ansi-blue-fg">.</span>pix2ang<span class="ansi-blue-fg">(</span>nside<span class="ansi-blue-fg">,</span> shifted_pix<span class="ansi-blue-fg">,</span> nest<span class="ansi-blue-fg">=</span><span class="ansi-green-fg">True</span><span class="ansi-blue-fg">,</span> lonlat<span class="ansi-blue-fg">=</span><span class="ansi-green-fg">True</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">.</span>mean<span class="ansi-blue-fg">(</span>axis<span class="ansi-blue-fg">=</span><span class="ansi-cyan-fg">1</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">.</span>round<span class="ansi-blue-fg">(</span><span class="ansi-cyan-fg">1</span><span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">    204</span> 
-<span class="ansi-green-fg">--&gt; 205</span><span class="ansi-red-fg">             </span><span class="ansi-green-fg">raise</span> Exception<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">f&#39;There was no overlap of the photon data at {b} and the weights at {a}&#39;</span><span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">    206</span>         shifted_pix<span class="ansi-blue-fg">[</span>bad<span class="ansi-blue-fg">]</span> <span class="ansi-blue-fg">=</span> <span class="ansi-cyan-fg">12</span><span class="ansi-blue-fg">*</span>nside<span class="ansi-blue-fg">**</span><span class="ansi-cyan-fg">2</span> <span class="ansi-red-fg"># set index to be beyond pixel indices</span>
-<span class="ansi-green-intense-fg ansi-bold">    207</span> 
+<span class="ansi-green-intense-fg ansi-bold">    204</span>             b <span class="ansi-blue-fg">=</span> np<span class="ansi-blue-fg">.</span>array<span class="ansi-blue-fg">(</span>healpy<span class="ansi-blue-fg">.</span>pix2ang<span class="ansi-blue-fg">(</span>nside<span class="ansi-blue-fg">,</span> shifted_pix<span class="ansi-blue-fg">,</span> nest<span class="ansi-blue-fg">=</span><span class="ansi-green-fg">True</span><span class="ansi-blue-fg">,</span> lonlat<span class="ansi-blue-fg">=</span><span class="ansi-green-fg">True</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">.</span>mean<span class="ansi-blue-fg">(</span>axis<span class="ansi-blue-fg">=</span><span class="ansi-cyan-fg">1</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">.</span>round<span class="ansi-blue-fg">(</span><span class="ansi-cyan-fg">1</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    205</span> 
+<span class="ansi-green-fg">--&gt; 206</span><span class="ansi-red-fg">             </span><span class="ansi-green-fg">raise</span> Exception<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">f&#39;There was no overlap of the photon data at {b} and the weights at {a}&#39;</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    207</span>         shifted_pix<span class="ansi-blue-fg">[</span>bad<span class="ansi-blue-fg">]</span> <span class="ansi-blue-fg">=</span> <span class="ansi-cyan-fg">12</span><span class="ansi-blue-fg">*</span>nside<span class="ansi-blue-fg">**</span><span class="ansi-cyan-fg">2</span> <span class="ansi-red-fg"># set index to be beyond pixel indices</span>
+<span class="ansi-green-intense-fg ansi-bold">    208</span> 
 
 <span class="ansi-red-fg">Exception</span>: There was no overlap of the photon data at [nan nan] and the weights at [290.   64.3]</pre>
 </div>
@@ -853,8 +854,8 @@ with subfolders for the photon data, <code>photon</code> and spacecraft data, <c
 <div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Select-Data-for-a-source">Select Data for a source<a class="anchor-link" href="#Select-Data-for-a-source"> </a></h3><p>All further processing uses a subset of the photons within a cone, currently $4^\circ$, about the selected source, and 
 evaluates the exposure during 30-s intervals for this direction.  In the class
-<a href="/wtlikesource_data#SourceData"><code>SourceData</code></a>, implemented in the module 
-<a href="/wtlikesource_data"><code>source_data</code></a> we</p>
+<code>SourceData</code>, implemented in the module 
+<a href="/wtlikesource_data.html"><code>source_data</code></a> we</p>
 <ol>
 <li>Extract photons</li>
 <li>Evaluate exposure, using the effective area tables and a spectral assumption.</li>
@@ -862,7 +863,7 @@ evaluates the exposure during 30-s intervals for this direction.  In the class
 <li>For each photon's livetime, determine the exposure $\tau$. </li>
 </ol>
 <p>The result is a photon DataFrame, containing for each photon, the time $t$ in MJD units, $w$,  and $\tau$.</p>
-<p>This class is a superclass of the user interface class <a href="/wtlikemain#WtLike"><code>WtLike</code></a> introduced above.</p>
+<p>This class is a superclass of the user interface class <code>WtLike</code> introduced above.</p>
 
 </div>
 </div>
@@ -891,7 +892,7 @@ The default binning is simply <code>(0, 0, 7)</code> for weekly bins with the fu
 <li><code>S</code> -- expected number source photons, the nominal source rate times the sum of $\tau$ values.</li>
 <li><code>B</code> -- expected number of background photons (unused)</li>
 </ul>
-<h3 id="Views">Views<a class="anchor-link" href="#Views"> </a></h3><p><a href="/wtlikecell_data#CellData"><code>CellData</code></a> implements a method <code>view</code>, which accepts a binning tuple as an argument, returns a <em>copy</em> of the current object, which can be a subclass, assigning to it the binning. Thus the view has all the attributes of its parent, but
+<h3 id="Views">Views<a class="anchor-link" href="#Views"> </a></h3><p><code>CellData</code> implements a method <code>view</code>, which accepts a binning tuple as an argument, returns a <em>copy</em> of the current object, which can be a subclass, assigning to it the binning. Thus the view has all the attributes of its parent, but
 with a different set of cells.</p>
 <p>So the following creates a new WtLike object that we generated above, rebins a copy with 25-day bins in the first 100 days, generates a list of the cells, then removes it since it wasn't assigned a reference variable.</p>
 
@@ -1011,28 +1012,28 @@ LightCurve: select 4 cells for fitting with e&gt;1 &amp; n&gt;2
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Evaluate-Likelihoods-and-make-light-curve-plots">Evaluate Likelihoods and make light curve plots<a class="anchor-link" href="#Evaluate-Likelihoods-and-make-light-curve-plots"> </a></h3><p>The class <a href="/wtlikelightcurve#LightCurve"><code>LightCurve</code></a>, implemented in the module <a href="/wtlikelightcurve"><code>lightcurve</code></a> is a subclass of <a href="/wtlikesource_data#SourceData"><code>SourceData</code></a>.
+<h3 id="Evaluate-Likelihoods-and-make-light-curve-plots">Evaluate Likelihoods and make light curve plots<a class="anchor-link" href="#Evaluate-Likelihoods-and-make-light-curve-plots"> </a></h3><p>The class <code>LightCurve</code>, implemented in the module <a href="/wtlikelightcurve.html"><code>lightcurve</code></a> is a subclass of <code>SourceData</code>.
 An instance invokes its superclass to generate the set of cells, then evaluates the likelihoods.</p>
 <h4 id="Poisson-like-Likelihood">Poisson-like Likelihood<a class="anchor-link" href="#Poisson-like-Likelihood"> </a></h4><p>We fit the likelihood for each cell, using only a few evaluations, to a <a href="https://tburnett.github.io/poisson">3-parameter Poisson-like formula</a>. Two advantages of this are:</p>
 <ul>
 <li>efficiency -- for large numbers of photons, this is much faster</li>
-<li>convenience -- the <a href="/wtlikepoisson#Poisson"><code>Poisson</code></a> object implements functions that return the TS, 95% CL, maximum, and uncertainties, using the <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.special.gammainc.html">incomplete gamma function</a>.</li>
+<li>convenience -- the <code>Poisson</code> object implements functions that return the TS, 95% CL, maximum, and uncertainties, using the <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.special.gammainc.html">incomplete gamma function</a>.</li>
 </ul>
 <p>This results in a DataFrame <code>fits</code> containing</p>
 <ul>
 <li><code>t, tw, n</code>, from the cell, and</li>
-<li><code>fit</code>, the <a href="/wtlikepoisson#Poisson"><code>Poisson</code></a> object</li>
+<li><code>fit</code>, the <code>Poisson</code> object</li>
 </ul>
-<h4 id="Light-curve-plots">Light curve plots<a class="anchor-link" href="#Light-curve-plots"> </a></h4><p>The function <code>Likelihood.plot</code> actually invokes <a href="/wtlikelightcurve#flux_plot"><code>flux_plot</code></a></p>
+<h4 id="Light-curve-plots">Light curve plots<a class="anchor-link" href="#Light-curve-plots"> </a></h4><p>The function <code>Likelihood.plot</code> actually invokes <code>flux_plot</code></p>
 
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Apply-Bayesian-Blocks">Apply Bayesian Blocks<a class="anchor-link" href="#Apply-Bayesian-Blocks"> </a></h3><p>The class <a href="/wtlikemain#WtLike"><code>WtLike</code></a>, 
-implememted in the module <a href="/wtlikemain"><code>main</code></a>, adds an implementation of the Bayesian Block (BB) algorithm, from the module <a href="/wtlikebayesian"><code>bayesian</code></a>  using likelihood instead of counts.
-There we have two subclasses of <code>astropy.stats.bayesian_blocks</code>, <a href="/wtlikebayesian#CountFitness"><code>CountFitness</code></a> and the default <a href="/wtlikebayesian#LikelihoodFitness"><code>LikelihoodFitness</code></a>.</p>
+<h3 id="Apply-Bayesian-Blocks">Apply Bayesian Blocks<a class="anchor-link" href="#Apply-Bayesian-Blocks"> </a></h3><p>The class <code>WtLike</code>, 
+implememted in the module <a href="/wtlikemain.html"><code>main</code></a>, adds an implementation of the Bayesian Block (BB) algorithm, from the module <a href="/wtlikebayesian.html"><code>bayesian</code></a>  using likelihood instead of counts.
+There we have two subclasses of <code>astropy.stats.bayesian_blocks</code>, <code>CountFitness</code> and the default <code>LikelihoodFitness</code>.</p>
 <p>This code creates partitions between boundaries of a set of cells. Usage is via a special view, 
 <a href="https://tburnett.github.io/wtlike/main#WtLike.bb_view">bb_view`</a></p>
 

@@ -44,6 +44,7 @@ def get_ft1_data( config, ft1_file):
         For the selected events above 100 MeV, this represents 9 bytes per photon, vs. 27.
         """
 
+        delta_t = config.offset_size
         ebins = config.energy_edges
         etypes = config.etypes
         nside = config.nside
@@ -112,26 +113,21 @@ def get_ft1_data( config, ft1_file):
         # digitize energy and create band index incluing (front/back)
         band_index = (2*(np.digitize(energy, ebins, )-1) + et_mask[1]).astype(np.uint8)
 
-        # sparcify the run, and make sparsified array of diffs
-        run_id = dsel['RUN_ID']
-        rundiff = np.diff(run_id, prepend=0).astype(np.int32)
-#         if np.any(rundiff<0):
-#             print(f'\t*** {sum(rundiff<0)} runs out of order: will need to sort.')
-        rdspar = pd.arrays.SparseArray(rundiff)
+        #
+        run_id = dsel['RUN_ID'].astype(np.uint32)
 
-        d ={    'band'  : band_index,
-                hpname  : hpindex,
-                'time'  : (time-tstart).astype(np.float32),
-                'run_diff':rdspar,
-                'rtime' : (time-run_id).astype(np.float32),
-                ### following for testing
-                #'run_id': run_id.astype(np.int32),
-                #'met'   : time.astype(float),
-           }
+
+        df = pd.DataFrame(
+                {   'band'  : band_index,
+                    hpname  : hpindex,
+                    #'time'  : (time-tstart).astype(np.float32), # the old time
+                    'run_id': pd.Categorical(run_id),
+                    'trun'  : ((time-run_id)/delta_t).astype(np.uint32),
+                }  )
         if verbose>1:
             print(f'\tReturning tstart={tstart:.0f}, {len(dsel):,} photons.')
 
-        return  tstart, pd.DataFrame(d), gti_times
+        return  tstart, df, gti_times
 
 # Cell
 def get_ft2_info(config, filename,
@@ -231,6 +227,10 @@ class WeeklyData(object):
             else:
                 if config.verbose>1: print(f'{fname} exists')
 
+        self.process_ft1()
+        self.process_ft2()
+
+
     def process_ft1(self):
         self.tstart, self.photon_data, self.gti_times = get_ft1_data(self.config, self.ft1_file)
 
@@ -245,8 +245,8 @@ class WeeklyData(object):
     def save(self):
         """process, then save aa dict"""
 
-        self.process_ft1()
-        self.process_ft2()
+#         self.process_ft1()
+#         self.process_ft2()
 
         d = dict(tstart = self.tstart,
                 photons = self.photon_data,
@@ -256,6 +256,8 @@ class WeeklyData(object):
         pickle.dump(d, open(filename, 'wb'))
         if self.config.verbose>0:
             print(f'Saved to {filename}')
+        if self.config.verbose>1:
+            print(self.photon_data.info())
 
 
 # Cell
@@ -332,13 +334,3 @@ def get_week(wk, config=None):
     if config is None: config =Config()
     assert config.valid
     WeeklyData(config, wk).save()
-
-# Cell
-# class GTI(object):
-
-#     def __init__(self, gti_times):
-#         self.mjd_gti = MJD(gti_times)
-
-#     def __call__(self, time:'float'):
-#         x = np.digitize(time, self.mjd_gti)
-#         return np.bitwise_and(x,1).astype(bool)

@@ -397,7 +397,7 @@ class LightCurve(CellData):
         """Generate a summary table from the light curve
 
         - lc -- A light curve fits dataframe; use current one if not specified
-        - includ_e -- include the exposure
+        - include_e -- include the exposure
         """
         if lc is None: lc=self.fits
 
