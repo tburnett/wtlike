@@ -81,7 +81,7 @@ class SourceData(object):
 
             if week_range is not None:
                 # always load directly if weeks specified
-                r = _load_from_weekly_data(self.config, self.source, week_range=week_range)
+                r = load_from_weekly_data(self.config, self.source, week_range=week_range)
             else:
                 r = self.config.cache(key,
                             load_from_weekly_data, self.config, self.source, week_range=None,

@@ -1,13 +1,12 @@
 ---
 
-title: Source Data management
-
+title: Source Data analysis
 
 keywords: fastai
 sidebar: home_sidebar
 
-summary: "Extract data for a source"
-description: "Extract data for a source"
+summary: "Analyze the selected data"
+description: "Analyze the selected data"
 nb_path: "nbs/05_source_data.ipynb"
 ---
 <!--
@@ -31,16 +30,7 @@ nb_path: "nbs/05_source_data.ipynb"
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Overview">Overview<a class="anchor-link" href="#Overview"> </a></h3><p>Given a point source, the class <a href="/wtlikesource_data.html#SourceData"><code>SourceData</code></a> manages all data-oriented operations, providing all that is necessary to create a set of cells. It depends on the modules</p>
-<ul>
-<li><p><a href="/wtlikeconfig.html"><code>config</code></a> 
-  This must set up the paths to the data created by <a href="/wtlikedata_man.html"><code>data_man</code></a>, and define paths for the effective area and weight files</p>
-</li>
-<li><p>effective_area</p>
-</li>
-<li>weights</li>
-<li>exposure</li>
-</ul>
+<h3 id="Overview">Overview<a class="anchor-link" href="#Overview"> </a></h3><p>For a point source, and data selection, the class <a href="/wtlikesource_data#SourceData"><code>SourceData</code></a> is the user interface to source-oriented data. It relies on the modules <a href="/wtlikeselect_data"><code>select_data</code></a> for actual data, or <a href="/wtlikesimulation"><code>simulation</code></a> for simulated data.</p>
 
 </div>
 </div>
@@ -48,137 +38,6 @@ nb_path: "nbs/05_source_data.ipynb"
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-</div>
-    {% endraw %}
-
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Check-exposure-with-last-data-file,-and-our-weak-source">Check exposure with last data file, and our weak source<a class="anchor-link" href="#Check-exposure-with-last-data-file,-and-our-weak-source"> </a></h3><p>Adapt to determine exposure record for each band.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Load-the-weight-info-for-the-source,-get-the">Load the weight info for the source, get the<a class="anchor-link" href="#Load-the-weight-info-for-the-source,-get-the"> </a></h3><ul>
-<li>energies</li>
-<li>spectral function</li>
-</ul>
-<p>And for each band:
-The id is 2 x energy index + front(0), back(1)</p>
-<ul>
-<li>npred, </li>
-<li>flux (which should be func(energy))</li>
-</ul>
-<p>For each s/c entry, typically 30-s intervals</p>
-<ul>
-<li>livetime</li>
-<li>pcosine</li>
-</ul>
-<p>The effective area function, <code>ea = EffectiveArea(file_path=config.wtlike_data/'aeff_files')</code>
-is evaluated <code>ea(energy, pcosine)</code>, and returns an effective area (front, back) tuple in $\mathrm{cm^2}$. This is then multiplied by the livetime for that interval.</p>
-
-</div>
-</div>
-</div>
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-</div>
-    {% endraw %}
-
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="test-photon-data">test photon data<a class="anchor-link" href="#test-photon-data"> </a></h3>
-</div>
-</div>
-</div>
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># # if config.valid:</span>
-<span class="c1"># for i,f in enumerate(ff[300:]):</span>
-<span class="c1">#     week = pickle.load(open(f,&#39;rb&#39;)); </span>
-<span class="c1">#     tstart = week[&#39;tstart&#39;]</span>
-<span class="c1">#     print(f&#39;{i} &#39;, end=&#39;&#39;)</span>
-<span class="c1">#     #print(f&#39;TSTART: MET {tstart}, UTC {UTC(MJD(tstart))}&#39;)</span>
-<span class="c1">#     p_df = _get_photons_near_source(config, source, week )</span>
-<span class="c1"># #     print(len(p_df))</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#     gstart, gstop = keep[0::2], keep[1::2]</span>
-<span class="c1">#     df =  pd.DataFrame.from_dict(dict(start=gstart, stop=gstop))</span>
-    
-<span class="c1">#     # add column with duration in sec</span>
-<span class="c1">#     df.loc[:,&#39;duration&#39;] = (df.stop-df.start)*24*3600</span>
-<span class="c1">#     return df.query(f&#39;duration&gt;{min_duration}&#39;)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4 id="time_bin_edges" class="doc_header"><code>time_bin_edges</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/source_data.py#L166" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>time_bin_edges</code>(<strong><code>config</code></strong>, <strong><code>exposure</code></strong>, <strong><code>tbin</code></strong>=<em><code>None</code></em>)</p>
-</blockquote>
-<p>Return an interleaved array of start/stop values</p>
-<p>tbin: an array (a,b,d), default config.time_bins</p>
-<p>interpretation of a, b:</p>
-
-<pre><code>if &gt; 50000, interpret as MJD
-if &lt;0, back from stop
-otherwise, offset from start
-
-</code></pre>
-<p>d : if positive, the day bin size
-    if 0; return contiguous bins</p>
-
-</div>
-
-</div>
-
-</div>
-</div>
 
 </div>
     {% endraw %}
@@ -201,272 +60,7 @@ otherwise, offset from start
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="contiguous_bins" class="doc_header"><code>contiguous_bins</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/source_data.py#L214" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>contiguous_bins</code>(<strong><code>exposure</code></strong>, <strong><code>min_gap</code></strong>=<em><code>20</code></em>, <strong><code>min_duration</code></strong>=<em><code>600</code></em>)</p>
-</blockquote>
-<p>return a start/stop interleaved array for contiguous intervals</p>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># print(time_bin_edges(config, exposure, (0,0,1)) )</span>
-<span class="c1"># print(time_bin_edges(config, exposure, (-1,0,0)))</span>
-<span class="c1"># print(time_bin_edges(config, exposure, (0,0,0.5)) )</span>
-<span class="c1"># print(time_bin_edges(config, exposure, (-5,0,2)) )</span>
-<span class="c1"># print(time_bin_edges(config, exposure, (0,1,0.25)) )</span>
-<span class="c1"># print(time_bin_edges(config, exposure, (-5,-4,0.25)) )   </span>
-<span class="c1"># print(time_bin_edges(config, exposure, (59326, 59330,0.5)) )    </span>
- 
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># gstart, gstop = keep[0::2], keep[1::2]</span>
-<span class="c1"># df =  pd.DataFrame.from_dict(dict(start=gstart, stop=gstop))</span>
-
-<span class="c1"># # add column with duration in sec</span>
-<span class="c1"># df.loc[:,&#39;duration&#39;] = (df.stop-df.start)*24*3600</span>
-
-<span class="c1"># df.hist(&#39;duration&#39;, bins=np.linspace(0,4e3,131));</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4 id="binned_exposure" class="doc_header"><code>binned_exposure</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/source_data.py#L246" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>binned_exposure</code>(<strong><code>config</code></strong>, <strong><code>exposure</code></strong>, <strong><code>time_edges</code></strong>)</p>
-</blockquote>
-<p>Bin the exposure</p>
-<ul>
-<li>time_bins: list of edges, as an interleaved start/stop array</li>
-</ul>
-<p>returns  array of exposure integrated over each time bin, times 1e-9
-it is interleaved, client must apply [0::2] selection.</p>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">load_photons</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">clear</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
-    
-    <span class="n">key</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">source</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">_data&#39;</span> <span class="k">if</span> <span class="n">key</span><span class="o">==</span><span class="s1">&#39;&#39;</span> <span class="k">else</span> <span class="n">key</span>
-    <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">wtlike_data</span><span class="o">/</span><span class="s1">&#39;data_files&#39;</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">cache</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Data for </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">source_name</span><span class="si">}</span><span class="s1"> is not cached, and config.wtlike_data/&quot;data_files&quot; is not set&#39;</span><span class="p">)</span>
-
-    <span class="n">r</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">cache</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> 
-                    <span class="n">_load_from_weekly_data</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> 
-                    <span class="n">overwrite</span><span class="o">=</span><span class="n">clear</span><span class="p">,</span>
-                    <span class="n">description</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;SourceData: photons and exposure for </span><span class="si">{</span><span class="n">source</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-    <span class="n">photons</span><span class="p">,</span> <span class="n">exposure</span> <span class="o">=</span> <span class="n">r</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span>
-    <span class="n">runs</span> <span class="o">=</span> <span class="n">r</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">r</span><span class="p">)</span><span class="o">==</span><span class="mi">3</span> <span class="k">else</span> <span class="kc">None</span>
-    <span class="c1"># get the photon data with good weights, not NaN (maybe remove small weigts, too)</span>
-    <span class="n">good</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_not</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">photons</span><span class="o">.</span><span class="n">weight</span><span class="p">))</span>
-    <span class="k">return</span> <span class="n">photons</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">good</span><span class="p">],</span> <span class="n">exposure</span><span class="p">,</span> <span class="n">runs</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4 id="update_cache" class="doc_header"><code>update_cache</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/source_data.py#L355" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>update_cache</code>(<strong><code>week_range</code></strong>=<em><code>(-1, None)</code></em>, <strong><code>save</code></strong>=<em><code>True</code></em>)</p>
-</blockquote>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">config</span><span class="o">=</span><span class="n">Config</span><span class="p">()</span>
-<span class="n">config</span><span class="o">.</span><span class="n">verbose</span><span class="o">=</span><span class="mi">2</span>
-<span class="n">source</span> <span class="o">=</span> <span class="n">PointSource</span><span class="p">(</span><span class="s1">&#39;PSR B1259-63&#39;</span><span class="p">)</span> <span class="c1">#&#39;4FGL J1257.0-6339&#39;)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">update_cache</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">save</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>Retrieve photon data from cache PSR_B1259-63_data
-	Assembling photon data and exposure for source PSR B1259-63
-	from folder &#34;/home/burnett/wtlike_data/data_files&#34;,
-	 with 669 files,
-	Weights from file PSR_B1259-63_weights.pkl
-	Loading weeks slice(-1, None, None).
-Loaded 965 photons from 2021-05-27 00:27 to  2021-05-30 04:41 
-Calculated 1,846 exposure entries
-Up to date
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>key = f'{source.name}_data'
-cur_ph, cur_exp, cur_runs = config.cache.get(key)</p>
-<p>tlast = cur_ph.iloc[-1].time 
-to_append = new_ph[new_ph.time&gt;tlast]
-print(tlast, to_append.iloc[0].time)</p>
-<p>tlast = cur_exp.iloc[-1].stop
-exp_to_append = new_exp[new_exp.start&gt;tlast]
-print(tlast, exp_to_append.iloc[0].start)</p>
-<p>exp.info(), src.info();</p>
-
-</div>
-</div>
-</div>
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h2 id="SourceData" class="doc_header"><code>class</code> <code>SourceData</code><a href="" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>SourceData</code>(<strong><code>source</code></strong>, <strong><code>config</code></strong>=<em><code>None</code></em>, <strong><code>clear</code></strong>=<em><code>False</code></em>, <strong><code>week_range</code></strong>=<em><code>None</code></em>, <strong><code>key</code></strong>=<em><code>''</code></em>)</p>
+<h2 id="SourceData" class="doc_header"><code>class</code> <code>SourceData</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/source_data.py#L17" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>SourceData</code>(<strong><code>source</code></strong>, <strong><code>config</code></strong>=<em><code>None</code></em>, <strong><code>clear</code></strong>=<em><code>False</code></em>, <strong><code>week_range</code></strong>=<em><code>None</code></em>, <strong><code>key</code></strong>=<em><code>''</code></em>)</p>
 </blockquote>
 <p>Load the photon data near the source and associated exposure.</p>
 <p>Either from:</p>
@@ -476,7 +70,7 @@ print(tlast, exp_to_append.iloc[0].start)</p>
 </ol>
 <ul>
 <li>source : name, PointSource, or Simulation</li>
-<li><code>config</code> : basic configuration</li>
+<li><a href="/wtlikeconfig"><code>config</code></a> : basic configuration</li>
 <li><code>source</code> : PointSource object if specified</li>
 <li><code>clear</code> : if set, overwrite the cached results</li>
 </ul>
@@ -494,11 +88,11 @@ print(tlast, exp_to_append.iloc[0].start)</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="SourceData.binned_exposure" class="doc_header"><code>SourceData.binned_exposure</code><a href="__main__.py#L119" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>SourceData.binned_exposure</code>(<strong><code>time_edges</code></strong>)</p>
+<h4 id="SourceData.binned_exposure" class="doc_header"><code>SourceData.binned_exposure</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/source_data.py#L137" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>SourceData.binned_exposure</code>(<strong><code>time_edges</code></strong>)</p>
 </blockquote>
 <p>Bin the exposure</p>
 <ul>
-<li>time_bins: list of edges.  </li>
+<li>time_bins: list of edges.</li>
 </ul>
 
 </div>

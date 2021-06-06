@@ -11,7 +11,7 @@
 
 Here is a minimal demo:
 
-```python
+```
 from wtlike import *
 wtl = WtLike('3C 273', clear=True)
 ```
@@ -104,7 +104,7 @@ wtl = WtLike('3C 273', clear=True)
     Exception: There was no overlap of the photon data at [nan nan] and the weights at [290.   64.3]
 
 
-```python
+```
 wtl.plot();
 ```
 
@@ -197,7 +197,7 @@ wtl.plot();
     Exception: There was no overlap of the photon data at [nan nan] and the weights at [290.   64.3]
 
 
-```python
+```
 debug
 ```
 
@@ -668,7 +668,7 @@ with a different set of cells.
 So the following creates a new WtLike object that we generated above, rebins a copy with 25-day bins in the first 100 days, generates a list of the cells, then removes it since it wasn't assigned a reference variable.
 
 
-```python
+```
 wtl.view(0,100,25).cells
 ```
 
@@ -780,7 +780,7 @@ This code creates partitions between boundaries of a set of cells. Usage is via 
 [bb_view`](https://tburnett.github.io/wtlike/main#WtLike.bb_view)
                      
 
-```python
+```
 bb = wtl.bb_view()
 bb.plot();
 ```
