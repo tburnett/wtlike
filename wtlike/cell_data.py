@@ -8,7 +8,8 @@ import numpy as np
 import pandas as pd
 from .config import *
 from .source_data import *
-from .loglike import LogLike, PoissonRep
+from .loglike import LogLike, PoissonRep, poisson_tolerance
+
 
 # Cell
 def time_bin_edges(config, exposure, tbin=None):
@@ -175,7 +176,7 @@ class CellData(SourceData):
 
         - exposure_factor --  recast exposure as cm^2 * Ms if $10^{-6}$
 
-        Thus the `e`  cell entry is the actual exposure for the cell in units $cm^2\ Ms$.
+        Thus the `e`  cell entry is the actual exposure for the cell in units $cm^2 Ms$.
         """
         # restrict photons to range of bin times
         photons = self.photons.query(f'{self.cell_edges[0]}<time<{self.cell_edges[-1]}')
@@ -210,18 +211,21 @@ class CellData(SourceData):
 
     def update(self): pass # virtual
 
-    def view(self, *pars):
-        """Return a "view": a new instance of this class with a perhaps a different set of cells
+    def view(self, *pars, exp_min=None):
+        """Return a "view": a copy of this instance with a perhaps a different set of cells
 
         - pars -- start, stop, step  to define new binning. Or start, step, or just step
            start and stop are either MJD values, or offsets from the start or stop.
            step -- the cell size in days, or if zero, orbit-based binning
+
+        - exp_min [None] -- If specified, a different inimum exposure, in cm^2 Ms units to use for fitting
+            from.
         """
         import copy
         if self.config.verbose>1:
             print(f'Making a view of the class {self.__class__}')
         r = copy.copy(self)
-
+        if exp_min is not None: r.exp_min=exp_min
 
         if len(pars)==3:
             newbins = pars
@@ -263,7 +267,7 @@ class CellData(SourceData):
             ca, cb =cells.iloc[0], cells.iloc[-1]
             newcell.update(dict(t= 0.5*(ca.t-ca.tw/2 + cb.t+cb.tw/2), tw=cb.t-ca.t ))
 
-        for col in ' n S B'.split():
+        for col in ' n e S B'.split():
             newcell[col] = cells[col].sum()
         newcell['w'] = np.concatenate(list(cells.w.values))
         return newcell

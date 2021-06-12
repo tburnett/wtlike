@@ -2,6 +2,7 @@
 
 title: Bayesian Blocks
 
+
 keywords: fastai
 sidebar: home_sidebar
 
@@ -32,11 +33,11 @@ nb_path: "nbs/14_bayesian.ipynb"
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>The functions implemented here are:</p>
 <ul>
-<li><p><a href="/wtlikebayesian#get_bb_partition"><code>get_bb_partition</code></a> to perform a BB partition. It requires a "fitness" function to perform an evaluation of the 
+<li><p><a href="/wtlikebayesian.html#get_bb_partition"><code>get_bb_partition</code></a> to perform a BB partition. It requires a "fitness" function to perform an evaluation of the 
 likelihoods for a set of sequential cells. There are two such, using the number of counts, and the Kerr likelihood. See the <a href="https://arxiv.org/pdf/1207.5578.pdf">Bayesian Block reference</a>.</p>
 <ul>
-<li><a href="/wtlikebayesian#CountFitness"><code>CountFitness</code></a></li>
-<li><a href="/wtlikebayesian#LikelihoodFitness"><code>LikelihoodFitness</code></a>, the default</li>
+<li><a href="/wtlikebayesian.html#CountFitness"><code>CountFitness</code></a></li>
+<li><a href="/wtlikebayesian.html#LikelihoodFitness"><code>LikelihoodFitness</code></a>, the default</li>
 </ul>
 </li>
 </ul>
@@ -44,13 +45,6 @@ likelihoods for a set of sequential cells. There are two such, using the number 
 </div>
 </div>
 </div>
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-</div>
-    {% endraw %}
-
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
@@ -96,7 +90,7 @@ Considerably modified to give the <code>fitness function</code> access to the ce
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="LikelihoodFitness" class="doc_header"><code>class</code> <code>LikelihoodFitness</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/bayesian.py#L125" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>LikelihoodFitness</code>(<strong><code>lc</code></strong>, <strong><code>p0</code></strong>=<em><code>0.05</code></em>, <strong><code>npt</code></strong>=<em><code>50</code></em>) :: <a href="/wtlikebayesian#CountFitness"><code>CountFitness</code></a></p>
+<h2 id="LikelihoodFitness" class="doc_header"><code>class</code> <code>LikelihoodFitness</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/bayesian.py#L125" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>LikelihoodFitness</code>(<strong><code>lc</code></strong>, <strong><code>p0</code></strong>=<em><code>0.05</code></em>, <strong><code>npt</code></strong>=<em><code>50</code></em>) :: <a href="/wtlikebayesian.html#CountFitness"><code>CountFitness</code></a></p>
 </blockquote>
 <p>Fitness function that uses the full likelihood</p>
 
@@ -157,6 +151,13 @@ Considerably modified to give the <code>fitness function</code> access to the ce
     
 <div class="cell border-box-sizing code_cell rendered">
 
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
 <div class="output_wrapper">
 <div class="output">
 
@@ -164,7 +165,7 @@ Considerably modified to give the <code>fitness function</code> access to the ce
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="get_bb_partition" class="doc_header"><code>get_bb_partition</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/bayesian.py#L185" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>get_bb_partition</code>(<strong><code>config</code></strong>, <strong><code>lc</code></strong>, <strong><code>fitness_class</code></strong>=<em><code>'LikelihoodFitness'</code></em>, <strong><code>p0</code></strong>=<em><code>0.05</code></em>, <strong><code>key</code></strong>=<em><code>None</code></em>, <strong><code>clear</code></strong>=<em><code>False</code></em>)</p>
+<h2 id="get_bb_partition" class="doc_header"><code>get_bb_partition</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/bayesian.py#L185" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>get_bb_partition</code>(<strong><code>config</code></strong>, <strong><code>lc</code></strong>, <strong><code>fitness_class</code></strong>=<em><code>LikelihoodFitness</code></em>, <strong><code>p0</code></strong>=<em><code>0.05</code></em>, <strong><code>key</code></strong>=<em><code>None</code></em>, <strong><code>clear</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 <p>Perform Bayesian Block partition of the cells found in a light curve</p>
 <ul>

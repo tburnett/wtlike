@@ -8,7 +8,7 @@ import numpy as np
 import pylab as plt
 import pandas as pd
 from .config import *
-from .loglike import (LogLike, GaussianRep, Gaussian2dRep, PoissonRep, PoissonRepTable)
+from .loglike import (LogLike, GaussianRep, Gaussian2dRep, PoissonRep, PoissonRepTable, poisson_tolerance)
 from .cell_data import *
 
 # Cell
@@ -17,7 +17,7 @@ class CellFitter(object):
 
     parameters:
        - cells : a table with index t, columns  tw, n, e, w, S, B
-       - exp_min : minimum fractional exposure allowed
+       - exp_min : minimum exposure allowed (units cm^2 Ms)
        - rep_name : represention to use
 
     Generates a DataFrame with columns n, ep, fit
@@ -88,10 +88,12 @@ def fit_cells(config,
     return light-curve dataframe
 
     """
+    global poisson_tolerance
 
     # select the set of cells
     cells = input_cells.copy()
 
+    poisson_tolerance = config.poisson_tolerance
     # generate a list of LogLike objects for each
     cells.loc[:,'loglike'] = cells.apply(LogLike, axis=1)
     if config.verbose>0:
@@ -136,7 +138,7 @@ def fit_table(lc, expect=1.0):
     flux = fits.apply(lambda f: f.flux)
     errors = fits.apply(lambda f: (round(f.errors[0]-f.flux,3), rorebinnedund(f.errors[1]-f.flux ,3) ) )
     sigma_dev = fits.apply(lambda f: round(f.poiss.sigma_dev(expect),1) )
-    df = lc['t tw n'.split()].copy() # maybe fix warnings?
+    df = lc['t tw n e'.split()].copy() # maybe fix warnings?
     df.loc[:,'flux'] = flux.values.round(4)
     df.loc[:, 'errors'] = errors.values
     df.loc[:, 'sigma_dev'] = sigma_dev.values
@@ -331,10 +333,11 @@ class LightCurve(CellData):
     """
     def __init__(self, *pars, **kwargs):
 
-        self.exp_min = kwargs.pop('e_min', 1) # corresponds to ~2counts
+        exp_min = kwargs.pop('exp_min', None) # corresponds to ~2counts
         self.n_min = kwargs.pop('n_min', 2)
         self.lc_key = kwargs.pop('lc_key', None)
         super().__init__(*pars, **kwargs)
+        self.exp_min = exp_min if exp_min is not None else self.config.exp_min
         self.update()
 
     def update(self):
@@ -392,7 +395,7 @@ class LightCurve(CellData):
         fig.set_facecolor('white')
         return fig
 
-    def flux_table(self, lc=None, include_e=False):
+    def flux_table(self, lc=None, include_e=True):
 
         """Generate a summary table from the light curve
 

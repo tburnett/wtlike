@@ -324,10 +324,19 @@ def process_week(config, source, week_file):
             last_run = run
 
         # update pdf
-        pdf.loc[:,'tau'] = tau
+        pdf.loc[:,'tau'] = np.array(tau, np.float32)
         pdf.loc[:,'time'] = time
-        pdf.drop(columns = 'trun', inplace=True)
+        pdf.drop(columns='trun', inplace=True)
         pdf.loc[:, 'run_id'] = pd.Categorical(run_id)
+
+    else: # zap legacy for now
+        for check in 'etime event run_diff rtime run'.split():
+            if check in pdf:
+                if config.verbose>2: print(f'remove {check}')
+                pdf.drop(columns=check, inplace=True)
+
+    # final attempt to do this
+    pdf.loc[:,'weight']=pdf['weight'].astype(np.float32)
 
     return pdf, edf
 
@@ -361,6 +370,7 @@ def process_weeks(config, source, week_files):
     print('');
     # concatenate the two lists of DataFrames
     p_df = pd.concat(pp, ignore_index=True)
+    p_df.loc[:,'run_id'] = pd.Categorical(p_df.run_id)
     e_df = pd.concat(ee, ignore_index=True)
     return p_df, e_df
 

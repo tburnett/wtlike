@@ -287,11 +287,11 @@ class PoissonRep(object):
             try:
                 self.pf = PoissonFitter(loglike, fmax=fmax, scale=sig if rate>0 else 1,  dd=-10., tol=tol)
             except Exception as msg:
-                print(f'Fail poisson fit for {loglike}: {msg}')
+                print(f'PoissonRep: Fail poisson fit for {loglike}: {msg}', file=sys.stderr)
                 with open('failed_loglike.pkl', 'wb') as file:
                     pickle.dump(loglike, file)
-                print('Saved file')
-                raise
+                print('Saved LogLike file for study')
+                assert False, 'breakpoint'
             self.poiss =  self.pf.poiss
 
         if self.ts>ts_min: # can use the simple non-truncated scaled Poisson distribution.

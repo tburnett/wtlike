@@ -204,6 +204,8 @@ class Config:
 
     # analysis
     likelihood_rep: str='poisson'
+    poisson_tolerance: float = 0.2
+    exp_min : float = 5   # default minimum exposure for a cell in cm^2 Ms.
 
     def __post_init__(self):
         # set up data

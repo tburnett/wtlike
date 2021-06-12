@@ -2,6 +2,7 @@
 
 title: Manage cell data
 
+
 keywords: fastai
 sidebar: home_sidebar
 
@@ -35,7 +36,7 @@ nb_path: "nbs/08_cell_data.ipynb"
 <p>{% raw %}
 $$ \displaystyle\log\mathcal{L}_k(\alpha)\ = \sum_{w}  \log \big( 1 + \alpha\ w \big) - \alpha\ f_k\ S   $$
 {% endraw %}</p>
-<p>The sum is over the weights $w$ in that cell, and $S$ is an estimate of the signal rate, and $f_k$ is the total exposure for that $k^{th}$ cell. Note that $f_k$ can be expressed as the sum of the exposures per photon, accumulated over the live time, which is from the start of the run or the previous photon.</p>
+<p>The sum is over the weights $w$ in that cell, and $S$ is an estimate of the signal count flux, and $f_k$ is the total exposure for that $k^{th}$ cell. Note that $f_k$ can be expressed as the sum of the exposures per photon, accumulated over the live time, which is from the start of the run or the previous photon.</p>
 <p><em>Fermi</em> data is broken into distinct runs, corresponding at most to a single orbit. The effective area, $\frac{df}{dt}$ varies by a factor of 2 or 3 for each 90-min orbit, is typically  $ 3 000\ \mathrm{cm}^2$, or $0.3\ \mathrm{m^2}$ for $fermi$. This is measured in 30-s intervals.</p>
 <p>We'll call the exposure per photon $\tau$ to emphasize that it plays the role of time.</p>
 <p>So for the $i^{th}$ photon,<br>
@@ -58,13 +59,6 @@ $$\displaystyle\log\mathcal{L}_i(\alpha) = \log( 1 + \alpha\ w_i) - \alpha\  \ta
     
 <div class="cell border-box-sizing code_cell rendered">
 
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
 <div class="output_wrapper">
 <div class="output">
 
@@ -72,7 +66,7 @@ $$\displaystyle\log\mathcal{L}_i(\alpha) = \log( 1 + \alpha\ w_i) - \alpha\  \ta
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="time_bin_edges" class="doc_header"><code>time_bin_edges</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/cell_data.py#L14" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>time_bin_edges</code>(<strong><code>config</code></strong>, <strong><code>exposure</code></strong>, <strong><code>tbin</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="time_bin_edges" class="doc_header"><code>time_bin_edges</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/cell_data.py#L15" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>time_bin_edges</code>(<strong><code>config</code></strong>, <strong><code>exposure</code></strong>, <strong><code>tbin</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <p>Return an interleaved array of start/stop values</p>
 <p>tbin: an array (a,b,d), default config.time_bins</p>
@@ -107,7 +101,7 @@ otherwise, offset from start
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="binned_exposure" class="doc_header"><code>binned_exposure</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/cell_data.py#L62" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>binned_exposure</code>(<strong><code>config</code></strong>, <strong><code>exposure</code></strong>, <strong><code>time_edges</code></strong>)</p>
+<h4 id="binned_exposure" class="doc_header"><code>binned_exposure</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/cell_data.py#L63" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>binned_exposure</code>(<strong><code>config</code></strong>, <strong><code>exposure</code></strong>, <strong><code>time_edges</code></strong>)</p>
 </blockquote>
 <p>Bin the exposure</p>
 <ul>
@@ -137,7 +131,7 @@ it is interleaved, client must apply [0::2] selection.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="contiguous_bins" class="doc_header"><code>contiguous_bins</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/cell_data.py#L95" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>contiguous_bins</code>(<strong><code>exposure</code></strong>, <strong><code>min_gap</code></strong>=<em><code>20</code></em>, <strong><code>min_duration</code></strong>=<em><code>600</code></em>)</p>
+<h4 id="contiguous_bins" class="doc_header"><code>contiguous_bins</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/cell_data.py#L96" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>contiguous_bins</code>(<strong><code>exposure</code></strong>, <strong><code>min_gap</code></strong>=<em><code>20</code></em>, <strong><code>min_duration</code></strong>=<em><code>600</code></em>)</p>
 </blockquote>
 <p>return a start/stop interleaved array for contiguous intervals</p>
 
@@ -162,6 +156,13 @@ it is interleaved, client must apply [0::2] selection.</p>
     
 <div class="cell border-box-sizing code_cell rendered">
 
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
 <div class="output_wrapper">
 <div class="output">
 
@@ -169,7 +170,7 @@ it is interleaved, client must apply [0::2] selection.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="CellData" class="doc_header"><code>class</code> <code>CellData</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/cell_data.py#L128" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>CellData</code>(<strong>*<code>pars</code></strong>, <strong>**<code>kwargs</code></strong>) :: <a href="/wtlikesource_data#SourceData"><code>SourceData</code></a></p>
+<h2 id="CellData" class="doc_header"><code>class</code> <code>CellData</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/cell_data.py#L129" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>CellData</code>(<strong>*<code>pars</code></strong>, <strong>**<code>kwargs</code></strong>) :: <a href="/wtlikesource_data.html#SourceData"><code>SourceData</code></a></p>
 </blockquote>
 <p>Manage a set of cells generated from a data set</p>
 <p>Invoke superclass to load photon data and exposure for the source.</p>
@@ -186,13 +187,17 @@ it is interleaved, client must apply [0::2] selection.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="CellData.view" class="doc_header"><code>CellData.view</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/cell_data.py#L213" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>CellData.view</code>(<strong>*<code>pars</code></strong>)</p>
+<h4 id="CellData.view" class="doc_header"><code>CellData.view</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/cell_data.py#L214" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>CellData.view</code>(<strong>*<code>pars</code></strong>, <strong><code>exp_min</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
-<p>Return a "view": a new instance of this class with a perhaps a different set of cells</p>
+<p>Return a "view": a copy of this instance with a perhaps a different set of cells</p>
 <ul>
-<li>pars -- start, stop, step  to define new binning. Or start, step, or just step
+<li><p>pars -- start, stop, step  to define new binning. Or start, step, or just step
  start and stop are either MJD values, or offsets from the start or stop.
- step -- the cell size in days, or if zero, orbit-based binning</li>
+ step -- the cell size in days, or if zero, orbit-based binning</p>
+</li>
+<li><p>exp_min [None] -- If specified, a different inimum exposure, in cm^2 Ms units to use for fitting
+  from.</p>
+</li>
 </ul>
 
 </div>
@@ -209,13 +214,6 @@ it is interleaved, client must apply [0::2] selection.</p>
     
 <div class="cell border-box-sizing code_cell rendered">
 
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
 <div class="output_wrapper">
 <div class="output">
 
@@ -223,7 +221,7 @@ it is interleaved, client must apply [0::2] selection.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="concatenate_cells" class="doc_header"><code>concatenate_cells</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/cell_data.py#L287" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>concatenate_cells</code>(<strong><code>cells</code></strong>)</p>
+<h4 id="concatenate_cells" class="doc_header"><code>concatenate_cells</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/cell_data.py#L291" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>concatenate_cells</code>(<strong><code>cells</code></strong>)</p>
 </blockquote>
 <p>Combine a group of cells to one</p>
 <ul>
@@ -254,6 +252,13 @@ Return a dict with summed n, S, B, and concatenated w</li>
     
 <div class="cell border-box-sizing code_cell rendered">
 
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
 <div class="output_wrapper">
 <div class="output">
 
@@ -261,7 +266,7 @@ Return a dict with summed n, S, B, and concatenated w</li>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="partition_cells" class="doc_header"><code>partition_cells</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/cell_data.py#L305" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>partition_cells</code>(<strong><code>config</code></strong>, <strong><code>cells</code></strong>, <strong><code>edges</code></strong>)</p>
+<h4 id="partition_cells" class="doc_header"><code>partition_cells</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/cell_data.py#L309" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>partition_cells</code>(<strong><code>config</code></strong>, <strong><code>cells</code></strong>, <strong><code>edges</code></strong>)</p>
 </blockquote>
 <p>Partition a set of cells</p>
 <ul>

@@ -2,6 +2,7 @@
 
 title: wtlike tutorial
 
+
 keywords: fastai
 sidebar: home_sidebar
 
@@ -95,7 +96,7 @@ nb_path: "nbs/99_tutorial.ipynb"
 <li>background -- 1e-6 /s</li>
 <li>exposure rate -- 3000 cm^2 </li>
 </ul>
-<p>Here we create a <a href="/wtlikesimulation#Simulation"><code>Simulation</code></a> object, then pass it to the primary wtlike entry point, the class <a href="/wtlikemain#WtLike"><code>WtLike</code></a>.
+<p>Here we create a <a href="/wtlikesimulation.html#Simulation"><code>Simulation</code></a> object, then pass it to the primary wtlike entry point, the class <a href="/wtlikemain.html#WtLike"><code>WtLike</code></a>.
 We tell it to immediately bin the photons into daily time-bins, called "cells". (That can be easily redone.)</p>
 
 </div>
@@ -367,7 +368,7 @@ The relative flux is $1+\alpha$.</p>
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Note that the properties <code>photons</code>, <a href="/wtlikeexposure"><code>exposure</code></a>, <code>cells</code>, <code>fits</code>, and <code>fluxes</code> are <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html">DataFrames</a>. So we can find a fit at the peak with a <code>query</code>.</p>
+<p>Note that the properties <code>photons</code>, <a href="/wtlikeexposure.html"><code>exposure</code></a>, <code>cells</code>, <code>fits</code>, and <code>fluxes</code> are <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html">DataFrames</a>. So we can find a fit at the peak with a <code>query</code>.</p>
 
 </div>
 </div>
@@ -456,7 +457,7 @@ The relative flux is $1+\alpha$.</p>
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Views">Views<a class="anchor-link" href="#Views"> </a></h2><p>A <a href="/wtlikemain#WtLike"><code>WtLike</code></a> object provides a function <code>view</code>, which returns a <strong>new</strong> instance with a different binning. 
+<h2 id="Views">Views<a class="anchor-link" href="#Views"> </a></h2><p>A <a href="/wtlikemain.html#WtLike"><code>WtLike</code></a> object provides a function <code>view</code>, which returns a <strong>new</strong> instance with a different binning. 
 So if we want a detailed look at the flare, we can choose an interval as so:</p>
 
 </div>
@@ -968,7 +969,7 @@ Return a &#34;view&#34;: a new instance of this class with a perhaps a different
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Using-Fermi-data.">Using <em>Fermi</em> data.<a class="anchor-link" href="#Using-Fermi-data."> </a></h2><p>The only change from above is that one uses <a href="/wtlikeconfig#PointSource"><code>PointSource</code></a> instead of <a href="/wtlikesimulation#Simulation"><code>Simulation</code></a>.</p>
+<h2 id="Using-Fermi-data.">Using <em>Fermi</em> data.<a class="anchor-link" href="#Using-Fermi-data."> </a></h2><p>The only change from above is that one uses <a href="/wtlikeconfig.html#PointSource"><code>PointSource</code></a> instead of <a href="/wtlikesimulation.html#Simulation"><code>Simulation</code></a>.</p>
 <p>The data must be available, of course.
 So,</p>
 

@@ -232,8 +232,7 @@ class WeightMan(dict):
         band_index = np.fmin(31, photons.band.values) #all above 1 TeV into last bin
 
         # final grand lookup -- isn't numpy wonderful!
-        photons.loc[:,'weight'] = self.wts[tuple([band_index, weight_index])]
-
+        photons.loc[:,'weight'] = self.wts[tuple([band_index, weight_index])].astype(np.float16)
 
     def _new_format(self, photons):
 
@@ -256,7 +255,7 @@ class WeightMan(dict):
             band = photons[photons.band==band_id] #.query('band== @band_id')
             wt_table = wt_tables[band_id]
             nside =  wt_table['nside']
-            new_weights = wt_table['wts']
+            new_weights = wt_table['wts'].astype(np.float16)
             to_shift = int(2*np.log2(data_nside//nside))
             data_pixels = np.right_shift(band.nest_index, to_shift)
             wt_pixels=wt_table['pixels']
@@ -275,7 +274,7 @@ class WeightMan(dict):
             # get subset of photons in this band, with new weights
             these_photons = photons[photons.band==band_id][good]
             these_photons.loc[:,'weight']=new_wts
-            photons.loc[photons.band==band_id,'weight'] = these_photons.weight
+            photons.loc[photons.band==band_id,'weight'] = (these_photons.weight).astype(np.float16)
     #         if self.config.verbose>1:
     #             print(f' -> {len(new_wts):8,}')
 
