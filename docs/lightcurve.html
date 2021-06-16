@@ -2,7 +2,6 @@
 
 title: Light Curve Generation
 
-
 keywords: fastai
 sidebar: home_sidebar
 
@@ -37,13 +36,20 @@ nb_path: "nbs/09_lightcurve.ipynb"
 <li><code>tw</code> -- the cell width</li>
 <li><code>n</code>  -- number of photons</li>
 <li><code>e</code>  -- exposure, in $10^6 s\ cm^2$ units</li>
-<li><code>fit</code> -- the fit object, containing info about the flux. This is usually a <a href="/wtlikeloglike.html#PoissonRep"><code>PoissonRep</code></a> object</li>
+<li><code>fit</code> -- the fit object, containing info about the flux. This is usually a <a href="/wtlikeloglike#PoissonRep"><code>PoissonRep</code></a> object</li>
 </ul>
 <p>It is generated from a set of cells</p>
 
 </div>
 </div>
 </div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    {% endraw %}
+
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
@@ -101,7 +107,7 @@ nb_path: "nbs/09_lightcurve.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="fit_cells" class="doc_header"><code>fit_cells</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/lightcurve.py#L82" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>fit_cells</code>(<strong><code>config</code></strong>, <strong><code>input_cells</code></strong>, <strong><code>repcl</code></strong>=<em><code>PoissonRep</code></em>)</p>
+<h4 id="fit_cells" class="doc_header"><code>fit_cells</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/lightcurve.py#L82" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>fit_cells</code>(<strong><code>config</code></strong>, <strong><code>input_cells</code></strong>, <strong><code>repcl</code></strong>=<em><code>'PoissonRep'</code></em>)</p>
 </blockquote>
 <p>Apply fits to the likelihoods for a set of cells
 return light-curve dataframe</p>
@@ -197,13 +203,6 @@ return light-curve dataframe</p>
     
 <div class="cell border-box-sizing code_cell rendered">
 
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
 <div class="output_wrapper">
 <div class="output">
 
@@ -213,7 +212,7 @@ return light-curve dataframe</p>
 <div class="output_markdown rendered_html output_subarea ">
 <h3 id="flux_plot" class="doc_header"><code>flux_plot</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/lightcurve.py#L149" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>flux_plot</code>(<strong><code>cell_fits</code></strong>, <strong><code>query</code></strong>=<em><code>''</code></em>, <strong><code>ax</code></strong>=<em><code>None</code></em>, <strong><code>fignum</code></strong>=<em><code>1</code></em>, <strong><code>figsize</code></strong>=<em><code>(12, 4)</code></em>, <strong><code>log</code></strong>=<em><code>False</code></em>, <strong><code>title</code></strong>=<em><code>None</code></em>, <strong><code>step</code></strong>=<em><code>False</code></em>, <strong><code>tzero</code></strong>:<code>time offset</code>=<em><code>0</code></em>, <strong><code>flux_factor</code></strong>=<em><code>1</code></em>, <strong><code>colors</code></strong>=<em><code>('cornflowerblue', 'sandybrown', 'blue')</code></em>, <strong><code>fmt</code></strong>=<em><code>''</code></em>, <strong><code>ms</code></strong>=<em><code>None</code></em>, <strong><code>error_pixsize</code></strong>=<em><code>10</code></em>, <strong><code>limit_fmt</code></strong>=<em><code>None</code></em>, <strong><code>source_name</code></strong>=<em><code>None</code></em>, <strong><code>legend_loc</code></strong>=<em><code>'upper left'</code></em>, <strong><code>error_lw</code></strong>=<em><code>2</code></em>, <strong><code>ts_bar_min</code></strong>=<em><code>4</code></em>, <strong><code>zorder</code></strong>=<em><code>0</code></em>, <strong><code>errorbar_args</code></strong>=<em><code>{}</code></em>, <strong><code>axhline</code></strong>=<em><code>{}</code></em>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
-<p>Make a plot of flux vs. time. This is invoked by the <code>plot</code> function of <a href="/wtlikelightcurve.html#LightCurve"><code>LightCurve</code></a></p>
+<p>Make a plot of flux vs. time. This is invoked by the <code>plot</code> function of <a href="/wtlikelightcurve#LightCurve"><code>LightCurve</code></a></p>
 <ul>
 <li>cell_fits -- cell fits DataFrame</li>
 <li>query ['']-- DataFrame query to select subset</li>
@@ -258,6 +257,13 @@ if None, create one using subplots with fignum [1] and figsize [(12,4)]</p>
 </div>
 </div>
 </div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    {% endraw %}
+
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
@@ -311,13 +317,6 @@ if None, create one using subplots with fignum [1] and figsize [(12,4)]</p>
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
 <details class="description">
       <summary data-open="Hide Code" data-close="Show Code"></summary>
         <summary></summary>
@@ -344,6 +343,13 @@ if None, create one using subplots with fignum [1] and figsize [(12,4)]</p>
     
 <div class="cell border-box-sizing code_cell rendered">
 
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
 <div class="output_wrapper">
 <div class="output">
 
@@ -351,10 +357,10 @@ if None, create one using subplots with fignum [1] and figsize [(12,4)]</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="LightCurve" class="doc_header"><code>class</code> <code>LightCurve</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/lightcurve.py#L329" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>LightCurve</code>(<strong>*<code>pars</code></strong>, <strong>**<code>kwargs</code></strong>) :: <a href="/wtlikecell_data.html#CellData"><code>CellData</code></a></p>
+<h2 id="LightCurve" class="doc_header"><code>class</code> <code>LightCurve</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/lightcurve.py#L329" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>LightCurve</code>(<strong>*<code>pars</code></strong>, <strong>**<code>kwargs</code></strong>) :: <a href="/wtlikecell_data#CellData"><code>CellData</code></a></p>
 </blockquote>
 <p>Full analysis of a source,
-Inherits from <a href="/wtlikecell_data.html#CellData"><code>CellData</code></a></p>
+Inherits from <a href="/wtlikecell_data#CellData"><code>CellData</code></a></p>
 
 </div>
 
@@ -362,13 +368,6 @@ Inherits from <a href="/wtlikecell_data.html#CellData"><code>CellData</code></a>
 
 </div>
 </div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
 
 </div>
     {% endraw %}

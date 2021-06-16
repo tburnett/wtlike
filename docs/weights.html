@@ -2,7 +2,6 @@
 
 title: Weights
 
-
 keywords: fastai
 sidebar: home_sidebar
 
@@ -59,7 +58,7 @@ background, the combined fluxes from all other sources. We choose the following 
             pixels= pixels,
             weights = weights,
         )</code></pre>
-<h4 id="New-format----varying-pixel-size-depending-on-PSF-width">New format -- varying pixel size depending on PSF width<a class="anchor-link" href="#New-format----varying-pixel-size-depending-on-PSF-width"> </a></h4><p>This is unpacked by <a href="/wtlikeweights.html#load_weights"><code>load_weights</code></a></p>
+<h4 id="New-format----varying-pixel-size-depending-on-PSF-width">New format -- varying pixel size depending on PSF width<a class="anchor-link" href="#New-format----varying-pixel-size-depending-on-PSF-width"> </a></h4><p>This is unpacked by <a href="/wtlikeweights#load_weights"><code>load_weights</code></a></p>
 <p>This table is used with the data, as a simple lookup: A weight is assigned to each photon according to which energy, event type or HEALPix pixel it lands in.</p>
 
 </div>
@@ -129,14 +128,14 @@ $$w'_1 = \frac{w_1}{1+\alpha_2\ w_2}\ \ .   $$
 
 <div class="output_subarea output_stream output_stderr output_text">
 <pre>Source &#34;test&#34; at: (l,b)=(0.000,0.000) not found in list of weight files at
-	 /nfs/farm/g/glast/u/burnett/wtlike_data/weight_files.
+	 /home/burnett/wtlike_data/weight_files.
  Available:
-[&#39;J1257_ring&#39; &#39;PSR_J1312p0051&#39; &#39;HESS_J1303-631&#39; &#39;PSR_B1259-63&#39; &#39;BL_Lac&#39;
- &#39;PSR_J0835-4510&#39; &#39;PSR_J2032p4127&#39; &#39;PSR_J1836p5925&#39; &#39;J1257_test2&#39;
- &#39;4FGL_J1257.0-6339&#39; &#39;3C_273&#39; &#39;J1257_test&#39; &#39;3C_279&#39; &#39;PSR_J1913p1011&#39;
- &#39;B2_1520p31&#39; &#39;Geminga&#39; &#39;3C454.3&#39; &#39;Eta_car&#39; &#39;PSR_J2022p3842&#39;
- &#39;J0209.7p6437&#39; &#39;PSR_J1909-3744&#39; &#39;PSR_J1302-6350&#39; &#39;PSR_J0633p1746&#39; &#39;J1257&#39;
- &#39;PSR_J0205p6449&#39;]
+[&#39;3C454.3&#39; &#39;3C_273&#39; &#39;3C_279&#39; &#39;4FGL_J1257.0-6339&#39; &#39;B2_1520p31&#39; &#39;BL_Lac&#39;
+ &#39;Eta_car&#39; &#39;Geminga&#39; &#39;HESS_J1303-631&#39; &#39;J0209.7p6437&#39; &#39;J1257_ring&#39;
+ &#39;J1257_test2&#39; &#39;J1257_test&#39; &#39;J1257&#39; &#39;PSR_B1259-63&#39; &#39;PSR_J0205p6449&#39;
+ &#39;PSR_J0633p1746&#39; &#39;PSR_J0835-4510&#39; &#39;PSR_J1302-6350&#39; &#39;PSR_J1312p0051&#39;
+ &#39;PSR_J1836p5925&#39; &#39;PSR_J1909-3744&#39; &#39;PSR_J1913p1011&#39; &#39;PSR_J2022p3842&#39;
+ &#39;PSR_J2032p4127&#39;]
 </pre>
 </div>
 </div>
@@ -144,13 +143,20 @@ $$w'_1 = \frac{w_1}{1+\alpha_2\ w_2}\ \ .   $$
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Source &#34;Geminga&#34; at: (l,b)=(195.134,4.266) Should be found: file at /nfs/farm/g/glast/u/burnett/wtlike_data/weight_files/Geminga_weights.pkl 
+<pre>Source &#34;Geminga&#34; at: (l,b)=(195.134,4.266) Should be found: file at /home/burnett/wtlike_data/weight_files/Geminga_weights.pkl 
 </pre>
 </div>
 </div>
 
 </div>
 </div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
 
 </div>
     {% endraw %}
@@ -212,7 +218,7 @@ $$w'_1 = \frac{w_1}{1+\alpha_2\ w_2}\ \ .   $$
 <ul>
 <li><p>photon_data -- DataFrame with photon data</p>
 </li>
-<li><p>source -- <a href="/wtlikeconfig.html#PointSource"><code>PointSource</code></a> object</p>
+<li><p>source -- <a href="/wtlikeconfig#PointSource"><code>PointSource</code></a> object</p>
 </li>
 </ul>
 
@@ -253,13 +259,6 @@ $$w'_1 = \frac{w_1}{1+\alpha_2\ w_2}\ \ .   $$
 
 </div>
 </div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
 
 </div>
     {% endraw %}
