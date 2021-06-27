@@ -9,9 +9,9 @@ import pickle
 import pandas as pd
 import numpy as np
 from .config import *
-from .weights import *
+from .sources import *
 from .data_man import *
-from .exposure import *
+#from wtlike.exposure import *
 from .effective_area import *
 
 # Cell
@@ -30,7 +30,7 @@ def time_bin_edges(config, exposure, tbin=None):
         if 0; return contiguous bins
 
 
-    """
+    """.exp
     # nominal total range, MJD edges
     start = np.round(exposure.start.values[0])
     stop =  np.round(exposure.stop.values[-1])
@@ -118,7 +118,7 @@ def _exposure(config,  livetime, pcosine):
     assert base_spectrum(1000)==1.
     wts = base_spectrum(edom)
 
-    # effectivee area function from
+    # effective area function
     ea = EffectiveArea(file_path=config.wtlike_data/'aeff_files')
 
     # a table of the weighted for each pair in livetime and pcosine arrays
@@ -130,6 +130,7 @@ def _exposure(config,  livetime, pcosine):
     aeff = simps(rvals,edom,axis=0)/simps(wts,edom)
     return (aeff*livetime)
 
+# Cell
 def _calculate_exposure_for_source(config, source, week):
     """
     Calcualate the exposure for the source during the given week
@@ -203,7 +204,7 @@ def _get_photons_near_source(config, source, week): #tzero, photon_df):
 
     if sum(incone)<2:
         if config.verbose>1:
-            print(f'\nWeek at {UTC(MJD(tstart))} has 0 or 1 photons')
+            print(f'\nWeek starting {UTC(MJD(tstart))} has 0 or 1 photons')
         return
 
     if config.verbose>2:
@@ -251,9 +252,9 @@ def get_week_files(config, week_range=None):
         data_files = wk_table.loc[slc].values
 
         if config.verbose>0:
-            print(f'\tLoading weeks {slc}', end='' if config.verbose<2 else '\n')
+            print(f'SelectData: Loading weeks {slc}', end='' if config.verbose<2 else '\n')
     else:
-        if config.verbose>0: print('loading all files', end='')
+        if config.verbose>0: print('\tloading all weekly files')
     assert len(data_files)>0, f'Specified week_range {week_range} produced no output.'
 
     return data_files
@@ -262,27 +263,26 @@ def get_week_files(config, week_range=None):
 def process_week(config, source, week_file):
     """Process a single week file
 
-    * Retrieve the file, estracting the photon and spacecraft info
+    * Retrieve the file, extracting the photon and spacecraft info
     * Select photons near the source,
-    * Deterine exposure for the direction
-    * Add weights, selecting photons with weight info
+    * Determine exposure for the direction
+    * Use the weight table to add weights to photon data, selecting photons with weight info
+    -- in progress --
     * Use the exposure to assign an exposure to each photon.
-    *
+
 
     """
 
-    if config.verbose>2:
-        print(f'Loading file {week_file}-----')
     with open(week_file, 'rb') as inp:
         week = pickle.load(inp)
 
     pdf = _get_photons_near_source(config, source, week )
     edf = _calculate_exposure_for_source(config, source, week )
     if config.verbose>2:
-        print(f'\n\t-->Selected {len(photons)}')
+        print(f'\n\t-->Selected {len(pdf)} photons')
 
     # add weights
-    if pdf is None or len(pdf)<3:
+    if pdf is None or len(pdf)<3 or len(edf)==0:
         return None, edf
 
     add_weights(config, pdf, source)
@@ -293,6 +293,7 @@ def process_week(config, source, week_file):
         estop  = edf.stop.values
         exptime = np.append(estart, estop[-1])
         expval = edf.exp.values
+        expcth = edf.cos_theta.values
 
         # corresponding cumulative exposure -- in m^2
         cumexp = np.insert(np.cumsum(edf.exp.values/1e4), 0,0)
@@ -305,23 +306,26 @@ def process_week(config, source, week_file):
         run_id = []
         for run, g in runs:
             assert run>last_run
+            run_id += [run]* len(g)
+            last_run = run
 
             # assemble MJD time from run_id and trun
             runstart =MJD(float(run) )
             rtime = MJD(float(run) + g.trun*config.offset_size)
             time += list( rtime )
-            # initial cumexp
+
+            # cumexp at run start
             run_cumexp = cumexp[np.searchsorted(estart, runstart)]
 
             # use event times in this run to interpolate table of exposure times, cumexp
             event_cumexp = np.interp(rtime, exptime, cumexp)
 
-            # diffs, from first
+            # diffs, from first --> tau
             event_exp = np.diff(np.insert(event_cumexp, 0, run_cumexp))
-
             tau += list( event_exp )
-            run_id += [run]* len(g)
-            last_run = run
+
+#             # extract cos_theta at event_time? should interplate maybe
+#             cth += expcth[np.searchsorted(rtime, estart )]
 
         # update pdf
         pdf.loc[:,'tau'] = np.array(tau, np.float32)
@@ -343,8 +347,7 @@ def process_week(config, source, week_file):
 # Cell
 def process_weeks(config, source, week_files):
     # check weights
-    weight_file =  check_weights(config,  source)
-    assert weight_file is not None
+    assert source.wtman is not None, f'Source {source.name} not set up with weights'
     data_folder = config.wtlike_data/'data_files'
     data_files = sorted(list(data_folder.glob('*.pkl')))
     iname = data_folder.name
@@ -360,7 +363,7 @@ def process_weeks(config, source, week_files):
     for week_file in week_files:
         if config.verbose<2: print('.', end='')
         elif config.verbose>2:
-            print(f'Loading file {f}-----')
+            print(f'Loading file {week_file}-----')
         pdf, edf = process_week(config, source, week_file)
         if pdf is not None and len(pdf)>2:
             pp.append(pdf)

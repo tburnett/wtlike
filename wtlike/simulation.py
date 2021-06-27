@@ -6,10 +6,11 @@ __all__ = ['generate_times', 'sec_per_day', 'WeightFunction', 'make_exposure', '
 import os
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 from scipy import stats
 
-from .config import Config, PointSource
-
+from .config import Config
+from .weights import PointSource
 
 # Cell
 import numbers
@@ -183,4 +184,8 @@ class Simulation(object):
             weights = np.append(weights, new_wts)
 
         print(f'generated {len(times)} photons')
-        self.photons=pd.DataFrame(dict(time=times, weight=weights.astype(np.float32)))
+        self.photons=pd.DataFrame(dict(
+            time=times,
+            weight=weights.astype(np.float32),
+            tau=np.nan, #### FIX this later when start using tau for exposure
+        ))

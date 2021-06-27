@@ -8,6 +8,7 @@ import numpy as np
 import pylab as plt
 import pandas as pd
 from .config import *
+from .sources import PointSource
 from .loglike import (LogLike, GaussianRep, Gaussian2dRep, PoissonRep, PoissonRepTable, poisson_tolerance)
 from .cell_data import *
 
@@ -202,14 +203,16 @@ def flux_plot(cell_fits,
     #error_size=kwargs.pop('error_size', 2)
     # errorbar_args.update(error_size=kwargs.pop('error_size', 2))
     fig, ax = plt.subplots(figsize=figsize, num=fignum) if ax is None else (ax.figure, ax)
+
+    # key words for the Axes object
     kw=dict(xlabel='MJD'+ f' - {tzero} [{UTC(tzero)[:10]}]' if tzero else 'MJD' ,
             ylabel='Relative flux',
             yscale='log' if log else 'linear',
            )
-
     kw.update(**kwargs)
     ax.set(**kw)
     ax.set_title(title) # or f'{source_name}, rep {self.rep}')
+
     ax.grid(alpha=0.5)
 
     # potential yaxis formatting
@@ -272,7 +275,7 @@ def flux_plot(cell_fits,
                 label=label, zorder=zorder+1,
                 **errorbar_args)
 
-    # finally ovelay the step if requested
+    # finally overlay the step if requested
     if step:
         t = df.t.values-tzero
         xerr = df.tw.values/2;
@@ -291,7 +294,6 @@ def flux_plot(cell_fits,
         ax.text(0.99, 0.95, source_name, va='top',  ha='right',  transform=ax.transAxes,)
 
     return fig
-
 
 # Cell
 def fit_beta_free(self):
@@ -322,8 +324,6 @@ def plot_beta_free(self, abdf):
     ax2.set(ylabel=r'$\alpha$')
     ax2.grid(alpha=0.5);
     [ax.axhline(0, ls='--',color='grey') for ax in (ax1,ax2)];
-
-
 
 # Cell
 class LightCurve(CellData):
@@ -374,16 +374,21 @@ class LightCurve(CellData):
         if  kwargs.pop('show_flux', False):
             kwargs['flux_factor'] = self.src_flux * 1e6
             if kwargs.get('ylabel', None) is None:
-                kwargs['ylabel'] = 'Count flux [$\mathrm{10^{-6} cm^{-2} s^{-1}}$]'
+                kwargs['ylabel'] = 'Photon flux [$\mathrm{10^{-6} cm^{-2} s^{-1}}$]'
+        if kwargs.pop('UTC', False):
+            yrs = [str(yr) for yr in range(2008,2023,2)] #get this from kwarg maybe
+            yrkw = dict( xticks=[MJD(yr) for yr in yrs], xticklabels=yrs,  xlabel='UTC',)
+            kwargs.update(**yrkw)
 
     @decorate_with(flux_plot)
     def plot(self, **kwargs):
         """Make a light curve plot
         Invokes flux_plot, after processing kwargs to intercept
         - log -- translate to `xscale='log'`
-        - xlim -- convert to (start, stop) interpreted relative to start, stop if < start.
-        - show_flux
-
+        - xlim [None] -- convert to (start, stop) interpreted relative to start, stop if < start.
+        - show_flux [False]-- convert y scale to photon flux
+        - UTC [False] -- convert x scale to UTC years
+-
         """
         source_name = kwargs.pop('source_name', self.source_name)
 
@@ -394,6 +399,24 @@ class LightCurve(CellData):
                         label=f'{self.step_name} bins',  **kwargs)
         fig.set_facecolor('white')
         return fig
+
+    def plot_with_exposure(self, **kwargs):
+        """Stacked flux plot flux with exposure
+        """
+        fig,(ax1,ax2) = plt.subplots(2,1, figsize=(15,6), sharex=True);
+        fig.subplots_adjust(hspace=0)
+        ax1.tick_params(labelbottom=False)
+        left, bottom, width, height = (0.15, 0.10, 0.75, 0.85)
+        fraction = 0.7
+        ax1.set_position([left, bottom+(1-fraction)*height, width, fraction*height])
+        ax2.set_position([left, bottom, width, (1-fraction)*height])
+
+        self.plot(ax=ax1, **kwargs)
+        ax2.plot(self.cells.t, self.cells.e, '.')
+        ax2.grid(alpha=0.5)
+        ax2.set(ylabel='exposure')
+
+
 
     def flux_table(self, lc=None, include_e=True):
 

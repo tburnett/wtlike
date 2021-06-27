@@ -7,9 +7,9 @@ import os
 import numpy as np
 import pandas as pd
 from .config import *
+from .sources import *
 from .source_data import *
 from .loglike import LogLike, PoissonRep, poisson_tolerance
-
 
 # Cell
 def time_bin_edges(config, exposure, tbin=None):
@@ -59,12 +59,10 @@ def time_bin_edges(config, exposure, tbin=None):
     v[1::2] = u[1:]
     return v
 
-# export
 def binned_exposure(config, exposure, time_edges):
     """Bin the exposure
-
-    - time_bins: list of edges, as an interleaved start/stop array
-
+    - exposure--DataFrame of S/C exposure: contains start,stop (MJD), exp (cm^2 s), cos_theta
+    - time_bins-- list of edges, as an interleaved start/stop array
 
     returns  array of exposure integrated over each time bin, times 1e-9
     it is interleaved, client must apply [0::2] selection.
@@ -87,12 +85,12 @@ def binned_exposure(config, exposure, time_edges):
     # return the exposure integrated over the intervals
     cum = cumexp[edge_index]
 
-    # difference is exposure per interval: normalize it here
+    # difference is exposure per interval
     bexp = np.diff(cum)
-#     if config.verbose>1:
-#         print(f'Relative exposure per bin:\n{pd.Series(bexp).describe(percentiles=[])}')
+
     return bexp
-#export
+
+# Cell
 def contiguous_bins(exposure, min_gap=20, min_duration=600):
 
     """ return a start/stop interleaved array for contiguous intervals
@@ -174,7 +172,7 @@ class CellData(SourceData):
         """
         Generate the cell DataFrame
 
-        - exposure_factor --  recast exposure as cm^2 * Ms if $10^{-6}$
+        - exposure_factor --  recast exposure as cm^2 * Ms if `exposure_facto`==1e-6`
 
         Thus the `e`  cell entry is the actual exposure for the cell in units $cm^2 Ms$.
         """
@@ -185,6 +183,7 @@ class CellData(SourceData):
         edges = np.searchsorted(photons.time, self.cell_edges)
 
         wts = photons.weight.values
+        taus = photons.tau.values
         start,stop = self.cell_edges[0::2], self.cell_edges[1::2]
         center = (start+stop)/2
         width = (stop-start)
@@ -197,9 +196,11 @@ class CellData(SourceData):
         for k, (t, tw, e) in enumerate( zip(
                     center, width, self.binexp*exposure_factor) ):
             w = wts[ek[k]:ek[k+1]]
+            tau = taus[ek[k]:ek[k+1]].sum()
             n = len(w)
             cells.append(dict(t=t, tw=tw,
                               e=e,
+                              tau=tau,
                               n=n,
                               w=w,
                               S=e*Sk,
@@ -212,13 +213,14 @@ class CellData(SourceData):
     def update(self): pass # virtual
 
     def view(self, *pars, exp_min=None):
-        """Return a "view": a copy of this instance with a perhaps a different set of cells
+        """
+        Return a "view", a copy of this instance with a perhaps a different set of cells
 
         - pars -- start, stop, step  to define new binning. Or start, step, or just step
            start and stop are either MJD values, or offsets from the start or stop.
            step -- the cell size in days, or if zero, orbit-based binning
 
-        - exp_min [None] -- If specified, a different inimum exposure, in cm^2 Ms units to use for fitting
+        - exp_min [None] -- If specified, a different minimum exposure, in cm^2 Ms units to use for fitting
             from.
         """
         import copy

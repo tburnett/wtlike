@@ -19,11 +19,14 @@ entries:
       title: Effective Area
       url: /effective_area
     - output: web,pdf
-      title: Weights
-      url: /weights
+      title: Sources and Weights
+      url: /sources
     - output: web,pdf
       title: Exposure processing
       url: /exposure
+    - output: web,pdf
+      title: Load data
+      url: /load_data
     - output: web,pdf
       title: Select data
       url: /select_data

@@ -104,7 +104,7 @@ nb_path: "nbs/00_config.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="Cache" class="doc_header"><code>class</code> <code>Cache</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L18" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Cache</code>(<strong><code>path</code></strong>, <strong><code>clear</code></strong>:<code>bool</code>=<em><code>False</code></em>) :: <code>dict</code></p>
+<h2 id="Cache" class="doc_header"><code>class</code> <code>Cache</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L17" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Cache</code>(<strong><code>path</code></strong>, <strong><code>clear</code></strong>:<code>bool</code>=<em><code>False</code></em>) :: <code>dict</code></p>
 </blockquote>
 <p>Manage a file cache</p>
 <ul>
@@ -150,7 +150,7 @@ p.mkdir<span class="o">?</span>
 <div class="output_text output_subarea ">
 <pre><span class="ansi-red-fg">Signature:</span> p<span class="ansi-blue-fg">.</span>mkdir<span class="ansi-blue-fg">(</span>mode<span class="ansi-blue-fg">=</span><span class="ansi-cyan-fg">511</span><span class="ansi-blue-fg">,</span> parents<span class="ansi-blue-fg">=</span><span class="ansi-green-fg">False</span><span class="ansi-blue-fg">,</span> exist_ok<span class="ansi-blue-fg">=</span><span class="ansi-green-fg">False</span><span class="ansi-blue-fg">)</span>
 <span class="ansi-red-fg">Docstring:</span> Create a new directory at this given path.
-<span class="ansi-red-fg">File:</span>      ~/miniconda/envs/py3/lib/python3.8/pathlib.py
+<span class="ansi-red-fg">File:</span>      ~/anaconda3/lib/python3.8/pathlib.py
 <span class="ansi-red-fg">Type:</span>      method
 </pre>
 </div>
@@ -174,7 +174,7 @@ p.mkdir<span class="o">?</span>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="Cache.__call__" class="doc_header"><code>Cache.__call__</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L113" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Cache.__call__</code>(<strong><code>key</code></strong>, <strong><code>func</code></strong>, <strong>*<code>pars</code></strong>, <strong><code>description</code></strong>=<em><code>''</code></em>, <strong><code>overwrite</code></strong>=<em><code>False</code></em>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="Cache.__call__" class="doc_header"><code>Cache.__call__</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L112" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Cache.__call__</code>(<strong><code>key</code></strong>, <strong><code>func</code></strong>, <strong>*<code>pars</code></strong>, <strong><code>description</code></strong>=<em><code>''</code></em>, <strong><code>overwrite</code></strong>=<em><code>False</code></em>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
 <p>One-line usage interface for cache use</p>
 <ul>
@@ -279,10 +279,73 @@ result = mycache('mykey', myfun, x=99,  description='My data')
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="Config" class="doc_header"><code>class</code> <code>Config</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L172" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Config</code>(<strong><code>verbose</code></strong>:<code>int</code>=<em><code>1</code></em>, <strong><code>wtlike_data</code></strong>:<code>str</code>=<em><code>'~/wtlike_data'</code></em>, <strong><code>cachepath</code></strong>:<code>str</code>=<em><code>'~/wtlike_cache'</code></em>, <strong><code>radius</code></strong>:<code>float</code>=<em><code>4</code></em>, <strong><code>cos_theta_max</code></strong>:<code>float</code>=<em><code>0.4</code></em>, <strong><code>z_max</code></strong>:<code>float</code>=<em><code>100</code></em>, <strong><code>week_range</code></strong>:<code>Tuple</code>=<em><code>(None, None)</code></em>, <strong><code>time_bins</code></strong>:<code>Tuple</code>=<em><code>(0, 0, 7)</code></em>, <strong><code>offset_size</code></strong>:<code>float</code>=<em><code>2e-06</code></em>, <strong><code>nside</code></strong>:<code>int</code>=<em><code>1024</code></em>, <strong><code>nest</code></strong>:<code>bool</code>=<em><code>True</code></em>, <strong><code>bins_per_decade</code></strong>:<code>int</code>=<em><code>5</code></em>, <strong><code>base_spectrum</code></strong>:<code>str</code>=<em><code>'lambda E: (E/1000)**-2.1'</code></em>, <strong><code>energy_range</code></strong>:<code>Tuple</code>=<em><code>(100.0, 1000000.0)</code></em>, <strong><code>likelihood_rep</code></strong>:<code>str</code>=<em><code>'poisson'</code></em>, <strong><code>poisson_tolerance</code></strong>:<code>float</code>=<em><code>0.2</code></em>, <strong><code>exp_min</code></strong>:<code>float</code>=<em><code>5</code></em>)</p>
+<h2 id="Config" class="doc_header"><code>class</code> <code>Config</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L171" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Config</code>()</p>
 </blockquote>
 <p>Default light curve configuration parameters</p>
 
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
+<span class="n">config</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">valid</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(Configuration parameters 
+   verbose         : 1
+   wtlike_data     : /home/burnett/wtlike_data
+   cachepath       : /home/burnett/wtlike_cache
+   radius          : 4
+   cos_theta_max   : 0.4
+   z_max           : 100
+   energy_edges    : [1.00000000e+02 1.77827941e+02 3.16227766e+02 5.62341325e+02
+  1.00000000e+03 1.77827941e+03 3.16227766e+03 5.62341325e+03
+  1.00000000e+04 1.77827941e+04 3.16227766e+04 5.62341325e+04
+  1.00000000e+05 1.77827941e+05 3.16227766e+05 5.62341325e+05
+  1.00000000e+06]
+   energy_bins     : [1.3335214e+02 2.3713737e+02 4.2169650e+02 7.4989423e+02 1.3335215e+03
+  2.3713738e+03 4.2169648e+03 7.4989419e+03 1.3335214e+04 2.3713736e+04
+  4.2169648e+04 7.4989422e+04 1.3335214e+05 2.3713738e+05 4.2169650e+05
+  7.4989419e+05]
+   etypes          : (0, 1)
+   week_range      : (None, None)
+   time_bins       : (0, 0, 7)
+   offset_size     : 2e-06
+   nside           : 1024
+   nest            : True
+   bins_per_decade : 5
+   base_spectrum   : lambda E: (E/1000)**-2.1
+   energy_range    : (100.0, 1000000.0)
+   likelihood_rep  : poisson
+   poisson_tolerance : 0.2
+   exp_min         : 5
+   errors          : [],
+ True)</pre>
 </div>
 
 </div>
@@ -485,102 +548,7 @@ result = mycache('mykey', myfun, x=99,  description='My data')
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="PointSource" class="doc_header"><code>class</code> <code>PointSource</code><a href="" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>PointSource</code>(<strong><code>name</code></strong>, <strong><code>position</code></strong>=<em><code>None</code></em>, <strong><code>nickname</code></strong>=<em><code>None</code></em>)</p>
-</blockquote>
-<p>Manage the position and name of a point source</p>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4 id="PointSource.fk5" class="doc_header"><code>PointSource.fk5</code><a href="__main__.py#L54" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>PointSource.fk5</code>(<strong><code>name</code></strong>, <strong><code>position</code></strong>)</p>
-</blockquote>
-<p>position: (ra,dec) tuple</p>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">for</span> <span class="n">s</span><span class="p">,</span> <span class="n">expect</span> <span class="ow">in</span> <span class="p">[(</span> <span class="n">PointSource</span><span class="p">(</span><span class="s1">&#39;Geminga&#39;</span><span class="p">),</span>             <span class="s1">&#39;Source &quot;Geminga&quot; at: (l,b)=(195.134,4.266)&#39;</span><span class="p">),</span>
-                  <span class="p">(</span> <span class="n">PointSource</span><span class="p">(</span><span class="s1">&#39;gal_source&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)),</span>   <span class="s1">&#39;Source &quot;gal_source&quot; at: (l,b)=(0.000,0.000)&#39;</span><span class="p">,</span> <span class="p">),</span>
-                  <span class="p">(</span> <span class="n">PointSource</span><span class="o">.</span><span class="n">fk5</span><span class="p">(</span><span class="s1">&#39;fk5_source&#39;</span><span class="p">,(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)),</span><span class="s1">&#39;Source &quot;fk5_source&quot; at: (l,b)=(96.337,-60.189)&#39;</span><span class="p">,)</span>
-                   <span class="p">]:</span>    
-    <span class="k">assert</span> <span class="nb">str</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="o">==</span><span class="n">expect</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;expected </span><span class="si">{</span><span class="n">expect</span><span class="si">}</span><span class="s1">, got </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span>
-<span class="n">PointSource</span><span class="p">(</span><span class="s1">&#39;3C 273&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span> <span class="n">PointSource</span><span class="p">(</span><span class="s1">&#39;3C 273&#39;</span><span class="p">,</span> <span class="n">nickname</span><span class="o">=</span><span class="s1">&#39;3Cxxx&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">filename</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>(&#39;3C_273&#39;, &#39;3Cxxx&#39;)</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4 id="decorate_with" class="doc_header"><code>decorate_with</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L389" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>decorate_with</code>(<strong><code>other_func</code></strong>)</p>
+<h4 id="decorate_with" class="doc_header"><code>decorate_with</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L297" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>decorate_with</code>(<strong><code>other_func</code></strong>)</p>
 </blockquote>
 
 </div>

@@ -7,9 +7,9 @@ import os, sys
 import numpy as np
 import pandas as pd
 from .config import *
-from .select_data import *
+from .sources import PointSource
+from .load_data import load_from_weekly_data, binned_exposure
 from .simulation import *
-
 
 # Cell
 
@@ -66,6 +66,11 @@ class SourceData(object):
             source.run()
             self.photons = source.photons
             self.exposure = source.exposure
+
+        else: # assume really PointSource
+            self.source = source # do I need this?
+            self.source_name = source.name
+
 
         if self.source is not None:
             key = f'{self.source.filename}_data' if key=='' else key
@@ -171,8 +176,7 @@ class SourceData(object):
             ax1.set(xlabel='Time (MJD)')
 
             ax4.hist(self.photons.weight, 100, histtype='step')
-            ax4.set(xlabel='weight');
-
+            ax4.set(xlabel='weight')
 
         else:
             fig, (ax1,ax2, ax3,ax4) = plt.subplots(1,4, figsize=(15,4))
@@ -184,7 +188,7 @@ class SourceData(object):
             ax3.hist(self.photons.band, 32, histtype='step', log=True);
             ax3.set(xlabel='Band index')
             ax4.hist(self.photons.weight, 100, histtype='step')
-            ax4.set(xlabel='weight');
+            ax4.set(xlabel='weight')
 
     def update_cache(self, **kwargs): #week_range=(-1,None), save=True):
         return update_cache(self, **kwargs)

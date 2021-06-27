@@ -259,7 +259,6 @@ class WeeklyData(object):
         if self.config.verbose>1:
             print(self.photon_data.info())
 
-
 # Cell
 def data_check(config=None):
     """
@@ -277,7 +276,7 @@ def data_check(config=None):
         days = (gti[-1]-gti[0])/(24*3600)
         if config.verbose>0:
             print(f'Weekly folder "{weekly_folder}" contains {len(wk)} weeks.'\
-            f'\n\t Last week, # {wk[-1]}, has {days:.1f} days, ends at UTC {UTC(MJD(gti[-1]))}' )
+            f'\n\t Last week, # {wk[-1]}, has {days:.3f} days, ends at UTC {UTC(MJD(gti[-1]))}' )
         return ff, wk[-1], days
     else:
         print(f'Config not valid, {config.errors} no files found', file=sys.stderr)
@@ -290,7 +289,7 @@ def check_data(config=None):
 def update_recent(config=None, test=False):
     if config is None: config=Config()
     ff, last_wk, days = data_check(config);
-    if days<6:
+    if days<6.98:
         wk = last_wk
         print(f'Will reload week {last_wk} ...')
     else:
@@ -335,7 +334,7 @@ def load_weeks(week_range, config=None, overwrite=True):
     tmp = Path('/tmp/from_gsfc')
     os.makedirs(tmp, exist_ok=True)
     files_on_disk  = list(tmp.glob('*.fits'))
-    print(f'Currently {len(files_on_disk)} FTx files on disk at {tmp}')
+#     print(f'Currently {len(files_on_disk)} FTx files on disk at {tmp}')
     print(f'Downloading range {week_range})')
 
     for week in range(*week_range):

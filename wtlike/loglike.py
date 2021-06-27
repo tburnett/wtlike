@@ -235,7 +235,6 @@ class GaussianRep(object):
             f"\n\tflux: {1+fit['flux']:.3f} +/- {fit['sig_flux']:.3f} {beta_fit}"
         return r
 
-
 # Cell
 class Gaussian2dRep(GaussianRep):
     def __init__(self, ll):
