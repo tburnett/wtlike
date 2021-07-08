@@ -291,10 +291,10 @@ def update_recent(config=None, test=False):
     ff, last_wk, days = data_check(config);
     if days<6.98:
         wk = last_wk
-        print(f'Will reload week {last_wk} ...')
+        print(f'Downloading current last week {last_wk} from GSFC ...')
     else:
         wk = last_wk+1
-        print(f'Will load next week, # {last_wk+1} ...')
+        print(f'Downloading new week {last_wk+1} from GSFC ...')
     if not test:
         WeeklyData(config, wk, overwrite=True).save()
         _,last_wk, new_days = data_check(config)

@@ -19,7 +19,6 @@ class LogLike(object):
     """ implement Kerr Eqn 2 for a single interval, or cell
 
      - cell -- a dict with  w, S, B <br>
-            w may be an array of np.uint8: if so, divide by 256
 
     """
 
@@ -27,6 +26,7 @@ class LogLike(object):
         """
         """
         self.__dict__.update(cell)
+        self.w = np.atleast_1d(self.w)
         self.verbose=0
 
 

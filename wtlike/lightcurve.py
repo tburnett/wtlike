@@ -4,6 +4,7 @@ __all__ = ['CellFitter', 'fit_cells', 'getCellFitter', 'fit_table', 'flux_plot',
            'LightCurve']
 
 # Cell
+import sys
 import numpy as np
 import pylab as plt
 import pandas as pd
@@ -63,7 +64,7 @@ class CellFitter(object):
         try:
             self.ll_fits.loc[:,'fit'] = cells.loglike.apply(repcl)
         except Exception as e:
-            print(f'Failed a fit: \n{e}', file=sys.sterr)
+            print(f'Failed a fit: \n{e}', file=sys.stderr)
             raise
 
 
@@ -412,9 +413,11 @@ class LightCurve(CellData):
         ax2.set_position([left, bottom, width, (1-fraction)*height])
 
         self.plot(ax=ax1, **kwargs)
-        ax2.plot(self.cells.t, self.cells.e, '.')
+
+        # the step plot
+        ax2.step(self.cells.t, self.cells.e, '-', where='mid')
         ax2.grid(alpha=0.5)
-        ax2.set(ylabel='exposure')
+        ax2.set(ylabel='exposure', ylim=(0,None))
 
 
 

@@ -8,12 +8,10 @@ import numpy as np
 import pandas as pd
 from .config import *
 from .sources import PointSource
-from .load_data import load_from_weekly_data, binned_exposure
+from .load_data import load_source_data, binned_exposure
 from .simulation import *
 
 # Cell
-
-
 class SourceData(object):
     """ Load the photon data near the source and associated exposure.
 
@@ -81,22 +79,8 @@ class SourceData(object):
 
         if not self.simulated:
             # either load from data, or from a chache
-            if self.config.wtlike_data/'data_files' is None and key not in config.cache:
-                raise Exception(f'Data for {self.source_name} is not cached, and config.wtlike_data/"data_files" is not set')
-
-            if week_range is not None:
-                # always load directly if weeks specified
-                r = load_from_weekly_data(self.config, self.source, week_range=week_range)
-            else:
-                r = self.config.cache(key,
-                            load_from_weekly_data, self.config, self.source, week_range=None,
-                            overwrite=clear,
-                            description=f'SourceData: photons and exposure for {self.source_name}')
-            photons, self.exposure = r[:2]
-            self.runs = r[2] if len(r)==3 else None
-            # get the photon data with good weights, not NaN (maybe remove small weigts, too)
-            good = np.logical_not(np.isnan(photons.weight))
-            self.photons = photons.loc[good]
+            self.photons, self.exposure, self.band_exposure = load_source_data(
+                    self.config, self.source, week_range, key, clear)
 
         else: #TODO
             pass

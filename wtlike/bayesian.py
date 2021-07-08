@@ -209,5 +209,5 @@ def get_bb_partition(config, lc, fitness_class=LikelihoodFitness, p0=0.05, key=N
     edges = config.cache(key, doit,  description=key if config.verbose>0 else '', overwrite=clear)
 
     if config.verbose>0:
-        print(f'Partitioned {len(lc)} cells into {len(edges)-1} blocks, using {fitness_class.__name__} ' )
+        print(f'\tPartitioned {len(lc)} cells into {len(edges)-1} blocks, using {fitness_class.__name__} ' )
     return edges

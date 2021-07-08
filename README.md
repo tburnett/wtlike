@@ -91,7 +91,7 @@ Live time, the time since the start of a run, or the previous photon. It is equi
 This behaves like a time, but accounts for variation of the exposure rate, often rapid with respect to event rates.
 
 (A note about "exposure": It has units $\mathrm{cm^2\ s}$ and is the integral of the "exposure rate" over a time interval.
-For *Fermi*, the rate is typically $\mathrm{3000 cm^2}$ but varies as much as a factor of three over a single orbit.)
+For *Fermi*, the rate is the effective area, typically $\mathrm{3000 cm^2}$ but varies as much as a factor of three over a single orbit.)
 
 This is evaluated in the module  [loglike](https://tburnett.github.io/wtlike/loglike).
 
