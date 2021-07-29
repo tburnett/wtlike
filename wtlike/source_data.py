@@ -79,8 +79,8 @@ class SourceData(object):
 
         if not self.simulated:
             # either load from data, or from a chache
-            self.photons, self.exposure, self.band_exposure = load_source_data(
-                    self.config, self.source, week_range, key, clear)
+            self.photons, self.exposure = \
+                load_source_data( self.config, self.source, week_range, key, clear)
 
         else: #TODO
             pass

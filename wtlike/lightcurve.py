@@ -412,12 +412,14 @@ class LightCurve(CellData):
         ax1.set_position([left, bottom+(1-fraction)*height, width, fraction*height])
         ax2.set_position([left, bottom, width, (1-fraction)*height])
 
+        tzero = kwargs.get('tzero', 0)
         self.plot(ax=ax1, **kwargs)
 
         # the step plot
-        ax2.step(self.cells.t, self.cells.e, '-', where='mid')
+        ax2.step(self.cells.t-tzero, self.cells.e, '-', where='mid')
         ax2.grid(alpha=0.5)
         ax2.set(ylabel='exposure', ylim=(0,None))
+        return fig
 
 
 

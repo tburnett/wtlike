@@ -289,7 +289,7 @@ def check_data(config=None):
 def update_recent(config=None, test=False):
     if config is None: config=Config()
     ff, last_wk, days = data_check(config);
-    if days<6.98:
+    if days<6.91: ### need better test.
         wk = last_wk
         print(f'Downloading current last week {last_wk} from GSFC ...')
     else:

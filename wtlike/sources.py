@@ -111,7 +111,7 @@ class WeightMan(dict):
                       f' with nsides {nsides[0]} to {nsides[-1]}')
             if self.source is not None:
                 self.source.fit_info = self.fitinfo
-                if config.verbose>1:
+                if config.verbose>2:
                     print(f'\tAdded fit info {self.fitinfo} to source')
 
     def _new_format(self, photons):
