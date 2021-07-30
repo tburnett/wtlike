@@ -198,10 +198,8 @@ class Config:
     nside : int=1024
     nest: bool=True
 
-    # exposure calculation
-    bins_per_decade: int=5
-    base_spectrum: str='lambda E: (E/1000)**-2.1'
-    energy_range: Tuple = (100.,1e6)
+    # exposure calculation -- Kerr version
+    use_kerr: bool=False
 
     # analysis
     likelihood_rep: str='poisson'

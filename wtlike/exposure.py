@@ -22,8 +22,6 @@ def _sc_process(config, source, sc_data):
     columns:
     - start, stop, livetime -- from the FT2 info
     - cos_theta -- angle between bore and direction
-    - exp -- effective area at angle wighted by a default spectral function, times livetime
-
     """
 
     # calculate cosines with respect to sky direction
@@ -35,17 +33,25 @@ def _sc_process(config, source, sc_data):
         dec2_r = np.radians(dec2.values)
         return np.cos(dec2_r)*cdec*np.cos(ra_r-ra2_r) + np.sin(dec2_r)*sdec
 
-    pcosines = cosines(sc_data.ra_scz,    sc_data.dec_scz)
+    cos_thetas = cosines(sc_data.ra_scz,    sc_data.dec_scz)
     zcosines = cosines(sc_data.ra_zenith, sc_data.dec_zenith)
     # mask out entries too close to zenith, or too far away from ROI center
-    mask =   (pcosines >= config.cos_theta_max) & (zcosines>=np.cos(np.radians(config.z_max)))
+    mask =   (cos_thetas >= config.cos_theta_max) & (zcosines>=np.cos(np.radians(config.z_max)))
     if config.verbose>1:
         print(f'\tFound {len(mask):,} S/C entries:  {sum(mask):,} remain after zenith and theta cuts')
     dfm = sc_data.loc[mask,:]
     livetime = dfm.livetime.values
-    return livetime, pcosines[mask]
 
+    #return livetime, cos_thetas[mask]
 
+    return  pd.DataFrame(
+        dict(
+            start=sc_data.start[mask],
+            stop=sc_data.stop[mask],
+            livetime=livetime,
+            cos_theta=cos_thetas[mask],
+        )
+    )
 
 # Cell
 from abc import abstractmethod
@@ -66,28 +72,25 @@ class BaseExposure(object):
     def setup(self):
         pass
 
-    def __call__(self, sc_data):
+    def __call__(self, cos_theta) : #sc_data):
         """
         Apply to a SC data set
-        - sc_data -- DF with start,stop, livetime
+        - cos_theta -- array of cos(theta) values
 
         Returns:
 
-        array of esposures for the input sc_data intervals
+        array of the weighted effective area
 
         """
-        # get SC info for this source
-        livetime, pcosine = _sc_process(self.config, self.source, sc_data)
-
         # as set by self.setup -- also serl.back_min
         edom = self.edom
         wts = self.wts #self(edom)
 
-        # a table of the weights for each pair in livetime and pcosine arrays
-        rvals = np.empty([len(wts),len(pcosine)])
+        # a table of the weights for each pair in livetime and cos_theta arrays
+        rvals = np.empty([len(wts),len(cos_theta)])
 
         for i, (en,wt) in enumerate(zip(edom,wts)):
-            faeff, baeff = np.array(self.Aeff( [en], pcosine ))
+            faeff, baeff = np.array(self.Aeff( [en], cos_theta ))
             if en>self.back_min:
                 rvals[i] = (faeff+baeff)*wt # note that adds front and back exposure
             else:
@@ -96,24 +99,28 @@ class BaseExposure(object):
         from scipy.integrate import simpson
         aeff = simpson(rvals, edom,axis=0) / simpson(wts,edom)
 
-        return aeff*livetime
+        return aeff
 
 class KerrExposure(BaseExposure):
+    """
+    """
 
-    def setup(self):
+    bins_per_decade: int=5
+    base_spectrum: str='lambda E: (E/1000)**-2.1'
+    energy_range: tuple = (100.,1e6)
+
+
+    def setup(self ):
 
         """set up energy domain, evaluate fluxes
-           This is the Kerr version
+           This is the Kerr version, with wired-in values
         """
 
-        def energy_domain(config):
-            emin,emax = config.energy_range
-            loge1=np.log10(emin); loge2=np.log10(emax)
-            return np.logspace(loge1, loge2, int((loge2-loge1)*config.bins_per_decade+1))
+        emin,emax = self.energy_range
+        loge1=np.log10(emin); loge2=np.log10(emax)
+        self.edom= np.logspace(loge1, loge2, int((loge2-loge1)*self.bins_per_decade+1))
 
-        self.edom = energy_domain(self.config)
-
-        spectrum = eval(self.config.base_spectrum) #lambda E: (E/1000)**-2.1
+        spectrum = eval(self.base_spectrum) #lambda E: (E/1000)**-2.1
 
         self.wts = spectrum(self.edom)
 
@@ -189,7 +196,7 @@ def time_bin_edges(config, exposure, tbin=None):
 
 
 # Cell
-def sc_data_selection(config, source, sc_df):
+def sc_data_selection(config, source, sc_data):
 
     """
     Return a DF with the S/C data for the source direction, wtih cos theta and zenith cuts
@@ -201,38 +208,18 @@ def sc_data_selection(config, source, sc_df):
 
     """
 
-    # calculate cosines with respect to sky direction
-    sc = source
-    ra_r,dec_r = np.radians(sc.ra), np.radians(sc.dec)
-    sdec, cdec = np.sin(dec_r), np.cos(dec_r)
+    sc_df = _sc_process(config, source, sc_data)
+    cos_theta = sc_df.cos_theta.values
+    livetime = sc_df.livetime.values
 
-    def cosines( ra2, dec2):
-        ra2_r =  np.radians(ra2.values)
-        dec2_r = np.radians(dec2.values)
-        return np.cos(dec2_r)*cdec*np.cos(ra_r-ra2_r) + np.sin(dec2_r)*sdec
+    # now get appropriate weighted effective area, mjultipy by livetime
+    if config.use_kerr:
+        sc_df.loc[:,'exp'] = KerrExposure(config, source)(cos_theta) * livetime
+    else:
+        sc_df.loc[:,'exp']= SourceExposure(config, source)(cos_theta) * livetime
 
-    pcosines = cosines(sc_df.ra_scz,    sc_df.dec_scz)
-    zcosines = cosines(sc_df.ra_zenith, sc_df.dec_zenith)
-    # mask out entries too close to zenith, or too far away from ROI center
-    mask =   (pcosines >= config.cos_theta_max) & (zcosines>=np.cos(np.radians(config.z_max)))
-    if config.verbose>1:
-        print(f'\tFound {len(mask):,} S/C entries:  {sum(mask):,} remain after zenith and theta cuts')
-    dfm = sc_df.loc[mask,:]
-    livetime = dfm.livetime.values
+    return sc_df
 
-    exp = KerrExposure(config, source)(sc_df)
-    exp2= SourceExposure(config, source)(sc_df)
-
-    return  pd.DataFrame(
-        dict(
-            start=sc_df.start[mask],
-            stop=sc_df.stop[mask],
-            livetime=livetime,
-            cos_theta=pcosines[mask],
-            exp=exp,
-            exp2=exp2,
-            ),
-        )
 
 # Cell
 def binned_exposure(config, exposure, time_edges):

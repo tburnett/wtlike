@@ -1,3 +1,9 @@
+"""
+# wtlike--make FermiLAT gamma-ray Light curves
+
+see https://tburnett.github.io/wtlike/tutorial
+"""
+
 __version__ = "0.2.4"
 
 
