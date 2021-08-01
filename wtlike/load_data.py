@@ -10,6 +10,7 @@ import matplotlib.pyplot as plt
 from .config import (Config, UTC, MJD)
 from .exposure import  binned_exposure, sc_data_selection
 
+
 # Cell
 def _get_photons_near_source(config, source, week): #tzero, photon_df):
     """
@@ -232,7 +233,7 @@ def load_source_data(config, source, week_range=None, key='', clear=False):
         e_df = pd.concat(ee, ignore_index=True)
 
         return p_df, e_df
-    description=f'SourceData:  {source.name}, use_kerr={config.use_kerr}'
+    description=f'SourceData:  {source.name}'
 
     if week_range is not None:
         # always load directly if weeks specified
@@ -240,7 +241,7 @@ def load_source_data(config, source, week_range=None, key='', clear=False):
         r = load_from_weekly_data(config, source, week_range=week_range)
     else:
         # use the cache
-        key = f'{source.filename}_data'+('_kerr' if config.use_kerr else '') if key=='' else key
+        key = f'{source.filename}_data' if key=='' else key
         r = config.cache(key,
                     load_from_weekly_data, config, source, week_range=None,
                     overwrite=clear,

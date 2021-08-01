@@ -6,34 +6,34 @@
 [this document](https://tburnett.github.io/wtlike/),   [the repository](https://github.com/tburnett/wtlike)
 
 ## Introduction
-`wtlike`(Pronounced "DUB-Tee-like"), is a library optimized for interactive exploration in a [Jupyter notebook](https://jupyter.org/) with access to all Fermi-LAT data, and to analyze the time dependence of any source in the
+`wtlike`(Perhaps pronounced "DUB-Tee-like"), is a library optimized for interactive exploration in a [Jupyter notebook](https://jupyter.org/) with access to all Fermi-LAT data, and to analyze the time dependence of any source in the
 4FGL catalog on any time scale, with the option of performing a [Bayesian Block](https://arxiv.org/pdf/1207.5578.pdf)  partition to select optimal time intervals. The source can be identified by the 4FGL name, or any equivalent common name.
 
 Here is a minimal demo:
 
-```python
+```
 from wtlike import *
 wtl = WtLike('3C 273')
 ```
 
-    SourceData: photons and exposure for 3C 273: Restoring from cache with key "P88Y3157_data"
+    SourceData:  3C 273, use_kerr=False: Restoring from cache with key "P88Y3157_data"
     SourceData: Source 3C 273 with:
-    	 data:        95,463 photons from 2008-08-04 to 2021-06-26
-    	 exposure: 2,849,598 intervals,  average flux 2812 cm^2 for 85.1 Ms
-    	 rates:  source 1.22e-07/s, background 2.77e-07/s, S/N ratio 4.41e-01
-    CellData: Bin photon data into 672 1-week bins from 54683.0 to 59387.0
-    LightCurve: select 662 cells for fitting with e>5 & n>2
+    	 data:        96,186 photons from 2008-08-04 to 2021-08-01
+    	 exposure: 2,872,539 intervals,  average flux 1989 cm^2 for 85.8 Ms
+    	 rates:  source 1.73e-07/s, background 3.91e-07/s, S/N ratio 4.42e-01
+    CellData: Bin photon data into 677 1-week bins from 54683.0 to 59422.0
+    LightCurve: select 667 cells for fitting with e>5 & n>2
 
 
-```python
-wtl.plot();
+```
+wtl.plot(UTC=True);
 ```
 
 
 ![png](docs/images/output_2_0.png)
 
 
-This assumes that the name for the source, in this case the historically famous first [quasar](https://en.wikipedia.org/wiki/Quasar#Background) to be discovered, can be associated with a 4FGL catalog source. The plot shows, as a function of the MJD time, weekly measurements of deviations of the flux relative to the average of the 12-year interval used to define the 4FGL-DR3 catalog.
+This assumes that the name for the source, in this case the historically famous first [quasar](https://en.wikipedia.org/wiki/Quasar#Background) to be discovered, can be associated with a 4FGL catalog source. The plot shows, as a function of UTC (or MJD if desired) time, weekly measurements of deviations of the flux relative to the average of the 12-year interval used to define the 4FGL-DR3 catalog.
 
 The first stage, extracting data for the source, takes ~10 min, but, using an included [cache system](https://tburnett.github.io/wtlike/config.html#Cache), only has to be done once.
 
@@ -152,7 +152,7 @@ with a different set of cells.
 So the following creates a new WtLike object that we generated above, rebins a copy with 25-day bins in the first 100 days, generates a list of the cells, then removes it since it wasn't assigned a reference variable.
 
 
-```python
+```
 wtl.view(0,100,25).cells
 ```
 
@@ -184,7 +184,6 @@ wtl.view(0,100,25).cells
       <th>t</th>
       <th>tw</th>
       <th>e</th>
-      <th>tau</th>
       <th>n</th>
       <th>w</th>
       <th>S</th>
@@ -196,45 +195,41 @@ wtl.view(0,100,25).cells
       <th>0</th>
       <td>54695.5</td>
       <td>25.0</td>
-      <td>1526.99</td>
-      <td>2.93e+09</td>
+      <td>1076.90</td>
       <td>553</td>
       <td>[0.489013671875, 0.806640625, 0.113037109375, ...</td>
-      <td>186.46</td>
-      <td>422.63</td>
+      <td>185.90</td>
+      <td>421.04</td>
     </tr>
     <tr>
       <th>1</th>
       <td>54720.5</td>
       <td>25.0</td>
-      <td>1916.42</td>
-      <td>5.91e+09</td>
+      <td>1353.24</td>
       <td>1438</td>
       <td>[0.4345703125, 0.6064453125, 0.069091796875, 0...</td>
-      <td>234.02</td>
-      <td>530.41</td>
+      <td>233.60</td>
+      <td>529.08</td>
     </tr>
     <tr>
       <th>2</th>
       <td>54745.5</td>
       <td>25.0</td>
-      <td>1488.15</td>
-      <td>5.45e+09</td>
+      <td>1049.03</td>
       <td>1183</td>
       <td>[0.339111328125, 0.31005859375, 0.708984375, 0...</td>
-      <td>181.72</td>
-      <td>411.88</td>
+      <td>181.09</td>
+      <td>410.14</td>
     </tr>
     <tr>
       <th>3</th>
       <td>54770.5</td>
       <td>25.0</td>
-      <td>1979.26</td>
-      <td>5.43e+09</td>
+      <td>1396.37</td>
       <td>1175</td>
       <td>[0.09112548828125, 0.58251953125, 0.0753784179...</td>
-      <td>241.69</td>
-      <td>547.80</td>
+      <td>241.05</td>
+      <td>545.94</td>
     </tr>
   </tbody>
 </table>
@@ -269,15 +264,15 @@ This code creates partitions between boundaries of a set of cells. Usage is via 
 [bb_view`](https://tburnett.github.io/wtlike/main#WtLike.bb_view)
                      
 
-```python
+```
 bb = wtl.bb_view()
 bb.plot();
 ```
 
-    LightCurve: select 662 cells for fitting with e>5 & n>2
+    LightCurve: select 667 cells for fitting with e>5 & n>2
     Bayesian Blocks: using penalty 0.05
-    Partitioned 662 cells into 92 blocks, using LikelihoodFitness 
-    LightCurve: Loaded 92 / 92 cells for fitting
+    	Partitioned 667 cells into 93 blocks, using LikelihoodFitness 
+    LightCurve: Loaded 93 / 93 cells for fitting
 
 
 
