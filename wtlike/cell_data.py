@@ -59,7 +59,6 @@ def time_bin_edges(config, exposure, tbin=None):
     v[1::2] = u[1:]
     return v
 
-
 # Cell
 def contiguous_bins(exposure, min_gap=20, min_duration=600):
 

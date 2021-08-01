@@ -201,7 +201,7 @@ class WeeklyData(object):
         """
         import wget
         self.config= config
-        self.saveto=Path(config.wtlike_data/'data_files')
+        self.saveto=Path(config.datapath/'data_files')
         os.makedirs(self.saveto, exist_ok=True)
         assert week>8
         self.wk = week
@@ -265,7 +265,7 @@ def data_check(config=None):
     Return: list of files, last week number, number of days in last week"""
     if config is None: config=Config()
     if config.valid:
-        weekly_folder = config.wtlike_data/'data_files'
+        weekly_folder = config.datapath/'data_files'
         ff = sorted(list(weekly_folder.glob('*.pkl')))
         if len(ff)==0:
             print(f'No .pkl files found in {weekly_folder}', file=sys.stderr)
@@ -310,7 +310,7 @@ def get_data_files(config=None):
     Return a list of the pickled data files
     """
     if config.valid:
-        weekly_folder = config.wtlike_data/'data_files'
+        weekly_folder = config.datapath/'data_files'
         ff = sorted(list(weekly_folder.glob('*.pkl')))
         if len(ff)==0:
             print(f'No .pkl files found in {weekly_folder}', file=sys.stderr)

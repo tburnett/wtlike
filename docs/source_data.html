@@ -5,8 +5,8 @@ title: Source Data analysis
 keywords: fastai
 sidebar: home_sidebar
 
-summary: "Analyze the selected data"
-description: "Analyze the selected data"
+summary: "Load, for analysis, data associated with a source, or manage a simulation"
+description: "Load, for analysis, data associated with a source, or manage a simulation"
 nb_path: "nbs/05_source_data.ipynb"
 ---
 <!--
@@ -30,7 +30,7 @@ nb_path: "nbs/05_source_data.ipynb"
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Overview">Overview<a class="anchor-link" href="#Overview"> </a></h3><p>For a point source, and data selection, the class <a href="/wtlikesource_data#SourceData"><code>SourceData</code></a> is the user interface to source-oriented data. It relies on the modules <a href="/wtlikeselect_data"><code>select_data</code></a> for actual data, or <a href="/wtlikesimulation"><code>simulation</code></a> for simulated data.</p>
+<h3 id="Overview">Overview<a class="anchor-link" href="#Overview"> </a></h3><p>For a point source, and data selection, the class <a href="/wtlikesource_data#SourceData"><code>SourceData</code></a> is the user interface to source-oriented data. It relies on the modules <code>laad_data</code> for actual data, or <a href="/wtlikesimulation"><code>simulation</code></a> for simulated data.</p>
 
 </div>
 </div>
@@ -62,7 +62,9 @@ nb_path: "nbs/05_source_data.ipynb"
 <div class="output_markdown rendered_html output_subarea ">
 <h2 id="SourceData" class="doc_header"><code>class</code> <code>SourceData</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/source_data.py#L15" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>SourceData</code>(<strong><code>source</code></strong>, <strong><code>config</code></strong>=<em><code>None</code></em>, <strong><code>clear</code></strong>=<em><code>False</code></em>, <strong><code>week_range</code></strong>=<em><code>None</code></em>, <strong><code>key</code></strong>=<em><code>''</code></em>)</p>
 </blockquote>
-<p>Load the photon data near the source and associated exposure.</p>
+<p>Load the photon data near the source and associated exposure.
+--or--
+Use a Simulation object to generate data</p>
 <p>Either from:</p>
 <ol>
 <li><code>config.wtlike_data/'data_files'</code>, the Path to folder with list of pickle files</li>
@@ -80,6 +82,128 @@ nb_path: "nbs/05_source_data.ipynb"
 <li>exptot : total associated exposure</li>
 </ul>
 
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">valid</span><span class="p">:</span>
+    <span class="n">config</span><span class="o">.</span><span class="n">use_kerr</span><span class="o">=</span><span class="kc">False</span>
+    <span class="n">source</span> <span class="o">=</span><span class="n">PointSource</span><span class="p">(</span><span class="s1">&#39;Geminga&#39;</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">)</span> 
+    <span class="n">sd2</span> <span class="o">=</span> <span class="n">SourceData</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">week_range</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span><span class="mi">18</span><span class="p">),</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">clear</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">sd2</span><span class="o">.</span><span class="n">photons</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+    <span class="n">sd2</span><span class="o">.</span><span class="n">exposure</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>SourceData:  Geminga, use_kerr=False
+LoadData: Loading weeks[9:18:]..........
+SourceData: Source Geminga with:
+	 data:        19,922 photons from 2008-08-04 to 2008-10-08
+	 exposure:    49,297 intervals,  average flux 3352 cm^2 for 1.5 Ms
+	 rates:  source 3.03e-06/s, background 9.97e-07/s, S/N ratio 3.04e+00
+&lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;
+RangeIndex: 19922 entries, 0 to 19921
+Data columns (total 4 columns):
+ #   Column  Non-Null Count  Dtype   
+---  ------  --------------  -----   
+ 0   band    19922 non-null  uint8   
+ 1   run_id  19922 non-null  category
+ 2   time    19922 non-null  float64 
+ 3   weight  19922 non-null  float64 
+dtypes: category(1), float64(2), uint8(1)
+memory usage: 409.0 KB
+&lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;
+RangeIndex: 49297 entries, 0 to 49296
+Data columns (total 5 columns):
+ #   Column     Non-Null Count  Dtype  
+---  ------     --------------  -----  
+ 0   start      49297 non-null  float64
+ 1   stop       49297 non-null  float64
+ 2   livetime   49297 non-null  float32
+ 3   cos_theta  49297 non-null  float32
+ 4   exp        49297 non-null  float64
+dtypes: float32(2), float64(3)
+memory usage: 1.5 MB
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">sd</span><span class="o">.</span><span class="n">exposure</span><span class="o">.</span><span class="n">exp</span><span class="o">.</span><span class="n">describe</span><span class="p">())</span>
+<span class="n">sd2</span><span class="o">.</span><span class="n">exposure</span><span class="o">.</span><span class="n">exp</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>count     49297.00
+mean      92395.18
+std       33201.65
+min        1003.97
+25%       64546.51
+50%       95338.88
+75%      120938.32
+max      152926.57
+Name: exp, dtype: float64
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>count     49297.00
+mean     100261.59
+std       32312.52
+min        1147.51
+25%       73636.02
+50%      104629.95
+75%      128399.59
+max      155509.22
+Name: exp, dtype: float64</pre>
 </div>
 
 </div>

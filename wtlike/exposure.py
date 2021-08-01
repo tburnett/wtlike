@@ -65,7 +65,7 @@ class BaseExposure(object):
 
         self.config = config
         self.source = source
-        self.Aeff = EffectiveArea(file_path=config.wtlike_data/'aeff_files')
+        self.Aeff = EffectiveArea(file_path=config.datapath/'aeff_files')
         self.setup()
 
     @abstractmethod
@@ -194,7 +194,6 @@ def time_bin_edges(config, exposure, tbin=None):
     v[1::2] = u[1:]
     return v
 
-
 # Cell
 def sc_data_selection(config, source, sc_data):
 
@@ -219,7 +218,6 @@ def sc_data_selection(config, source, sc_data):
         sc_df.loc[:,'exp']= SourceExposure(config, source)(cos_theta) * livetime
 
     return sc_df
-
 
 # Cell
 def binned_exposure(config, exposure, time_edges):

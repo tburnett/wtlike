@@ -168,61 +168,77 @@ class Cache(dict):
         return self.show()
 
 # Cell
-@dataclass
-class Config:
-    """Default light curve configuration parameters"""
-    verbose : int = 1
+class Config():
+    defaults=\
+    """
+        verbose         : 1
 
-    # data source: if set, expect all data files here
-    wtlike_data:  str = '~/wtlike_data' # wired in for convenience
+        datapath        : None # where to find data--must be set
+        cachepath       : None # cache location -- will be /tmp/wtlike_cache if not set
 
-    # cache
-    cachepath: str = '~/wtlike_cache'
+        # data cuts, processing
+        radius          : 4
+        cos_theta_max   : 0.4
+        z_max           : 100
+        offset_size     : 2.e-06  # scale factor used for event time
 
-    radius: float = 4
-    cos_theta_max:float=0.4
-    z_max : float=100
+        # binning
+        energy_edge_pars : [2,6,17] # pars for np.logspace
+        etypes          : [0, 1] # front, back
+        nside           : 1024
+        nest            : True
 
-    # binning: energy, event type, HEALPix
-    energy_edges: np.ndarray = np.logspace(2,6,17)
-    energy_bins: np.ndarray = np.logspace(2.125, 5.875,16,).astype( np.float32)
-    etypes : tuple = (0,1)
+        # data selection for cell creation
+        week_range      : []
+        time_bins       : [0, 0, 7]
+        exp_min         : 5
 
-    week_range: tuple=(None,None)
+        # cell fitting
+        use_kerr        : False
+        likelihood_rep  : poisson
+        poisson_tolerance : 0.2
 
-    time_bins: tuple=(0,0,7)
+    """
 
-    offset_size: float = 2e-6 # 2 usec units for time relative to run #
+    def __init__(self, **kwargs):
+        import yaml
+        from yaml import SafeLoader
 
-    # healpix data representation used by data
-    nside : int=1024
-    nest: bool=True
+        # parameters: first defaults, then from ~/.config/wtlike/config.yaml, then kwars
+        pars = yaml.load(self.defaults, Loader=SafeLoader)
+        dp = Path('~/.config/wtlike/config.yaml').expanduser()
+        if dp.is_file():
+            userpars = yaml.load(open(dp,'r'), Loader=SafeLoader)
+            pars.update(userpars)
+            #print(f'update from user file {dp}: {userpars}')
+        pars.update(kwargs)
 
-    # exposure calculation -- Kerr version
-    use_kerr: bool=False
+        self.__dict__.update(pars)
 
-    # analysis
-    likelihood_rep: str='poisson'
-    poisson_tolerance: float = 0.2
-    exp_min : float = 5   # default minimum exposure for a cell in cm^2 Ms.
+        self.energy_edges = ee=np.logspace(*self.energy_edge_pars)
+        self.energy_bins = np.sqrt(ee[1:] * ee[:-1])
+        if not self.week_range:
+            self.week_range = (None, None)
 
-    def __post_init__(self):
-        # set up data
-        self.errors=[]
-        if self.wtlike_data is None:
-            self.errors.append('wtlike_data must be set')
-        if self.cachepath is None:
-            self.errors.appnd('wtlike_cache must be set')
-        self.wtlike_data = df = Path(self.wtlike_data).expanduser()
-        self.cachepath =  Path(self.cachepath).expanduser()
-        if not self.wtlike_data.is_dir() and not self.wtlike_data.is_symlink():
-            self.errors.append(f'data_folder {df} not a directory or symlink')
+       # set up, check files paths
+        self.error_msg=''
+        if self.datapath is None:
+            self.error_msg+='\ndatapath must be a folder with wtlike data'
+        self.datapath = df = Path(self.datapath).expanduser()
+        if not (self.datapath.is_dir() or  self.datapath.is_symlink()):
+            self.error_msg+=f'\ndata_folder "{df}" is not a directory or symlink'
         subs = 'aeff_files weight_files data_files'.split()
         for sub in subs:
-            if not (df/sub).is_dir() and (df/sub).is_symlink() :
-                self.errors.append(f'{df/sub} is not a directory or symlink')
-        if self.verbose>1:
-            print(self)
+            if not ( (df/sub).is_dir() or  (df/sub).is_symlink()) :
+                self.error_msg+=f'\n{df/sub} is not a directory or symlink'
+
+        if self.cachepath is None:
+            self.cachepath = Path('/tmp/wtlike_cache')
+            os.makedirs(self.cachepath, exist_ok=True)
+        else:
+            self.cachepath =  Path(self.cachepath).expanduser()
+        if not self.cachepath.is_dir():
+            self.error_msg +=f'cachepath {self.cachepath} is not a folder.'
 
     @property
     def cache(self):
@@ -232,7 +248,9 @@ class Config:
 
     @property
     def valid(self):
-        return len(self.errors)==0
+        if len(self.error_msg)==0: return True
+        print(f'wtlike configuration is invalid:\n{self.error_msg}',file=sys.stderr)
+        return False
 
     def __str__(self):
         s = 'Configuration parameters \n'
@@ -243,6 +261,8 @@ class Config:
 
     def __repr__(self): return str(self)
     def get(self, *pars): return self.__dict__.get(*pars)
+
+
 
 # Cell
 
@@ -274,7 +294,6 @@ def UTCnow():
     from datetime import datetime
     t=datetime.utcnow()
     return f'UTC {t.year}-{t.month:02d}-{t.day} {t.hour:02d}:{t.minute:02d}'
-
 
 
 # Cell

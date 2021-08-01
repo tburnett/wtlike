@@ -1,12 +1,12 @@
 ---
 
-title: Sources and Weights
+title: Sources with weights
 
 keywords: fastai
 sidebar: home_sidebar
 
-summary: "Define PointSource, load weight tables to combine with photon data"
-description: "Define PointSource, load weight tables to combine with photon data"
+summary: "Define the PointSource class, code to load weight tables to combine with photon data"
+description: "Define the PointSource class, code to load weight tables to combine with photon data"
 nb_path: "nbs/03_sources.ipynb"
 ---
 <!--
@@ -33,9 +33,9 @@ nb_path: "nbs/03_sources.ipynb"
 <p>We use the full-sky catalog analysis model to evaluate the predicted flux from a source of interest with respect to the
 background, the combined fluxes from all other sources. We choose the following binning:</p>
 <ul>
-<li>energy:  4/decade from 100 MeV to 1 TeV </li>
-<li>event type: Front and Back  </li>
-<li>Angular position: HEALPix, currently nside=64, for 1 degree-square pixels,</li>
+<li>energy:  4/decade from 100 MeV to 1 TeV (but only upto 10 GeV really used)</li>
+<li>event type: Front/Back  </li>
+<li>Angular position: HEALPix, nside from 64 to 512 depending on PSF</li>
 </ul>
 
 </div>
@@ -43,22 +43,8 @@ background, the combined fluxes from all other sources. We choose the following 
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Pointlike-generation">Pointlike generation<a class="anchor-link" href="#Pointlike-generation"> </a></h3><p>A procedure, currently only for pointlike, <a href="https://github.com/tburnett/pointlike/blob/master/python/uw/like2/source_weights.py">see source_weighsts</a> packs this table with the source name and position, into a pickled dict.</p>
-<h4 id="Original-format----fixed-1-degree-pixel">Original format -- fixed 1-degree pixel<a class="anchor-link" href="#Original-format----fixed-1-degree-pixel"> </a></h4>
-<pre><code>        outdict = dict(
-            model_name = '/'.join(os.getcwd().split('/')[-2:]),
-            radius=self.radius,
-            nside=self.nside,
-            order='NEST',
-            energy_bins=self.energy_bins,
-            source_name= self.source.name,
-            source_lb=galactic(self.source.skydir),
-            roi_lb  = galactic(self.roi.roi_dir),
-            roi_name=self.roi.name,
-            pixels= pixels,
-            weights = weights,
-        )</code></pre>
-<h4 id="New-format----varying-pixel-size-depending-on-PSF-width">New format -- varying pixel size depending on PSF width<a class="anchor-link" href="#New-format----varying-pixel-size-depending-on-PSF-width"> </a></h4><p>This is unpacked by the class <a href="/wtlikesources#WeightMan"><code>WeightMan</code></a></p>
+<h3 id="Pointlike-generation">Pointlike generation<a class="anchor-link" href="#Pointlike-generation"> </a></h3><p>A procedure, implement for pointlike all-aky models, <a href="https://github.com/tburnett/pointlike/blob/master/python/uw/like2/source_weights.py">see source_weights</a> packs this table with the source name and position, into a pickled dict.</p>
+<p>This is unpacked by the class <a href="/wtlikesources#WeightMan"><code>WeightMan</code></a></p>
 <p>This table is used with the data, as a simple lookup: A weight is assigned to each photon according to which energy, event type or HEALPix pixel it lands in.</p>
 
 </div>

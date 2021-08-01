@@ -14,6 +14,8 @@ from .simulation import *
 # Cell
 class SourceData(object):
     """ Load the photon data near the source and associated exposure.
+    --or--
+    Use a Simulation object to generate data
 
     Either from:
       1. `config.wtlike_data/'data_files'`, the Path to folder with list of pickle files

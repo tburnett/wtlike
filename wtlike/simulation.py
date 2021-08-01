@@ -187,5 +187,4 @@ class Simulation(object):
         self.photons=pd.DataFrame(dict(
             time=times,
             weight=weights.astype(np.float32),
-            tau=np.nan, #### FIX this later when start using tau for exposure
         ))

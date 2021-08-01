@@ -10,7 +10,6 @@ import matplotlib.pyplot as plt
 from .config import (Config, UTC, MJD)
 from .exposure import  binned_exposure, sc_data_selection
 
-
 # Cell
 def _get_photons_near_source(config, source, week): #tzero, photon_df):
     """
@@ -166,7 +165,7 @@ class ProcessWeek(object):
 def get_week_files(config, week_range=None):
     """
     """
-    data_folder = config.wtlike_data/'data_files'
+    data_folder = config.datapath/'data_files'
     data_files = sorted(list(data_folder.glob('*.pkl')))
     weeks = week_range or  config.week_range
     if week_range is not None:
@@ -201,8 +200,8 @@ def load_source_data(config, source, week_range=None, key='', clear=False):
 
     """
 
-    if config.wtlike_data/'data_files' is None and key not in config.cache:
-        raise Exception(f'Data for {source.name} is not cached, and config.wtlike_data/"data_files" is not set')
+    if config.datapath/'data_files' is None and key not in config.cache:
+        raise Exception(f'Data for {source.name} is not cached, and config.datapath/"data_files" is not set')
 
     def load_from_weekly_data(config, source, week_range=None):
 
