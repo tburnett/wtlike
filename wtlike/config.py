@@ -226,13 +226,14 @@ class Config():
         self.error_msg=''
         if self.datapath is None:
             self.error_msg+='\ndatapath must be a folder with wtlike data'
-        self.datapath = df = Path(self.datapath).expanduser()
-        if not (self.datapath.is_dir() or  self.datapath.is_symlink()):
-            self.error_msg+=f'\ndata_folder "{df}" is not a directory or symlink'
-        subs = 'aeff_files weight_files data_files'.split()
-        for sub in subs:
-            if not ( (df/sub).is_dir() or  (df/sub).is_symlink()) :
-                self.error_msg+=f'\n{df/sub} is not a directory or symlink'
+        else:
+            self.datapath = df = Path(self.datapath).expanduser()
+            if not (self.datapath.is_dir() or  self.datapath.is_symlink()):
+                self.error_msg+=f'\ndata_folder "{df}" is not a directory or symlink'
+            subs = 'aeff_files weight_files data_files'.split()
+            for sub in subs:
+                if not ( (df/sub).is_dir() or  (df/sub).is_symlink()) :
+                    self.error_msg+=f'\n{df/sub} is not a directory or symlink'
 
         if self.cachepath is None:
             self.cachepath = Path('/tmp/wtlike_cache')
