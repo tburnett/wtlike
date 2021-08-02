@@ -171,7 +171,7 @@ class Cache(dict):
 class Config():
     defaults=\
     """
-        verbose         : 1
+        verbose         : 1 # set to zero for no output
 
         datapath        : None # where to find data--must be set
         cachepath       : None # cache location -- will be /tmp/wtlike_cache if not set
@@ -182,16 +182,16 @@ class Config():
         z_max           : 100
         offset_size     : 2.e-06  # scale factor used for event time
 
-        # binning
+        # binning -- actually determined by weight run
         energy_edge_pars : [2,6,17] # pars for np.logspace
         etypes          : [0, 1] # front, back
         nside           : 1024
         nest            : True
 
         # data selection for cell creation
-        week_range      : []
-        time_bins       : [0, 0, 7]
-        exp_min         : 5
+        week_range      : []  # default all weeks found
+        time_bins       : [0, 0, 7] # full MJD range, 7-day cells
+        exp_min         : 5    # threshold for exposure per cell, in cm^2 Ms units.
 
         # cell fitting
         use_kerr        : False
