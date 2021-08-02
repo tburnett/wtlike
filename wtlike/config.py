@@ -33,7 +33,7 @@ class Cache(dict):
 
 
         self.path = Path(path) if path else None
-        if not self.path: return
+        if self.path is None: return
         if not self.path.exists() :
             raise Exception(f'cache Path {self.path} does not exist ')
 
@@ -135,7 +135,7 @@ class Cache(dict):
 
         """
 
-        if key is None:
+        if key is None or self.path is None:
             return func(*pars, **kwargs)
 
         ret = self.get(key)
