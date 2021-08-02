@@ -35,7 +35,9 @@ class Cache(dict):
         self.path = Path(path) if path else None
         if self.path is None: return
         if not self.path.exists() :
-            raise Exception(f'cache Path {self.path} does not exist ')
+            print(f'Warning: cache Path {self.path} does not exist, cache disables ',file='sys.stderr')
+            self.path=None
+            return
 
         self.index_file = self.path/'index.pkl'
 

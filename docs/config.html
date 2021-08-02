@@ -98,7 +98,7 @@ filename in a file <code>index.pkl</code> in the same folder.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="Cache.__call__" class="doc_header"><code>Cache.__call__</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L113" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Cache.__call__</code>(<strong><code>key</code></strong>, <strong><code>func</code></strong>, <strong>*<code>pars</code></strong>, <strong><code>description</code></strong>=<em><code>''</code></em>, <strong><code>overwrite</code></strong>=<em><code>False</code></em>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="Cache.__call__" class="doc_header"><code>Cache.__call__</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L115" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Cache.__call__</code>(<strong><code>key</code></strong>, <strong><code>func</code></strong>, <strong>*<code>pars</code></strong>, <strong><code>description</code></strong>=<em><code>''</code></em>, <strong><code>overwrite</code></strong>=<em><code>False</code></em>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
 <p>One-line usage interface for cache use</p>
 <ul>
@@ -191,9 +191,9 @@ Test: Restoring from cache with key &#34;four&#34;
 Before remove:
 Cache contents
  key                                    size  time                 name, in folder /tmp/cache_test
-  one                                     18  2021-08-01 15:20     cache_file_d7a97129dbf65.pkl
-  two                                     18  2021-08-01 15:20     cache_file_10d19c6307109a27.pkl
-  four                                    23  2021-08-01 15:20     cache_file_41d038288807144b.pkl
+  one                                     18  2021-08-02 07:41     cache_file_4ee43612bb5cab9.pkl
+  two                                     18  2021-08-02 07:41     cache_file_285f75aebcfb12c3.pkl
+  four                                    23  2021-08-02 07:41     cache_file_2a2f06e650874955.pkl
 
 </pre>
 </div>
@@ -231,7 +231,7 @@ Cache contents
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="Config" class="doc_header"><code>class</code> <code>Config</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L171" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Config</code>(<strong>**<code>kwargs</code></strong>)</p>
+<h2 id="Config" class="doc_header"><code>class</code> <code>Config</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L173" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Config</code>(<strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
 
 </div>
@@ -316,7 +316,7 @@ Cache contents
 </ul>
 <h5 id="Config-defaults">Config defaults<a class="anchor-link" href="#Config-defaults"> </a></h5><p>This is yaml-format, corresponding to <code>config.yaml</code>.</p>
 
-<pre><code>    verbose         : 1
+<pre><code>    verbose         : 1 # set to zero for no output
 
     datapath        : None # where to find data--must be set
     cachepath       : None # cache location -- will be /tmp/wtlike_cache if not set
@@ -327,16 +327,16 @@ Cache contents
     z_max           : 100
     offset_size     : 2.e-06  # scale factor used for event time
 
-    # binning
+    # binning -- actually determined by weight run
     energy_edge_pars : [2,6,17] # pars for np.logspace
     etypes          : [0, 1] # front, back
     nside           : 1024  
     nest            : True
 
     # data selection for cell creation
-    week_range      : []
-    time_bins       : [0, 0, 7]
-    exp_min         : 5
+    week_range      : []  # default all weeks found
+    time_bins       : [0, 0, 7] # full MJD range, 7-day cells
+    exp_min         : 5    # threshold for exposure per cell, in cm^2 Ms units.
 
     # cell fitting
     use_kerr        : False
@@ -392,7 +392,7 @@ Cache contents
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="MJD" class="doc_header"><code>MJD</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L277" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>MJD</code>(<strong><code>arg</code></strong>)</p>
+<h4 id="MJD" class="doc_header"><code>MJD</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L279" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>MJD</code>(<strong><code>arg</code></strong>)</p>
 </blockquote>
 
 </div>
@@ -416,7 +416,7 @@ Cache contents
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="UTC" class="doc_header"><code>UTC</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L287" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>UTC</code>(<strong><code>mjd</code></strong>)</p>
+<h4 id="UTC" class="doc_header"><code>UTC</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L289" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>UTC</code>(<strong><code>mjd</code></strong>)</p>
 </blockquote>
 <p>convert MJD value to ISO date string</p>
 
@@ -441,7 +441,7 @@ Cache contents
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="UTCnow" class="doc_header"><code>UTCnow</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L293" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>UTCnow</code>()</p>
+<h4 id="UTCnow" class="doc_header"><code>UTCnow</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L295" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>UTCnow</code>()</p>
 </blockquote>
 
 </div>
@@ -476,7 +476,7 @@ Cache contents
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>(&#39;2001-01-01 00:01&#39;, &#39;2008-08-05 00:00&#39;, &#39;UTC 2021-08-1 21:33&#39;)</pre>
+<pre>(&#39;2001-01-01 00:01&#39;, &#39;2008-08-05 00:00&#39;, &#39;UTC 2021-08-2 14:41&#39;)</pre>
 </div>
 
 </div>
@@ -529,7 +529,7 @@ Cache contents
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="bin_size_name" class="doc_header"><code>bin_size_name</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L300" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>bin_size_name</code>(<strong><code>bins</code></strong>)</p>
+<h4 id="bin_size_name" class="doc_header"><code>bin_size_name</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L302" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>bin_size_name</code>(<strong><code>bins</code></strong>)</p>
 </blockquote>
 <p>Provide a nice name, e.g., 'day' for a time interval</p>
 
@@ -561,7 +561,7 @@ Cache contents
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="decorate_with" class="doc_header"><code>decorate_with</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L321" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>decorate_with</code>(<strong><code>other_func</code></strong>)</p>
+<h4 id="decorate_with" class="doc_header"><code>decorate_with</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L323" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>decorate_with</code>(<strong><code>other_func</code></strong>)</p>
 </blockquote>
 
 </div>
