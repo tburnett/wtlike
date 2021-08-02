@@ -4,7 +4,7 @@
 see https://tburnett.github.io/wtlike/tutorial
 """
 
-__version__ = "0.2.4"
+__version__ = "0.2.5"
 
 
 from .config import Config, UTC, MJD
