@@ -1016,6 +1016,7 @@ The source must have been analyzed with <code>gtlike</code> or <code>pointlike</
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="o">!</span>cat ~/.config/wtlike/config.yaml
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;du -h ~/wtlike_data/&#39;</span><span class="p">)</span>
 <span class="o">!</span>du -h ~/wtlike_data/*
 </pre></div>
 
@@ -1032,6 +1033,7 @@ The source must have been analyzed with <code>gtlike</code> or <code>pointlike</
 <pre>verbose : 1
 datapath : ~/wtlike_data
 cachepath : ~/wtlike_cache
+
 72K	/home/burnett/wtlike_data/aeff_files
 2.7G	/home/burnett/wtlike_data/data_files
 3.9M	/home/burnett/wtlike_data/weight_files
@@ -1059,7 +1061,9 @@ cachepath : ~/wtlike_cache
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">check_data</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">config</span><span class="o">=</span> <span class="n">Config</span><span class="p">()</span> <span class="c1"># file paths must be valid for following.</span>
+<span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">valid</span><span class="p">:</span>
+    <span class="n">check_data</span><span class="p">()</span>
 </pre></div>
 
     </div>
@@ -1098,8 +1102,7 @@ cachepath : ~/wtlike_cache
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">config</span><span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
-<span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">valid</span><span class="p">:</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">valid</span><span class="p">:</span>
     <span class="n">source</span> <span class="o">=</span> <span class="n">PointSource</span><span class="p">(</span><span class="s1">&#39;3C 279&#39;</span><span class="p">);</span> <span class="n">source</span>
 </pre></div>
 
