@@ -312,7 +312,8 @@ we choose 2$\mu$s.</p>
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">check_data</span><span class="p">();</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">if</span> <span class="n">Config</span><span class="p">()</span><span class="o">.</span><span class="n">valid</span><span class="p">:</span>
+    <span class="n">check_data</span><span class="p">();</span>
 <span class="c1">#update_recent();</span>
 </pre></div>
 
@@ -388,85 +389,6 @@ we choose 2$\mu$s.</p>
 
 </div>
 
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># weeks = range(678,682)</span>
-<span class="c1"># wd=[]</span>
-<span class="c1"># for wk in weeks:</span>
-<span class="c1"># #     t = WeeklyData(config, week=wk); t.save()</span>
-<span class="c1">#     wd.append(t)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#     pixels = wd[week-678].photon_data.nest_index.values</span>
-<span class="c1">#     import healpy</span>
-<span class="c1">#     l,b = healpy.pix2ang(nside=1024, ipix=pixels, nest=True,lonlat=True)</span>
-<span class="c1">#     l[l&gt;180]-=360</span>
-<span class="c1">#     sinb = np.sin(np.radians(b))</span>
-<span class="c1">#     ax.set(xlim=(180,-180), ylim=(-1,1), xlabel=&#39;$l$&#39;, ylabel=r&#39;$\mathrm{\sin(b)}$&#39;,</span>
-<span class="c1">#           title=f&#39;week {week}&#39;)</span>
-<span class="c1">#     u = ax.hexbin(l,sinb, bins=&#39;log&#39;);</span>
-<span class="c1">#     #plt.colorbar(u);</span>
-<span class="c1"># fig, axx = plt.subplots(2,2, figsize=(12,8), sharex=True, sharey=True);</span>
-<span class="c1"># plt.subplots_adjust(hspace=0.2, wspace=0.15)</span>
-<span class="c1"># for ax, week in zip(axx.flatten(), range(678,682)):</span>
-<span class="c1">#     plot_data(ax, week)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#     sc = wd[week-678].sc_data</span>
-<span class="c1">#     ra=sc.ra_scz.values</span>
-<span class="c1">#     ra[ra&gt;180]-=360</span>
-<span class="c1">#     dec=sc.dec_scz.values</span>
-<span class="c1">#     fig, ax = plt.subplots() if ax is None else (ax.figure, ax)</span>
-<span class="c1">#     ax.plot(ra, dec, &#39;.&#39;);</span>
-<span class="c1">#     ax.plot(-94, -29, &#39;+r&#39;, ms=20)</span>
-<span class="c1">#     ax.set(xlim=(180,-180), ylim=(-90,90), xlabel=&#39;RA&#39;, ylabel=&#39;Dec&#39;, title=f&#39;week {week}&#39;)</span>
-<span class="c1"># fig, axx = plt.subplots(2,2, figsize=(12,8), sharex=True, sharey=True)</span>
-<span class="c1"># fig.suptitle(&#39;Fermi pointing&#39;)</span>
-<span class="c1"># plt.subplots_adjust(hspace=0.2, wspace=0.15)</span>
-<span class="c1"># for ax, week in zip(axx.flatten(), range(678,682)):</span>
-<span class="c1">#     plot_scz(week, ax)</span>
-</pre></div>
-
-    </div>
 </div>
 </div>
 

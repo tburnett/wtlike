@@ -285,8 +285,10 @@ Cache contents
     <span class="n">config_defaults</span> <span class="o">=</span> <span class="n">Config</span><span class="o">.</span><span class="n">defaults</span>
     <span class="n">config_text</span> <span class="o">=</span> <span class="n">monospace</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">summary</span><span class="o">=</span><span class="s1">&#39;config parameter list&#39;</span><span class="p">)</span>
 
- 
-    <span class="n">cache_text</span> <span class="o">=</span> <span class="n">monospace</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">cache</span><span class="p">,</span> <span class="s1">&#39;current cache contents&#39;</span> <span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">cache_text</span> <span class="o">=</span> <span class="n">monospace</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">cache</span><span class="p">,</span> <span class="s1">&#39;current cache contents&#39;</span> <span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">msg</span><span class="p">:</span>
+        <span class="n">cache_text</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;(Failed: </span><span class="si">{</span><span class="n">msg</span><span class="si">}</span><span class="s1">)&#39;</span>
 
 
     <span class="k">return</span> <span class="nb">locals</span><span class="p">()</span>

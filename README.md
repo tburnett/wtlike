@@ -11,12 +11,15 @@
 
 Here is a minimal demo:
 
-```
+```python
 from wtlike import *
-wtl = WtLike('3C 273')
+config = Config()
+if config.valid:
+    wtl = WtLike('3C 273')
+    wtl.plot(UTC=True);
 ```
 
-    SourceData:  3C 273, use_kerr=False: Restoring from cache with key "P88Y3157_data"
+    SourceData:  3C 273: Restoring from cache with key "P88Y3157_data"
     SourceData: Source 3C 273 with:
     	 data:        96,186 photons from 2008-08-04 to 2021-08-01
     	 exposure: 2,872,539 intervals,  average flux 1989 cm^2 for 85.8 Ms
@@ -25,12 +28,8 @@ wtl = WtLike('3C 273')
     LightCurve: select 667 cells for fitting with e>5 & n>2
 
 
-```
-wtl.plot(UTC=True);
-```
 
-
-![png](docs/images/output_2_0.png)
+![png](docs/images/output_1_1.png)
 
 
 This assumes that the name for the source, in this case the historically famous first [quasar](https://en.wikipedia.org/wiki/Quasar#Background) to be discovered, can be associated with a 4FGL catalog source. The plot shows, as a function of UTC (or MJD if desired) time, weekly measurements of deviations of the flux relative to the average of the 12-year interval used to define the 4FGL-DR3 catalog.
@@ -152,8 +151,9 @@ with a different set of cells.
 So the following creates a new WtLike object that we generated above, rebins a copy with 25-day bins in the first 100 days, generates a list of the cells, then removes it since it wasn't assigned a reference variable.
 
 
-```
-wtl.view(0,100,25).cells
+```python
+if config.valid:
+    wtl.view(0,100,25).cells
 ```
 
     CellData: Bin photon data into 4 4-week bins from 54683.0 to 54783.0
@@ -264,9 +264,10 @@ This code creates partitions between boundaries of a set of cells. Usage is via 
 [bb_view`](https://tburnett.github.io/wtlike/main#WtLike.bb_view)
                      
 
-```
-bb = wtl.bb_view()
-bb.plot();
+```python
+if config.valid:
+    bb = wtl.bb_view()
+    bb.plot();
 ```
 
     LightCurve: select 667 cells for fitting with e>5 & n>2
@@ -276,7 +277,7 @@ bb.plot();
 
 
 
-![png](docs/images/output_13_1.png)
+![png](docs/images/output_12_1.png)
 
 
 As you see, this made 94 blocks from the 656 weeks, fit each, and overplotted in on the weekly light curve.
