@@ -205,8 +205,9 @@ class CellData(SourceData):
 
         if newbins is not None:
             r.rebin(newbins)
+            r.update()
         r.parent = self
-        r.update()
+
         return r
 
 

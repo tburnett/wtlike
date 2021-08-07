@@ -301,6 +301,46 @@ dtype: float64</code></pre>
 </div>
 </div>
 </div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># if config.valid:</span>
+<span class="c1">#     # make a DF with spectrum</span>
+<span class="c1">#     wtdict = source.wtman.wt_dict</span>
+
+<span class="c1">#     bf_df = pd.DataFrame(dict(</span>
+<span class="c1">#         band=wtdict.keys(), flux=[d[&#39;flux&#39;] for d in wtdict.values()]))</span>
+<span class="c1">#     bf_df.loc[:,&#39;energy&#39;] = config.energy_bins[bf_df.band//2]</span>
+<span class="c1">#     bf_df.loc[:,&#39;eflux&#39;] = (bf_df.flux * bf_df.energy**2)*1e6</span>
+<span class="c1">#     print(bf_df.head(), &#39;\n&#39;)</span>
+
+
+<span class="c1">#     plt.rc(&#39;font&#39;, size=12)</span>
+<span class="c1">#     fig, (ax,ax2) =plt.subplots(2,1, figsize=(3.5,4), sharex=True)</span>
+<span class="c1">#     plt.subplots_adjust(hspace=0)</span>
+<span class="c1">#     ax.loglog(&#39;energy&#39;, &#39;eflux&#39;, &#39;o--&#39;,data=bf_df,label=f&#39;{source.name}&#39;); ax.grid(alpha=0.5)</span>
+<span class="c1">#     ax.set(xlabel=&#39;Energy&#39;, ylabel=&#39;Energy flux&#39;,  xlim=(100,None), title=&#39;Spectra&#39;);</span>
+<span class="c1">#     base_spectrum = eval(KerrExposure.base_spectrum)</span>
+<span class="c1">#     edom = config.energy_bins[:12]</span>
+<span class="c1">#     ax.loglog(edom, base_spectrum(edom)*edom**2/3e3, &#39;-&#39; , label=&#39;Kerr base&#39;)</span>
+<span class="c1">#     ax.legend();</span>
+<span class="c1">#     ax2.plot(&#39;energy&#39;, &#39;flux&#39;, &#39;o--&#39;,data=bf_df,label=f&#39;{source.name}&#39;); ax2.grid(alpha=0.5)</span>
+<span class="c1">#     edom2 = np.logspace(2.125,4)</span>
+<span class="c1">#     ax2.plot(edom2, base_spectrum(edom2)/6e9, &#39;-&#39; , label=&#39;Kerr base&#39;)</span>
+<span class="c1">#     ax2.set(xlabel=&#39;Energy&#39;, ylabel=&#39;Count flux&#39;);</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
 </div>
  
 

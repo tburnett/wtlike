@@ -174,6 +174,7 @@ class Config():
     defaults=\
     """
         verbose         : 1 # set to zero for no output
+        usermode        : true # default suppress warnings
 
         datapath        : None # where to find data--must be set
         cachepath       : None # cache location -- will be /tmp/wtlike_cache if not set
@@ -216,6 +217,12 @@ class Config():
         pars.update(kwargs)
 
         self.__dict__.update(pars)
+
+        # suppress warnings unless testing or in usermode
+        if self.usermode:
+            if not sys.warnoptions:
+                import warnings
+                warnings.simplefilter("ignore")
 
         self.energy_edges = ee=np.logspace(*self.energy_edge_pars)
         self.energy_bins = np.sqrt(ee[1:] * ee[:-1])

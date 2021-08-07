@@ -15,7 +15,6 @@ from .lightcurve import * #get_lightcurve, fit_cells, flux_plot
 from .cell_data import * #get_cells, partition_cells
 from .loglike import *
 
-plt.rc('font', size=18)
 
 # Cell
 class CountFitness(FitnessFunc):
@@ -201,7 +200,7 @@ def get_bb_partition(config, lc, fitness_class=LikelihoodFitness, p0=0.05, key=N
         fitness = fitness_class(lc, p0=p0)
         # Now run the astropy Bayesian Blocks code using my version of the 'event' model
         if config.verbose>0:
-            print(f'Bayesian Blocks: using penalty {fitness.p0}')
+            print(f'Bayesian Blocks: partitioning {len(lc)} cells using {fitness_class.__name__} with penalty {100*fitness.p0}%')
         return fitness.fit()
 
     key = f'BB_edges_' if key == '' else key
@@ -209,5 +208,5 @@ def get_bb_partition(config, lc, fitness_class=LikelihoodFitness, p0=0.05, key=N
     edges = config.cache(key, doit,  description=key if config.verbose>0 else '', overwrite=clear)
 
     if config.verbose>0:
-        print(f'\tPartitioned {len(lc)} cells into {len(edges)-1} blocks, using {fitness_class.__name__} ' )
+        print(f'\tfound {len(edges)-1} / {len(lc)} blocks.' )
     return edges

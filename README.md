@@ -64,35 +64,18 @@ circular region, that is, aperture photometry.
 
 Matthew Kerr [introduced](https://arxiv.org/pdf/1910.00140.pdf) a third method, basically counting photons but using information from a static
 likelihood analysis to assign a "weight" to each photon, the probability for being from the source in question, then optimizing this likelihood. This assumes that the only thing changing is the flux of
-the source.  He calls it "retrospective", since the analysis for the full time is then applied back to the individual photons.
+the source.  He calls it "retrospective", since the analysis for the full time is then applied back to the individual photons. Another way of looking at it is to make the assumption that the time dependence of a source's photon flux factorizes from the energy and spatitial dependence.  
 
-### Individual photon Likelihood ("unbinned")
-We use  a version of the Kerr likelihood where the fundamental "cell" is a single photon. The likelihood for any group of photons 
-is easily determined by adding the photons.
+### Likelihood evaluation
+
+In a significant modification from Kerr's implemetation as described in that paper, we evaluate weights for each photon by a table lookup.
 
 Assumptions:
 * Source photons are completely contained in the dataset boundaries (the "ROI").
 * The instrument response is constant with time.
 * The background pattern is constant. (Clearly violated if a neighboring source varies!)
 
-For a photon $i$ with weight $w_i$ and exposure $\tau_i$,
-
-{% raw %}
-$$ \displaystyle\log\mathcal{L}_i(\alpha) = \log (1 + \alpha \ w_i ) - \alpha \ w_i\ R\ \tau_i $$
-{% endraw %}
-
-where:
-* $\alpha$ -- fractional deviation of the source flux from the average as measured by the catalog analysis 
-* $w_i$ -- probability, for the nominal source rate, that photon $i$ is from the source.
-* $R$ -- expected source rate in $\mathrm{cm^{-2}\ s^{-1}}$ units. 
-* $\tau_i$ -- integration of the exposure rate for the live time preceding this detection in $\mathrm{cm^2} s$ units. 
-Live time, the time since the start of a run, or the previous photon. It is equivalent to time.  
-This behaves like a time, but accounts for variation of the exposure rate, often rapid with respect to event rates.
-
-(A note about "exposure": It has units $\mathrm{cm^2\ s}$ and is the integral of the "exposure rate" over a time interval.
-For *Fermi*, the rate is the effective area, typically $\mathrm{3000 cm^2}$ but varies as much as a factor of three over a single orbit.)
-
-This is evaluated in the module  [loglike](https://tburnett.github.io/wtlike/loglike).
+The likelihood evaluation is implemented in the module  [loglike](https://tburnett.github.io/wtlike/loglike).
 
 ### Photon Data
 
@@ -101,7 +84,7 @@ with subfolders for the photon data, `photon` and spacecraft data, `spacecraft`.
 
 We convert each pair of photon and spacecraft files to two DataFrame tables with the minimum information needed to evaluate the likelihood, as compressed as possible. Particularly, the energy and position are binned. Details can be seen in the module [data_man](https://tburnett.github.io/wtlike/data_man).  
 
-The entire data set in this format occupies <2 GB.
+The entire data set (SOURCE class, energy>100 MeV) in this format occupies ~2 GB.
 
 ### Select Data for a source
 
@@ -112,9 +95,8 @@ evaluates the exposure during 30-s intervals for this direction.  In the class
 1. Extract photons
 2. Evaluate exposure, using the effective area tables and a spectral assumption.
 3. Determine the weight for each photon, using the table for the source. See the module [weights](https://tburnett.github.io/wtlike/weights) for details.
-4. For each photon's livetime, determine the exposure $\tau$. 
 
-The result is a photon DataFrame, containing for each photon, the time $t$ in MJD units, $w$,  and $\tau$.
+The result is a photon DataFrame, containing for each photon, the time $t$ in MJD units, $w$.
 
 This class is a superclass of the user interface class `WtLike` introduced above.
 
@@ -140,7 +122,7 @@ A DataFrame table of the cells is created as a data member `cells`, with content
 * `e` -- cell exposure, for reference 
 * `n` -- the number of photons
 * `w` -- a list of `n` weights
-* `S` -- expected number source photons, the nominal source rate times the sum of $\tau$ values.
+* `S` -- expected number source photons, the nominal source rate times the total exposure.
 * `B` -- expected number of background photons (unused)
 
 ### Views

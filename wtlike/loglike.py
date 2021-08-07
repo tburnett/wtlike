@@ -166,12 +166,20 @@ class LogLike(object):
 
         kw = dict(factor=2, xtol=1e-3, fprime=self.hessian)
         kw.update(**fit_kw)
+        f = self.gradient
         try:
-            ret = optimize.fsolve(self.gradient, estimate[0] if fix_beta else estimate , **kw)
+            ret = optimize.fsolve(f, estimate[0] if fix_beta else estimate , **kw)
         except RuntimeWarning as msg:
+            # fall back
+            if fix_beta:
+                ret = optimize.root_scalar(f, x0=0.5, bracket=[0,2],  method='brentq', xtol=1e-3)
+#                 print(f'*** fall back {ret}')
+                if ret.converged:
+                     return np.array([ret.root])
+
             if debug or self.verbose>2:
-                print(f'Runtime fsolve warning for cell {self}, \n\t {msg}')
-            return None
+                print(f'Runtime fsolve warning for cell {self}, \n\t {msg}', file=sys.stderr)
+            raise Exception()
         except Exception as msg:
             raise Exception(msg)
         return np.array(ret)
@@ -347,10 +355,11 @@ class PoissonRep(object):
 
     def create_table(self, npts=100, support=1e-6):
         # make a table of evently-spaced points between limits
+        #
         pars = self.fit['poiss_pars']
         p = Poisson(pars)
         a,b = p.cdfinv(support), p.cdfcinv(support)
-        dom=(a,b,npts)
+        dom=(0 if np.isinf(a) else a, b, npts) # cdfinv can return inf
         cod = np.array(list(map(p, np.linspace(*dom)))) .astype(np.float32)
         return dom, cod
 

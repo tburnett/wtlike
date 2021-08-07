@@ -191,9 +191,9 @@ Test: Restoring from cache with key &#34;four&#34;
 Before remove:
 Cache contents
  key                                    size  time                 name, in folder /tmp/cache_test
-  one                                     18  2021-08-02 08:19     cache_file_f183ff05c6232c5.pkl
-  two                                     18  2021-08-02 08:19     cache_file_08da406080900c.pkl
-  four                                    23  2021-08-02 08:19     cache_file_0f4ba9e1e9a4ecb.pkl
+  one                                     18  2021-08-06 13:30     cache_file_dd1d32816a02d94.pkl
+  two                                     18  2021-08-06 13:30     cache_file_648aecc7712f1a22.pkl
+  four                                    23  2021-08-06 13:30     cache_file_3d02b8fad9a2559e.pkl
 
 </pre>
 </div>
@@ -305,6 +305,14 @@ Cache contents
 
 <div class="output_area">
 
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Development status
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
 
 <div class="output_markdown rendered_html output_subarea ">
 <h4 id="config.Config----parameters-are-from-three-sources:">config.Config -- parameters are from three sources:<a class="anchor-link" href="#config.Config----parameters-are-from-three-sources:"> </a></h4><ul>
@@ -317,6 +325,7 @@ Cache contents
 <h5 id="Config-defaults">Config defaults<a class="anchor-link" href="#Config-defaults"> </a></h5><p>This is yaml-format, corresponding to <code>config.yaml</code>.</p>
 
 <pre><code>    verbose         : 1 # set to zero for no output
+    dev             : False 
 
     datapath        : None # where to find data--must be set
     cachepath       : None # cache location -- will be /tmp/wtlike_cache if not set
@@ -347,11 +356,80 @@ Cache contents
 
 
 </code></pre>
-<h4 id="Config-contents-as-set-up-here">Config contents as set up here<a class="anchor-link" href="#Config-contents-as-set-up-here"> </a></h4><p><details  class="nbdoc-description" >  <summary> config parameter list </summary>  <div style="margin-left: 5%"><pre>Configuration parameters <br>  verbose         : 1<br>  datapath        : /home/burnett/wtlike_data<br>  cachepath       : /home/burnett/wtlike_cache<br>  radius          : 4<br>  cos_theta_max   : 0.4<br>  z_max           : 100<br>  offset_size     : 2e-06<br>  energy_edge_pars : [2, 6, 17]<br>  etypes          : [0, 1]<br>  nside           : 1024<br>  nest            : True<br>  week_range      : (None, None)<br>  time_bins       : [0, 0, 7]<br>  exp_min         : 5<br>  use_kerr        : False<br>  likelihood_rep  : poisson<br>  poisson_tolerance : 0.2<br>  energy_edges    : [1.00000000e+02 1.77827941e+02 3.16227766e+02 5.62341325e+02<br> 1.00000000e+03 1.77827941e+03 3.16227766e+03 5.62341325e+03<br> 1.00000000e+04 1.77827941e+04 3.16227766e+04 5.62341325e+04<br> 1.00000000e+05 1.77827941e+05 3.16227766e+05 5.62341325e+05<br> 1.00000000e+06]<br>  energy_bins     : [1.33352143e+02 2.37137371e+02 4.21696503e+02 7.49894209e+02<br> 1.33352143e+03 2.37137371e+03 4.21696503e+03 7.49894209e+03<br> 1.33352143e+04 2.37137371e+04 4.21696503e+04 7.49894209e+04<br> 1.33352143e+05 2.37137371e+05 4.21696503e+05 7.49894209e+05]<br>  error_msg       : <br></pre></div> </details></p>
+<h4 id="Config-contents-as-set-up-here">Config contents as set up here<a class="anchor-link" href="#Config-contents-as-set-up-here"> </a></h4><p><details  class="nbdoc-description" >  <summary> config parameter list </summary>  <div style="margin-left: 5%"><pre>Configuration parameters <br>  verbose         : 1<br>  dev             : True<br>  datapath        : /home/burnett/wtlike_data<br>  cachepath       : /home/burnett/wtlike_cache<br>  radius          : 4<br>  cos_theta_max   : 0.4<br>  z_max           : 100<br>  offset_size     : 2e-06<br>  energy_edge_pars : [2, 6, 17]<br>  etypes          : [0, 1]<br>  nside           : 1024<br>  nest            : True<br>  week_range      : (None, None)<br>  time_bins       : [0, 0, 7]<br>  exp_min         : 5<br>  use_kerr        : False<br>  likelihood_rep  : poisson<br>  poisson_tolerance : 0.2<br>  energy_edges    : [1.00000000e+02 1.77827941e+02 3.16227766e+02 5.62341325e+02<br> 1.00000000e+03 1.77827941e+03 3.16227766e+03 5.62341325e+03<br> 1.00000000e+04 1.77827941e+04 3.16227766e+04 5.62341325e+04<br> 1.00000000e+05 1.77827941e+05 3.16227766e+05 5.62341325e+05<br> 1.00000000e+06]<br>  energy_bins     : [1.33352143e+02 2.37137371e+02 4.21696503e+02 7.49894209e+02<br> 1.33352143e+03 2.37137371e+03 4.21696503e+03 7.49894209e+03<br> 1.33352143e+04 2.37137371e+04 4.21696503e+04 7.49894209e+04<br> 1.33352143e+05 2.37137371e+05 4.21696503e+05 7.49894209e+05]<br>  error_msg       : <br></pre></div> </details></p>
 <h5 id="config.cache----a-file-cache">config.cache -- a file cache<a class="anchor-link" href="#config.cache----a-file-cache"> </a></h5><p>The class <code>Cache</code>, available from <code>config.cache</code> implements a file cache in the folder
 <code>/home/burnett/wtlike_cache</code></p>
-<p><details  class="nbdoc-description" >  <summary> current cache contents </summary>  <div style="margin-left: 5%"><pre>Cache contents<br> key                                    size  time                 name, in folder /home/burnett/wtlike_cache<br>  P88Y3278_data                    128097967  2021-07-30 07:11     cache_file_7cc64c0c03169077.pkl<br>  P88Y3243_data                     96003882  2021-07-31 06:10     cache_file_616b5b35718cbef9.pkl<br>  PSR J0633+1746_data              125596991  2021-07-29 15:49     cache_file_e5a52bc7bf78597.pkl<br>  P88Y4744_data                    155979422  2021-07-06 09:42     cache_file_313ff9a4a61b0dd.pkl<br>  PSR J1747-2958_data              153970472  2021-07-06 10:01     cache_file_67d7112d0fd9cf73.pkl<br>  Geminga_test                     134106948  2021-07-08 06:14     cache_file_110ee4a7bc8f2715.pkl<br>  P88Y3157_data                     94261671  2021-08-01 10:06     cache_file_4c35159676191122.pkl<br>  PSR J0534+2200_data              123229511  2021-07-09 10:41     cache_file_31da097aee4d5d1a.pkl<br>  Geminga_nokerr                   128071691  2021-07-29 14:33     cache_file_2905cf7a9572d1c4.pkl<br></pre></div> </details></p>
+<p><details  class="nbdoc-description" >  <summary> current cache contents </summary>  <div style="margin-left: 5%"><pre>Cache contents<br> key                                    size  time                 name, in folder /home/burnett/wtlike_cache<br>  P88Y3278_data                    128216086  2021-08-03 06:25     cache_file_7cc64c0c03169077.pkl<br>  P88Y3243_data                     96003882  2021-07-31 06:10     cache_file_616b5b35718cbef9.pkl<br>  PSR J0633+1746_data              125596991  2021-07-29 15:49     cache_file_e5a52bc7bf78597.pkl<br>  P88Y4744_data                    155979422  2021-07-06 09:42     cache_file_313ff9a4a61b0dd.pkl<br>  PSR J1747-2958_data              153970472  2021-07-06 10:01     cache_file_67d7112d0fd9cf73.pkl<br>  Geminga_test                     134106948  2021-07-08 06:14     cache_file_110ee4a7bc8f2715.pkl<br>  P88Y3157_data                     94261671  2021-08-01 10:06     cache_file_4c35159676191122.pkl<br>  PSR J0534+2200_data              123229511  2021-07-09 10:41     cache_file_31da097aee4d5d1a.pkl<br>  Geminga_nokerr                   128071691  2021-07-29 14:33     cache_file_2905cf7a9572d1c4.pkl<br>  P88Y6076_data                    110633497  2021-08-03 06:46     cache_file_6ed2292a03d41425.pkl<br></pre></div> </details></p>
 
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">Config</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Development status
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>Configuration parameters 
+  verbose         : 1
+  dev             : True
+  datapath        : /home/burnett/wtlike_data
+  cachepath       : /home/burnett/wtlike_cache
+  radius          : 4
+  cos_theta_max   : 0.4
+  z_max           : 100
+  offset_size     : 2e-06
+  energy_edge_pars : [2, 6, 17]
+  etypes          : [0, 1]
+  nside           : 1024
+  nest            : True
+  week_range      : (None, None)
+  time_bins       : [0, 0, 7]
+  exp_min         : 5
+  use_kerr        : False
+  likelihood_rep  : poisson
+  poisson_tolerance : 0.2
+  energy_edges    : [1.00000000e+02 1.77827941e+02 3.16227766e+02 5.62341325e+02
+ 1.00000000e+03 1.77827941e+03 3.16227766e+03 5.62341325e+03
+ 1.00000000e+04 1.77827941e+04 3.16227766e+04 5.62341325e+04
+ 1.00000000e+05 1.77827941e+05 3.16227766e+05 5.62341325e+05
+ 1.00000000e+06]
+  energy_bins     : [1.33352143e+02 2.37137371e+02 4.21696503e+02 7.49894209e+02
+ 1.33352143e+03 2.37137371e+03 4.21696503e+03 7.49894209e+03
+ 1.33352143e+04 2.37137371e+04 4.21696503e+04 7.49894209e+04
+ 1.33352143e+05 2.37137371e+05 4.21696503e+05 7.49894209e+05]
+  error_msg       : </pre>
 </div>
 
 </div>
@@ -392,7 +470,7 @@ Cache contents
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="MJD" class="doc_header"><code>MJD</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L280" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>MJD</code>(<strong><code>arg</code></strong>)</p>
+<h4 id="MJD" class="doc_header"><code>MJD</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L284" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>MJD</code>(<strong><code>arg</code></strong>)</p>
 </blockquote>
 
 </div>
@@ -416,7 +494,7 @@ Cache contents
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="UTC" class="doc_header"><code>UTC</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L290" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>UTC</code>(<strong><code>mjd</code></strong>)</p>
+<h4 id="UTC" class="doc_header"><code>UTC</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L294" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>UTC</code>(<strong><code>mjd</code></strong>)</p>
 </blockquote>
 <p>convert MJD value to ISO date string</p>
 
@@ -441,7 +519,7 @@ Cache contents
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="UTCnow" class="doc_header"><code>UTCnow</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L296" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>UTCnow</code>()</p>
+<h4 id="UTCnow" class="doc_header"><code>UTCnow</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L300" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>UTCnow</code>()</p>
 </blockquote>
 
 </div>
@@ -476,7 +554,7 @@ Cache contents
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>(&#39;2001-01-01 00:01&#39;, &#39;2008-08-05 00:00&#39;, &#39;UTC 2021-08-2 15:19&#39;)</pre>
+<pre>(&#39;2001-01-01 00:01&#39;, &#39;2008-08-05 00:00&#39;, &#39;UTC 2021-08-6 20:30&#39;)</pre>
 </div>
 
 </div>
@@ -529,7 +607,7 @@ Cache contents
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="bin_size_name" class="doc_header"><code>bin_size_name</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L303" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>bin_size_name</code>(<strong><code>bins</code></strong>)</p>
+<h4 id="bin_size_name" class="doc_header"><code>bin_size_name</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L307" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>bin_size_name</code>(<strong><code>bins</code></strong>)</p>
 </blockquote>
 <p>Provide a nice name, e.g., 'day' for a time interval</p>
 
@@ -561,7 +639,7 @@ Cache contents
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="decorate_with" class="doc_header"><code>decorate_with</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L324" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>decorate_with</code>(<strong><code>other_func</code></strong>)</p>
+<h4 id="decorate_with" class="doc_header"><code>decorate_with</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L328" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>decorate_with</code>(<strong><code>other_func</code></strong>)</p>
 </blockquote>
 
 </div>
