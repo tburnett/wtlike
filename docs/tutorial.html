@@ -373,7 +373,9 @@ The relative flux is $1+\alpha$.</p>
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Note that the properties <code>photons</code>, <a href="/wtlikeexposure"><code>exposure</code></a>, <code>cells</code>, <code>fits</code>, and <code>fluxes</code> are <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html">DataFrames</a>. So we can find a fit at the peak with a <code>query</code>.</p>
+<h4 id="About-DataFrames">About DataFrames<a class="anchor-link" href="#About-DataFrames"> </a></h4><p>The properties <code>photons</code>, <a href="/wtlikeexposure"><code>exposure</code></a>, <code>cells</code>, <code>fits</code>, and <code>fluxes</code> are <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html">pandas.DataFrame</a> objects.
+For those unfamiliar with pandas, note that one can create "csv" files with the method <code>to_csv(</code><em>filename</em><code>)</code>.</p>
+<p>The function <code>query</code> is very useful: To select the cells with flux&gt;3,</p>
 
 </div>
 </div>
@@ -465,8 +467,8 @@ The relative flux is $1+\alpha$.</p>
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Views">Views<a class="anchor-link" href="#Views"> </a></h2><p>A <a href="/wtlikemain#WtLike"><code>WtLike</code></a> object provides a function <code>view</code>, which returns a <strong>new</strong> instance with a different binning. 
-So if we want a detailed look at the flare, we can choose an interval. The parameters specify</p>
+<h2 id="Views">Views<a class="anchor-link" href="#Views"> </a></h2><p>A <a href="/wtlikemain#WtLike"><code>WtLike</code></a> object provides a function <code>view</code>, which returns a copy but with a different binning. 
+So if we want a detailed look at the flare, we can choose an interval. The parameters specify an interval 10 days after the start, and 10 days before the end, with 1/day or 6-hour bins.</p>
 
 </div>
 </div>

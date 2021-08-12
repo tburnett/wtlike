@@ -1,4 +1,4 @@
-# Making FermiLAT gamma-ray Light curves with wtlike 
+# Making FermiLAT gamma-ray light curves with wtlike 
 > Quickly create a light curve for any 4FGL source, on any time scale, with optional Bayesian Block analysis 
 
 

@@ -179,6 +179,10 @@ class Config():
         datapath        : None # where to find data--must be set
         cachepath       : None # cache location -- will be /tmp/wtlike_cache if not set
 
+        # catalogs -- temporary
+        pointlike_csv   : None
+        catalog_fits    : None
+
         # data cuts, processing
         radius          : 4
         cos_theta_max   : 0.4

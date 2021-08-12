@@ -100,7 +100,7 @@ class CellData(SourceData):
         * time_bins, default config.time_bins
 
 
-        Note that the `e`  cell entry is the actual exposure for the cell in units $cm^2\ s$, times $10^{-6}$.
+        Note that the `e`  cell entry is the actual exposure for the cell in units $cm^2\ Ms$.
         """
 
     def __init__(self, *pars, **kwargs):

@@ -88,6 +88,6 @@ class WtLike(LightCurve):
                   label=self.step_name+' bins', **kwargs)
         flux_plot(self.fits, ax=ax, step=True,
                   label=f'BB (p0={100*self.bayes_p0:.0f}%)', zorder=10,**kwargs)
-
+        ax.grid(alpha=0.5)
         fig.set_facecolor('white')
         return fig

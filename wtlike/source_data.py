@@ -107,7 +107,7 @@ class SourceData(object):
 
         exp = self.exposure
         days  = np.sum(exp.stop-exp.start); secs = days*24*3600
-        exp_text = f' average flux {self.exptot/secs:.0f} cm^2 for {secs/1e6:.1f} Ms'
+        exp_text = f' average effective area {self.exptot/secs:.0f} cm^2 for {secs/1e6:.1f} Ms'
 
         if not self.simulated:
             photon_text = f'photons from {UTC(time[0])[:10]} to {UTC(time[-1])[:10]}'
