@@ -22,7 +22,7 @@ if config.valid:
     SourceData:  3C 273: Restoring from cache with key "P88Y3157_data"
     SourceData: Source 3C 273 with:
     	 data:        96,186 photons from 2008-08-04 to 2021-08-01
-    	 exposure: 2,872,539 intervals,  average flux 1989 cm^2 for 85.8 Ms
+    	 exposure: 2,872,539 intervals,  average effective area 1989 cm^2 for 85.8 Ms
     	 rates:  source 1.73e-07/s, background 3.91e-07/s, S/N ratio 4.42e-01
     CellData: Bin photon data into 677 1-week bins from 54683.0 to 59422.0
     LightCurve: select 667 cells for fitting with e>5 & n>2
@@ -142,83 +142,6 @@ if config.valid:
     LightCurve: select 4 cells for fitting with e>5 & n>2
 
 
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>t</th>
-      <th>tw</th>
-      <th>e</th>
-      <th>n</th>
-      <th>w</th>
-      <th>S</th>
-      <th>B</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>54695.5</td>
-      <td>25.0</td>
-      <td>1076.90</td>
-      <td>553</td>
-      <td>[0.489013671875, 0.806640625, 0.113037109375, ...</td>
-      <td>185.90</td>
-      <td>421.04</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>54720.5</td>
-      <td>25.0</td>
-      <td>1353.24</td>
-      <td>1438</td>
-      <td>[0.4345703125, 0.6064453125, 0.069091796875, 0...</td>
-      <td>233.60</td>
-      <td>529.08</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>54745.5</td>
-      <td>25.0</td>
-      <td>1049.03</td>
-      <td>1183</td>
-      <td>[0.339111328125, 0.31005859375, 0.708984375, 0...</td>
-      <td>181.09</td>
-      <td>410.14</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>54770.5</td>
-      <td>25.0</td>
-      <td>1396.37</td>
-      <td>1175</td>
-      <td>[0.09112548828125, 0.58251953125, 0.0753784179...</td>
-      <td>241.05</td>
-      <td>545.94</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-
-
 ### Evaluate Likelihoods and make light curve plots
 
 The class [`LightCurve`](https://tburnett.github.io/wtlike/lightcurve), implemented in the module [`lightcurve`](https://tburnett.github.io/wtlike#LightCurve) is a subclass of `SourceData`.
@@ -252,9 +175,8 @@ if config.valid:
     bb.plot();
 ```
 
-    LightCurve: select 667 cells for fitting with e>5 & n>2
-    Bayesian Blocks: using penalty 0.05
-    	Partitioned 667 cells into 93 blocks, using LikelihoodFitness 
+    Bayesian Blocks: partitioning 667 cells using LikelihoodFitness with penalty 5.0%
+    	found 93 / 667 blocks.
     LightCurve: Loaded 93 / 93 cells for fitting
 
 

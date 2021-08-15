@@ -235,8 +235,8 @@ def load_source_data(config, source, week_range=None, key='', clear=False):
         return p_df, e_df
     description=f'SourceData:  {source.name}'
 
-    if week_range is not None:
-        # always load directly if weeks specified
+    if week_range is not None or key is None:
+        # always load directly if weeks specified or key set to None
         print(description)
         r = load_from_weekly_data(config, source, week_range=week_range)
     else:

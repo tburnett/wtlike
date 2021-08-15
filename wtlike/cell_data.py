@@ -159,7 +159,7 @@ class CellData(SourceData):
 
         for k, (t, tw, e) in enumerate( zip(
                     center, width, self.binexp*exposure_factor) ):
-            w = wts[ek[k]:ek[k+1]]
+            w = wts[ek[k]:ek[k+1]].astype(np.float32)
             n = len(w)
             cells.append(dict(t=t, tw=tw,
                               e=e,

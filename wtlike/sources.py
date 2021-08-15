@@ -16,7 +16,9 @@ from .config import *
 def get_wtzip_index(config, update=False):
 
     wtzipfile = config.datapath/'weight_files.zip'
-    assert wtzipfile.is_file(), 'Expect a zip file'
+    if not  wtzipfile.is_file():
+        print( f'Did not find the zip file {wtzipfile}', file=sys.stderr)
+        return None
 
     with  zipfile.ZipFile(wtzipfile) as wtzip:
         if 'index.pkl' in wtzip.namelist() and not update:
@@ -250,19 +252,40 @@ class SourceLookup():
     def __init__(self, config):
         from astropy.io import fits
         import pandas as pd
+        self.config=config
 
         zip_index = get_wtzip_index(config)
+        if zip_index is None:
+            raise Exception('Expected zip file weight_files.zip')
+
         self.pt_dirs=zip_index['coord']
         self.pt_names = zip_index['name']
 
-        catalog_file = Path(config.catalog_fits).expanduser()
+        if config.catalog_file is None or not Path(config.catalog_file).expanduser().is_file():
+            print('Expected to find the 4FGL catalog file: set "catalog_file" in your config.yaml file',
+                 file=sys.stderr)
+
+        catalog_file = Path(config.catalog_file).expanduser()
 
         # make this optional
-        assert(catalog_file).is_file(), f'4FGL file not found: {catalog_file}'
-        hdus = fits.open(catalog_file)
-        data = hdus[1].data
+        with fits.open(catalog_file) as hdus:
+            data = hdus[1].data
         self.cat_names = list(map(lambda x: x.strip() , data['Source_Name']))
         self.cat_dirs = SkyCoord(data['RAJ2000'], data['DEJ2000'], unit='deg', frame='fk5')
+
+    def check_folder(self, *pars):
+        if len(pars)>1: return None
+        name = pars[0]
+        filename = self.config.datapath/'weight_files'/(name.replace(' ','_').replace('+','p')+'_weights.pkl')
+        if not filename.is_file():
+            return None
+        with open(filename, 'rb') as inp:
+            wd = pickle.load(inp, encoding='latin1')
+
+        #print(wd.keys(), wd['source_name'], wd['source_lb'])
+        skycoord = SkyCoord( *wd['source_lb'], unit='deg', frame='galactic')
+        self.check_4fgl(skycoord)
+        return name
 
     def __call__(self, *pars, **kwargs):
         """
@@ -272,12 +295,17 @@ class SourceLookup():
         * name of a source found by astropy, or a coordinate, which is close to a source in the pointlike list
         * a coordinate pair (ra,dec), or (l,b, gal=True)
 
-        Returns the pointlike name. If  with the latter `None` if not in 4FGL.
+        Returns the pointlike name.
         """
         self.psep=self.csep=99 # flag not found
+        self.cat_name = None
 
-        # first check pointlike list
-        if len(pars)==1 and pars[0] in self.pt_names:
+        # first, is the name in the weidht_files folder?
+        name = self.check_folder(*pars)
+        if name is not None:  return name
+
+        # then check pointlike list
+        if self.pt_names is not None and len(pars)==1 and pars[0] in self.pt_names:
             idx = list(self.pt_names).index(pars[0])
             skycoord = self.pt_dirs[idx]
         else:
@@ -303,14 +331,17 @@ class SourceLookup():
             print(error, file=sys.stderr)
 
             return None
+        self.check_4fgl(skycoord)
+        return pt_name
 
+    def check_4fgl(self, skycoord):
         # check for 4FGL correspondence
         idx, sep2d, _= skycoord.match_to_catalog_sky(self.cat_dirs)
         self.csep = sep2d.deg[0]
         self.cat_name = self.cat_names[idx] if self.csep < self.max_sep else None
         self.skycoord = skycoord
 
-        return pt_name
+
 
 # Cell
 

@@ -358,8 +358,11 @@ class LightCurve(CellData):
 
         # use cache only with default bins?
         key = f'lightcurve_{source_name}' if self.lc_key=='' else  self.lc_key
-        description = f'Light curve with {cell_query} for {source_name}' if self.config.verbose>0 and key is not None else ''
-        self.lc = self.fits =  self.config.cache(key, doit, description=description)
+        if key is None:
+            self.fits = doit()
+        else:
+            description = f'Light curve with {cell_query} for {source_name}' if self.config.verbose>0 and key is not None else ''
+            self.fits =  self.config.cache(key, doit, description=description)
 
     def check_plot_kwargs(self, kwargs):
         tzero = kwargs.get('tzero', None)
