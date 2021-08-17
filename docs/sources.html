@@ -257,72 +257,6 @@ $$w'_1 = \frac{w_1}{1+\alpha_2\ w_2}\ \ .   $$
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">config</span><span class="o">=</span><span class="n">Config</span><span class="p">()</span>
-<span class="n">sl</span> <span class="o">=</span> <span class="n">SourceLookup</span><span class="p">(</span><span class="n">config</span><span class="p">);</span>
-<span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;PSR B1259-63&#39;</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#     if len(pars)&gt;1: return None</span>
-<span class="c1">#     name = pars[0]</span>
-<span class="c1">#     filename = config.datapath/&#39;weight_files&#39;/(name.replace(&#39; &#39;,&#39;_&#39;).replace(&#39;+&#39;,&#39;p&#39;)+&#39;_weights.pkl&#39;) </span>
-<span class="c1">#     if not filename.is_file():</span>
-<span class="c1">#         return None</span>
-<span class="c1">#     with open(filename, &#39;rb&#39;) as inp:</span>
-<span class="c1">#         wd = pickle.load(inp, encoding=&#39;latin1&#39;)</span>
-        
-<span class="c1">#     #print(wd.keys(), wd[&#39;source_name&#39;], wd[&#39;source_lb&#39;])</span>
-<span class="c1">#     skycoord = SkyCoord( *wd[&#39;source_lb&#39;], unit=&#39;deg&#39;, frame=&#39;galactic&#39;)</span>
-<span class="c1">#     self.check_4fgl(skycoord)</span>
-<span class="c1">#     return name</span>
-    
-    
-<span class="n">sl</span><span class="o">.</span><span class="n">check_folder</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="p">,</span><span class="n">sl</span><span class="o">.</span><span class="n">cat_name</span> 
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>(&#39;PSR B1259-63&#39;, &#39;4FGL J1302.9-6349&#39;)</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
 
 <div class="output_wrapper">
 <div class="output">
@@ -343,7 +277,7 @@ $$w'_1 = \frac{w_1}{1+\alpha_2\ w_2}\ \ .   $$
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="SourceLookup.__call__" class="doc_header"><code>SourceLookup.__call__</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/sources.py#L290" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>SourceLookup.__call__</code>(<strong>*<code>pars</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="SourceLookup.__call__" class="doc_header"><code>SourceLookup.__call__</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/sources.py#L295" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>SourceLookup.__call__</code>(<strong>*<code>pars</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
 <p>Search the catalog lists. Options are:</p>
 <ul>
@@ -373,40 +307,6 @@ $$w'_1 = \frac{w_1}{1+\alpha_2\ w_2}\ \ .   $$
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">s</span> <span class="o">=</span> <span class="n">PointSource</span><span class="p">(</span><span class="s1">&#39;PSR B1259-63&#39;</span><span class="p">);</span> <span class="n">s</span>
-<span class="n">s</span><span class="o">.</span><span class="n">wtman</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>dict_keys([&#39;energy_bins&#39;, &#39;source_name&#39;, &#39;source_lb&#39;, &#39;roi_lb&#39;, &#39;wt_dict&#39;, &#39;nickname&#39;, &#39;model_name&#39;, &#39;fitinfo&#39;])</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
 
 <div class="output_wrapper">
 <div class="output">
@@ -415,7 +315,7 @@ $$w'_1 = \frac{w_1}{1+\alpha_2\ w_2}\ \ .   $$
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="PointSource" class="doc_header"><code>class</code> <code>PointSource</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/sources.py#L348" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>PointSource</code>(<strong>*<code>pars</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
+<h2 id="PointSource" class="doc_header"><code>class</code> <code>PointSource</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/sources.py#L358" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>PointSource</code>(<strong>*<code>pars</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
 <p>Manage the position and name of a point source</p>
 
@@ -427,7 +327,7 @@ $$w'_1 = \frac{w_1}{1+\alpha_2\ w_2}\ \ .   $$
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="PointSource.fk5" class="doc_header"><code>PointSource.fk5</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/sources.py#L402" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>PointSource.fk5</code>(<strong><code>name</code></strong>, <strong><code>position</code></strong>)</p>
+<h4 id="PointSource.fk5" class="doc_header"><code>PointSource.fk5</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/sources.py#L412" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>PointSource.fk5</code>(<strong><code>name</code></strong>, <strong><code>position</code></strong>)</p>
 </blockquote>
 <p>position: (ra,dec) tuple</p>
 
@@ -448,105 +348,13 @@ $$w'_1 = \frac{w_1}{1+\alpha_2\ w_2}\ \ .   $$
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span> 
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># source = PointSource(179.8, 65.04, gal=True); print(source, source.nickname)</span>
+
+
+<span class="c1"># PointSource(&#39;PSR B1259-63&#39;)</span>
 </pre></div>
 
     </div>
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">source</span> <span class="o">=</span> <span class="n">PointSource</span><span class="p">(</span><span class="s1">&#39;Geminga&#39;</span><span class="p">);</span> <span class="nb">print</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>Source &#34;4FGL J0633.9+1746&#34; at: (l,b)=(195.134,4.273), nickname PSR J0633+1746
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">source</span> <span class="o">=</span> <span class="n">PointSource</span><span class="p">(</span><span class="mf">179.8</span><span class="p">,</span> <span class="mf">65.04</span><span class="p">,</span> <span class="n">gal</span><span class="o">=</span><span class="kc">True</span><span class="p">);</span> <span class="nb">print</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">source</span><span class="o">.</span><span class="n">nickname</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>Source &#34;fk5 (179.8,65.04) &#34; at: (l,b)=(179.800,65.040), nickname P88Y2756 P88Y2756
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">PointSource</span><span class="p">(</span><span class="s1">&#39;PSR B1259-63&#39;</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>Source &#34;4FGL J1302.9-6349&#34; at: (l,b)=(304.206,-0.985), nickname P88Y3278</pre>
-</div>
-
-</div>
-
 </div>
 </div>
 

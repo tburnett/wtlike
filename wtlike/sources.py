@@ -262,16 +262,21 @@ class SourceLookup():
         self.pt_names = zip_index['name']
 
         if config.catalog_file is None or not Path(config.catalog_file).expanduser().is_file():
-            print('Expected to find the 4FGL catalog file: set "catalog_file" in your config.yaml file',
-                 file=sys.stderr)
+            print('There is no link to 4FGL catalog file: set "catalog_file" in your config.yaml'
+                  ' or specify if in the Config() call',
+                        file=sys.stderr)
+            self.cat_names=[]
+            self.cat_dirs =[]
 
-        catalog_file = Path(config.catalog_file).expanduser()
+        else:
 
-        # make this optional
-        with fits.open(catalog_file) as hdus:
-            data = hdus[1].data
-        self.cat_names = list(map(lambda x: x.strip() , data['Source_Name']))
-        self.cat_dirs = SkyCoord(data['RAJ2000'], data['DEJ2000'], unit='deg', frame='fk5')
+            catalog_file = Path(config.catalog_file).expanduser()
+
+            # make this optional
+            with fits.open(catalog_file) as hdus:
+                data = hdus[1].data
+            self.cat_names = list(map(lambda x: x.strip() , data['Source_Name']))
+            self.cat_dirs = SkyCoord(data['RAJ2000'], data['DEJ2000'], unit='deg', frame='fk5')
 
     def check_folder(self, *pars):
         if len(pars)>1: return None
@@ -283,8 +288,8 @@ class SourceLookup():
             wd = pickle.load(inp, encoding='latin1')
 
         #print(wd.keys(), wd['source_name'], wd['source_lb'])
-        skycoord = SkyCoord( *wd['source_lb'], unit='deg', frame='galactic')
-        self.check_4fgl(skycoord)
+        self.skycoord = SkyCoord( *wd['source_lb'], unit='deg', frame='galactic')
+        self.check_4fgl()
         return name
 
     def __call__(self, *pars, **kwargs):
@@ -331,15 +336,20 @@ class SourceLookup():
             print(error, file=sys.stderr)
 
             return None
-        self.check_4fgl(skycoord)
+        self.skycoord=skycoord
+        self.check_4fgl()
         return pt_name
 
-    def check_4fgl(self, skycoord):
-        # check for 4FGL correspondence
-        idx, sep2d, _= skycoord.match_to_catalog_sky(self.cat_dirs)
+    def check_4fgl(self):
+        # check for 4FGL correspondence, set self.cat_name, self.csep
+        if len(self.cat_dirs)==0:
+            self.cat_name=None
+            return
+
+        idx, sep2d, _= self.skycoord.match_to_catalog_sky(self.cat_dirs)
         self.csep = sep2d.deg[0]
         self.cat_name = self.cat_names[idx] if self.csep < self.max_sep else None
-        self.skycoord = skycoord
+
 
 
 
