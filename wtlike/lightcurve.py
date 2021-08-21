@@ -60,7 +60,13 @@ class CellFitter(object):
             print(f'Fitting likelihoods with {rep_name} representation')
 
         # making output with reduced columns
-        self.ll_fits = cells['t tw n e'.split()].copy()
+        self.ll_fits = cells['t tw n e S'.split()].copy()
+
+        # add summary of weights
+        self.ll_fits.loc[:,'wsum'] =  cells.w.apply(lambda w: np.sum(w))
+        self.ll_fits.loc[:,'w2sum'] = cells.w.apply(lambda w: np.sum(w**2))
+        self.ll_fits.loc[:,'wmax'] =  cells.w.apply(lambda w: np.max(w))
+
         try:
             self.ll_fits.loc[:,'fit'] = cells.loglike.apply(repcl)
         except Exception as e:

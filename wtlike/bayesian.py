@@ -200,7 +200,8 @@ def get_bb_partition(config, lc, fitness_class=LikelihoodFitness, p0=0.05, key=N
         fitness = fitness_class(lc, p0=p0)
         # Now run the astropy Bayesian Blocks code using my version of the 'event' model
         if config.verbose>0:
-            print(f'Bayesian Blocks: partitioning {len(lc)} cells using {fitness_class.__name__} with penalty {100*fitness.p0}%')
+            print(f'Bayesian Blocks: partitioning {len(lc)} cells using {fitness_class.__name__}'\
+                  f' with penalty {100*fitness.p0:.0f}%')
         return fitness.fit()
 
     key = f'BB_edges_' if key == '' else key

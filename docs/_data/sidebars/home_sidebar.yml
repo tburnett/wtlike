@@ -22,7 +22,7 @@ entries:
       title: Exposure processing
       url: /exposure
     - output: web,pdf
-      title: Sources with weights
+      title: Sources and weights
       url: /sources
     - output: web,pdf
       title: Load data

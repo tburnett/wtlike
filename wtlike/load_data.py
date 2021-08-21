@@ -182,7 +182,10 @@ def get_week_files(config, week_range=None):
             print(f'LoadData: Loading weeks[{q(slc.start)}:{q(slc.stop)}:{q(slc.step)}]', end='' if config.verbose<2 else '\n')
     else:
         if config.verbose>0: print(f'LoadData: loading all {len(data_files)} weekly files')
-    assert len(data_files)>0, f'Specified week_range {week_range} produced no output.'
+
+    if len(data_files)==0:
+        msg =  f'Specified week_range {week_range} produced no output. Note that week numbers are 9-'
+        raise Exception(msg)
 
     return data_files
 
