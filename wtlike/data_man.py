@@ -179,7 +179,7 @@ class WeeklyData(object):
 
     at FTP 'https://heasarc.gsfc.nasa.gov/FTP/fermi/data/lat/weekly'
 
-    * week: a mission week number
+    * week_or_mjd: a mission week number or MJD value
     * saveto: path to save the files
 
     Creates a pickled file as  dict with
@@ -193,16 +193,21 @@ class WeeklyData(object):
     ftp = 'https://heasarc.gsfc.nasa.gov/FTP/fermi/data/lat/weekly'
     tmp = Path('/tmp/from_gsfc')
 
-    def __init__(self, config, week,  overwrite=False):
-        """
-        * week: a mission week number, starting at 9
+    @classmethod
+    def mjd2week(self, mjd):
+        return int((mjd-54615)//7)
 
+    def __init__(self, config, week_or_mjd,  overwrite=False):
+        """
+        * week_or_mjd: a mission week number, starting at 9 -or- MJD
 
         """
         import wget
         self.config= config
         self.saveto=Path(config.datapath/'data_files')
         os.makedirs(self.saveto, exist_ok=True)
+
+        week = self.mjd2week(week_or_mjd) if week_or_mjd>1000 else week_or_mjd
         assert week>8
         self.wk = week
 
@@ -309,6 +314,7 @@ def get_data_files(config=None):
     """
     Return a list of the pickled data files
     """
+    config = config or Config()
     if config.valid:
         weekly_folder = config.datapath/'data_files'
         ff = sorted(list(weekly_folder.glob('*.pkl')))

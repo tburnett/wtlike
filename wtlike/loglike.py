@@ -18,13 +18,19 @@ poisson_tolerance = 0.2
 class LogLike(object):
     """ implement Kerr Eqn 2 for a single interval, or cell
 
-     - cell -- a dict with  w, S, B <br>
+     - cell -- a dict with  w, n, S, B <br>
 
     """
 
     def __init__(self, cell):
         """
         """
+        if isinstance(cell, pd.Series):
+            # a row  from the cells dataframe
+            cell_dict = cell.to_dict()
+            extract = lambda x: cell_dict[x]
+            cell = dict(w = extract('w'), S = extract('S'),  B = extract('B'),  n = extract('n'),    )
+
         self.__dict__.update(cell)
         self.w = np.atleast_1d(self.w)
         self.verbose=0

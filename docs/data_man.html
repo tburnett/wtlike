@@ -186,12 +186,12 @@ we choose 2$\mu$s.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="WeeklyData" class="doc_header"><code>class</code> <code>WeeklyData</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L177" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>WeeklyData</code>(<strong><code>config</code></strong>, <strong><code>week</code></strong>, <strong><code>overwrite</code></strong>=<em><code>False</code></em>)</p>
+<h2 id="WeeklyData" class="doc_header"><code>class</code> <code>WeeklyData</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L177" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>WeeklyData</code>(<strong><code>config</code></strong>, <strong><code>week_or_mjd</code></strong>, <strong><code>overwrite</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 <p>Download and process weekly Fermi-LAT files from GSFC,</p>
 <p>at FTP '<a href="https://heasarc.gsfc.nasa.gov/FTP/fermi/data/lat/weekly">https://heasarc.gsfc.nasa.gov/FTP/fermi/data/lat/weekly</a>'</p>
 <ul>
-<li>week: a mission week number</li>
+<li>week_or_mjd: a mission week number or MJD value</li>
 <li>saveto: path to save the files</li>
 </ul>
 <p>Creates a pickled file as  dict with</p>
@@ -236,7 +236,7 @@ we choose 2$\mu$s.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="data_check" class="doc_header"><code>data_check</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L263" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>data_check</code>(<strong><code>config</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="data_check" class="doc_header"><code>data_check</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L268" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>data_check</code>(<strong><code>config</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <p>Return: list of files, last week number, number of days in last week</p>
 
@@ -261,7 +261,7 @@ we choose 2$\mu$s.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="check_data" class="doc_header"><code>check_data</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L285" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>check_data</code>(<strong><code>config</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="check_data" class="doc_header"><code>check_data</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L290" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>check_data</code>(<strong><code>config</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 
 </div>
@@ -292,7 +292,7 @@ we choose 2$\mu$s.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="update_recent" class="doc_header"><code>update_recent</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L289" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>update_recent</code>(<strong><code>config</code></strong>=<em><code>None</code></em>, <strong><code>test</code></strong>=<em><code>False</code></em>)</p>
+<h4 id="update_recent" class="doc_header"><code>update_recent</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L294" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>update_recent</code>(<strong><code>config</code></strong>=<em><code>None</code></em>, <strong><code>test</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 
 </div>
@@ -327,8 +327,8 @@ we choose 2$\mu$s.</p>
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Weekly folder &#34;/home/burnett/wtlike_data/data_files&#34; contains 678 weeks.
-	 Last week, # 687, has 3.469 days, ends at UTC 2021-08-01 11:20
+<pre>Weekly folder &#34;/home/burnett/wtlike_data/data_files&#34; contains 680 weeks.
+	 Last week, # 689, has 3.506 days, ends at UTC 2021-08-15 13:12
 </pre>
 </div>
 </div>
@@ -357,7 +357,7 @@ we choose 2$\mu$s.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_data_files" class="doc_header"><code>get_data_files</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L308" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_data_files</code>(<strong><code>config</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="get_data_files" class="doc_header"><code>get_data_files</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L313" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_data_files</code>(<strong><code>config</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <p>Return a list of the pickled data files</p>
 
@@ -382,7 +382,7 @@ we choose 2$\mu$s.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="load_weeks" class="doc_header"><code>load_weeks</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L331" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>load_weeks</code>(<strong><code>week_range</code></strong>, <strong><code>config</code></strong>=<em><code>None</code></em>, <strong><code>overwrite</code></strong>=<em><code>True</code></em>)</p>
+<h4 id="load_weeks" class="doc_header"><code>load_weeks</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L337" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>load_weeks</code>(<strong><code>week_range</code></strong>, <strong><code>config</code></strong>=<em><code>None</code></em>, <strong><code>overwrite</code></strong>=<em><code>True</code></em>)</p>
 </blockquote>
 
 </div>

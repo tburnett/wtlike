@@ -83,7 +83,7 @@ That is because the rest of the background would not be varying. This case could
 </blockquote>
 <p>implement Kerr Eqn 2 for a single interval, or cell</p>
 <ul>
-<li>cell -- a dict with  w, S, B <br></li>
+<li>cell -- a dict with  w, n, S, B <br></li>
 </ul>
 
 </div>
@@ -162,7 +162,7 @@ That is because the rest of the background would not be varying. This case could
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="GaussianRep" class="doc_header"><code>class</code> <code>GaussianRep</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/loglike.py#L227" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>GaussianRep</code>(<strong><code>loglike</code></strong>, <strong><code>fix_beta</code></strong>=<em><code>True</code></em>)</p>
+<h2 id="GaussianRep" class="doc_header"><code>class</code> <code>GaussianRep</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/loglike.py#L233" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>GaussianRep</code>(<strong><code>loglike</code></strong>, <strong><code>fix_beta</code></strong>=<em><code>True</code></em>)</p>
 </blockquote>
 <p>Manage fits to the loglike object</p>
 
@@ -246,7 +246,7 @@ and $ k(s-b)= k^2 v = n$.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="Gaussian2dRep" class="doc_header"><code>class</code> <code>Gaussian2dRep</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/loglike.py#L247" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Gaussian2dRep</code>(<strong><code>ll</code></strong>) :: <a href="/wtlikeloglike#GaussianRep"><code>GaussianRep</code></a></p>
+<h2 id="Gaussian2dRep" class="doc_header"><code>class</code> <code>Gaussian2dRep</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/loglike.py#L253" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Gaussian2dRep</code>(<strong><code>ll</code></strong>) :: <a href="/wtlikeloglike#GaussianRep"><code>GaussianRep</code></a></p>
 </blockquote>
 <p>Manage fits to the loglike object</p>
 
@@ -318,7 +318,7 @@ and $ k(s-b)= k^2 v = n$.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="PoissonRep" class="doc_header"><code>class</code> <code>PoissonRep</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/loglike.py#L253" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>PoissonRep</code>(<strong><code>loglike</code></strong>, <strong><code>tol</code></strong>=<em><code>0.2</code></em>, <strong><code>ts_min</code></strong>=<em><code>25</code></em>)</p>
+<h2 id="PoissonRep" class="doc_header"><code>class</code> <code>PoissonRep</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/loglike.py#L259" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>PoissonRep</code>(<strong><code>loglike</code></strong>, <strong><code>tol</code></strong>=<em><code>0.2</code></em>, <strong><code>ts_min</code></strong>=<em><code>25</code></em>)</p>
 </blockquote>
 <p>Manage the representation of the log likelihood of a cell by a <a href="/wtlikepoisson#Poisson"><code>Poisson</code></a>.</p>
 <ul>
@@ -566,7 +566,7 @@ Poisson: mu,beta= 1000.0, 209.4 [1.0, 790.5694150420948, 0.2649110640673519]
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="PoissonRepTable" class="doc_header"><code>class</code> <code>PoissonRepTable</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/loglike.py#L391" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>PoissonRepTable</code>(<strong><code>loglike</code></strong>) :: <a href="/wtlikeloglike#PoissonRep"><code>PoissonRep</code></a></p>
+<h2 id="PoissonRepTable" class="doc_header"><code>class</code> <code>PoissonRepTable</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/loglike.py#L397" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>PoissonRepTable</code>(<strong><code>loglike</code></strong>) :: <a href="/wtlikeloglike#PoissonRep"><code>PoissonRep</code></a></p>
 </blockquote>
 <p>Create a table, then interpolate it</p>
 

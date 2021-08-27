@@ -124,10 +124,10 @@ class ProcessWeek(object):
             # finally set the time and the exposure per remaining photons
             self.photons = self.photon_times( pdf )
 
-    def __repl__(self):
-        return f'Data for week of {UTF(self.start)}: {len(self.photons):,} photons'
+    def __str__(self):
+        return f'Data for week of {UTC(self.start)}: {len(self.photons):,} photons'
 
-    def __str__(self): return self.__repl__()
+    def __repr__(self): return self.__str__()
 
     def photon_times(self, pdf):
 

@@ -46,12 +46,12 @@ class SourceData(object):
         if type(source)==str:
 
             try:
-                self.source = PointSource(source)
+                self.source = PointSource(source, config=self.config)
             except Exception as e:
                 print(f'{e}', file=sys.stderr)
                 raise
-
-            self.source_name = self.source.name
+            # if a string, use it as the name
+            self.source_name = source
 
         elif isinstance(source, PointSource):
             self.source = source # do I need this?

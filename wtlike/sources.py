@@ -184,7 +184,10 @@ class WeightMan(dict):
         assert photons is not None
 
         # don't need these columns now (add flag to config to control??)
-        photons.drop(['nest_index'], axis=1, inplace=True)
+        if not getattr(self.config, 'keep_pixels', False):
+            photons.drop(['nest_index'], axis=1, inplace=True)
+            if self.config.verbose>2:
+                print('Keeping pixels')
         noweight = np.isnan(photons.weight.values)
         if self.config.verbose>1:
             print(f'\tremove {sum(noweight):,} events without weight')
@@ -330,7 +333,6 @@ class SourceLookup():
             self.cat_dirs =[]
 
         else:
-
             catalog_file = Path(config.catalog_file).expanduser()
 
             # make this optional
