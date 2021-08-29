@@ -354,7 +354,8 @@ class LightCurve(CellData):
 
         def doit():
             # fit the subset that have enought exposure and counts
-            query_string = f'e>{self.exp_min} & n>{self.n_min}'
+            exp_min = self.exp_min*self.time_bins[2]
+            query_string = f'e>{exp_min} & n>{self.n_min}'
             fit_cells = self.cells.query(query_string).copy()
             if self.config.verbose>0:
                 print(f'LightCurve: select {len(fit_cells)} cells for fitting with {query_string}' )

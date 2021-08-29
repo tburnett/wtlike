@@ -175,5 +175,5 @@ class SourceData(object):
             ax4.hist(self.photons.weight, 100, histtype='step')
             ax4.set(xlabel='weight')
 
-    def update_cache(self, **kwargs): #week_range=(-1,None), save=True):
-        return update_cache(self, **kwargs)
+#     def update_cache(self, **kwargs): #week_range=(-1,None), save=True):
+#         return update_cache(self, **kwargs)

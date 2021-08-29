@@ -277,23 +277,67 @@ are contained within the exposure.</p>
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Saved-output-for-comparison">Saved output for comparison<a class="anchor-link" href="#Saved-output-for-comparison"> </a></h3>
-<pre><code>    Found 16,826 S/C entries:  5,633 remain after zenith and theta cuts
-count      5633.00
-mean      89305.61
-std       33910.22
-min        1117.04
-25%       60491.62
-50%       87129.21
-75%      124531.16
-max      151232.82
-dtype: float64</code></pre>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># from wtlike import *</span>
+<span class="c1"># config=Config(); config.verbose=2</span>
+<span class="c1"># name=&quot;Geminga&quot;</span>
+<span class="c1"># name=&#39;PSR B1259-63&#39;</span>
+<span class="c1"># if config.valid:</span>
+<span class="c1">#     # testing</span>
+<span class="c1">#     from wtlike.sources import PointSource</span>
+<span class="c1">#     source =PointSource(name, config=config) </span>
+<span class="c1">#     week_files = get_week_files(config, (665,665)); </span>
+<span class="c1">#     week_file = week_files[0]</span>
+<span class="c1">#     self = ProcessWeek(config, source, week_file)</span>
+
+<span class="c1">#     self.hist_photons()</span>
+<span class="c1">#     self.hist_spacecraft()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>WeightMan: file from source &#34;PSR B1259-63&#34;_weights.pkl : 16 bamds with nsides 64 to 1024
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+<div class="output_subarea output_text output_error">
+<pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">NameError</span>                                 Traceback (most recent call last)
+<span class="ansi-green-fg">&lt;ipython-input-2-6a60dae3db97&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
+<span class="ansi-green-intense-fg ansi-bold">      8</span>     <span class="ansi-green-fg">from</span> wtlike<span class="ansi-blue-fg">.</span>sources <span class="ansi-green-fg">import</span> PointSource
+<span class="ansi-green-intense-fg ansi-bold">      9</span>     source <span class="ansi-blue-fg">=</span>PointSource<span class="ansi-blue-fg">(</span>name<span class="ansi-blue-fg">,</span> config<span class="ansi-blue-fg">=</span>config<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-fg">---&gt; 10</span><span class="ansi-red-fg">     </span>week_files <span class="ansi-blue-fg">=</span> get_week_files<span class="ansi-blue-fg">(</span>config<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">(</span><span class="ansi-cyan-fg">665</span><span class="ansi-blue-fg">,</span><span class="ansi-cyan-fg">665</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">;</span>
+<span class="ansi-green-intense-fg ansi-bold">     11</span>     week_file <span class="ansi-blue-fg">=</span> week_files<span class="ansi-blue-fg">[</span><span class="ansi-cyan-fg">0</span><span class="ansi-blue-fg">]</span>
+<span class="ansi-green-intense-fg ansi-bold">     12</span>     self <span class="ansi-blue-fg">=</span> ProcessWeek<span class="ansi-blue-fg">(</span>config<span class="ansi-blue-fg">,</span> source<span class="ansi-blue-fg">,</span> week_file<span class="ansi-blue-fg">)</span>
+
+<span class="ansi-red-fg">NameError</span>: name &#39;get_week_files&#39; is not defined</pre>
+</div>
+</div>
 
 </div>
 </div>
+
 </div>
+    {% endraw %}
+
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Check-flux-values-per-energy-band-from-weight-computation">Check flux values per energy band from weight computation<a class="anchor-link" href="#Check-flux-values-per-energy-band-from-weight-computation"> </a></h3><p>Compare with default</p>

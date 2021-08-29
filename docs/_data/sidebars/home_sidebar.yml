@@ -52,6 +52,9 @@ entries:
       title: wtlike interface
       url: /main
     - output: web,pdf
+      title: wtlike Presentation
+      url: /presentation
+    - output: web,pdf
       title: wtlike tutorial
       url: /tutorial
     output: web

@@ -22,7 +22,8 @@ Useful routines:
 - image 
 - figure
 - monospace
-- capture_print
+- capture_print or capture
+
 - shell
 - create_file
 
@@ -34,7 +35,7 @@ import sys, os, shutil, string, pprint, datetime
 
 #import nbdev # only for a show_doc
 
-__all__ = ['nbdoc', 'image', 'figure', 'monospace', 'capture_print', 'shell', 'create_file'] #,'show_doc']
+__all__ = ['nbdoc', 'image', 'figure', 'monospace', 'capture_print','capture', 'shell', 'create_file'] #,'show_doc']
 
 def doc_formatter(
         text:'text string to process',
@@ -387,7 +388,7 @@ def shell(text:'a shell command ', mono=True, **kwargs):
         ret = f'Command {text} failed : {e}'
     return monospace(ret, **kwargs) if mono else ret
 
-def capture_print(summary=None, **kwargs):
+def capture(summary=None, **kwargs):
     """
     """
 
@@ -410,6 +411,8 @@ def capture_print(summary=None, **kwargs):
             return monospace(self._new.getvalue(), summary=summary, **kwargs)
 
     return Capture_print()
+def capture_print(summary=None, **kwargs):
+    return capture(summary, **kwargs)
 
 def create_file(func, filename, folder='images'):
     """
