@@ -367,10 +367,11 @@ def monospace(text:'Either a string, or an object',
                 summary:'string for <details>'=None,
                 open:'initially show details'=False, 
                 indent='5%',
+                style='',
                 )->str:
 
     text = str(text).replace('<','&lt;').replace('>','&gt;').replace('\n', '<br>')
-    out = f'<div style="margin-left: {indent}"><pre>{text}</pre></div>'
+    out = f'<div style="margin-left: {indent};{style}"><pre>{text}</pre></div>'
     if not summary:
         return out
 

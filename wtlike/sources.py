@@ -417,14 +417,12 @@ class SourceLookup():
         self.cat_name = self.cat_names[idx] if self.csep < self.max_sep else None
 
 
-
-
 # Cell
 
 class PointSource():
     """Manage the position and name of a point source
     """
-    def __init__(self, *pars, **kwargs): # name,  position=None, nickname=None, config=None,):
+    def __init__(self, *pars, **kwargs):
         """
 
         """
