@@ -30,21 +30,84 @@ nb_path: "nbs/03_sources.ipynb"
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>We use the full-sky catalog analysis model to evaluate the predicted flux from a source of interest with respect to the
-background, the combined fluxes from all other sources. We choose the following binning:</p>
+<h3 id="Weight-tables">Weight tables<a class="anchor-link" href="#Weight-tables"> </a></h3><p>We use a full-sky catalog analysis model, currently pointlike, see <a href="https://github.com/tburnett/pointlike/blob/master/python/uw/like2/.py">source_weights</a>, to evaluate the predicted flux from a source of interest with respect to the
+background, the combined fluxes from all other sources.</p>
+<p>We choose the following binning:</p>
 <ul>
 <li>energy:  4/decade from 100 MeV to 1 TeV (but only upto 10 GeV really used)</li>
-<li>event type: Front/Back  </li>
-<li>Angular position: HEALPix, nside from 64 to 512 depending on PSF</li>
+<li>event types: Front/Back  </li>
+<li>Angular position: HEALPix, nside from 64 to 512 depending on the PSF </li>
 </ul>
+<p>In the tables, the energy index and event type are packed into a 1-byte band index, and the HEALPix index 
+is in NEST order.</p>
+<p>The table output also includes the predicted flux for each band, and the spectral model used.</p>
 
 </div>
 </div>
 </div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<details class="description">
+      <summary data-open="Hide Code" data-close="Show Code"></summary>
+        <summary></summary>
+        <div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">weight_table_plots</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    ### Plots of weight vs. radius</span>
+<span class="sd">    </span>
+<span class="sd">    These plots, of a strong source with little background, and a weak one, show the</span>
+<span class="sd">    value of the weight vs. the radius of the pixels in the table. These is a </span>
+<span class="sd">    plot for each energy/event type band. The top row has energies 100 MeV to 1 GeV,</span>
+<span class="sd">    the bottom row 1 GeV to 10 GeV, Front, in green, and Back in orange.</span>
+<span class="sd">    {img}</span>
+<span class="sd">    Note the absense of Back for energies below {Emid} MeV. The pointlike model does not</span>
+<span class="sd">    compute these to avoid the larger PSF and Earth limb background. The maximum radius</span>
+<span class="sd">    per band is determined by the PSF. </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">Emid</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="mi">10</span><span class="o">**</span><span class="mf">2.5</span><span class="p">)</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">image</span><span class="p">(</span><span class="s1">&#39;weight_table_plots.png&#39;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">caption</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">locals</span><span class="p">()</span>
+<span class="n">nbdoc</span><span class="p">(</span><span class="n">weight_table_plots</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+    </details>
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h3 id="Plots-of-weight-vs.-radius">Plots of weight vs. radius<a class="anchor-link" href="#Plots-of-weight-vs.-radius"> </a></h3><p>These plots, of a strong source with little background, and a weak one, show the
+value of the weight vs. the radius of the pixels in the table. These is a 
+plot for each energy/event type band. The top row has energies 100 MeV to 1 GeV,
+the bottom row 1 GeV to 10 GeV, Front, in green, and Back in orange.</p>
+<p><figure style="margin-left: 5%" title="Figure 1">  <a href="images/weight_table_plots_fig_01.png" title="images/weight_table_plots_fig_01.png">    <img src="images/weight_table_plots_fig_01.png" alt="Figure 1 at images/weight_table_plots_fig_01.png" width=500>   </a> </figure>
+Note the absense of Back for energies below 316 MeV. The pointlike model does not
+compute these to avoid the larger PSF and Earth limb background. The maximum radius
+per band is determined by the PSF.</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Pointlike-generation">Pointlike generation<a class="anchor-link" href="#Pointlike-generation"> </a></h3><p>A procedure, implement for pointlike all-aky models, <a href="https://github.com/tburnett/pointlike/blob/master/python/uw/like2/source_weights.py">see source_weights</a> packs this table with the source name and position, into a pickled dict.</p>
-<p>This is unpacked by the class <a href="/wtlikesources#WeightMan"><code>WeightMan</code></a></p>
+<p>The local code used to do the unpacking is in the class <a href="/wtlikesources#WeightMan"><code>WeightMan</code></a></p>
 <p>This table is used with the data, as a simple lookup: A weight is assigned to each photon according to which energy, event type or HEALPix pixel it lands in.</p>
 
 </div>
@@ -301,7 +364,7 @@ $$w'_1 = \frac{w_1}{1+\alpha_2\ w_2}\ \ .   $$
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="PointSource" class="doc_header"><code>class</code> <code>PointSource</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/sources.py#L424" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>PointSource</code>(<strong>*<code>pars</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
+<h2 id="PointSource" class="doc_header"><code>class</code> <code>PointSource</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/sources.py#L422" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>PointSource</code>(<strong>*<code>pars</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
 <p>Manage the position and name of a point source</p>
 
@@ -313,7 +376,7 @@ $$w'_1 = \frac{w_1}{1+\alpha_2\ w_2}\ \ .   $$
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="PointSource.fk5" class="doc_header"><code>PointSource.fk5</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/sources.py#L484" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>PointSource.fk5</code>(<strong><code>name</code></strong>, <strong><code>position</code></strong>)</p>
+<h4 id="PointSource.fk5" class="doc_header"><code>PointSource.fk5</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/sources.py#L482" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>PointSource.fk5</code>(<strong><code>name</code></strong>, <strong><code>position</code></strong>)</p>
 </blockquote>
 <p>position: (ra,dec) tuple</p>
 
