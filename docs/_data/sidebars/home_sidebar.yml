@@ -57,9 +57,6 @@ entries:
     - output: web,pdf
       title: wtlike tutorial
       url: /tutorial
-    - output: web,pdf
-      title: Title
-      url: /Untitled
     output: web
     title: wtlike
   output: web

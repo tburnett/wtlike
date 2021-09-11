@@ -41,6 +41,7 @@ class SourceData(object):
         self.config = config if config else Config()
         self.verbose = self.config.verbose
         self.simulated=False
+        self.used_key = None
 
         ## source is either a name, a PointSource object, or a Simulation
         if type(source)==str:
@@ -79,9 +80,13 @@ class SourceData(object):
 
 
         if not self.simulated:
-            # either load from data, or from a chache
-            self.photons, self.exposure = \
-                load_source_data( self.config, self.source, week_range, key, clear)
+            # either load from data, or from a chache--also key used to retrieve data
+            ret =load_source_data( self.config, self.source, week_range, key, clear)
+            self.photons, self.exposure = ret[:2]
+            if len(ret)>2: self.used_key = ret[2]
+
+#             self.photons, self.exposure = \
+#                 load_source_data( self.config, self.source, week_range, key, clear)
 
         else: #TODO
             pass

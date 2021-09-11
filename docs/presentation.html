@@ -219,13 +219,13 @@ Here is the 4FGL source 4FGL J0237.8+2848 (associated with 4C 28.07), as shown o
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="The-same-source-with-wtlike">The same source with wtlike<a class="anchor-link" href="#The-same-source-with-wtlike"> </a></h2><p style="text-align:right; ">wtlike version 0.3.9<br>2021-09-01 05:10</p><h3 id="The-result">The result<a class="anchor-link" href="#The-result"> </a></h3><figure style="margin-left: 5%" title="Figure 1">  <a href="images/lcr_about_example_fig_01.png" title="images/lcr_about_example_fig_01.png">    <img src="images/lcr_about_example_fig_01.png" alt="Figure 1 at images/lcr_about_example_fig_01.png" width=600>   </a> </figure><p>What did that take?</p>
-<h4 id="Set-up-the-source-...">Set up the source ...<a class="anchor-link" href="#Set-up-the-source-..."> </a></h4><p>The only code, presumably in a Jupyterlab cell, needed to set up the source for plots is:</p>
+<h2 id="The-same-source-with-wtlike">The same source with wtlike<a class="anchor-link" href="#The-same-source-with-wtlike"> </a></h2><p style="text-align:right; ">wtlike version 0.3.10<br>2021-09-11 07:17</p><h3 id="The-result">The result<a class="anchor-link" href="#The-result"> </a></h3><figure style="margin-left: 5%" title="Figure 1">  <a href="images/lcr_about_example_fig_01.png" title="images/lcr_about_example_fig_01.png">    <img src="images/lcr_about_example_fig_01.png" alt="Figure 1 at images/lcr_about_example_fig_01.png" width=600>   </a> </figure><p>What did that take?</p>
+<h4 id="Set-up-the-source-...">Set up the source ...<a class="anchor-link" href="#Set-up-the-source-..."> </a></h4><p>The only code, perhaps in a Jupyterlab cell, needed to set up the source for plots is:</p>
 
 <pre><code>    from wtlike import *
     wtl = WtLike('4FGL J0237.8+2848', time_bins=(0,0,3))</code></pre>
 <p><br></p>
-<p><details  class="nbdoc-description" >  <summary> Source setup output: Load data, create and fit bins </summary>  <div style="margin-left: 5%;"><pre>SourceData:  4FGL J0237.8+2848: Restoring from cache with key "P88Y0643_data"<br>SourceData: Source 4FGL J0237.8+2848 with:<br>  data:       123,458 photons from 2008-08-04 to 2021-09-01<br>   exposure: 3,197,520 intervals,  average effective area 2509 cm^2 for 95.6 Ms<br>    rates:  source 1.43e-07/s, background 3.71e-07/s, S/N ratio 3.86e-01<br>CellData: Bin photon data into 1591 3-day bins from 54683.0 to 59456.0<br>LightCurve: select 1546 cells for fitting with e&gt;15 & n&gt;2<br>elapsed time: 6.5s (0.1 min)<br></pre></div> </details></p>
+<p><details  class="nbdoc-description" >  <summary> Source setup output: Load data, create and fit bins </summary>  <div style="margin-left: 5%;"><pre>SourceData:  4FGL J0237.8+2848: Saving to cache with key "P88Y0643_data"<br>LoadData: loading all 684 weekly files<br>  Processing 684 week files, using 4 processes <br><br>SourceData: Source 4FGL J0237.8+2848 with:<br>  data:       123,711 photons from 2008-08-04 to 2021-09-11<br>   exposure: 3,204,725 intervals,  average effective area 3024 cm^2 for 95.8 Ms<br>    rates:  source 1.19e-07/s, background 3.08e-07/s, S/N ratio 3.86e-01<br>CellData: Bin photon data into 1595 3-day bins from 54683.0 to 59468.0<br>LightCurve: select 1551 cells for fitting with e&gt;15 & n&gt;2<br>elapsed time: 651.9s (10.9 min)<br></pre></div> </details></p>
 <p>This creates an instance, <code>wtl</code>, of the class <code>WtLike</code>, specifying a source name, with 3-day (default is 7) time bins for the full data set.
 The name can be that of any source known to <code>astropy</code> which is closer than $0.1^\circ$ to a 4FGL-DR3 or uw1216 source.
 Thus specifying instead the associated 4C 28.07 would have worked.</p>
@@ -241,14 +241,14 @@ statements</p>
 <p>&lt;br&lt;
 define a new <em>instance</em> of <code>WtLike</code>, using the current 3-day likelihood fits.
 This instance has a different <code>plot()</code>, which makes an overlay showing the BB partitions, each with a new fit.</p>
-<p><details  class="nbdoc-description" >  <summary> Bayesian block analysis output </summary>  <div style="margin-left: 5%;"><pre>Bayesian Blocks: partitioning 1546 cells using LikelihoodFitness with penalty 5%<br> found 80 / 1546 blocks.<br>LightCurve: Loaded 80 / 80 cells for fitting<br>elapsed time: 85.1s (1.4 min)<br></pre></div> </details></p>
+<p><details  class="nbdoc-description" >  <summary> Bayesian block analysis output </summary>  <div style="margin-left: 5%;"><pre>Bayesian Blocks: partitioning 1551 cells using LikelihoodFitness with penalty 5%<br> found 81 / 1551 blocks.<br>LightCurve: Loaded 81 / 81 cells for fitting<br>elapsed time: 78.6s (1.3 min)<br></pre></div> </details></p>
 <figure style="margin-left: 5%" title="Figure 2">  <a href="images/lcr_about_example_fig_02.png" title="images/lcr_about_example_fig_02.png">    <img src="images/lcr_about_example_fig_02.png" alt="Figure 2 at images/lcr_about_example_fig_02.png" width=600>   </a> </figure><h3 id="Check-that-recent-flare">Check that recent flare<a class="anchor-link" href="#Check-that-recent-flare"> </a></h3><p>The flaring behavior at the end of the interval prompts exploration. We use the <code>view()</code> function to return another 
 copy of the original <code>wtl</code>, but with different binning, and ask it to make a plot of the last 30 days, via</p>
 
 <pre><code>    recent = wtl.view(-30,0,1)
     recent.plot()</code></pre>
 <p><br></p>
-<p><details  class="nbdoc-description" >  <summary> Rebinning output </summary>  <div style="margin-left: 5%;"><pre>CellData: Bin photon data into 30 1-day bins from 59428.0 to 59458.0<br>LightCurve: select 30 cells for fitting with e&gt;5 & n&gt;2<br></pre></div> </details></p>
+<p><details  class="nbdoc-description" >  <summary> Rebinning output </summary>  <div style="margin-left: 5%;"><pre>CellData: Bin photon data into 30 1-day bins from 59438.0 to 59468.0<br>LightCurve: select 29 cells for fitting with e&gt;5 & n&gt;2<br></pre></div> </details></p>
 <figure style="margin-left: 5%" title="Figure 3">  <a href="images/lcr_about_example_fig_03.png" title="images/lcr_about_example_fig_03.png">    <img src="images/lcr_about_example_fig_03.png" alt="Figure 3 at images/lcr_about_example_fig_03.png" width=600>   </a> </figure>
 </div>
 

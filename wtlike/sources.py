@@ -446,10 +446,10 @@ class PointSource():
         self.l, self.b = gal.l.deg, gal.b.deg
         self.cat_name = lookup.cat_name
         # override 4FGL if identifiec pulasr
-        if self.nickname.startswith('PSR ') and self.cat_name.startswith('4FGL '):
+        if self.nickname.startswith('PSR ') and self.cat_name is not None and self.cat_name.startswith('4FGL '):
             self.name = self.nickname
         # use cat name if used J-name to find it
-        elif self.name.startswith('J') and self.cat_name.startswith('4FGL'):
+        elif self.name.startswith('J') and self.cat_name is not None and self.cat_name.startswith('4FGL'):
             self.name = self.cat_name
 
         try:

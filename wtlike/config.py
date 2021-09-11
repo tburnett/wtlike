@@ -195,13 +195,16 @@ class Config():
         nside           : 1024
         nest            : True
 
+        # multiprocessing
+        pool_size       : 1 # number of pool processes to use
+
         # data selection for cell creation
         week_range      : []  # default all weeks found
         time_bins       : [0, 0, 7] # full MJD range, 7-day cells
-        exp_min         : 5    # threshold for exposure per cell, in cm^2 Ms units.
+        exp_min         : 5    # threshold for exposure per day, in cm^2 Ms units.
 
         # cell fitting
-        use_kerr        : False
+        use_kerr        : True  # Use the Kerr power-law exposure weighting
         likelihood_rep  : poisson
         poisson_tolerance : 0.2
 
@@ -287,15 +290,20 @@ first_data=54683
 # MJDREFI =               51910. / Integer part of MJD corresponding to SC clock S
 # MJDREFF =  0.00074287037037037 / Fractional part of MJD corresponding to SC cloc
 mission_start = 51910.00074287037
+from datetime import datetime
 
 def MJD(arg):
+    """ convert MET or UTC to MJD
+    """
 
     if type(arg)==str:
+        if arg=='now':
+            return Time(datetime.utcnow()).mjd
         while len(arg.split('-'))<3:
             arg+='-1'
         return Time(arg, format='iso').mjd
 
-    "convert MET or UTC to MJD"
+
     return (mission_start + arg/day  )
 
 def UTC(mjd):
@@ -305,7 +313,7 @@ def UTC(mjd):
     return t.value
 
 def UTCnow():
-    from datetime import datetime
+
     t=datetime.utcnow()
     return f'UTC {t.year}-{t.month:02d}-{t.day} {t.hour:02d}:{t.minute:02d}'
 

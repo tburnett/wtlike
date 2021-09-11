@@ -15,26 +15,40 @@ Here is a minimal demo:
 from wtlike import *
 config = Config()
 if config.valid:
-    wtl = WtLike('3C 273')
-    wtl.plot(UTC=True);
+    with Timer() as t:
+        wtl = WtLike('3C 273',week_range=(9,3*52+9))
+        print(t)
 ```
 
-    SourceData:  3C 273: Restoring from cache with key "P88Y3157_data"
+    SourceData:  4FGL J1229.0+0202
+    LoadData: Loading weeks[9:165:]	Processing 157 week files, using 4 processes .............................................................................................................................................................
+    
     SourceData: Source 3C 273 with:
-    	 data:        96,186 photons from 2008-08-04 to 2021-08-01
-    	 exposure: 2,872,539 intervals,  average effective area 1989 cm^2 for 85.8 Ms
-    	 rates:  source 1.73e-07/s, background 3.91e-07/s, S/N ratio 4.42e-01
-    CellData: Bin photon data into 677 1-week bins from 54683.0 to 59422.0
-    LightCurve: select 667 cells for fitting with e>5 & n>2
+    	 data:        33,210 photons from 2008-08-04 to 2011-08-03
+    	 exposure:   713,320 intervals,  average effective area 2857 cm^2 for 21.3 Ms
+    	 rates:  source 1.97e-07/s, background 3.48e-07/s, S/N ratio 5.65e-01
+    CellData: Bin photon data into 156 1-week bins from 54683.0 to 55775.0
+    LightCurve: select 156 cells for fitting with e>35 & n>2
+    elapsed time: 36.7s (0.6 min)
 
 
+This created a `WtLike` object, loading the first 3 years of data, by specifying weeks from #9, the first data-taking week.
+The reason to specify only the first three years here is to avoid the 10 min or so that extracting the furl 13+ years would take for this demo. If that had already been done, then using an included [cache system](https://tburnett.github.io/wtlike/config.html#Cache), it only has to be done once.
 
-![png](docs/images/output_1_1.png)
+Now ask it to make a plot:
+
+```python
+if config.valid:
+    wtl.plot(UTC=1);
+```
+
+
+![png](docs/images/output_3_0.png)
 
 
 This assumes that the name for the source, in this case the historically famous first [quasar](https://en.wikipedia.org/wiki/Quasar#Background) to be discovered, can be associated with a 4FGL catalog source. The plot shows, as a function of UTC (or MJD if desired) time, weekly measurements of deviations of the flux relative to the average of the 12-year interval used to define the 4FGL-DR3 catalog.
 
-The first stage, extracting data for the source, takes ~10 min, but, using an included [cache system](https://tburnett.github.io/wtlike/config.html#Cache), only has to be done once.
+
 
 ## Overview
 
@@ -135,11 +149,22 @@ So the following creates a new WtLike object that we generated above, rebins a c
 
 ```python
 if config.valid:
-    wtl.view(0,100,25).cells
+    print(wtl.view(0,100,25).cells)
 ```
 
     CellData: Bin photon data into 4 4-week bins from 54683.0 to 54783.0
-    LightCurve: select 4 cells for fitting with e>5 & n>2
+    LightCurve: select 4 cells for fitting with e>125 & n>2
+             t    tw            e       ctm     n  \
+    0  54695.5  25.0  1526.920773  0.670382   553   
+    1  54720.5  25.0  1916.489766  0.681891  1438   
+    2  54745.5  25.0  1488.140507  0.679038  1183   
+    3  54770.5  25.0  1979.221022  0.682316  1175   
+    
+                                                       w           S           B  
+    0  [0.48901367, 0.8066406, 0.11303711, 0.19165039...  300.715802  531.770966  
+    1  [0.4345703, 0.6064453, 0.0690918, 0.056274414,...  377.438547  667.443676  
+    2  [0.33911133, 0.3100586, 0.7089844, 0.06994629,...  293.078314  518.265210  
+    3  [0.09112549, 0.58251953, 0.07537842, 0.3457031...  389.793006  689.290691  
 
 
 ### Evaluate Likelihoods and make light curve plots
@@ -172,16 +197,16 @@ This code creates partitions between boundaries of a set of cells. Usage is via 
 ```python
 if config.valid:
     bb = wtl.bb_view()
-    bb.plot();
+    bb.plot(UTC=1);
 ```
 
-    Bayesian Blocks: partitioning 667 cells using LikelihoodFitness with penalty 5.0%
-    	found 93 / 667 blocks.
-    LightCurve: Loaded 93 / 93 cells for fitting
+    Bayesian Blocks: partitioning 156 cells using LikelihoodFitness with penalty 5%
+    	found 43 / 156 blocks.
+    LightCurve: Loaded 43 / 43 cells for fitting
 
 
 
-![png](docs/images/output_12_1.png)
+![png](docs/images/output_14_1.png)
 
 
 As you see, this made 94 blocks from the 656 weeks, fit each, and overplotted in on the weekly light curve.

@@ -60,7 +60,7 @@ class CellFitter(object):
             print(f'Fitting likelihoods with {rep_name} representation')
 
         # making output with reduced columns
-        self.ll_fits = cells['t tw n e S'.split()].copy()
+        self.ll_fits = cells['t tw n e ctm S'.split()].copy()
 
         # add summary of weights
         self.ll_fits.loc[:,'wsum'] =  cells.w.apply(lambda w: np.sum(w))
@@ -386,8 +386,11 @@ class LightCurve(CellData):
             kwargs['flux_factor'] = self.src_flux * 1e6
             if kwargs.get('ylabel', None) is None:
                 kwargs['ylabel'] = 'Photon flux [$\mathrm{10^{-6} cm^{-2} s^{-1}}$]'
-        if kwargs.pop('UTC', False):
-            yrs = [str(yr) for yr in range(2008,2023,2)] #get this from kwarg maybe
+        utc_flag = kwargs.pop('UTC', False)
+        if utc_flag:
+            # even years if True else interpret as int
+            cnt = 2 if type(utc_flag)==bool else utc_flag
+            yrs = [str(yr) for yr in range(2008,2023, cnt)] #get this from kwarg maybe
             yrkw = dict( xticks=[MJD(yr) for yr in yrs], xticklabels=yrs,  xlabel='UTC',)
             kwargs.update(**yrkw)
 
@@ -433,7 +436,7 @@ class LightCurve(CellData):
 
 
 
-    def flux_table(self, lc=None, include_e=True):
+    def flux_table(self, lc=None, include_e=True, include_ctm=True):
 
         """Generate a summary table from the light curve
 
@@ -451,6 +454,8 @@ class LightCurve(CellData):
         df = lc['t tw n'.split()].copy() # maybe fix warnings?
         if include_e:
             df.loc[:,'e'] = self.fits.e
+        if include_ctm and 'ctm' in self.fits:
+            df.loc[:,'ctm'] = self.fits.ctm
         df.loc[:, 'ts'] =  fits.apply(lambda f: f.ts).round(1)
         df.loc[:,'flux'] = flux.values.round(4)
         df.loc[:, 'errors'] = errors.values

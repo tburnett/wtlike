@@ -13,9 +13,8 @@ from .effective_area import EffectiveArea
 def _sc_process(config, source, sc_data):
 
     """
-
-    - sec_data -- DF constructedted from FT2.
-
+    - source -- contains ra, dec in degrees
+    - sc_data -- DF constructed from spacecraft data (FT2).
 
     Return: a DF with the S/C data for the source direction, wtih cos theta and zenith cuts
 
@@ -127,6 +126,9 @@ class KerrExposure(BaseExposure):
         # the threshold for including Back events
         self.back_min=0
 
+        if self.config.verbose>1:
+            print(f'Set up power-law weigted exposure for {self.source.name}')
+
 # Cell
 class SourceExposure(BaseExposure):
     """
@@ -212,6 +214,7 @@ def sc_data_selection(config, source, sc_data):
     livetime = sc_df.livetime.values
 
     # now get appropriate weighted effective area, mjultipy by livetime
+
     if config.use_kerr:
         sc_df.loc[:,'exp'] = KerrExposure(config, source)(cos_theta) * livetime
     else:

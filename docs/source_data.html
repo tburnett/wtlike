@@ -92,6 +92,121 @@ Use a Simulation object to generate data</p>
 </div>
     {% endraw %}
 
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="n">expk</span> <span class="o">=</span> <span class="n">sdk</span><span class="o">.</span><span class="n">exposure</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">expk</span><span class="o">.</span><span class="n">cos_theta</span><span class="p">,</span> <span class="n">expk</span><span class="o">.</span><span class="n">exp</span><span class="p">,</span><span class="s1">&#39;.&#39;</span><span class="p">);</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_text output_error">
+<pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">NameError</span>                                 Traceback (most recent call last)
+<span class="ansi-green-fg">&lt;ipython-input-4-f7e26665b12b&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
+<span class="ansi-green-intense-fg ansi-bold">      1</span> <span class="ansi-green-fg">import</span> matplotlib<span class="ansi-blue-fg">.</span>pyplot <span class="ansi-green-fg">as</span> plt
+<span class="ansi-green-fg">----&gt; 2</span><span class="ansi-red-fg"> </span>expk <span class="ansi-blue-fg">=</span> sdk<span class="ansi-blue-fg">.</span>exposure
+<span class="ansi-green-intense-fg ansi-bold">      3</span> plt<span class="ansi-blue-fg">.</span>plot<span class="ansi-blue-fg">(</span>expk<span class="ansi-blue-fg">.</span>cos_theta<span class="ansi-blue-fg">,</span> expk<span class="ansi-blue-fg">.</span>exp<span class="ansi-blue-fg">,</span><span class="ansi-blue-fg">&#39;.&#39;</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">;</span>
+
+<span class="ansi-red-fg">NameError</span>: name &#39;sdk&#39; is not defined</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="n">expnk</span> <span class="o">=</span> <span class="n">sdnk</span><span class="o">.</span><span class="n">exposure</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">expnk</span><span class="o">.</span><span class="n">cos_theta</span><span class="p">,</span> <span class="n">expnk</span><span class="o">.</span><span class="n">exp</span><span class="p">,</span><span class="s1">&#39;.&#39;</span><span class="p">);</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_text output_error">
+<pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">NameError</span>                                 Traceback (most recent call last)
+<span class="ansi-green-fg">&lt;ipython-input-5-dc0bf787e8b4&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
+<span class="ansi-green-intense-fg ansi-bold">      1</span> <span class="ansi-green-fg">import</span> matplotlib<span class="ansi-blue-fg">.</span>pyplot <span class="ansi-green-fg">as</span> plt
+<span class="ansi-green-fg">----&gt; 2</span><span class="ansi-red-fg"> </span>expnk <span class="ansi-blue-fg">=</span> sdnk<span class="ansi-blue-fg">.</span>exposure
+<span class="ansi-green-intense-fg ansi-bold">      3</span> plt<span class="ansi-blue-fg">.</span>plot<span class="ansi-blue-fg">(</span>expnk<span class="ansi-blue-fg">.</span>cos_theta<span class="ansi-blue-fg">,</span> expnk<span class="ansi-blue-fg">.</span>exp<span class="ansi-blue-fg">,</span><span class="ansi-blue-fg">&#39;.&#39;</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">;</span>
+
+<span class="ansi-red-fg">NameError</span>: name &#39;sdnk&#39; is not defined</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">expnk</span><span class="o">.</span><span class="n">exp</span><span class="o">/</span><span class="n">expk</span><span class="o">.</span><span class="n">exp</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">50</span><span class="p">);</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_png output_subarea ">
+<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAXcAAAD4CAYAAAAXUaZHAAAAOXRFWHRTb2Z0d2FyZQBNYXRwbG90bGliIHZlcnNpb24zLjMuNCwgaHR0cHM6Ly9tYXRwbG90bGliLm9yZy8QVMy6AAAACXBIWXMAAAsTAAALEwEAmpwYAAAPyklEQVR4nO3df4xdaV3H8feHAouuEHbdaS39YddYf3QJLGRSSdYoWMOWH7H7h0tKFBts0n+qQKKRlj8kxjRZE0PUhMU0C26NQGmUzTagwFrdEANLmcoKdJe6DV13J63bsoKIJsWWr3/MWXO3c2fmzsy905ln3q+kuec85zlzv3N65zPPPPecc1NVSJLa8oLrXYAkafgMd0lqkOEuSQ0y3CWpQYa7JDXohde7AIBbbrmltmzZcr3LkKQV5dSpU9+qqrF+25ZFuG/ZsoWJiYnrXYYkrShJ/m2mbU7LSFKDDHdJapDhLkkNMtwlqUGGuyQ1yHCXpAYZ7pLUIMNdkhpkuEtSgwa6QjXJy4H7gFcCBfwmcAb4BLAFeBJ4W1V9u+t/ENgLXAXeVVWfHXLd0oJtOfDpvu1P3vOWJa5EGp1Bbz/wp8BnqupXk7wY+GHgfcCJqronyQHgAPDeJNuA3cBtwCuAv0/yU1V1dQT1A/6wStK15pyWSfIy4BeADwNU1fer6jvALuBI1+0IcFe3vAs4WlWXq+occBbYPtyyJUmzGWTO/SeAS8BfJPlKkvuS3Aisq6oLAN3j2q7/BuDpnv0nu7bnSbIvyUSSiUuXLi3qm5AkPd8g4f5C4LXAh6rqNcB/MzUFM5P0aZv2KdxVdbiqxqtqfGys7x0rJUkLNEi4TwKTVfWlbv2vmQr7Z5KsB+geL/b039Sz/0bg/HDKlSQNYs5wr6p/B55O8tNd0w7gMeA4sKdr2wM82C0fB3YnuSHJrcBW4ORQq5YkzWrQs2V+G/hod6bMN4F3MvWL4ViSvcBTwN0AVXU6yTGmfgFcAfaP8kwZSdJ0A4V7VT0KjPfZtGOG/oeAQwsvS5K0GF6hKkkNMtwlqUHL4gOypdXAK6m1lBy5S1KDDHdJapDhLkkNMtwlqUGGuyQ1yHCXpAYZ7pLUIMNdkhpkuEtSgwx3SWqQ4S5JDTLcJalBhrskNchwl6QGGe6S1CDDXZIaZLhLUoMMd0lqkOEuSQ0y3CWpQYa7JDXIcJekBg0U7kmeTPK1JI8mmejabk7yUJInusebevofTHI2yZkkd46qeElSf/MZub+hqm6vqvFu/QBwoqq2Aie6dZJsA3YDtwE7gXuTrBlizZKkOSxmWmYXcKRbPgLc1dN+tKouV9U54CywfRHPI0map0HDvYDPJTmVZF/Xtq6qLgB0j2u79g3A0z37TnZtz5NkX5KJJBOXLl1aWPWSpL5eOGC/O6rqfJK1wENJvjFL3/Rpq2kNVYeBwwDj4+PTtkuSFm6gkXtVne8eLwIPMDXN8kyS9QDd48Wu+ySwqWf3jcD5YRUsSZrbnOGe5MYkL31uGXgj8HXgOLCn67YHeLBbPg7sTnJDkluBrcDJYRcuSZrZINMy64AHkjzX/2NV9ZkkXwaOJdkLPAXcDVBVp5McAx4DrgD7q+rqSKqXJPU1Z7hX1TeBV/dpfxbYMcM+h4BDi65OkrQgXqEqSQ0y3CWpQYa7JDXIcJekBhnuktQgw12SGmS4S1KDDHdJapDhLkkNMtwlqUGGuyQ1yHCXpAYZ7pLUIMNdkhpkuEtSgwx3SWqQ4S5JDRrkY/a0zGw58OkZtz15z1uWsBJJy5Ujd0lqkOEuSQ0y3CWpQYa7JDXIcJekBhnuktQgw12SGjRwuCdZk+QrST7Vrd+c5KEkT3SPN/X0PZjkbJIzSe4cReGSpJnNZ+T+buDxnvUDwImq2gqc6NZJsg3YDdwG7ATuTbJmOOVKkgYxULgn2Qi8Bbivp3kXcKRbPgLc1dN+tKouV9U54CywfSjVSpIGMujI/U+A3wN+0NO2rqouAHSPa7v2DcDTPf0mu7bnSbIvyUSSiUuXLs23bknSLOYM9yRvBS5W1akBv2b6tNW0hqrDVTVeVeNjY2MDfmlJ0iAGuXHYHcCvJHkz8BLgZUn+CngmyfqqupBkPXCx6z8JbOrZfyNwfphFS5JmN+fIvaoOVtXGqtrC1Bul/1BVvw4cB/Z03fYAD3bLx4HdSW5IciuwFTg59MolSTNazC1/7wGOJdkLPAXcDVBVp5McAx4DrgD7q+rqoiuVJA1sXuFeVQ8DD3fLzwI7Zuh3CDi0yNokSQvkFaqS1CA/iUnzMtOnQPkJUNLy4shdkhpkuEtSgwx3SWqQc+66Lpy7l0bLkbskNchwl6QGGe6S1CDDXZIaZLhLUoMMd0lqkKdCalnxFElpOBy5S1KDDHdJapDhLkkNMtwlqUGGuyQ1yLNlGuPZJpLAcNeQ+EtFWl6clpGkBjlyl1Yx/+JqlyN3SWqQ4S5JDTLcJalBc4Z7kpckOZnkX5KcTvIHXfvNSR5K8kT3eFPPPgeTnE1yJsmdo/wGJEnTDTJyvwz8UlW9Grgd2JnkdcAB4ERVbQVOdOsk2QbsBm4DdgL3JlkzgtolSTOYM9xryve61Rd1/wrYBRzp2o8Ad3XLu4CjVXW5qs4BZ4HtwyxakjS7gU6F7Ebep4CfBD5YVV9Ksq6qLgBU1YUka7vuG4BHenaf7Nqu/Zr7gH0AmzdvXvh3oGVtplPtJI3WQG+oVtXVqrod2AhsT/LKWbqn35fo8zUPV9V4VY2PjY0NVKwkaTDzuoipqr6T5GGm5tKfSbK+G7WvBy523SaBTT27bQTOD6NYSfPnX0+r0yBny4wleXm3/EPALwPfAI4De7pue4AHu+XjwO4kNyS5FdgKnBxy3ZKkWQwycl8PHOnm3V8AHKuqTyX5InAsyV7gKeBugKo6neQY8BhwBdhfVVdHU/7K4qXekpbKnOFeVV8FXtOn/Vlgxwz7HAIOLbo6SdKCeOOwRRj1SNy5UkkLZbj3cNpEUisM9wE4gpa00qzKcDesJbXOu0JKUoMMd0lq0KqclpH68Q11tcSRuyQ1yJH7MuAbvJKGzZG7JDXIkbtWBOfDpflx5C5JDTLcJalBTsusEk5rSKtL0+HuWSiSVqumw/168ZeKpOvNOXdJapDhLkkNMtwlqUGGuyQ1yHCXpAZ5toykabwuYuVz5C5JDTLcJalBhrskNWjOcE+yKck/Jnk8yekk7+7ab07yUJInusebevY5mORskjNJ7hzlNyBJmm6QkfsV4Heq6meB1wH7k2wDDgAnqmorcKJbp9u2G7gN2Ancm2TNKIqXJPU3Z7hX1YWq+udu+b+Ax4ENwC7gSNftCHBXt7wLOFpVl6vqHHAW2D7kuiVJs5jXqZBJtgCvAb4ErKuqCzD1CyDJ2q7bBuCRnt0mu7Zrv9Y+YB/A5s2b5124pKXnKZIrx8BvqCb5EeBvgPdU1Xdn69qnraY1VB2uqvGqGh8bGxu0DEnSAAYK9yQvYirYP1pVn+yan0myvtu+HrjYtU8Cm3p23wicH065kqRBDHK2TIAPA49X1Qd6Nh0H9nTLe4AHe9p3J7khya3AVuDk8EqWJM1lkDn3O4B3AF9L8mjX9j7gHuBYkr3AU8DdAFV1Oskx4DGmzrTZX1VXh124JGlmc4Z7Vf0T/efRAXbMsM8h4NAi6pIkLYI3DtOK5kcaSv15+wFJapDhLkkNclpGmoMX7mglMtzVl3PZ0srmtIwkNciR+yrnCF1qkyN3SWqQ4S5JDTLcJalBhrskNcg3VKUF8vx3LWeO3CWpQYa7JDXIaRlJi+YU1fJjuEtD5oVhWg6clpGkBjlyl7TknMYZPUfuktQgw12SGuS0jKSR8c3l68eRuyQ1yJG7dJ355qJGwZG7JDXIkbu0TDmi12LMGe5JPgK8FbhYVa/s2m4GPgFsAZ4E3lZV3+62HQT2AleBd1XVZ0dSubRKtRz6LX9vS22QaZn7gZ3XtB0ATlTVVuBEt06SbcBu4LZun3uTrBlatZKkgcw5cq+qzyfZck3zLuD13fIR4GHgvV370aq6DJxLchbYDnxxSPVK0v9zpD+zhb6huq6qLgB0j2u79g3A0z39Jru2aZLsSzKRZOLSpUsLLEOS1M+wz5ZJn7bq17GqDlfVeFWNj42NDbkMSVrdFnq2zDNJ1lfVhSTrgYtd+ySwqaffRuD8YgqUNBivBlWvhYb7cWAPcE/3+GBP+8eSfAB4BbAVOLnYIiVpGFbTHP0gp0J+nKk3T29JMgm8n6lQP5ZkL/AUcDdAVZ1Ocgx4DLgC7K+qqyOqXZL68q+Ywc6WefsMm3bM0P8QcGgxRUnSUprtl8FKHdV7haqkZc+R+Px5bxlJapDhLkkNMtwlqUGGuyQ1yDdUJWmI5vvm76jOxnHkLkkNcuQuSbNYqVe1OnKXpAY5cpekBVjuF1Y5cpekBhnuktQgw12SGmS4S1KDDHdJapDhLkkNMtwlqUGGuyQ1yHCXpAYZ7pLUIMNdkhpkuEtSgwx3SWqQ4S5JDTLcJalBIwv3JDuTnElyNsmBUT2PJGm6kYR7kjXAB4E3AduAtyfZNornkiRNN6qR+3bgbFV9s6q+DxwFdo3ouSRJ1xjVx+xtAJ7uWZ8Efq63Q5J9wL5u9XtJzoyoluXsFuBb17uIZcZj0p/HZbomjkn+aFG7//hMG0YV7unTVs9bqToMHB7R868ISSaqavx617GceEz687hM5zGZ3aimZSaBTT3rG4HzI3ouSdI1RhXuXwa2Jrk1yYuB3cDxET2XJOkaI5mWqaorSX4L+CywBvhIVZ0exXOtcKt6WmoGHpP+PC7TeUxmkaqau5ckaUXxClVJapDhLkkNMtyHLMlHklxM8vUZtifJn3W3Zfhqktf2bHsyydeSPJpkYumqHr0BjsvPJPlikstJfveabU3eymKRx2Q1v1Z+rfvZ+WqSLyR5dc+2Jl8rC2G4D9/9wM5Ztr8J2Nr92wd86Jrtb6iq2xs8f/d+Zj8u/wG8C/jj3sbGb2VxPws4Jj1W62vlHPCLVfUq4A/p3lht/LUyb4b7kFXV55n6oZzJLuAva8ojwMuTrF+a6q6fuY5LVV2sqi8D/3vNpmZvZbGIY9K0AY7LF6rq293qI0xdRwMNv1YWwnBfev1uzbChWy7gc0lOdbdn0OzHazXztTJlL/B33bKvlR6juv2AZjbbrRnuqKrzSdYCDyX5RjeKWc3mvJXFKrXqXytJ3sBUuP/8c019uq3a14oj96U3460Zquq5x4vAA0z9mbnaeSuLPlb7ayXJq4D7gF1V9WzX7Gulh+G+9I4Dv9GdNfM64D+r6kKSG5O8FCDJjcAbgb5nC6wy3sriGqv9tZJkM/BJ4B1V9a89m3yt9HBaZsiSfBx4PXBLkkng/cCLAKrqz4G/Bd4MnAX+B3hnt+s64IEkMPX/8rGq+sySFj9Ccx2XJD8GTAAvA36Q5D3Atqr6bqu3sljoMWHqVrer9rUC/D7wo8C93TG4UlXj3vbk+bz9gCQ1yGkZSWqQ4S5JDTLcJalBhrskNchwl6QGGe6S1CDDXZIa9H9xQKNEQEQVKwAAAABJRU5ErkJggg==
+"
+>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
 </div>
  
 

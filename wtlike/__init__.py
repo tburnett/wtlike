@@ -4,7 +4,7 @@
 see https://tburnett.github.io/wtlike/tutorial
 """
 
-__version__ = "0.3.9"
+__version__ = "0.3.10"
 
 import matplotlib.pyplot as plt
 import numpy as np

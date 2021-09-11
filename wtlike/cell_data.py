@@ -108,11 +108,9 @@ class CellData(SourceData):
 
         """
         bins = kwargs.pop('bins', kwargs.pop('time_bins', Config().time_bins))
-#         self.new_cells = kwargs.pop('new_cells', False)
 
         #  load source data
         super().__init__(*pars, **kwargs )
-
 
         self.rebin(bins)
         self.parent = None
@@ -129,9 +127,10 @@ class CellData(SourceData):
             print(f'CellData: Bin photon data into {int(len(edges)/2)} {self.step_name}'\
                   f' bins from {edges[0]:.1f} to {edges[-1]:.1f}')
         # note need to take care of interleave
-        self.binexp = self.binned_exposure( edges ) [0::2]
+        #self.binexp = self.binned_exposure( edges ) [0::2]
 
         self.get_cells()
+
 
     def get_cells(self, exposure_factor=1e-6):
         """
@@ -142,35 +141,77 @@ class CellData(SourceData):
         Thus the `e`  cell entry is the actual exposure for the cell in units $cm^2 Ms$.
         """
         # restrict photons to range of bin times
-        photons = self.photons.query(f'{self.cell_edges[0]}<time<{self.cell_edges[-1]}')
+#         photons = self.photons.query(f'{self.cell_edges[0]}<time<{self.cell_edges[-1]}')
 
-        # use photon times to get indices into photon list
-        edges = np.searchsorted(photons.time, self.cell_edges)
+#         # use photon times to get indices into photon list
+#         edges = np.searchsorted(photons.time, self.cell_edges)
 
-        wts = photons.weight.values
+#         wts = photons.weight.values
+#         start,stop = self.cell_edges[0::2], self.cell_edges[1::2]
+#         center = (start+stop)/2
+#         width = (stop-start)
+#         cells = []
+#         ek = np.append(edges[0::2], edges[-1])
+#         etot = self.exptot*exposure_factor
+
+#         Sk, Bk = self.S/etot, self.B/etot
+
+#         for k, (t, tw, e) in enumerate( zip(
+#                     center, width, self.binexp*exposure_factor) ):
+#             w = wts[ek[k]:ek[k+1]].astype(np.float32)
+#             n = len(w)
+#             cells.append(dict(t=t, tw=tw,
+#                               e=e,
+#                               n=n,
+#                               w=w,
+#                               S=e*Sk,
+#                               B=e*Bk,
+#                              )
+#                         )
+#         self.cells =  pd.DataFrame(cells)
+# cell properties
+        ncells = len(self.cell_edges)//2
         start,stop = self.cell_edges[0::2], self.cell_edges[1::2]
         center = (start+stop)/2
         width = (stop-start)
-        cells = []
-        ek = np.append(edges[0::2], edges[-1])
         etot = self.exptot*exposure_factor
-
         Sk, Bk = self.S/etot, self.B/etot
 
-        for k, (t, tw, e) in enumerate( zip(
-                    center, width, self.binexp*exposure_factor) ):
-            w = wts[ek[k]:ek[k+1]].astype(np.float32)
+        # photon stuff
+        photons = self.photons.query(f'{self.cell_edges[0]}<time<{self.cell_edges[-1]}')
+        wts = photons.weight.values
+
+        # use photon times to get cell index range into photon list
+        photon_cell = np.searchsorted(photons.time, self.cell_edges).reshape(ncells,2)
+
+        # exposure stuff
+        estop = self.exposure.stop.values
+        costh = None if 'cos_theta' not in self.exposure else self.exposure.cos_theta.values
+        exp   = self.exposure.exp.values
+
+        # exposure cell index ranges
+        exposure_cell = np.searchsorted(estop, self.cell_edges).reshape(ncells,2)
+
+        # now make the cells
+        cells = []
+
+        for k, (t, tw ) in enumerate( zip( center, width ) ):
+            w = wts[slice(*photon_cell[k])].astype(np.float32)
             n = len(w)
+            e = exp[slice(*exposure_cell[k])].sum() * exposure_factor
+
             cells.append(dict(t=t, tw=tw,
                               e=e,
+                              ctm = 0 if (e==0 or costh is None) else costh[slice(*exposure_cell[k])].mean() ,
                               n=n,
                               w=w,
                               S=e*Sk,
                               B=e*Bk,
                              )
                         )
+
         self.cells =  pd.DataFrame(cells)
-        return self.cells
+
 
     def update(self): pass # virtual
 
