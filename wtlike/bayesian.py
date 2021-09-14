@@ -15,7 +15,6 @@ from .lightcurve import * #get_lightcurve, fit_cells, flux_plot
 from .cell_data import * #get_cells, partition_cells
 from .loglike import *
 
-
 # Cell
 class CountFitness(FitnessFunc):
     """

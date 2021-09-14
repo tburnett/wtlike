@@ -2,6 +2,7 @@
 
 title: Making FermiLAT gamma-ray light curves with wtlike 
 
+
 keywords: fastai
 sidebar: home_sidebar
 
@@ -72,7 +73,7 @@ SourceData: Source 3C 273 with:
 	 rates:  source 1.97e-07/s, background 3.48e-07/s, S/N ratio 5.65e-01
 CellData: Bin photon data into 156 1-week bins from 54683.0 to 55775.0
 LightCurve: select 156 cells for fitting with e&gt;35 &amp; n&gt;2
-elapsed time: 111.4s (1.9 min)
+elapsed time: 36.6s (0.6 min)
 </pre>
 </div>
 </div>
@@ -85,7 +86,7 @@ elapsed time: 111.4s (1.9 min)
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>This created a <a href="/wtlikemain#WtLike"><code>WtLike</code></a> object, loading the first 3 years of data, by specifying weeks from #9, the first data-taking week.
+<p>This created a <a href="/wtlikemain.html#WtLike"><code>WtLike</code></a> object, loading the first 3 years of data, by specifying weeks from #9, the first data-taking week.
 The reason to specify only the first three years here is to avoid the 10 min or so that extracting the furl 13+ years would take for this demo. If that had already been done, then using an included <a href="https://tburnett.github.io/wtlike/config.html#Cache">cache system</a>, it only has to be done once.</p>
 <p>Now ask it to make a plot:</p>
 
@@ -199,15 +200,15 @@ with subfolders for the photon data, <code>photon</code> and spacecraft data, <c
 <div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Select-Data-for-a-source">Select Data for a source<a class="anchor-link" href="#Select-Data-for-a-source"> </a></h3><p>All further processing uses a subset of the photons within a cone, currently $4^\circ$, about the selected source, and 
 evaluates the exposure during 30-s intervals for this direction.  In the class
-<a href="/wtlikesource_data#SourceData"><code>SourceData</code></a>, implemented in the module 
-<a href="/wtlikesource_data"><code>source_data</code></a> we</p>
+<a href="/wtlikesource_data.html#SourceData"><code>SourceData</code></a>, implemented in the module 
+<a href="/wtlikesource_data.html"><code>source_data</code></a> we</p>
 <ol>
 <li>Extract photons</li>
 <li>Evaluate exposure, using the effective area tables and a spectral assumption.</li>
 <li>Determine the weight for each photon, using the table for the source. See the module <a href="https://tburnett.github.io/wtlike/weights">weights</a> for details.</li>
 </ol>
 <p>The result is a photon DataFrame, containing for each photon, the time $t$ in MJD units, $w$.</p>
-<p>This class is a superclass of the user interface class <a href="/wtlikemain#WtLike"><code>WtLike</code></a> introduced above.</p>
+<p>This class is a superclass of the user interface class <a href="/wtlikemain.html#WtLike"><code>WtLike</code></a> introduced above.</p>
 
 </div>
 </div>
@@ -236,7 +237,7 @@ The default binning is simply <code>(0, 0, 7)</code> for weekly bins with the fu
 <li><code>S</code> -- expected number source photons, the nominal source rate times the total exposure.</li>
 <li><code>B</code> -- expected number of background photons (unused)</li>
 </ul>
-<h3 id="Views">Views<a class="anchor-link" href="#Views"> </a></h3><p><a href="/wtlikecell_data#CellData"><code>CellData</code></a> implements a method <code>view</code>, which accepts a binning tuple as an argument, returns a <em>copy</em> of the current object, which can be a subclass, assigning to it the binning. Thus the view has all the attributes of its parent, but
+<h3 id="Views">Views<a class="anchor-link" href="#Views"> </a></h3><p><a href="/wtlikecell_data.html#CellData"><code>CellData</code></a> implements a method <code>view</code>, which accepts a binning tuple as an argument, returns a <em>copy</em> of the current object, which can be a subclass, assigning to it the binning. Thus the view has all the attributes of its parent, but
 with a different set of cells.</p>
 <p>So the following creates a new WtLike object that we generated above, rebins a copy with 25-day bins in the first 100 days, generates a list of the cells, then removes it since it wasn't assigned a reference variable.</p>
 
@@ -289,28 +290,28 @@ LightCurve: select 4 cells for fitting with e&gt;125 &amp; n&gt;2
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Evaluate-Likelihoods-and-make-light-curve-plots">Evaluate Likelihoods and make light curve plots<a class="anchor-link" href="#Evaluate-Likelihoods-and-make-light-curve-plots"> </a></h3><p>The class <a href="/wtlikelightcurve#LightCurve"><code>LightCurve</code></a>, implemented in the module <a href="/wtlikelightcurve"><code>lightcurve</code></a> is a subclass of <a href="/wtlikesource_data#SourceData"><code>SourceData</code></a>.
+<h3 id="Evaluate-Likelihoods-and-make-light-curve-plots">Evaluate Likelihoods and make light curve plots<a class="anchor-link" href="#Evaluate-Likelihoods-and-make-light-curve-plots"> </a></h3><p>The class <a href="/wtlikelightcurve.html#LightCurve"><code>LightCurve</code></a>, implemented in the module <a href="/wtlikelightcurve.html"><code>lightcurve</code></a> is a subclass of <a href="/wtlikesource_data.html#SourceData"><code>SourceData</code></a>.
 An instance invokes its superclass to generate the set of cells, then evaluates the likelihoods.</p>
 <h4 id="Poisson-like-Likelihood">Poisson-like Likelihood<a class="anchor-link" href="#Poisson-like-Likelihood"> </a></h4><p>We fit the likelihood for each cell, using only a few evaluations, to a <a href="https://tburnett.github.io/poisson">3-parameter Poisson-like formula</a>. Two advantages of this are:</p>
 <ul>
 <li>efficiency -- for large numbers of photons, this is much faster</li>
-<li>convenience -- the <a href="/wtlikepoisson#Poisson"><code>Poisson</code></a> object implements functions that return the TS, 95% CL, maximum, and uncertainties, using the <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.special.gammainc.html">incomplete gamma function</a>.</li>
+<li>convenience -- the <a href="/wtlikepoisson.html#Poisson"><code>Poisson</code></a> object implements functions that return the TS, 95% CL, maximum, and uncertainties, using the <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.special.gammainc.html">incomplete gamma function</a>.</li>
 </ul>
 <p>This results in a DataFrame <code>fits</code> containing</p>
 <ul>
 <li><code>t, tw, n</code>, from the cell, and</li>
-<li><code>fit</code>, the <a href="/wtlikepoisson#Poisson"><code>Poisson</code></a> object</li>
+<li><code>fit</code>, the <a href="/wtlikepoisson.html#Poisson"><code>Poisson</code></a> object</li>
 </ul>
-<h4 id="Light-curve-plots">Light curve plots<a class="anchor-link" href="#Light-curve-plots"> </a></h4><p>The function <code>Likelihood.plot</code> actually invokes <a href="/wtlikelightcurve#flux_plot"><code>flux_plot</code></a></p>
+<h4 id="Light-curve-plots">Light curve plots<a class="anchor-link" href="#Light-curve-plots"> </a></h4><p>The function <code>Likelihood.plot</code> actually invokes <a href="/wtlikelightcurve.html#flux_plot"><code>flux_plot</code></a></p>
 
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Apply-Bayesian-Blocks">Apply Bayesian Blocks<a class="anchor-link" href="#Apply-Bayesian-Blocks"> </a></h3><p>The class <a href="/wtlikemain#WtLike"><code>WtLike</code></a>, 
-implememted in the module <a href="/wtlikemain"><code>main</code></a>, adds an implementation of the Bayesian Block (BB) algorithm, from the module <a href="/wtlikebayesian"><code>bayesian</code></a>  using likelihood instead of counts.
-There we have two subclasses of <code>astropy.stats.bayesian_blocks</code>, <a href="/wtlikebayesian#CountFitness"><code>CountFitness</code></a> and the default <a href="/wtlikebayesian#LikelihoodFitness"><code>LikelihoodFitness</code></a>.</p>
+<h3 id="Apply-Bayesian-Blocks">Apply Bayesian Blocks<a class="anchor-link" href="#Apply-Bayesian-Blocks"> </a></h3><p>The class <a href="/wtlikemain.html#WtLike"><code>WtLike</code></a>, 
+implememted in the module <a href="/wtlikemain.html"><code>main</code></a>, adds an implementation of the Bayesian Block (BB) algorithm, from the module <a href="/wtlikebayesian.html"><code>bayesian</code></a>  using likelihood instead of counts.
+There we have two subclasses of <code>astropy.stats.bayesian_blocks</code>, <a href="/wtlikebayesian.html#CountFitness"><code>CountFitness</code></a> and the default <a href="/wtlikebayesian.html#LikelihoodFitness"><code>LikelihoodFitness</code></a>.</p>
 <p>This code creates partitions between boundaries of a set of cells. Usage is via a special view, 
 <a href="https://tburnett.github.io/wtlike/main#WtLike.bb_view">bb_view`</a></p>
 
@@ -381,24 +382,14 @@ LightCurve: Loaded 43 / 43 cells for fitting
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Installation">Installation<a class="anchor-link" href="#Installation"> </a></h2><p>Note that this is in beta mode. 
-It requires:  matplotlib pandas scipy astropy healpy</p>
+It depends on the packages:  matplotlib, pandas, scipy, astropy, and healpy, which pip should install if needed.</p>
 <p>To install from pyPI:</p>
 
 <pre><code>pip install wtlike</code></pre>
-<p>Data requirements: There are three sets of files:</p>
-<ul>
-<li><p><strong>photon data</strong><br> 
-These are a set of weekly pickled python <code>dict</code> objects with compressed condensed photon and spacecraft data extracted from the GSFC FTP site. They contain every photon above 100 MeV, and less than $100^\circ$ 
-from the zenith.</p>
-</li>
-<li><p><strong>weight tables</strong><br>
-Each source to be analyzed needs a table defining the photon weight as a function of position, energy, and event type. These are currently generated by pointlike. (A <code>fermipy</code>-generated version would be preferable.)</p>
-</li>
-<li><p><strong>effective area</strong><br>
-A standard <em>Fermi</em> instrument response file (IRF) defining the effective area as a function of detector angle and energy.</p>
-</li>
-</ul>
-<p>A set of these is available as a 1.6 GB zip file.</p>
+<p>or</p>
+
+<pre><code>pip install -U wtlike</code></pre>
+<p>to upgrade.</p>
 
 </div>
 </div>
@@ -411,7 +402,7 @@ A standard <em>Fermi</em> instrument response file (IRF) defining the effective 
 <li>A table of weights for each source</li>
 <li>An effective area IRF table </li>
 </ul>
-<p>These must be found under a folder, which by default is <code>~/wtlike_data</code>. In that folder there must be (perhaps links to) three folders named <code>data_files</code>, <code>weight_files</code>, <code>aeff_files</code>.  A copy of what I'm using is at <code>/afs/slac/g/glast/users/burnett/wtlike_data</code></p>
+<p>These must be found under a folder, which by default is <code>~/wtlike_data</code>. In that folder there must be (perhaps links to) three folders named <code>data_files</code>, <code>weight_files</code>, <code>aeff_files</code>, and a zip file, <code>weight_file.zip</code>.  A copy of what I'm using is at <code>/afs/slac/g/glast/users/burnett/wtlike_data</code></p>
 
 </div>
 </div>

@@ -2,6 +2,7 @@
 
 title: wtlike tutorial
 
+
 keywords: fastai
 sidebar: home_sidebar
 
@@ -97,7 +98,7 @@ nb_path: "nbs/99_tutorial.ipynb"
 <li>background -- 1e-6 /s</li>
 <li>effective area -- 3000 cm^2 </li>
 </ul>
-<p>Here we create a <a href="/wtlikesimulation#Simulation"><code>Simulation</code></a> object, then pass it to the primary wtlike entry point, the class <a href="/wtlikemain#WtLike"><code>WtLike</code></a>.
+<p>Here we create a <a href="/wtlikesimulation.html#Simulation"><code>Simulation</code></a> object, then pass it to the primary wtlike entry point, the class <a href="/wtlikemain.html#WtLike"><code>WtLike</code></a>.
 We tell it to immediately bin all the photons into daily time-bins, called "cells". (The time binning can be easily redone.)</p>
 
 </div>
@@ -379,7 +380,7 @@ The relative flux is $1+\alpha$.</p>
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="About-DataFrames">About DataFrames<a class="anchor-link" href="#About-DataFrames"> </a></h4><p>The properties <code>photons</code>, <a href="/wtlikeexposure"><code>exposure</code></a>, <code>cells</code>, <code>fits</code>, and <code>fluxes</code> are <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html">pandas.DataFrame</a> objects.
+<h4 id="About-DataFrames">About DataFrames<a class="anchor-link" href="#About-DataFrames"> </a></h4><p>The properties <code>photons</code>, <a href="/wtlikeexposure.html"><code>exposure</code></a>, <code>cells</code>, <code>fits</code>, and <code>fluxes</code> are <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html">pandas.DataFrame</a> objects.
 For those unfamiliar with pandas, note that one can create "csv" files with the method <code>to_csv(</code><em>filename</em><code>)</code>.</p>
 <p>The function <code>query</code> is very useful: To select the cells with flux&gt;3,</p>
 
@@ -476,7 +477,7 @@ For those unfamiliar with pandas, note that one can create "csv" files with the 
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Views">Views<a class="anchor-link" href="#Views"> </a></h2><p>A <a href="/wtlikemain#WtLike"><code>WtLike</code></a> object provides a function <code>view</code>, which returns a copy but with a different binning. 
+<h2 id="Views">Views<a class="anchor-link" href="#Views"> </a></h2><p>A <a href="/wtlikemain.html#WtLike"><code>WtLike</code></a> object provides a function <code>view</code>, which returns a copy but with a different binning. 
 So if we want a detailed look at the flare, we can choose an interval. The parameters specify an interval 10 days after the start, and 10 days before the end, with 1/day or 6-hour bins.</p>
 
 </div>
@@ -1013,13 +1014,13 @@ Return a &#34;view&#34;, a copy of this instance with a perhaps a different set 
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Using-Fermi-data.">Using <em>Fermi</em> data.<a class="anchor-link" href="#Using-Fermi-data."> </a></h2><p>The only change from the above code is that one substitues <a href="/wtlikesources#PointSource"><code>PointSource</code></a> with the designation of a source, for <a href="/wtlikesimulation#Simulation"><code>Simulation</code></a>.</p>
+<h2 id="Using-Fermi-data.">Using <em>Fermi</em> data.<a class="anchor-link" href="#Using-Fermi-data."> </a></h2><p>The only change from the above code is that one substitues <a href="/wtlikesources.html#PointSource"><code>PointSource</code></a> with the designation of a source, for <a href="/wtlikesimulation.html#Simulation"><code>Simulation</code></a>.</p>
 <p>Also, the data files must be available, the config parameter <code>datapath</code> set to the relevant folder. 
 Currently it is set by a line in <code>~/.config/wtlike/config.yaml</code>.  See the <a href="https://tburnett.github.io/wtlike/config#Config">Config help</a>.</p>
 <p>This requires access to a packaged form of the photon data, a table allowing generation of weights, and the effective area table.
 The source must have been analyzed with <code>gtlike</code> or <code>pointlike</code> to produce the weight table.</p>
 <p>All are available in a 2-GB zip file.</p>
-<p>The photon and spacecraft data can be checked with <a href="/wtlikedata_man#check_data"><code>check_data</code></a></p>
+<p>The photon and spacecraft data can be checked with <a href="/wtlikedata_man.html#check_data"><code>check_data</code></a></p>
 <p>The configuration must be valid, with path to data existing</p>
 
 </div>

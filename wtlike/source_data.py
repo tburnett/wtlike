@@ -13,7 +13,7 @@ from .simulation import *
 
 # Cell
 class SourceData(object):
-    """ Load the photon data near the source and associated exposure.
+    """ Load the photon data near the source and the associated exposure.
     --or--
     Use a Simulation object to generate data
 

@@ -1,21 +1,21 @@
 {
   "wtlike": {
     "Overview": "/",
-    "Configuration data and basic functions": "/config",
-    "Data management": "/data_man",
-    "Effective Area": "/effective_area",
-    "Exposure processing": "/exposure",
-    "Sources and weights": "/sources",
-    "Load data": "/load_data",
-    "Simulation": "/simulation",
-    "Source Data analysis": "/source_data",
-    "Poisson-like likelihood function": "/poisson",
-    "Log Likelihood tools": "/loglike",
-    "Manage cell data": "/cell_data",
-    "Light Curve Generation": "/lightcurve",
-    "Bayesian Blocks": "/bayesian",
-    "wtlike interface": "/main",
-    "Presentation to the Fermi Collaboration": "/presentation",
-    "wtlike tutorial": "/tutorial"
+    "Configuration data and basic functions": "config.html",
+    "Data management": "data_man.html",
+    "Effective Area": "effective_area.html",
+    "Exposure processing": "exposure.html",
+    "Sources and weights": "sources.html",
+    "Load data": "load_data.html",
+    "Simulation": "simulation.html",
+    "Source Data analysis": "source_data.html",
+    "Poisson-like likelihood function": "poisson.html",
+    "Log Likelihood tools": "loglike.html",
+    "Manage cell data": "cell_data.html",
+    "Light Curve Generation": "lightcurve.html",
+    "Bayesian Blocks": "bayesian.html",
+    "wtlike interface": "main.html",
+    "Presentation to the Fermi Collaboration": "presentation.html",
+    "wtlike tutorial": "tutorial.html"
   }
 }

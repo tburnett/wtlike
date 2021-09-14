@@ -2,6 +2,7 @@
 
 title: Load data
 
+
 keywords: fastai
 sidebar: home_sidebar
 
@@ -30,7 +31,7 @@ nb_path: "nbs/04_load_data.ipynb"
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>This module defines the function <a href="/wtlikeload_data#load_source_data"><code>load_source_data</code></a>.</p>
+<p>This module defines the function <a href="/wtlikeload_data.html#load_source_data"><code>load_source_data</code></a>.</p>
 <p>Depends on module Exposure for SC data</p>
 
 </div>
@@ -54,13 +55,6 @@ nb_path: "nbs/04_load_data.ipynb"
     
 <div class="cell border-box-sizing code_cell rendered">
 
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
 <div class="output_wrapper">
 <div class="output">
 
@@ -68,9 +62,9 @@ nb_path: "nbs/04_load_data.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="ProcessWeek" class="doc_header"><code>class</code> <code>ProcessWeek</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/load_data.py#L83" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ProcessWeek</code>(<strong><code>config</code></strong>, <strong><code>source</code></strong>, <strong><code>week_file</code></strong>)</p>
+<h2 id="ProcessWeek" class="doc_header"><code>class</code> <code>ProcessWeek</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/load_data.py#L85" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ProcessWeek</code>(<strong><code>config</code></strong>, <strong><code>source</code></strong>, <strong><code>week_file</code></strong>)</p>
 </blockquote>
-<p>Process a week</p>
+<p>Process a week's photon and livetime info into the source-related photon and exposure tables.</p>
 
 </div>
 
@@ -100,38 +94,7 @@ nb_path: "nbs/04_load_data.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_week_files" class="doc_header"><code>get_week_files</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/load_data.py#L166" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_week_files</code>(<strong><code>config</code></strong>, <strong><code>week_range</code></strong>=<em><code>None</code></em>)</p>
-</blockquote>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h2 id="TWeek" class="doc_header"><code>class</code> <code>TWeek</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/load_data.py#L193" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TWeek</code>(<strong><code>config</code></strong>, <strong><code>source</code></strong>)</p>
+<h2 id="TWeek" class="doc_header"><code>class</code> <code>TWeek</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/load_data.py#L168" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TWeek</code>(<strong><code>config</code></strong>, <strong><code>source</code></strong>)</p>
 </blockquote>
 
 </div>
@@ -155,7 +118,7 @@ nb_path: "nbs/04_load_data.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="multiprocess_week_data" class="doc_header"><code>multiprocess_week_data</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/load_data.py#L204" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>multiprocess_week_data</code>(<strong><code>config</code></strong>, <strong><code>source</code></strong>, <strong><code>week_range</code></strong>, <strong><code>processes</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="multiprocess_week_data" class="doc_header"><code>multiprocess_week_data</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/load_data.py#L179" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>multiprocess_week_data</code>(<strong><code>config</code></strong>, <strong><code>source</code></strong>, <strong><code>week_range</code></strong>, <strong><code>processes</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <p>Manage processing of set of week files with multiprocessing</p>
 
@@ -187,7 +150,7 @@ nb_path: "nbs/04_load_data.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="load_source_data" class="doc_header"><code>load_source_data</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/load_data.py#L240" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>load_source_data</code>(<strong><code>config</code></strong>, <strong><code>source</code></strong>, <strong><code>week_range</code></strong>=<em><code>None</code></em>, <strong><code>key</code></strong>=<em><code>''</code></em>, <strong><code>clear</code></strong>=<em><code>False</code></em>)</p>
+<h4 id="load_source_data" class="doc_header"><code>load_source_data</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/load_data.py#L215" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>load_source_data</code>(<strong><code>config</code></strong>, <strong><code>source</code></strong>, <strong><code>week_range</code></strong>=<em><code>None</code></em>, <strong><code>key</code></strong>=<em><code>''</code></em>, <strong><code>clear</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 <p>This is a client of SourceData.</p>
 <ul>
@@ -211,22 +174,18 @@ nb_path: "nbs/04_load_data.ipynb"
 </div>
     {% endraw %}
 
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="Test-multiprocessing">Test multiprocessing<a class="anchor-link" href="#Test-multiprocessing"> </a></h4>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="Test-cache-check">Test cache check<a class="anchor-link" href="#Test-cache-check"> </a></h4><p>If the most recent week has been changed, load it and replace only the most recent part in the cache</p>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
 
 </div>
-</div>
-</div>
+    {% endraw %}
+
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="Test-with-a-Geminga-week">Test with a Geminga week<a class="anchor-link" href="#Test-with-a-Geminga-week"> </a></h4>
+<h3 id="Cache-check">Cache check<a class="anchor-link" href="#Cache-check"> </a></h3><p>If the most recent week has been changed, load it and replace only the most recent part in the cache.</p>
+<p>Test with Geminga</p>
+
 </div>
 </div>
 </div>
@@ -237,46 +196,60 @@ nb_path: "nbs/04_load_data.ipynb"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">sc_df</span><span class="o">.</span><span class="n">head</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">sc_df</span><span class="o">.</span><span class="n">exp</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># from wtlike.data_man import FermiData</span>
+<span class="c1"># source = PointSource(&#39;Geminga&#39;)</span>
+<span class="c1"># config = Config()</span>
+<span class="c1"># ret = load_source_data(config, source)</span>
+<span class="c1"># stop = ret[1].iloc[-1].stop</span>
+<span class="c1"># print(f&#39;Cache ends  at {stop:.1f} [UTC {UTC(stop)}] , in week {FermiData().find_week(stop)}&#39;)</span>
 </pre></div>
 
     </div>
 </div>
 </div>
 
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>(            start          stop   livetime  cos_theta            exp
- 138  59270.094523  59270.094870  27.625910   0.400390   31210.906629
- 139  59270.094870  59270.095217  27.656601   0.496954   52301.332108
- 140  59270.095217  59270.095565  27.662363   0.588272   73006.130726
- 141  59270.095565  59270.095912  27.633326   0.672526   91013.834284
- 142  59270.095912  59270.096259  27.621405   0.748598  106996.720630,
- count      4213.000000
- mean     100933.988698
- std       34813.260229
- min        8946.474917
- 25%       71947.112339
- 50%      108820.090468
- 75%      132400.751691
- max      150696.347195
- Name: exp, dtype: float64)</pre>
 </div>
+    {% endraw %}
 
-</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
 
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># ff, ww, days = check_data()</span>
+<span class="c1"># eman = ProcessWeek( config, source, ff[-1])</span>
+<span class="c1"># eman.photons.head()</span>
+
+<span class="c1"># x = ret[0].run_id.dtype</span>
+<span class="c1"># A = set(x.categories); len(A)</span>
+
+<span class="c1"># rr = eman.photons.run_id</span>
+<span class="c1"># B = set(rr.dtype.categories); len(B)</span>
+
+<span class="c1"># A &amp; B</span>
+</pre></div>
+
+    </div>
 </div>
 </div>
 
 </div>
     {% endraw %}
 
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Test-multiprocessing">Test multiprocessing<a class="anchor-link" href="#Test-multiprocessing"> </a></h4>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Test-with-a-Geminga-week">Test with a Geminga week<a class="anchor-link" href="#Test-with-a-Geminga-week"> </a></h4>
+</div>
+</div>
+</div>
 </div>
  
 

@@ -279,8 +279,6 @@ class Config():
     def __repr__(self): return str(self)
     def get(self, *pars): return self.__dict__.get(*pars)
 
-
-
 # Cell
 
 day = 24*3600.
@@ -316,7 +314,6 @@ def UTCnow():
 
     t=datetime.utcnow()
     return f'UTC {t.year}-{t.month:02d}-{t.day} {t.hour:02d}:{t.minute:02d}'
-
 
 # Cell
 def bin_size_name(bins):

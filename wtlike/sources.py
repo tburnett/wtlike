@@ -416,7 +416,6 @@ class SourceLookup():
         self.csep = sep2d.deg[0]
         self.cat_name = self.cat_names[idx] if self.csep < self.max_sep else None
 
-
 # Cell
 
 class PointSource():
