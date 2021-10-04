@@ -58,16 +58,17 @@ nb_path: "nbs/06_poisson.ipynb"
 </blockquote>
 <p>This is a functor class which returns the log of a three-parameter Poisson-like function used to represent
 the flux likelihood. The parameters are, in order:</p>
-<p>$s_p$ : flux at peak, if positive; if negative, there is only a limit</p>
+<p>$s_p$ : flux at peak, the maximum likelihood, if positive; if negative, there is a limit</p>
 <p>$e$ : normalization factor to convert flux to equivalent counts. must be &gt;0</p>
 <p>$b$  : background flux: must be &gt;=0</p>
 <p>This parameterization is equivalent to that described in William Tompkins' thesis
 (arxiv: astro-ph/0202141) and Nolan, et al., 2003,  ApJ 597:615:627.
 The functional form is that of a Poisson distribution.</p>
 <p>The log likelihood expression is for flux $s&gt;=0$
-   $$w(s | s_p,e,b) = e\ (s_p+b) \ \log[ e\ (s+b) ] - e\ s + \mathrm{const}$$
-the const is such that $w=0$ at the peak.</p>
-<p>A slightly more elegant expression, used in the cdf function, is to define
+   $$w(s | s_p,e,b) = e\ \big[\  (s_p+b) \ \log( s+b ) - s\ \big] + \mathrm{const}$$
+the const is conventionally defined such that $w=0$ at the peak.</p>
+<p>for s_p &gt;&gt; b, the solution can be expressed as</p>
+$$ s = s_p \pm \sqrt{(s_p+b)/e}$$<p>A slightly more elegant expression, used in the cdf function, is to define
    $\beta = e b$,  $\mu = e s_p + \beta$, and  $x = e s$.</p>
 <p>Then the log likelihood is</p>
 <p>$$ f(x | \beta) =  \mu \ \log( x + \beta) - x + \mathrm{const}$$</p>
@@ -81,7 +82,7 @@ the const is such that $w=0$ at the peak.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="Poisson.from_fit" class="doc_header"><code>Poisson.from_fit</code><a href="__main__.py#L173" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Poisson.from_fit</code>(<strong><code>counts</code></strong>, <strong><code>flux</code></strong>, <strong><code>sig_flux</code></strong>, <strong><code>tol</code></strong>=<em><code>5</code></em>)</p>
+<h4 id="Poisson.from_fit" class="doc_header"><code>Poisson.from_fit</code><a href="__main__.py#L177" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Poisson.from_fit</code>(<strong><code>counts</code></strong>, <strong><code>flux</code></strong>, <strong><code>sig_flux</code></strong>, <strong><code>tol</code></strong>=<em><code>5</code></em>)</p>
 </blockquote>
 <p>Create a Poisson instance using the fit parameters from an analysis
 of a likelihood function.</p>
@@ -140,7 +141,7 @@ and $ k(s-b)= k^2 v = n$.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3 id="Poisson.__call__" class="doc_header"><code>Poisson.__call__</code><a href="__main__.py#L41" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>Poisson.__call__</code>(<strong><code>dom</code></strong>)</p>
+<h3 id="Poisson.__call__" class="doc_header"><code>Poisson.__call__</code><a href="__main__.py#L45" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>Poisson.__call__</code>(<strong><code>dom</code></strong>)</p>
 </blockquote>
 <p>Return the value(s) of the fit function for the given domain.</p>
 
@@ -186,7 +187,7 @@ peak less than zero, so that the Bayesian likelihood peaks at zero, and the effe
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="PoissonFitter" class="doc_header"><code>class</code> <code>PoissonFitter</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/poisson.py#L215" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>PoissonFitter</code>(<strong><code>func</code></strong>, <strong><code>fmax</code></strong>=<em><code>None</code></em>, <strong><code>scale</code></strong>=<em><code>None</code></em>, <strong><code>tol</code></strong>=<em><code>0.2</code></em>, <strong><code>delta</code></strong>=<em><code>0.0001</code></em>, <strong><code>dd</code></strong>=<em><code>-0.1</code></em>, <strong><code>test_mode</code></strong>=<em><code>False</code></em>)</p>
+<h2 id="PoissonFitter" class="doc_header"><code>class</code> <code>PoissonFitter</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/poisson.py#L219" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>PoissonFitter</code>(<strong><code>func</code></strong>, <strong><code>fmax</code></strong>=<em><code>None</code></em>, <strong><code>scale</code></strong>=<em><code>None</code></em>, <strong><code>tol</code></strong>=<em><code>0.2</code></em>, <strong><code>delta</code></strong>=<em><code>0.0001</code></em>, <strong><code>dd</code></strong>=<em><code>-0.1</code></em>, <strong><code>test_mode</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 <p>Helper class to fit a log likelihood function to the Poisson</p>
 <h2 id="parameters">parameters<a class="anchor-link" href="#parameters"> </a></h2><ul>
