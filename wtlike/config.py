@@ -325,15 +325,16 @@ def bin_size_name(bins):
         binsize = np.mean(bins)
 
     def check_unit(x):
-        unit_table = dict(week=1/7, day=1, hour=24, min=24*60, s=24*3600)
+        unit_table = dict(week=1/7, day=1, hour=24) #, min=24*60, s=24*3600)
         for name, unit in unit_table.items():
             t = x*unit
             r = np.mod(t+1e-9,1)
-            if r<1e-6 or t>1:
+
+            if r<1e-6 : #or t>1:
                 return t, name
         return x, 'day'
     n, unit =  check_unit(binsize)
-    nt = f'{n:.0f}' if np.mod(n,1)<1e-2 else f'{n:.0f}'
+    nt = f'{n:.0f}' if np.mod(n,1)<1e-3 else f'{n:.1f}'
     return f'{nt}-{unit}'# if n>1 else f'{unit}'
 
 # Cell

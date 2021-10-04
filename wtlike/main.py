@@ -3,9 +3,12 @@
 __all__ = ['WtLike']
 
 # Cell
+import numpy as np
 from .bayesian import get_bb_partition
 from .lightcurve import fit_cells, LightCurve, flux_plot
 from .cell_data import partition_cells
+from .config import MJD
+
 
 class WtLike(LightCurve):
     """
@@ -65,11 +68,13 @@ class WtLike(LightCurve):
         return r
 
     def plot(self, *pars, **kwargs):
-
-        if getattr(self, 'isBB',  None) is None:
-            return super().plot(*pars, **kwargs)
-        else:
+        # which view type is this?
+        if getattr(self, 'isBB', False):
             return self.plot_bb(*pars, **kwargs)
+        elif getattr(self, 'is_phase', False):
+            return self.plot_phase(*pars, **kwargs)
+        else:
+            return super().plot(*pars, **kwargs)
 
     def plot_bb(self, ax=None, **kwargs):
         """Plot the light curve with BB overplot
@@ -90,4 +95,53 @@ class WtLike(LightCurve):
                   label=f'BB (p0={100*self.bayes_p0:.0f}%)', zorder=10,**kwargs)
         ax.grid(alpha=0.5)
         fig.set_facecolor('white')
+        return fig
+
+    def phase_view(self, period, nbins=25, reference='2008'):
+        """ Return a "phase" view, in which the cell time binning is according to phase.
+
+        * reference -- a UTC data for aligning the bins.
+        """
+        ref = 0 if not reference else MJD(reference)
+
+        # helper function that returns the bin number as a float in [0,period)
+        binner = lambda t: np.mod(t-ref,period)/period * nbins
+
+        # adjust start to correspond to edge of bin
+
+        # create a view with nbins per period and get the cells
+        st = self.start # the start of data taking
+        self.reference_bin =strefbin = binner(st)
+        stnew = st +np.mod(-strefbin,1)*period/nbins
+        view = self.view(stnew, 0, period/nbins)
+        cells = view.cells
+        bw = 1/nbins
+
+        def concat(pcells, t):
+            newcell = dict(t=t, tw=bw)
+            for col in 'n e S B'.split():
+                newcell[col] = pcells[col].sum()
+            newcell['w'] = np.concatenate(list(pcells.w.values))
+            return newcell
+
+        # concatenate all in the same phase bin--note cyclic rotation
+        k = int(strefbin)
+        fcells = [concat(cells.iloc[((ibin-k)%nbins):-1:nbins], (ibin+0.5)*bw)  for ibin in range(nbins) ]
+
+        view.cells = pd.DataFrame(fcells)
+        view.update()
+        view.is_phase = True
+        view.period = period
+        return  view
+
+    def plot_phase(self, ax=None, **kwargs):
+        """Plot a phase lightcurve
+
+        """
+        kw = dict(ylim=(0.975, 1.025), xlim=(0,1) )
+        kw.update(kwargs)
+        fig, ax = plt.subplots(figsize=(10,5)) if ax is None else (ax.figure, ax)
+        fig = super().plot(ax=ax, xlabel=f'phase for {self.period}-day period');
+        ax.set(**kwargs );
+        ax.axhline(1.0, color='grey');
         return fig

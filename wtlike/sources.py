@@ -255,6 +255,12 @@ def findsource(*pars, gal=False):
         raise TypeError('require name or ra,dec or l,b,gal=True')
     return skycoord
 
+# Internal Cell
+class WTSkyCoord(SkyCoord):
+    def __repr__(self):
+        ra,dec = self.fk5.ra.deg, self.fk5.dec.deg
+        return f'({ra:.3f},{dec:.3f})'
+
 # Cell
 class FermiCatalog():
 
@@ -277,18 +283,20 @@ class FermiCatalog():
 
             cname = lambda n : [s.strip() for s in data[n]]
             cvar = lambda a: data[a].astype(float)
+            ivar = lambda a: data[a].astype(int)
             name = list(map(lambda x: x.strip() , data['Source_Name']))
 
-            self.skycoord = SkyCoord(data['RAJ2000'], data['DEJ2000'], unit='deg', frame='fk5')
+            self.skycoord = WTSkyCoord(data['RAJ2000'], data['DEJ2000'], unit='deg', frame='fk5')
 
             self.df = pd.DataFrame(dict(
 
                 skycoord = self.skycoord,
                 significance = cvar('Signif_Avg'),
                 variability = cvar('Variability_Index'),
-                assoc_prob = cvar('ASSOC_PROB_LR'),
-                assoc_name = cname('ASSOC1'),
-
+                assoc_prob  = cvar('ASSOC_PROB_BAY'), # for Bayesian, or _LR for likelihood ratio
+                assoc1_name = cname('ASSOC1'),
+                class1      = cname('CLASS1'),
+                flags       = ivar('FLAGS'),
                 # ....
             ))
             self.df.index = name
@@ -296,6 +304,10 @@ class FermiCatalog():
 
     def __repr__(self):
         return f'4FGL file {self.catalog_file.name} with {len(self)} entries'
+
+    def field(self, colname):
+        ## Todo: check type
+        return self.data[colname]
 
     def __call__(self, skycoord):
         """select an entry by skydir return entry"""
@@ -544,6 +556,6 @@ class PointSource():
     class PLSuperExpCutoff(FluxModel):
 
         def __call__(self,e):
-            print('WARNING: check e0!')
+            #print('WARNING: check e0!')
             n0,gamma,cutoff,b=self.pars
             return n0*(self.e0/e)**gamma*np.exp(-(e/cutoff)**b)

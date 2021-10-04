@@ -1,4 +1,5 @@
 """
+Copied to wtlike/config
 """
 import time
 

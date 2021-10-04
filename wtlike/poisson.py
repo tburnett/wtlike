@@ -12,7 +12,7 @@ class Poisson(object):
     r"""This is a functor class which returns the log of a three-parameter Poisson-like function used to represent
     the flux likelihood. The parameters are, in order:
 
-    $s_p$ : flux at peak, if positive; if negative, there is only a limit
+    $s_p$ : flux at peak, the maximum likelihood, if positive; if negative, there is a limit
 
     $e$ : normalization factor to convert flux to equivalent counts. must be >0
 
@@ -23,8 +23,12 @@ class Poisson(object):
     The functional form is that of a Poisson distribution.
 
     The log likelihood expression is for flux $s>=0$
-       $$w(s | s_p,e,b) = e\ (s_p+b) \ \log[ e\ (s+b) ] - e\ s + \mathrm{const}$$
-    the const is such that $w=0$ at the peak.
+       $$w(s | s_p,e,b) = e\ \big[\  (s_p+b) \ \log( s+b ) - s\ \big] + \mathrm{const}$$
+    the const is conventionally defined such that $w=0$ at the peak.
+
+    for s_p >> b, the solution can be expressed as
+
+    $$ s = s_p \pm \sqrt{(s_p+b)/e}$$
 
     A slightly more elegant expression, used in the cdf function, is to define
        $\beta = e b$,  $\mu = e s_p + \beta$, and  $x = e s$.

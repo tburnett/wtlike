@@ -15,7 +15,7 @@ Usage: Wtih code like this in a cell
 
     nbdoc(userdoc,)
 
-will display the text, with the {} strings replaceed by representations of the variables, like an f-string.
+will display the text, with the {} strings replaceed by representations of the variables, like an f-string, but actually equivalent to '...'.format(locals())
 
 Useful routines:
 
@@ -35,7 +35,8 @@ import sys, os, shutil, string, pprint, datetime
 
 #import nbdev # only for a show_doc
 
-__all__ = ['nbdoc', 'image', 'figure', 'monospace', 'capture_print','capture', 'shell', 'create_file'] #,'show_doc']
+__all__ = ['nbdoc', 'image', 'figure', 'monospace', 'capture_print','capture', 'shell', 'create_file',
+        'get_nb_namespace', ] #,'show_doc']
 
 def doc_formatter(
         text:'text string to process',
@@ -446,8 +447,16 @@ def create_file(func, filename, folder='images'):
 #     kwargs.update(disp=False)
 #     return nbdev.showdoc.show_doc(elt,  **kwargs)
 
+def get_nb_namespace():
+    """
+    Return a dictionary, excluding initial underscored variables, of the current IPython notebook namespace
+    """
+    from IPython.core.interactiveshell import InteractiveShell
+    gns = InteractiveShell._instance.get_ipython().user_global_ns
+    return {k:v for k,v in filter(lambda t: not t[0].startswith('_'), gns.items())}
+
 def nbdoc(fun, *pars, name=None, **kwargs):
-    """Format the output from an IPython notebook cell using the functon's docstring and computed variables.
+    """Format the output from an IPython notebook cell using the function's docstring and computed variables.
      
     If name is specified, use it instead of the function name to distinguish figure file names, say for separate
     executions with differing parameters.
@@ -459,6 +468,8 @@ def nbdoc(fun, *pars, name=None, **kwargs):
     """
     import inspect
     import IPython.display as display
+
+
 
     # the the docstring and function name
     rawdoc = fun.__doc__
@@ -473,9 +484,13 @@ def nbdoc(fun, *pars, name=None, **kwargs):
     vars = dict(date =str(datetime.datetime.now())[:16],
             )
 
-    # run it and collect its local symbol table
+    # run it, adding globals from the IPython session, and collect its local symbol table
     try:
+        globals().update(get_nb_namespace())
+
         user_vars = fun(*pars, **kwargs)
+        # user_vars = eval('fun(*pars, **kwargs)', locals().update(get_nb_namespace()) )
+
     except Exception as e:
         print(f'Function {fun.__name__} failed: {e}', file=sys.stderr)
         raise 
@@ -488,14 +503,13 @@ def nbdoc(fun, *pars, name=None, **kwargs):
     # add convenient symbols
     vars.update(user_vars)
 
-    # check location. Expect the
-    if os.path.isdir('docs'):
-        # in the root
-        folders = ['.', 'docs']
-    elif os.path.isdir('../docs'):
-        folders = ['.', '../docs']
+    # Will put plots images in a local folder, and also docs if found here or in parent
+    folders = ['.']
+    if os.path.isdir('docs'):      folders.append( 'docs')
+    elif os.path.isdir('../docs'): folders.append('../docs')
     else:
-        raise Exception('did not find the "docs" folder')
+        pass
+    #    raise Exception('did not find the "docs" folder')
     # initialze the ObjectReplacer
     orep = ObjectReplacer(folders=folders, figure_prefix=name)
 

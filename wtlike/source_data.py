@@ -124,8 +124,10 @@ class SourceData(object):
             f'\n\t exposure: {len(self.exposure):9,} intervals, {exp_text}'
 
         self.src_flux, self.bkg_flux = self.S/self.exptot,  self.B/self.exptot
-        r+= f'\n\t rates:  source {self.src_flux:.2e}/s, background {self.bkg_flux:.2e}/s,'\
-            f' S/N ratio {self.src_flux/self.bkg_flux:.2e}'
+        r+= f'\n\t rates:  source {self.src_flux:.2e}/s, background {self.bkg_flux:.2e}/s,'
+        if not self.simulated:
+            r+= f' TS {self.source.fit_info["ts"]:.1f}'
+#             f' S/N ratio {self.src_flux/self.bkg_flux:.2e}'
 
         return r
 

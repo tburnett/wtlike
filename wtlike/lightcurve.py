@@ -19,7 +19,6 @@ class CellFitter(object):
 
     parameters:
        - cells : a table with index t, columns  tw, n, e, w, S, B
-       - exp_min : minimum exposure allowed (units cm^2 Ms)
        - rep_name : represention to use
 
     Generates a DataFrame with columns n, ep, fit
@@ -37,21 +36,16 @@ class CellFitter(object):
                 ):
         """Apply fits to the likelihoods for a set of cells
 
-
         """
-
         self.source_name = source_name
         self.config=config
-
-        # select the set of cells
-
         self.cells = cells
 
         # generate a list of LogLike objects for each
         cells.loc[:,'loglike'] = cells.apply(LogLike, axis=1)
-         # analyze using selected rep
-        rep_name = rep_name or config.likelihood_rep
 
+        # analyze using selected rep
+        rep_name = rep_name or config.likelihood_rep
         if rep_name not in self.rep_list:
             raise Exception(f'Unrecognized rep: "{rep_name}", must be one of {self.rep_list}')
         repcl = self.rep_class[self.rep_list.index(rep_name)]
@@ -60,9 +54,9 @@ class CellFitter(object):
             print(f'Fitting likelihoods with {rep_name} representation')
 
         # making output with reduced columns
-        self.ll_fits = cells['t tw n e ctm S'.split()].copy()
+        self.ll_fits = cells['t tw n e S'.split()].copy() # ignore ctm?
 
-        # add summary of weights
+        # add summary of weights, which can be used for fast evaluation if log approx is ok.
         self.ll_fits.loc[:,'wsum'] =  cells.w.apply(lambda w: np.sum(w))
         self.ll_fits.loc[:,'w2sum'] = cells.w.apply(lambda w: np.sum(w**2))
         self.ll_fits.loc[:,'wmax'] =  cells.w.apply(lambda w: np.max(w))
@@ -73,7 +67,6 @@ class CellFitter(object):
             print(f'Failed a fit: \n{e}', file=sys.stderr)
             raise
 
-
     def __repr__(self):
         return f'{self.__class__.__name__}: source "{self.source_name}" fit with {len(self.ll_fits)} cells'
 
@@ -83,8 +76,7 @@ class CellFitter(object):
     @property
     def dataframe(self):
         return self.ll_fits
-#     def plot(self, **kwargs):
-#         flux_plot(self.config, self, **kwargs)
+
 
 # Cell
 def fit_cells(config,
@@ -184,7 +176,7 @@ def flux_plot(cell_fits,
 
     - ax [None] -- a matplotlib.axes._subplots.AxesSubplot object returned from plt.subplots<br>
     if None, create one using subplots with fignum [1] and figsize [(12,4)]
-    - fmt [''] -- marker symbol -- if not specifed, will use '.' if many bins, else 'o'
+    - fmt [''] -- marker symbol -- if not specified, will use '.' if many bins, else 'o'
     - ms [None] -- for marker size
     - colors -- tuple of colors for signal, limit, step
     - step   -- add a "step" plot
@@ -347,10 +339,15 @@ class LightCurve(CellData):
         self.exp_min = exp_min if exp_min is not None else self.config.exp_min
         self.update()
 
+    def __repr__(self):
+        r = super().__repr__()
+        r += f'\nLightCurve: {len(self.cells)} cells in view={self.time_bins}'
+        r += f', {len(self.fits)} fits with exposure > {self.exp_min*self.time_bins[2]}'
+        return r
+
     def update(self):
         # invoked by current, again if a copy
         # get the cells from superclass
-
 
         def doit():
             # fit the subset that have enought exposure and counts
@@ -376,7 +373,7 @@ class LightCurve(CellData):
         xlim = kwargs.get('xlim', None)
         if xlim is not None and tzero is None: # scale from start, stop times if less than start
             a,b = xlim
-            if a<self.start: a = self.start+a if a>0 else self.stop+a
+            if a<self.start: a = self.start+a if a>=0 else self.stop+a
             if b<self.start: b = self.start+b if b>0 else self.stop+b
             kwargs['xlim'] = (a,b)
         log = kwargs.pop('log', None)
