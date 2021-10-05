@@ -7,7 +7,7 @@ import numpy as np
 from .bayesian import get_bb_partition
 from .lightcurve import fit_cells, LightCurve, flux_plot
 from .cell_data import partition_cells
-from .config import MJD
+from .config import *
 
 
 class WtLike(LightCurve):
@@ -100,7 +100,7 @@ class WtLike(LightCurve):
     def phase_view(self, period, nbins=25, reference='2008'):
         """ Return a "phase" view, in which the cell time binning is according to phase.
 
-        * reference -- a UTC data for aligning the bins.
+        * reference -- a UTC date for aligning the bins.
         """
         ref = 0 if not reference else MJD(reference)
 
