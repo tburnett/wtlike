@@ -23,10 +23,12 @@ def get_wtzip_index(config, update=False):
 
     with  zipfile.ZipFile(wtzipfile) as wtzip:
         if 'index.pkl' in wtzip.namelist() and not update:
-            return pickle.load(wtzip.open('index.pkl'))
+            zi =  pickle.load(wtzip.open('index.pkl'))
+            zi['coord'] = SkyCoord(zi['glon'], zi['glat'], unit='deg', frame='galactic').fk5
+            return zi
 
         if config.verbose>0:
-            print(f'Extracting info from {wtzipfile}')
+            print(f'sources.get_wtzip_index: Extracting info from {wtzipfile}')
         name=[]; glat=[]; glon=[]
         for filename in wtzip.namelist():
             if filename=='index.pkl': continue
@@ -36,14 +38,17 @@ def get_wtzip_index(config, update=False):
                 name.append(Path(filename).name.split('_weights.pkl')[0].replace('_',' ').replace('p','+') )
                 glon.append(l)
                 glat.append(b)
-        zip_index = dict(name=name,
-                    coord=SkyCoord(glon, glat, unit='deg', frame='galactic').fk5
-               )
+        zip_index = dict(name=np.array(name),glon=np.array(glon), glat=np.array(glat))
+
+               #      coord=SkyCoord(glon, glat, unit='deg', frame='galactic').fk5
+               # )
+
         ### write to temp file, insert back into the zip
         ### SHould be a way to just stream
         pickle.dump(zip_index, open('/tmp/wtfile_index.pkl', 'wb'))
         with zipfile.ZipFile(wtzipfile, mode='a') as wtzip:
             wtzip.write('/tmp/wtfile_index.pkl', 'index.pkl')
+        zip_index['coord'] = SkyCoord(zip_index['glon'], zip_index['glat'], unit='deg', frame='galactic').fk5
     return zip_index
 
 # Cell
@@ -311,7 +316,11 @@ class FermiCatalog():
 
     def __call__(self, skycoord):
         """select an entry by skydir return entry"""
-        idx, sep2d, _= skycoord.match_to_catalog_sky(self.skycoord)
+        try:
+            idx, sep2d, _= skycoord.match_to_catalog_sky(self.skycoord)
+        except Exception as msg:
+            print(f'Fail skycoord.match, {skycoord}: {msg}', file=sys.stderr)
+            return
         csep = sep2d.deg[0]
         return self.df.iloc[idx] if csep < self.max_sep else None
 
@@ -404,8 +413,14 @@ class SourceLookup():
                 return None
 
         self.psep=0
+        # print(f'looking up: {skycoord} ', end='')
+        # print(f'in {self.pt_dirs}')
+        try:
+            idx, sep2d, _= skycoord.match_to_catalog_sky(self.pt_dirs)
+        except Exception as msg:
+            print(f'Fail SkyCoord catalog lookup: {self.pt_dirs}, {msg}', file=sys.stderr)
+            return None
 
-        idx, sep2d, _= skycoord.match_to_catalog_sky(self.pt_dirs)
         self.psep = sep = sep2d.deg[0]
         pt_name =  self.pt_names[idx]
         if sep > self.max_sep:
@@ -527,7 +542,7 @@ class PointSource():
         kw = dict(xlabel='Energy (GeV)',
                   ylabel=r'$\mathrm{Energy\ Flux\ (eV\ cm^{-2}\ s^{-1})}$',
                   title=f'{self.name}',
-                  xlim=(x.min(),x.max()),
+                  xlim=(x.min()/1e3,x.max()/1e3),
                  )
         kw.update(kwargs)
         ax.set(**kw)

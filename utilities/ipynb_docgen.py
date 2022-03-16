@@ -5,6 +5,7 @@ Usage: Wtih code like this in a cell
 
     from utilities.ipynb.docgen import *
 
+    @ipynb_doc
     def userdoc():
         '''
         Markdown text  with {} strings.
@@ -13,16 +14,18 @@ Usage: Wtih code like this in a cell
         # 
         return locals()
 
-    nbdoc(userdoc,)
+    userdoc()
 
 will display the text, with the {} strings replaceed by representations of the variables, like an f-string, but actually equivalent to '...'.format(locals())
+Note the decorator, and the "return locals()" as the last line of the function.
+
 
 Useful routines:
 
 - image 
 - figure
 - monospace
-- capture_print or capture
+- capture_show, capture_hide
 
 - shell
 - create_file
@@ -30,13 +33,26 @@ Useful routines:
 Names that are recognized:
 
 - date
+
+About image storage
+
+Images are made from plots, or imported directly, with HTML created to include the image. They are stored in a local folder "images".
+The file name by default is the 
 """
 import sys, os, shutil, string, pprint, datetime
 
-#import nbdev # only for a show_doc
 
-__all__ = ['nbdoc', 'image', 'figure', 'monospace', 'capture_print','capture', 'shell', 'create_file',
-        'get_nb_namespace', ] #,'show_doc']
+__all__ = ['nbdoc', 'image', 'figure', 'monospace', 'capture', 'capture_hide', 'capture_show', 'shell', 'create_file', 'ipynb_doc',
+        'get_nb_namespace', 'special_prefix'] #,'show_doc']
+
+special_prefix = ''
+
+# The decorator to run nbdoc on a function
+
+def ipynb_doc(func, name=None):
+    def inner(*args, **kwargs):
+        nbdoc(func, *args, name=name, **kwargs)
+    return inner
 
 def doc_formatter(
         text:'text string to process',
@@ -58,8 +74,8 @@ def doc_formatter(
         def vformat(self, format_string,  kwargs):
             try:
                 return super().vformat(format_string, [], kwargs)
-            except AttributeError as msg:
-                return f'Docstring formatting failed: {msg.args[0]}'
+            except Exception as msg:
+                return f'Docstring formatting failed: {msg}'
         def get_value(self, key, args, kwargs):
             return kwargs.get(key, Formatter.Unformatted(key))
 
@@ -366,7 +382,7 @@ class ObjectReplacer(dict):
 
 def monospace(text:'Either a string, or an object',
                 summary:'string for <details>'=None,
-                open:'initially show details'=False, 
+                show:'initially show details'=False, 
                 indent='5%',
                 style='',
                 )->str:
@@ -377,7 +393,7 @@ def monospace(text:'Either a string, or an object',
         return out
 
     # Set up a "details" HTML tag
-    return f'<details {"open" if open else ""} class="nbdoc-description" >'\
+    return f'<details {"open" if show else ""} class="nbdoc-description" >'\
            f'  <summary> {summary} </summary>'\
            f'  {out}'\
             ' </details>'
@@ -413,8 +429,10 @@ def capture(summary=None, **kwargs):
             return monospace(self._new.getvalue(), summary=summary, **kwargs)
 
     return Capture_print()
-def capture_print(summary=None, **kwargs):
+def capture_hide(summary=None, **kwargs):
     return capture(summary, **kwargs)
+def capture_show(summary=None, **kwargs):
+    return capture(summary, show=True, **kwargs)
 
 def create_file(func, filename, folder='images'):
     """
@@ -469,16 +487,22 @@ def nbdoc(fun, *pars, name=None, **kwargs):
     import inspect
     import IPython.display as display
 
+    # make sure callable, get name
+    if not callable(fun):
+        print('nbdoc arg must be callable', file=sys.stderr)
+        return
 
+    fun_name =  getattr(fun, '__name__', 'unnamed_function')
+    name = name or fun_name
 
     # the the docstring and function name
     rawdoc = fun.__doc__
     if rawdoc is None:
-        print(f'Function {fun.__name__} must have a docstring', file=sys.stderr)
+        print(f'Function {fun_name} must have a docstring', file=sys.stderr)
         return
 
+    # strip leading spaces from docstring
     doc = inspect.cleandoc(rawdoc)
-    name = name or fun.__name__
 
     # predefine convenient symbols
     vars = dict(date =str(datetime.datetime.now())[:16],
@@ -492,12 +516,12 @@ def nbdoc(fun, *pars, name=None, **kwargs):
         # user_vars = eval('fun(*pars, **kwargs)', locals().update(get_nb_namespace()) )
 
     except Exception as e:
-        print(f'Function {fun.__name__} failed: {e}', file=sys.stderr)
+        print(f'Function {fun_name} failed: {e}', file=sys.stderr)
         raise 
         #return
 
     if user_vars is None or  type(user_vars)!=dict:
-        print( 'The function {fun.__name__} must end with "return locals()"', file=sys.stderr)
+        print( 'The function {fun_name} must end with "return locals()"', file=sys.stderr)
         return
 
     # add convenient symbols
@@ -511,7 +535,7 @@ def nbdoc(fun, *pars, name=None, **kwargs):
         pass
     #    raise Exception('did not find the "docs" folder')
     # initialze the ObjectReplacer
-    orep = ObjectReplacer(folders=folders, figure_prefix=name)
+    orep = ObjectReplacer(folders=folders, figure_prefix=special_prefix+name)
 
     # replace variable objects that are recognized
     orep(vars)

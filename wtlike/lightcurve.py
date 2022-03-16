@@ -11,7 +11,7 @@ import pandas as pd
 from .config import *
 from .sources import PointSource
 from .loglike import (LogLike, GaussianRep, Gaussian2dRep, PoissonRep, PoissonRepTable, poisson_tolerance)
-from .cell_data import *
+from .cell_data import CellData
 
 # Cell
 class CellFitter(object):
@@ -451,8 +451,8 @@ class LightCurve(CellData):
         df = lc['t tw n'.split()].copy() # maybe fix warnings?
         if include_e:
             df.loc[:,'e'] = self.fits.e
-        if include_ctm and 'ctm' in self.fits:
-            df.loc[:,'ctm'] = self.fits.ctm
+        if include_ctm and 'ctm' in self.cells:
+            df.loc[:,'ctm'] = self.cells.ctm
         df.loc[:, 'ts'] =  fits.apply(lambda f: f.ts).round(1)
         df.loc[:,'flux'] = flux.values.round(4)
         df.loc[:, 'errors'] = errors.values

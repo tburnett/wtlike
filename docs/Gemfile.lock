@@ -266,7 +266,7 @@ DEPENDENCIES
   github-pages
   jekyll (>= 3.7)
   kramdown (>= 2.3.0)
-  nokogiri (< 1.11.5)
+  nokogiri (>= 1.13.2)
 
 BUNDLED WITH
    2.1.4

@@ -98,6 +98,8 @@ class WeightFunction(object):
         self.lam = wt_signif
 
     def __call__(self, r):
+        """ implement
+        """
         return (self.s * np.exp(-r/self.lam)/(self.lam*(1-np.exp(-1/self.lam))) + self.b)
 
     def sample(self, s,b, n):
@@ -146,7 +148,7 @@ class Simulation(object):
         - src_flux : source flux, scalar or function of days, typically around 1e-7
         - tstart, tstop :(days)
         - bkg_rate : background flux, scalar or function of day, typicaly 1e-6 for 4-deg cone
-        - efun : scalar, function (of time in days) of the exposure/s. Typically 3000 cm^2 for fermi
+        - efun : scalar | function (of time in days) of the exposure/s. Typically 3000 cm^2 for fermi
 
         - wt_signif : now the width of the PSF in (r/rmax)**2 coordinates
 

@@ -4,6 +4,8 @@ __all__ = ['WtLike']
 
 # Cell
 import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd
 from .bayesian import get_bb_partition
 from .lightcurve import fit_cells, LightCurve, flux_plot
 from .cell_data import partition_cells
@@ -33,6 +35,9 @@ class WtLike(LightCurve):
           - time_bins [Config().time_bins] : binning: start, stop, binsize
         sets:
           - cells
+        creates copies with new cells:
+          - view
+          - phase_view
 
     LightCurve -- likelihood analysis of the cells
         parameters:
@@ -96,43 +101,6 @@ class WtLike(LightCurve):
         ax.grid(alpha=0.5)
         fig.set_facecolor('white')
         return fig
-
-    def phase_view(self, period, nbins=25, reference='2008'):
-        """ Return a "phase" view, in which the cell time binning is according to phase.
-
-        * reference -- a UTC date for aligning the bins.
-        """
-        ref = 0 if not reference else MJD(reference)
-
-        # helper function that returns the bin number as a float in [0,period)
-        binner = lambda t: np.mod(t-ref,period)/period * nbins
-
-        # adjust start to correspond to edge of bin
-
-        # create a view with nbins per period and get the cells
-        st = self.start # the start of data taking
-        self.reference_bin =strefbin = binner(st)
-        stnew = st +np.mod(-strefbin,1)*period/nbins
-        view = self.view(stnew, 0, period/nbins)
-        cells = view.cells
-        bw = 1/nbins
-
-        def concat(pcells, t):
-            newcell = dict(t=t, tw=bw)
-            for col in 'n e S B'.split():
-                newcell[col] = pcells[col].sum()
-            newcell['w'] = np.concatenate(list(pcells.w.values))
-            return newcell
-
-        # concatenate all in the same phase bin--note cyclic rotation
-        k = int(strefbin)
-        fcells = [concat(cells.iloc[((ibin-k)%nbins):-1:nbins], (ibin+0.5)*bw)  for ibin in range(nbins) ]
-
-        view.cells = pd.DataFrame(fcells)
-        view.update()
-        view.is_phase = True
-        view.period = period
-        return  view
 
     def plot_phase(self, ax=None, **kwargs):
         """Plot a phase lightcurve
