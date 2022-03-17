@@ -6,8 +6,8 @@ title: Manage cell data
 keywords: fastai
 sidebar: home_sidebar
 
-summary: "Create cells from source data"
-description: "Create cells from source data"
+summary: "Create cells from source data and define the likelihood"
+description: "Create cells from source data and define the likelihood"
 nb_path: "nbs/08_cell_data.ipynb"
 ---
 <!--
@@ -31,13 +31,95 @@ nb_path: "nbs/08_cell_data.ipynb"
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Creating-cells">Creating cells<a class="anchor-link" href="#Creating-cells"> </a></h2><p>As set out in Kerr, we create "cells" by binning in time to form light curves. For each cell, we determine its likelihood function, which is then used to estimate the signal rate for that duration.</p>
-<p>Eqn. 2 of Kerr presents the log likelihood as a sum of cells of the log likelihoods of the cells, where the $k^{th}$ cell's likelihood,  (with $\beta=0$), is</p>
+<h2 id="Creating-and-fitting-cells">Creating and fitting cells<a class="anchor-link" href="#Creating-and-fitting-cells"> </a></h2><p>As set out in Kerr, we create "cells" by binning in time to form light curves. For each cell, we determine its likelihood function, which is then optimized to estimate the relative signal rate for that duration.</p>
+<p>Eqn. 2 of Kerr presents the log likelihood as a function of the incremental relative flux $\alpha$ (with $\beta=0$). The log likelihood for a cell,</p>
 <p>{% raw %}
-$$ \displaystyle\log\mathcal{L}_k(\alpha)\ = \sum_{w}  \log \big( 1 + \alpha\ w \big) - \alpha\ f_k\ S   $$
+$$ \displaystyle\log\mathcal{L}(\alpha)\ = \sum_w  \log \big( 1 + \alpha\ w \big) - \alpha\ S \tag{1}  $$
 {% endraw %}</p>
-<p>The sum is over the weights $w$ in that cell, and $S$ is an estimate of the signal count flux, and $f_k$ is the total exposure for that $k^{th}$ cell.</p>
-<p><em>Fermi</em> data is broken into distinct runs, corresponding at most to a single orbit. The effective area, $\frac{df}{dt}$ varies by a factor of 2 or 3 for each 90-min orbit, is typically  $ 3 000\ \mathrm{cm}^2$, or $0.3\ \mathrm{m^2}$. This is measured in 30-s intervals.</p>
+<p>The sum is over the photon weights $w$ for that cell, and $S$ is the expected value for sum of weights, determined from the total sum and the fraction of the energy-weighted exposure for the cell:</p>
+<p>{% raw %}
+$$ S =  \frac{f_{cell}}{ f_{total}}\ \sum{w},  $$
+{% endraw %}
+where $f$ represents the energy-weighted exposure.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><em>Fermi</em> data is broken into distinct <em>runs</em>, corresponding at most to a single orbit. The effective area, or $\frac{df}{dt}$, which varies by a factor of 2 or 3 for each 90-min orbit, is typically  $ 3 000\ \mathrm{cm}^2$, or $0.3\ \mathrm{m^2}$. This is measured in 30-s intervals. Exposure is the sum, for each interval in contained in the cell, of the effective area times livetime in the direcion of the source. Since it depends on energy, the Kerr strategy is to perform a weighted average with a spectrum. This can be improved on, see below.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The value of $\alpha$,  $\hat{\alpha}$, which maximizes the likelihood for the cell is the solution to</p>
+<p>{% raw %}
+$$ \sum_{w} \frac{w}{1+\hat{\alpha}\ w} = S $$
+{% endraw %}</p>
+<p>So that $\hat{\alpha}=0$ corresponds to $\sum w=  S$, as expected if the cell's flux is the same as the average.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The Hessian, or inverse variance, is<br>
+$$ -\frac{d^2\ \log(\mathcal{L})}{d\ \alpha^2} = \sum_{w} \frac{w^2}{(1+\hat{\alpha}\ w)^2}$$</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Approximate-the-log-if-$%5Calpha-%5Ctimes-%5Comega$-is-small">Approximate the log if $\alpha \times \omega$ is small<a class="anchor-link" href="#Approximate-the-log-if-$%5Calpha-%5Ctimes-%5Comega$-is-small"> </a></h3><p>Kerr uses this to for the frequency derivation. Let $W_=\sum w$ and $U=\sum w^2$. Then the  cell's likelihood is</p>
+<p>{% raw %}
+$$ \displaystyle\log\mathcal{L}(\alpha)\ \approx   \alpha\ \ (W-S) - \tfrac{1}{2} \alpha^2\ U ,  \tag{2}$$
+{% endraw %}</p>
+<p>and the maximum likelihood solution is analytic: $\hat{\alpha} =  (W-S)/U$
+and the inverse variance simply $U$.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Accounting-for-spectral-dependence">Accounting for spectral dependence<a class="anchor-link" href="#Accounting-for-spectral-dependence"> </a></h3><p>The development above does not consider energy. The sum over weights includes all photons of all energies, and the coresponding exposure uses a weighted average of the energy-dependent effective area. The Kerr 
+application uses a power-law spectral shape for this--since we have the actual spectrum available, we can use it instead.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We bin energy into four bands per decade. This modification breaks up a call into eight sub-cells with the
+same $\alpha$ value.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Also, the development above determines the <em>count</em> flux per cell, that is, simply counting photons.  An improvement wmeasures the energy flux as well, or perhaps a spectral index factor as a factor for the assumed spectrum.</p>
+<p>Each photon has a <em>band</em> index, indicating its type as Front or Back, and its energy band, one of 16 from 100 MeV to 1 TeV. (Although we only use 8 bands, up to 10 GeV). To use this information, we need the corresponding exposure.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Currently the <a href="/wtlikeexposure.html"><code>exposure</code></a> DataFrame has, for each 30-s time interval, the exposure as calculated for the assumed spectrum. This is extended to provide the exposure per energy band.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Let $l$ be the energy index. It represents a logarithmic derivative of the energy. Replace $\alpha$ with $\alpha+\zeta l$ in Equ. (2): Then the solution for $\zeta$ is</p>
+<p>{% raw %}
+$$\zeta = \frac{\sum_l(W_l-S_l-\alpha U_l)}{\sum_l l U_l} $$
+{% endraw %}</p>
 
 </div>
 </div>
@@ -71,6 +153,13 @@ a <code>time_bins</code> argument to describe the binning, generating a list, ac
     
 <div class="cell border-box-sizing code_cell rendered">
 
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
 <div class="output_wrapper">
 <div class="output">
 
@@ -78,19 +167,31 @@ a <code>time_bins</code> argument to describe the binning, generating a list, ac
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="time_bin_edges" class="doc_header"><code>time_bin_edges</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/cell_data.py#L15" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>time_bin_edges</code>(<strong><code>config</code></strong>, <strong><code>exposure</code></strong>, <strong><code>tbin</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="time_bin_edges" class="doc_header"><code>time_bin_edges</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/cell_data.py#L18" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>time_bin_edges</code>(<strong><code>config</code></strong>, <strong><code>exposure</code></strong>, <strong><code>tbin</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
-<p>Return an interleaved array of start/stop values</p>
-<p>tbin: an array (a,b,d), default config.time_bins</p>
-<p>interpretation of a, b:</p>
-<p>a:  if &gt; 50000, interpret as MJD for start
-    if &lt; 0, back from stop
-    otherwise, offset from start</p>
-<p>b:  if &gt; 50000, interpret MJD value for stop
-    if &gt; 0, increment from start
-    otherwise, offset from stop</p>
-<p>d : if positive, the day bin size
-    if 0; return contiguous bins</p>
+<p>Return an interleaved array of time bin, or cell start/stop values</p>
+<ul>
+<li>exposure -- the weighted exposure table derived from the spacecraft info and the source. Used only
+  to establish nominal start/stop</li>
+<li><p>tbin: an array (a,b,d), default config.time_bins to specify binning</p>
+<p>interpretation of a, b, d:</p>
+<p>a:  if &gt; 50000, interpret as MJD for start</p>
+
+<pre><code>  if &lt; 0, back from stop
+  otherwise, offset from exposure start
+
+</code></pre>
+<p>b:  if &gt; 50000, interpret MJD value for stop</p>
+
+<pre><code>  if &gt; 0, increment from start
+  otherwise, offset from exposure stop
+
+</code></pre>
+<p>d : if positive, the day bin size</p>
+
+<pre><code>  if 0; return contiguous bins</code></pre>
+</li>
+</ul>
 
 </div>
 
@@ -98,13 +199,6 @@ a <code>time_bins</code> argument to describe the binning, generating a list, ac
 
 </div>
 </div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
 
 </div>
     {% endraw %}
@@ -120,7 +214,7 @@ a <code>time_bins</code> argument to describe the binning, generating a list, ac
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="contiguous_bins" class="doc_header"><code>contiguous_bins</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/cell_data.py#L65" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>contiguous_bins</code>(<strong><code>exposure</code></strong>, <strong><code>min_gap</code></strong>=<em><code>20</code></em>, <strong><code>min_duration</code></strong>=<em><code>600</code></em>)</p>
+<h4 id="contiguous_bins" class="doc_header"><code>contiguous_bins</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/cell_data.py#L70" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>contiguous_bins</code>(<strong><code>exposure</code></strong>, <strong><code>min_gap</code></strong>=<em><code>20</code></em>, <strong><code>min_duration</code></strong>=<em><code>600</code></em>)</p>
 </blockquote>
 <p>return a start/stop interleaved array for contiguous intervals</p>
 
@@ -159,7 +253,7 @@ a <code>time_bins</code> argument to describe the binning, generating a list, ac
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="CellData" class="doc_header"><code>class</code> <code>CellData</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/cell_data.py#L97" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>CellData</code>(<strong>*<code>pars</code></strong>, <strong>**<code>kwargs</code></strong>) :: <a href="/wtlikesource_data.html#SourceData"><code>SourceData</code></a></p>
+<h2 id="CellData" class="doc_header"><code>class</code> <code>CellData</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/cell_data.py#L102" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>CellData</code>(<strong>*<code>pars</code></strong>, <strong>**<code>kwargs</code></strong>) :: <a href="/wtlikesource_data.html#SourceData"><code>SourceData</code></a></p>
 </blockquote>
 <p>Manage a set of cells generated from a data set</p>
 <p>Invoke superclass to load photon data and exposure for the source.</p>
@@ -176,7 +270,7 @@ a <code>time_bins</code> argument to describe the binning, generating a list, ac
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="CellData.view" class="doc_header"><code>CellData.view</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/cell_data.py#L188" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>CellData.view</code>(<strong>*<code>pars</code></strong>, <strong><code>exp_min</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="CellData.view" class="doc_header"><code>CellData.view</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/cell_data.py#L208" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>CellData.view</code>(<strong>*<code>pars</code></strong>, <strong><code>exp_min</code></strong>=<em><code>None</code></em>, <strong><code>no_update</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 <p>Return a "view", a copy of this instance with a perhaps a different set of cells</p>
 <ul>
@@ -186,6 +280,8 @@ a <code>time_bins</code> argument to describe the binning, generating a list, ac
 </li>
 <li><p>exp_min [None] -- If specified, a different minimum exposure, in cm^2 Ms units to use for fitting
   from.</p>
+</li>
+<li><p>no_update -- avoid fitting the cells if invoked by LightCurve or WtLike</p>
 </li>
 </ul>
 
@@ -210,7 +306,7 @@ a <code>time_bins</code> argument to describe the binning, generating a list, ac
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="concatenate_cells" class="doc_header"><code>concatenate_cells</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/cell_data.py#L267" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>concatenate_cells</code>(<strong><code>cells</code></strong>)</p>
+<h4 id="concatenate_cells" class="doc_header"><code>concatenate_cells</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/cell_data.py#L353" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>concatenate_cells</code>(<strong><code>cells</code></strong>)</p>
 </blockquote>
 <p>Combine a group of cells to one</p>
 <ul>
@@ -255,7 +351,7 @@ Return a dict with summed n, S, B, and concatenated w</li>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="partition_cells" class="doc_header"><code>partition_cells</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/cell_data.py#L285" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>partition_cells</code>(<strong><code>config</code></strong>, <strong><code>cells</code></strong>, <strong><code>edges</code></strong>)</p>
+<h4 id="partition_cells" class="doc_header"><code>partition_cells</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/cell_data.py#L371" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>partition_cells</code>(<strong><code>config</code></strong>, <strong><code>cells</code></strong>, <strong><code>edges</code></strong>)</p>
 </blockquote>
 <p>Partition a set of cells</p>
 <ul>
@@ -274,15 +370,30 @@ Return a dict with summed n, S, B, and concatenated w</li>
 </div>
     {% endraw %}
 
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Study-cell-formation-with-Geminga">Study cell formation with Geminga<a class="anchor-link" href="#Study-cell-formation-with-Geminga"> </a></h2>
-</div>
-</div>
-</div>
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">cells</span><span class="o">.</span><span class="n">photons</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="s1">&#39;eindex&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">band</span><span class="o">.</span><span class="n">values</span><span class="o">//</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+
+
+<span class="n">t</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;eindex&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">agg</span><span class="p">(</span>
+    <span class="n">wcount</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;weight&#39;</span><span class="p">,</span> <span class="nb">len</span><span class="p">),</span>
+    <span class="n">wsum</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;weight&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">),</span> <span class="c1">#column=&quot;B&quot;, aggfunc=&quot;min&quot;</span>
+    <span class="n">wsumsq</span> <span class="o">=</span><span class="p">(</span><span class="s1">&#39;weight&#39;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
+<span class="p">)</span>
+
+<span class="n">t</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="s1">&#39;unc&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">r</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">wsumsq</span><span class="p">)</span><span class="o">/</span><span class="n">r</span><span class="o">.</span><span class="n">wsum</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">t</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
 
 <div class="output_wrapper">
 <div class="output">
@@ -290,11 +401,97 @@ Return a dict with summed n, S, B, and concatenated w</li>
 <div class="output_area">
 
 
-<div class="output_markdown rendered_html output_subarea ">
-<h4 id="phase_cells" class="doc_header"><code>phase_cells</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/cell_data.py#L327" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>phase_cells</code>(<strong><code>period</code></strong>, <strong><code>nbins</code></strong>)</p>
-</blockquote>
+<div class="output_html rendered_html output_subarea output_execute_result"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
 
-</div>
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>wcount</th>
+      <th>wsum</th>
+      <th>wsumsq</th>
+      <th>unc</th>
+    </tr>
+    <tr>
+      <th>eindex</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1055</td>
+      <td>458.752258</td>
+      <td>265.572026</td>
+      <td>0.035523</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>895</td>
+      <td>580.675415</td>
+      <td>426.201388</td>
+      <td>0.035553</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1475</td>
+      <td>1121.376709</td>
+      <td>916.684202</td>
+      <td>0.027000</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1102</td>
+      <td>980.792725</td>
+      <td>883.487786</td>
+      <td>0.030306</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>874</td>
+      <td>810.381836</td>
+      <td>753.834191</td>
+      <td>0.033880</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>485</td>
+      <td>448.864258</td>
+      <td>416.848584</td>
+      <td>0.045486</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>197</td>
+      <td>182.605957</td>
+      <td>170.191864</td>
+      <td>0.071442</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>65</td>
+      <td>60.885742</td>
+      <td>57.421911</td>
+      <td>0.124458</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
 
 </div>
 
@@ -304,13 +501,133 @@ Return a dict with summed n, S, B, and concatenated w</li>
 </div>
     {% endraw %}
 
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Check-likelihood">Check likelihood<a class="anchor-link" href="#Check-likelihood"> </a></h2>
+</div>
+</div>
+</div>
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># def phase_cells(self, period, nbins):</span>
+<span class="c1">#     &quot;&quot;&quot;    </span>
+<span class="c1">#     &quot;&quot;&quot;</span>
+<span class="c1">#     view = self.view(0,0, period/nbins)</span>
+<span class="c1">#     cells = view.cells</span>
+<span class="c1">#     bw = 1/nbins</span>
+    
+<span class="c1">#     def concat(pcells, t):</span>
+<span class="c1">#         newcell = dict(t=t, tw=bw)</span>
+
+<span class="c1">#         for col in &#39;n e S B&#39;.split():</span>
+<span class="c1">#             newcell[col] = pcells[col].sum()</span>
+<span class="c1">#         newcell[&#39;w&#39;] = np.concatenate(list(pcells.w.values))</span>
+<span class="c1">#         return newcell</span>
+    
+<span class="c1">#     fcells = [concat(cells.iloc[ibin:-1:nbins], (ibin+0.5)*bw) for ibin in range(nbins) ]</span>
+         
+<span class="c1">#     return  pd.DataFrame(fcells)</span>
+
+<span class="c1"># # hide</span>
+<span class="c1"># ################################</span>
+<span class="c1"># #  Develop folded cells</span>
+<span class="c1"># ###############################</span>
+<span class="c1"># source = PointSource(&#39;Vela pulsar&#39;)</span>
+
+<span class="c1"># # photons, exposure = cd.photons.copy(), cd.exposure.copy()</span>
+<span class="c1"># period, nbins = 53.05, 25</span>
+
+
+
+<span class="c1"># z = phase_cells(CellData(source), period,nbins)</span>
+<span class="c1"># z.head()</span>
+
+<span class="c1"># # hide</span>
+<span class="c1"># config=Config(use_kerr=True); config.verbose=2</span>
+<span class="c1"># if config.valid:</span>
+<span class="c1">#     source = PointSource(&#39;Geminga&#39;)</span>
+
+<span class="c1">#     cd = CellData(source, config=config, week_range=(9,11),key=None)</span>
+
+<span class="c1">#     cd.plot_concatenated( title=f&#39;{cd.source.name}&#39;);</span>
+<span class="c1">#     print(&#39;Parmeters from Poisson fit to full data set&#39;)</span>
+<span class="c1">#     L = cd.full_likelihood()</span>
+<span class="c1">#     pr = PoissonRep(L)</span>
+<span class="c1">#     print(pd.Series(pr.info()))</span>
+
+<span class="c1"># #(cd.cells.n/cd.cells.e).describe()</span>
+
+<span class="c1"># # from wtlike.exposure import weighted_aeff</span>
+<span class="c1"># sc_df = cells.exposure</span>
+
+<span class="c1"># cos_theta = sc_df.cos_theta.values</span>
+<span class="c1"># livetime = sc_df.livetime.values</span>
+
+<span class="c1"># # func = weighted_aeff(config, source) </span>
+<span class="c1"># # sc_df.loc[:,&#39;exp&#39;] =</span>
+<span class="c1"># exp = sc_df.exp.values #(func(cos_theta) * livetime).astype(np.float32)</span>
+
+<span class="c1"># ef = sc_df.exp_fract</span>
+<span class="c1"># efa = np.array([np.array(x,float) for x in ef])</span>
+<span class="c1"># efe = efa.T * exp</span>
+<span class="c1"># efe.sum(axis=0)</span>
+
+<span class="c1">#     def get_exposure_per_cell(self, exposure_factor=1e-6):</span>
+<span class="c1">#         &quot;&quot;&quot;</span>
+<span class="c1">#         Return a dict of arrays per cell:</span>
+<span class="c1">#         - exp -- exposure, in cm^2 Ms units, if exposure_factor==1e-6</span>
+<span class="c1">#         - costh -- mean cos theta per cell</span>
+<span class="c1">#         - exp_energy if exp_fract in the exposure DF, set exposure energy</span>
+        
+<span class="c1">#         &quot;&quot;&quot;</span>
+<span class="c1">#         exp = self.exposure.exp.values</span>
+<span class="c1">#         costh = self.exposure.cos_theta.values</span>
+<span class="c1">#         # the cell index list  </span>
+<span class="c1">#         eci = np.searchsorted(self.exposure.stop, self.cell_edges).reshape(len(self.cell_edges)//2,2)</span>
+<span class="c1">#         cell_exp = np.array([exp[slice(*ecx)].sum()*exposure_factor for ecx in eci], np.float32) #np.float32)</span>
+<span class="c1">#         cell_costh =np.array([costh[slice(*ecx)].mean() for ecx in eci], np.float32) #np.float32)</span>
+        
+<span class="c1">#         ef = self.exposure.get(&#39;exp_fract&#39;, False)</span>
+<span class="c1">#         if ef is not None:</span>
+<span class="c1">#             efa = np.array([np.array(x,float) for x in ef])</span>
+<span class="c1">#             efe = efa.T * exp</span>
+<span class="c1">#             cee = np.array([efe.T[slice(*ecx)].sum(axis=0)*exposure_factor for ecx in eci], np.float32)</span>
+<span class="c1">#         else:</span>
+<span class="c1">#             cee = None</span>
+<span class="c1">#         return dict(exp=cell_exp, costh= cell_costh, exp_energy= cee)</span>
+
+<span class="c1"># get_exposure_per_cell(cells)</span>
+
+<span class="c1"># self = cd; exposure_factor=1e-6</span>
+<span class="c1"># exp = self.exposure.exp.values</span>
+
+<span class="c1"># eci = np.searchsorted(self.exposure.stop, self.cell_edges).reshape(len(self.cell_edges)//2,2)</span>
+<span class="c1"># cell_exp = np.array([exp[slice(*ecx)].sum()*exposure_factor for ecx in eci], np.float32) #np.float32)</span>
+
+<span class="c1"># cell_energy_exp = t = np.array([efe.T[slice(*ecx)].sum(axis=0)*exposure_factor for ecx in eci])</span>
+<span class="c1"># t, t.sum(axis=1)-</span>
+
+<span class="c1">## Temporary - check phased cells</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
 
 </div>
     {% endraw %}
 
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Phase-View-check">Phase View check<a class="anchor-link" href="#Phase-View-check"> </a></h2>
+</div>
+</div>
+</div>
 </div>
  
 

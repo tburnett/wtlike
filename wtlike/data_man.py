@@ -66,11 +66,11 @@ def get_ft1_data( config, ft1_file):
 
         gti_times = np.ravel(np.column_stack((a,b)))
         if np.any(np.diff(gti_times)<0):
-            raise Exception(f'Non-monatonic GTI found')
+            raise Exception(f'Non-monatonic GTI found in file {ft1_file}')
 
-        def apply_gti(time):
-            x = np.digitize(time, gti_times)
-            return np.bitwise_and(x,1).astype(bool)
+        # def apply_gti(time):
+        #     x = np.digitize(time, gti_times)
+        #     return np.bitwise_and(x,1).astype(bool)
 
         # apply  selections
 
@@ -264,7 +264,7 @@ class FermiData(dict):
         names = [f.name for f in Path(self.local_path).glob('*')]
         return names
 
-    def __call__(self, week, test=False, tries_left=3):
+    def __call__(self, week, test=False, tries_left=2):
         """ Process the given week:
         * download from GSFC
         * convert each
@@ -287,8 +287,12 @@ class FermiData(dict):
                 break
             except Exception as e:
                 print(f'*** ERROR *** Failed to convert {ft1_file}: {e} download it again)')
-                os.unlink(ft1_file)
                 tries_left -=1
+                if tries_left==0:
+                    print(f'Failed to convert week file {ft1_file}: quitting', file=sys.stderr)
+                    return None
+                else:
+                    os.unlink(ft1_file)
 
         def apply_gti(time): # note MJD
             x = np.digitize(time, MJD(gti_times))

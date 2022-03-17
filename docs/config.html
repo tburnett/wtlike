@@ -192,9 +192,9 @@ Test: Restoring from cache with key &#34;four&#34;
 Before remove:
 Cache contents
  key                                    size  time                 name, folder /tmp/cache_test
-  one                                     18  2021-10-04 14:15     cache_file_7d4c354a2d2b979c.pkl
-  two                                     18  2021-10-04 14:15     cache_file_599a6d6c518348b3.pkl
-  four                                    23  2021-10-04 14:15     cache_file_d2bd0e97e8ccfa9.pkl
+  one                                     18  2022-02-24 14:40     cache_file_4d32bff1013f1461.pkl
+  two                                     18  2022-02-24 14:40     cache_file_52efb515225bbde.pkl
+  four                                    23  2022-02-24 14:40     cache_file_613a9beacd44a14.pkl
 
 </pre>
 </div>
@@ -355,10 +355,10 @@ Cache contents
 
 
 </code></pre>
-<h4 id="Config-contents-as-set-up-here">Config contents as set up here<a class="anchor-link" href="#Config-contents-as-set-up-here"> </a></h4><p><details  class="nbdoc-description" >  <summary> config parameter list </summary>  <div style="margin-left: 5%;"><pre>Configuration parameters <br>  verbose         : 1<br>  usermode        : False<br>  datapath        : /home/burnett/wtlike_data<br>  cachepath       : /home/burnett/wtlike_cache<br>  catalog_file    : ~/onedrive/fermi/catalog/gll_psc_v28.fit<br>  radius          : 4<br>  cos_theta_max   : 0.4<br>  z_max           : 100<br>  offset_size     : 2e-06<br>  energy_edge_pars : [2, 6, 17]<br>  etypes          : [0, 1]<br>  nside           : 1024<br>  nest            : True<br>  pool_size       : 4<br>  week_range      : (None, None)<br>  time_bins       : [0, 0, 7]<br>  exp_min         : 5<br>  use_kerr        : True<br>  likelihood_rep  : poisson<br>  poisson_tolerance : 0.2<br>  energy_edges    : [1.00000000e+02 1.77827941e+02 3.16227766e+02 5.62341325e+02<br> 1.00000000e+03 1.77827941e+03 3.16227766e+03 5.62341325e+03<br> 1.00000000e+04 1.77827941e+04 3.16227766e+04 5.62341325e+04<br> 1.00000000e+05 1.77827941e+05 3.16227766e+05 5.62341325e+05<br> 1.00000000e+06]<br>  energy_bins     : [1.33352143e+02 2.37137371e+02 4.21696503e+02 7.49894209e+02<br> 1.33352143e+03 2.37137371e+03 4.21696503e+03 7.49894209e+03<br> 1.33352143e+04 2.37137371e+04 4.21696503e+04 7.49894209e+04<br> 1.33352143e+05 2.37137371e+05 4.21696503e+05 7.49894209e+05]<br>  error_msg       : <br></pre></div> </details></p>
+<h4 id="Config-contents-as-set-up-here">Config contents as set up here<a class="anchor-link" href="#Config-contents-as-set-up-here"> </a></h4><p><details  class="nbdoc-description" >  <summary> config parameter list </summary>  <div style="margin-left: 5%;"><pre>Configuration parameters <br>  verbose         : 1<br>  usermode        : True<br>  datapath        : /home/burnett/fermi/wtlike-data<br>  cachepath       : /home/burnett/.cache/wtlike<br>  catalog_file    : /home/burnett/fermi/catalog/gll_psc_v28.fit<br>  radius          : 4<br>  cos_theta_max   : 0.4<br>  z_max           : 100<br>  offset_size     : 2e-06<br>  energy_edge_pars : [2, 6, 17]<br>  etypes          : [0, 1]<br>  nside           : 1024<br>  nest            : True<br>  pool_size       : 1<br>  week_range      : (None, None)<br>  time_bins       : [0, 0, 7]<br>  exp_min         : 5<br>  use_kerr        : True<br>  likelihood_rep  : poisson<br>  poisson_tolerance : 0.2<br>  energy_edges    : [1.00000000e+02 1.77827941e+02 3.16227766e+02 5.62341325e+02<br> 1.00000000e+03 1.77827941e+03 3.16227766e+03 5.62341325e+03<br> 1.00000000e+04 1.77827941e+04 3.16227766e+04 5.62341325e+04<br> 1.00000000e+05 1.77827941e+05 3.16227766e+05 5.62341325e+05<br> 1.00000000e+06]<br>  energy_bins     : [1.33352143e+02 2.37137371e+02 4.21696503e+02 7.49894209e+02<br> 1.33352143e+03 2.37137371e+03 4.21696503e+03 7.49894209e+03<br> 1.33352143e+04 2.37137371e+04 4.21696503e+04 7.49894209e+04<br> 1.33352143e+05 2.37137371e+05 4.21696503e+05 7.49894209e+05]<br>  error_msg       : <br></pre></div> </details></p>
 <h5 id="config.cache----a-file-cache">config.cache -- a file cache<a class="anchor-link" href="#config.cache----a-file-cache"> </a></h5><p>The class <code>Cache</code>, available from <code>config.cache</code> implements a file cache in the folder
-<code>/home/burnett/wtlike_cache</code></p>
-<p><details  class="nbdoc-description" >  <summary> current cache contents </summary>  <div style="margin-left: 5%;"><pre>Cache contents<br> key                                    size  time                 name, folder /home/burnett/wtlike_cache<br>  PSR J0205+6449_data              140253559  2021-09-04 06:01     cache_file_1135b01cedc35bd5.pkl<br>  PSR J0633+1746_data              126498784  2021-09-05 07:53     cache_file_ed165cc2c16fe88.pkl<br>  P88Y4744_data                    140766120  2021-09-03 07:31     cache_file_6e528637cd6363ba.pkl<br>  PSR J1709-4429_data              132162268  2021-09-03 08:09     cache_file_8142b848dfe1602.pkl<br>  PSR J0835-4510_data              169506391  2021-09-04 07:03     cache_file_7e64890d2d3cf186.pkl<br>  PSR J0007+7303_data              141843713  2021-09-04 05:46     cache_file_f714543b036ec79.pkl<br>  PSR J0437-4715_data              102434009  2021-09-04 06:14     cache_file_4635c1bdf5575022.pkl<br>  PSR J0534+2200_data              118656836  2021-09-04 06:25     cache_file_4cab035390d771c.pkl<br>  PSR J0659+1414_data              104267819  2021-09-04 06:50     cache_file_65a4450859bc347.pkl<br>  PSR J0940-5428_data              118483627  2021-09-04 07:16     cache_file_fe79220fc4432a7.pkl<br>  PSR J1028-5819_data              132849933  2021-09-04 07:30     cache_file_2136c2db6aa564bd.pkl<br>  PSR J1048-5832_data              130091229  2021-09-04 07:42     cache_file_33be8b06abda2b0e.pkl<br>  PSR J1124-5916_data              123559308  2021-09-04 07:53     cache_file_ce80a37701882eb.pkl<br>  PSR J1357-6429_data              134612069  2021-09-04 08:04     cache_file_41ef2bb1a783a5d.pkl<br>  PSR J1420-6048_data              143998452  2021-09-04 08:35     cache_file_6822880c141b026.pkl<br>  PSR J1513-5908_data              135384551  2021-09-04 09:13     cache_file_ca248bef787137c.pkl<br>  Geminga_test                     158733144  2021-09-04 09:34     cache_file_df114f50e3463b5.pkl<br>  PSR J1531-5610_data              135463625  2021-09-05 08:18     cache_file_07a767b3c61cfb4.pkl<br>  PSR J1740+1000_data              108309885  2021-09-05 08:27     cache_file_1008b266a54fc.pkl<br>  PSR J1747-2958_data              139275385  2021-09-05 08:35     cache_file_b9ae79496d75335.pkl<br>  PSR J1833-1034_data              132315258  2021-09-05 08:41     cache_file_ab453d32bff9d3.pkl<br>  PSR J1935+2025_data              129783300  2021-09-05 08:48     cache_file_7fc8d2fd83528d21.pkl<br>  PSR J1952+3252_data              124547741  2021-09-05 08:55     cache_file_680073af19df930.pkl<br>  PSR J2229+6114_data              144810463  2021-09-05 09:01     cache_file_2f9b4a9c6aa654b5.pkl<br>  P88Y4787_data                    108470069  2021-09-05 10:02     cache_file_3f26aacbd6bc1e7.pkl<br>  P88Y3278_data                    129379406  2021-09-11 06:50     cache_file_1802a87df36ab64f.pkl<br>  P88Y3243_data                     96899924  2021-09-11 07:06     cache_file_4946ebc3043965e.pkl<br>  P88Y0643_data                    105522939  2021-09-11 07:28     cache_file_6337165d61592fea.pkl<br>  P88Y3157_data                     95033432  2021-09-11 10:24     cache_file_f1c623d2a8d0b6.pkl<br>  P88Y5020_data                    131706624  2021-09-13 12:05     cache_file_06a28c4c3bb35e9.pkl<br>  PSR J1813-1246_data              128965747  2021-09-14 11:05     cache_file_28963e023b09448b.pkl<br>  P88Y4996_data                    134505888  2021-09-14 11:27     cache_file_1d28bca0f4dae309.pkl<br>  504H-0317_data                   141578262  2021-09-14 13:39     cache_file_5544990f1fe3b53a.pkl<br>  LS 5039 source-weighted          131706624  2021-09-17 09:20     cache_file_19e076014fd1ebc.pkl<br>  LS 5039 Kerr weighting           131706624  2021-09-17 10:04     cache_file_4033a5bbe26ed03d.pkl<br>  Geminga source_weighted          126745562  2021-09-17 13:32     cache_file_4c312fd1fa44b67f.pkl<br></pre></div> </details></p>
+<code>/home/burnett/.cache/wtlike</code></p>
+<p>(Failed: cannot import name 'update_data' from 'wtlike.data_man' (/mnt/c/users/thbur/OneDrive/work/wtlike/wtlike/data_man.py))</p>
 
 </div>
 
@@ -487,9 +487,9 @@ Cache contents
 <div class="output_text output_subarea output_execute_result">
 <pre>(&#39;2001-01-01 00:01&#39;,
  &#39;2008-08-05 00:00&#39;,
- &#39;UTC 2021-10-4 21:15&#39;,
- 59491.885915105326,
- &#39;2021-10-04 21:15&#39;)</pre>
+ &#39;UTC 2022-02-24 22:40&#39;,
+ 59634.94460890989,
+ &#39;2022-02-24 22:40&#39;)</pre>
 </div>
 
 </div>
@@ -552,37 +552,6 @@ Cache contents
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">([</span><span class="n">bin_size_name</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span> <span class="mf">7.4</span><span class="p">)])</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>[&#39;1-day&#39;, &#39;2-day&#39;, &#39;1-week&#39;, &#39;7.4-day&#39;]
-</pre>
-</div>
-</div>
-
-</div>
-</div>
 
 </div>
     {% endraw %}

@@ -13,6 +13,7 @@
     "Log Likelihood tools": "loglike.html",
     "Manage cell data": "cell_data.html",
     "Light Curve Generation": "lightcurve.html",
+    "Frequency Domain": "10-time_series.html",
     "Bayesian Blocks": "bayesian.html",
     "wtlike interface": "main.html",
     "Presentation to the Fermi Collaboration": "presentation.html",

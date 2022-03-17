@@ -30,6 +30,7 @@ class SourceData(object):
 
     * S, B : sums of w and 1-w
     * exptot : total associated exposure
+
     """
 
     def __init__(self, source, config=None,  clear=False,
@@ -85,8 +86,6 @@ class SourceData(object):
             self.photons, self.exposure = ret[:2]
             if len(ret)>2: self.used_key = ret[2]
 
-#             self.photons, self.exposure = \
-#                 load_source_data( self.config, self.source, week_range, key, clear)
 
         else: #TODO
             pass
@@ -182,5 +181,3 @@ class SourceData(object):
             ax4.hist(self.photons.weight, 100, histtype='step')
             ax4.set(xlabel='weight')
 
-#     def update_cache(self, **kwargs): #week_range=(-1,None), save=True):
-#         return update_cache(self, **kwargs)

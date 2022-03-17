@@ -131,7 +131,10 @@ def make_exposure(fexp, start, stop, interval=300):
     edges = np.linspace(start, start+nbins*interval/sec_per_day, nbins+1)
     starts, stops = edges[:-1], edges[1:]
     exp = fexp(starts) * interval
-    return pd.DataFrame.from_dict(dict(start=starts, stop=stops, exp=exp))
+    return pd.DataFrame.from_dict(dict(start=starts, stop=stops,
+                                       cos_theta=np.ones(nbins,np.float32),
+                                       exp=exp,
+                                      ))
 
 # exp  = make_exposure(500, 0, 1 )
 # days  = np.sum(exp.stop-exp.start); secs = days*24*3600
@@ -170,7 +173,7 @@ class Simulation(object):
     def run(self):
         times = []
         weights = []
-        for start, stop, exp in self.exposure.itertuples(index=False,name=None):
+        for start, stop, costh, exp  in self.exposure.itertuples(index=False,name=None):
 
             src = self.src_fun((start+stop)/2)
             bkg = self.bkg_fun((start+stop)/2)

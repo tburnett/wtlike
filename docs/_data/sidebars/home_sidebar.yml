@@ -46,6 +46,9 @@ entries:
       title: Light Curve Generation
       url: lightcurve.html
     - output: web,pdf
+      title: Frequency Domain
+      url: 10-time_series.html
+    - output: web,pdf
       title: Bayesian Blocks
       url: bayesian.html
     - output: web,pdf

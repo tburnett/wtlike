@@ -69,13 +69,10 @@ class WeightMan(dict):
         filename = 'weight_files/'+nickname.replace(' ','_').replace('+','p')+'_weights.pkl'
 
         if (datapath/filename).exists():
-#             print('found in directory')
             with open(datapath/filename, 'rb') as inp:
                 wtd =  pickle.load(inp, encoding='latin1')
 
         elif (datapath/'weight_files.zip').exists():
-            # check the zip file
-#             print('load from zip')
             with  zipfile.ZipFile(datapath/'weight_files.zip') as wtzip:
                 wtd =  pickle.load(wtzip.open(filename), encoding='latin1')
 
@@ -86,8 +83,6 @@ class WeightMan(dict):
         self.__dict__.update(wtd)
         self.filename=filename
         self.config = config
-#         pos = self['source_lb']
-#         print(f'\tSource is {self["source_name"]} at ({pos[0]:.2f}, {pos[1]:.2f})')
 
         # check format--old has pixels, weights at tome
         srcfile = f'file "{self.filename}"' if self.source is None else f'file from source "{source.filename}"_weights.pkl'
@@ -200,6 +195,8 @@ class WeightMan(dict):
         ret = photons[np.logical_not(noweight)]
         assert ret is not None
         return ret
+
+# Cell
 
 def weight_radius_plots(photons):
     """

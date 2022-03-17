@@ -35,7 +35,7 @@ nb_path: "nbs/07_loglike.ipynb"
 <p>{% raw %}
 $$ \displaystyle\log\mathcal{L}(\alpha,\beta\ |\ w)\ = \sum_{w}  \log \big( 1 + \alpha\ w + \beta\ (1-w) \big) - (\alpha\ S + \beta\ B) $$
 {% endraw %}</p>
-<p>where  $\alpha$ and $\beta$ are the excess signal, and background fractions, and $S$ and $B$ are
+<p>where  $\alpha$ and $\beta$ are the excess signal and background fractions and $S$ and $B$ are
 the expected numbers of signal and background counts for the cell, determined from the full data set and relative exposure for the cell.</p>
 <p>Usually, we assume $\beta=0$, that the background is not varying, and look for signal variation.</p>
 <p>In the special case where all $w$ values are 1, this reduces to Poisson likelihood, with solution $\alpha = (1-n/S)$,
@@ -50,7 +50,8 @@ That is because the rest of the background would not be varying. This case could
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Weak-case">Weak case<a class="anchor-link" href="#Weak-case"> </a></h3><p>The case where the signal is weak, and background dominated, deserves attention. Suppose $\max(w) &lt;&lt;1$</p>
+<h3 id="Weak-case:-expand-the-log">Weak case: expand the log<a class="anchor-link" href="#Weak-case:-expand-the-log"> </a></h3><p>The case where the signal is weak, and background dominated, deserves attention. Suppose $\max(|\alpha w|) &lt;&lt;1$ and $\beta$ is also small.</p>
+<p>Then we only need the sums $\sum w$ and $\sum w^2$.</p>
 
 </div>
 </div>
@@ -333,6 +334,35 @@ where the parameter $\lambda$ is equal to the expected value of number of occurr
 to its variance, and that the function we want is shifted by the background $b$ and scaled by a factor
 $k$ so we use $f(k(s-b); \lambda)$ This implies that for the expected value of $s$, $\lambda = n$,
 and $ k(s-b)= k^2 v = n$.</p>
+<table>
+<thead><tr>
+<th></th>
+<th>Type</th>
+<th>Default</th>
+<th>Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong><a href="/wtlikeloglike.html"><code>loglike</code></a></strong></td>
+<td></td>
+<td></td>
+<td><em>No Content</em></td>
+</tr>
+<tr>
+<td><strong><code>tol</code></strong></td>
+<td><code>float</code></td>
+<td><code>2</code></td>
+<td>note global</td>
+</tr>
+<tr>
+<td><strong><code>ts_min</code></strong></td>
+<td><code>int</code></td>
+<td><code>25</code></td>
+<td><em>No Content</em></td>
+</tr>
+</tbody>
+</table>
 
 </div>
 
