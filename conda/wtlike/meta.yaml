@@ -1,0 +1,43 @@
+package:
+  name: wtlike
+  version: 0.3.9
+source:
+  sha256: 705797fcdd7fd7a2b938b549333d4f6e67a3021b290408e6b0a614437e6d6422
+  url: https://files.pythonhosted.org/packages/91/4e/e4c46e2dd20da2e963ae7dc6cdbe34b21383cc2d9c1e65297a089a80ef94/wtlike-0.3.9.tar.gz
+about:
+  dev_url: https://tburnett.github.io
+  doc_url: https://tburnett.github.io
+  home: https://tburnett.github.io
+  license: Apache Software
+  license_family: APACHE
+  summary: Time-dependent analysis of point sources in Fermi-LAT data
+build:
+  noarch: python
+  number: '0'
+  script: '{{ PYTHON }} -m pip install . -vv'
+extra:
+  recipe-maintainers:
+  - tburnett
+requirements:
+  host:
+  - pip
+  - python
+  - packaging
+  - matplotlib
+  - pandas
+  - scipy
+  - astropy
+  - healpy
+  run:
+  - pip
+  - python
+  - packaging
+  - matplotlib
+  - pandas
+  - scipy
+  - astropy
+  - healpy
+test:
+  imports:
+  - numpy
+  - wtlike
