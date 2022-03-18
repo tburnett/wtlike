@@ -397,8 +397,6 @@ def partition_cells(config, cells, edges):
         check = cells.iloc[a:b]
         subset = check[~pd.isna(check.n)]
 
-#         ca, cb = subset.iloc[0], subset.iloc[-1]
-#         newcell = dict(t= 0.5*(ca.t-ca.tw/2 + cb.t+cb.tw/2)  )
         tl, tr = tboundary[k:k+2]
         newcell = dict(t=0.5*(tl+tr), tw=tr-tl)
 

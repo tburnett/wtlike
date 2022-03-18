@@ -43,9 +43,10 @@ import sys, os, shutil, string, pprint, datetime
 
 
 __all__ = ['nbdoc', 'image', 'figure', 'monospace', 'capture', 'capture_hide', 'capture_show', 'shell', 'create_file', 'ipynb_doc',
-        'get_nb_namespace', 'special_prefix'] #,'show_doc']
+        'get_nb_namespace', 'special_prefix', 'figure_number'] #,'show_doc']
 
 special_prefix = ''
+figure_number = 0 # make this global
 
 # The decorator to run nbdoc on a function
 
@@ -142,8 +143,9 @@ def image(filename,
 
 try:
     import matplotlib.pyplot as plt
-    def figure(fig, caption=None, width=None, height=None):
+    def figure(fig, caption=None, width=None, height=None, num=0):
         """ Set the caption, and possibly width and height attributes of a plt.Figuare object
+            num -- allow setting starting
         """
         assert isinstance(fig, plt.Figure), 'Must be a plt.Figure object'
         fig.caption=caption
@@ -183,7 +185,7 @@ class Wrapper(object):
 class FigureWrapper(Wrapper): 
     
     def __init__(self, *pars, **kwargs): 
-        
+        global figure_number
         super().__init__(*pars, **kwargs)
         self.indent = kwargs.pop('indent', '5%')
 
@@ -196,8 +198,8 @@ class FigureWrapper(Wrapper):
         self.folder_name=kwargs.pop('folder_name', 'images')
         self.fig_folders=kwargs.pop('fig_folders', self.replacer.document_folders)
 
-        self.replacer.figure_number += 1
-        self.number = self.replacer.figure_number
+        figure_number += 1
+        self.number = figure_number
         self.prefix = self.replacer.figure_prefix
         self.fig_class=kwargs.pop('fig_class', 'nbdoc_image') 
 
@@ -318,6 +320,8 @@ class ObjectReplacer(dict):
             1. the replacement class, which implements a __str__ method
             2. kwargs to apply to new object
     """
+
+    
     def __init__(self, 
                  folders:'one or more document folders to save images'=['.'], 
                  figure_prefix:'prefix for figure filename'='',
@@ -325,7 +329,7 @@ class ObjectReplacer(dict):
 
         self.update(wrappers)
         self.set_folders(folders)
-        self.figure_number=0
+        # self.figure_number=0
         self.figure_prefix = figure_prefix
         self.debug=False
         
@@ -337,7 +341,7 @@ class ObjectReplacer(dict):
         self.clear()
 
     def clear(self):
-        self.figure_number= 0
+        figure_number= 0
  
     @property
     def folders(self):

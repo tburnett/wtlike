@@ -199,8 +199,7 @@ class TimeSeries(CellData):
             usin = d.astype(np.float32),
             ))
 
-    def power_plot(self, xlim=(0,0.05), pmax=None, ax=None,
-                   fs = (1/53.05, 2/53.05, 1/365.25, 4/365.25) ,**kwargs):
+    def power_plot(self,  pmax=None, ax=None, fs=() ,**kwargs):
         """ Make a plot like Kerr Fig 6
 
         """
@@ -212,20 +211,27 @@ class TimeSeries(CellData):
         df = getattr(self, 'power_df', self.power_spectrum())
         pmax=pmax or max(df.p1.max(), df.pb.max())* 1.1
 
+        kw = dict(xlim=(0,0.05), ylim=(-pmax, pmax))
+        kw.update(kwargs)
         fig, ax = plt.subplots(figsize=(8,4)) if ax is None else (ax.figure, ax)
 
         ax.plot(df.f, df.p1 , '-', color='cornflowerblue', lw=2)
         ax.plot(df.f, -df.pb, '-', color='orange', lw=2)
 
         ax.axhline(0, color='grey')
-        ax.set( ylim=(-pmax,pmax),  xlim=xlim,
-              xlabel='$\mathrm{Frequency\ (cycles\ d^{-1})}$',
-              ylabel='Power')
+        ax.set( xlabel='$\mathrm{Frequency\ (cycles\ d^{-1})}$',
+              ylabel='Power', **kw)
         ax.yaxis.set_major_formatter(mtick.FuncFormatter(lambda x,p: f'{abs(x):.0f}' ))
         ax.grid(alpha=0.5)
 
-        # mark standard frequencies
+
+        ap = dict(arrowstyle='->',color='k', lw=3)
 
         for f in fs:
-            ax.axvline(f, color='grey',ls='--')
+            ax.annotate('', xy=(f, 0.85*pmax), xytext=(f, pmax),# transform=ax.transData,
+                        arrowprops=ap);
+            ax.annotate('', xy=(f, -0.85*pmax), xytext=(f, -pmax),# transform=ax.transData,
+                        arrowprops=ap);
+        # mark standard frequencies
+
         return fig
