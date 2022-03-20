@@ -172,6 +172,7 @@ class TimeSeries(CellData):
         kw = dict(tweak_exp=True)
         kw.update(kwargs)
 
+        # invoke copy of Kerr's godot/core.power_spectru_fft
         f, p0, p1, pb = power_spectrum_fft(self, **kw)
         self.power_df = pd.DataFrame.from_dict(dict(
             f  = f.astype(np.float32),
@@ -199,11 +200,11 @@ class TimeSeries(CellData):
             usin = d.astype(np.float32),
             ))
 
-    def power_plot(self,  pmax=None, ax=None, fs=() ,**kwargs):
+    def power_plot(self,  pmax=None, profile=True,  ax=None, fs=() ,**kwargs):
         """ Make a plot like Kerr Fig 6
 
         """
-        import matplotlib.ticker as mtick
+        import matplotlib.ticker as ticker
 
         # if self.power_df is None:
         #     self.power_spectrum()
@@ -215,13 +216,22 @@ class TimeSeries(CellData):
         kw.update(kwargs)
         fig, ax = plt.subplots(figsize=(8,4)) if ax is None else (ax.figure, ax)
 
-        ax.plot(df.f, df.p1 , '-', color='cornflowerblue', lw=2)
+        ax.plot(df.f,  df.p1 if profile else df.p0, '-', color='cornflowerblue', lw=2)
         ax.plot(df.f, -df.pb, '-', color='orange', lw=2)
 
         ax.axhline(0, color='grey')
         ax.set( xlabel='$\mathrm{Frequency\ (cycles\ d^{-1})}$',
               ylabel='Power', **kw)
-        ax.yaxis.set_major_formatter(mtick.FuncFormatter(lambda x,p: f'{abs(x):.0f}' ))
+        # y-axis: no display abs to account for negatives
+        ax.yaxis.set_major_formatter(ticker.FuncFormatter(lambda x,p: f'{abs(x):.0f}' ))
+        # x-axis: prettry
+        def formatter(x, p):
+            if x<0.01: return f'{x:.3f}'
+            if x<0.1: return f'{x:.2f}'
+            if x<1: return f'{x:.1f}'
+            return f'{x:.0f}'
+        ax.xaxis.set_major_formatter(ticker.FuncFormatter(formatter))
+            # lambda val,pos: { 0.01:'0.01', 0.1:'0.1', 1.0:'1', 10.0:'10',}.get(val,'')))
         ax.grid(alpha=0.5)
 
 

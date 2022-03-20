@@ -6,8 +6,8 @@ title: Frequency Domain
 keywords: fastai
 sidebar: home_sidebar
 
-summary: "This code treats a set of cells as a time series, and applies FFT. It is based on the development in  "
-description: "This code treats a set of cells as a time series, and applies FFT. It is based on the development in  "
+summary: "This code treats a set of cells as a time series, and applies FFT."
+description: "This code treats a set of cells as a time series, and applies FFT."
 nb_path: "nbs/10-time_series.ipynb"
 ---
 <!--
@@ -29,6 +29,13 @@ nb_path: "nbs/10-time_series.ipynb"
 </div>
     {% endraw %}
 
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>It is based on the development in <a href="https://arxiv.org/pdf/1910.00140.pdf">Kerr</a> Section 5 equations (6) and (8), using code from the <a href="https://github.com/kerrm/godot">godot</a> implementation, specifically the function <a href="/wtlike10-time_series.html#power_spectrum_fft"><code>power_spectrum_fft</code></a> which follows.</p>
+
+</div>
+</div>
+</div>
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
@@ -130,13 +137,6 @@ of which is here.</p>
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Output-from-wtlike.TimeSeries">Output from <code>wtlike.TimeSeries</code><a class="anchor-link" href="#Output-from-wtlike.TimeSeries"> </a></h2><p>Summary plots for the two sources that Matthew examined, plus Vela.</p>
-
-</div>
-</div>
-</div>
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
@@ -149,29 +149,39 @@ of which is here.</p>
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">figure_number</span><span class="o">=</span><span class="mi">0</span> <span class="c1"># this is global in iipynb_docgen -- need to update if aftet each call</span>
 <span class="nd">@ipynb_doc</span>
-<span class="k">def</span> <span class="nf">source_fft</span><span class="p">(</span><span class="n">source_name</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span><span class="mi">25</span><span class="p">),</span> <span class="n">pmax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">xscale</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">,</span>  <span class="n">fs</span><span class="o">=</span><span class="p">[],</span> <span class="n">comment</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">source_ffts</span><span class="p">(</span><span class="n">source_list</span><span class="p">,</span> <span class="n">fs_list</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="p">(</span><span class="mf">0.01</span><span class="p">,</span><span class="mi">25</span><span class="p">),</span> <span class="n">xscale</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    ### {source_name}</span>
+<span class="sd">    ## Output spectra using `wtlike.TimeSeries`</span>
+
+<span class="sd">    This shows the results of analyses of the two sources that Matthew examined, plus Vela.</span>
+<span class="sd">    Like Kerr&#39;s Figure 6, the upper blue plot is the profile likelihood estimator $P_1$, </span>
+<span class="sd">    and the bottom orange plot the background-fixed estimator $P_b$. </span>
 <span class="sd">    {txt}</span>
 <span class="sd">    {fig}</span>
-<span class="sd">    {comment}</span>
+
+<span class="sd">    {txt2}</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">global</span> <span class="n">figure_number</span>
-    <span class="k">with</span> <span class="n">capture_hide</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;setup printout&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">txt</span><span class="p">:</span>
-        <span class="n">tms</span> <span class="o">=</span> <span class="n">TimeSeries</span><span class="p">(</span><span class="n">source_name</span><span class="p">,</span><span class="n">Config</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">time_bins</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="o">/</span><span class="mi">96</span><span class="p">))</span> 
-    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
-    <span class="n">tms</span><span class="o">.</span><span class="n">power_plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="n">xlim</span><span class="p">,</span> <span class="n">pmax</span><span class="o">=</span><span class="n">pmax</span><span class="p">,</span> <span class="n">xscale</span><span class="o">=</span><span class="n">xscale</span><span class="p">,</span> <span class="n">fs</span><span class="o">=</span><span class="n">fs</span><span class="p">)</span>
-    <span class="n">figure_number</span><span class="o">+=</span><span class="mi">1</span>
+    <span class="k">with</span> <span class="n">capture_hide</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Source setup output&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">txt</span><span class="p">:</span>        
+        <span class="n">tms_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">TimeSeries</span><span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="n">Config</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">time_bins</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="o">/</span><span class="mi">96</span><span class="p">))</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">source_list</span><span class="p">]</span>
+        
+    <span class="n">fig</span><span class="p">,</span> <span class="n">axx</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">source_list</span><span class="p">),</span><span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">),</span> <span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">,)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">hspace</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
+    
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span><span class="n">tms</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">source_list</span><span class="p">,</span> <span class="n">axx</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span> <span class="n">fs_list</span><span class="p">,</span> <span class="n">tms_list</span><span class="p">):</span>
+        <span class="n">tms</span><span class="o">.</span><span class="n">power_plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="n">xlim</span><span class="p">,</span> <span class="n">pmax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">xscale</span><span class="o">=</span><span class="n">xscale</span><span class="p">,</span> <span class="n">fs</span><span class="o">=</span><span class="n">fs</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.02</span><span class="p">,</span><span class="mf">0.96</span><span class="p">,</span>  <span class="n">name</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s1">&#39;top&#39;</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="n">ax</span><span class="o">.</span><span class="n">transAxes</span><span class="p">)</span>
+
+    <span class="n">fs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">sorted</span><span class="p">([</span><span class="mi">1</span><span class="o">/</span><span class="mf">53.05</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mf">15.1</span><span class="p">,</span> <span class="mi">4</span><span class="o">/</span><span class="mf">365.25</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="mf">53.05</span><span class="p">,</span> <span class="mi">4</span><span class="o">/</span><span class="mf">365.25</span><span class="p">,</span> <span class="mf">0.256</span><span class="p">,</span><span class="mf">0.512</span><span class="p">,</span> <span class="mf">15.1</span><span class="p">])))</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">frequency</span><span class="o">=</span><span class="n">fs</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="n">period</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">fs</span><span class="p">)</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">2</span><span class="p">)))</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="s1">&#39;comment&#39;</span><span class="p">]</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;4/year&#39;</span><span class="p">,</span> <span class="s1">&#39;Fermi precession&#39;</span><span class="p">,</span> <span class="s1">&#39;LS 5039 orbital period&#39;</span><span class="p">,</span> 
+                         <span class="s1">&#39;LS 5039 harmonic&#39;</span><span class="p">,</span> <span class="s1">&#39;1 day&#39;</span><span class="p">,</span> <span class="s1">&#39;2 days&#39;</span><span class="p">,</span> <span class="s1">&#39;Fermi orbital frequency&#39;</span><span class="p">]</span>
+    <span class="k">with</span> <span class="n">capture_show</span><span class="p">(</span><span class="s1">&#39;Frequencies tagged in the above plot.&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">txt2</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+        
     <span class="k">return</span> <span class="nb">locals</span><span class="p">()</span>
 
-<span class="n">source_fft</span><span class="p">(</span><span class="s1">&#39;Vela pulsar&#39;</span><span class="p">,</span><span class="n">fs</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mf">15.1</span><span class="p">],</span> 
-           <span class="n">comment</span><span class="o">=</span><span class="s1">&#39;Frequences tagged: 1,2, 15.1&#39;</span><span class="p">)</span>
-
-<span class="n">source_fft</span><span class="p">(</span><span class="s1">&#39;Geminga&#39;</span><span class="p">,</span> <span class="n">fs</span><span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mf">53.05</span><span class="p">,</span> <span class="mi">2</span><span class="o">/</span><span class="mf">53.05</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="mf">365.25</span><span class="p">,</span> <span class="mi">4</span><span class="o">/</span><span class="mf">365.25</span><span class="p">))</span>
-
-<span class="n">source_fft</span><span class="p">(</span><span class="s1">&#39;LS 5039&#39;</span><span class="p">,</span> <span class="n">pmax</span><span class="o">=</span><span class="mi">1200</span><span class="p">,</span><span class="n">fs</span><span class="o">=</span><span class="p">(</span><span class="mf">0.26</span><span class="p">,</span> <span class="mf">0.52</span><span class="p">,</span> <span class="mf">15.1</span><span class="p">),</span>
-          <span class="n">comment</span><span class="o">=</span><span class="s1">&#39;Frequencies: 0.26, the orbital frequency; 0.52 is harmonic,&#39;</span>
-          <span class="s1">&#39;and 15.1, the Fermi orbital frequency&#39;</span><span class="p">)</span>
+<span class="n">source_ffts</span><span class="p">([</span><span class="s1">&#39;Vela pulsar&#39;</span><span class="p">,</span><span class="s1">&#39;Geminga&#39;</span><span class="p">,</span><span class="s1">&#39;LS 5039&#39;</span><span class="p">],</span>
+            <span class="p">[[</span><span class="mi">1</span><span class="o">/</span><span class="mf">53.05</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mf">15.1</span><span class="p">],[</span> <span class="mi">4</span><span class="o">/</span><span class="mf">365.25</span><span class="p">,</span> <span class="mf">15.1</span><span class="p">],[</span><span class="mi">1</span><span class="o">/</span><span class="mf">53.05</span><span class="p">,</span> <span class="mi">4</span><span class="o">/</span><span class="mf">365.25</span><span class="p">,</span> <span class="mf">0.256</span><span class="p">,</span><span class="mf">0.512</span><span class="p">,</span> <span class="mf">15.1</span><span class="p">]])</span> 
 </pre></div>
 
     </div>
@@ -186,31 +196,11 @@ of which is here.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3 id="Vela-pulsar">Vela pulsar<a class="anchor-link" href="#Vela-pulsar"> </a></h3><p><details  class="nbdoc-description" >  <summary> setup printout </summary>  <div style="margin-left: 5%;"><pre>SourceData:  PSR J0835-4510: Restoring from cache with key "PSR J0835-4510_data"<br></pre></div> </details></p>
-<p><figure style="margin-left: 5%" title="Figure 2">  <a href="images/source_fft_fig_02.png" title="images/source_fft_fig_02.png">    <img src="images/source_fft_fig_02.png" alt="Figure 2 at images/source_fft_fig_02.png" >   </a> </figure>
-Frequences tagged: 1,2, 15.1</p>
-
-</div>
-
-</div>
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h3 id="Geminga">Geminga<a class="anchor-link" href="#Geminga"> </a></h3><p><details  class="nbdoc-description" >  <summary> setup printout </summary>  <div style="margin-left: 5%;"><pre>SourceData:  4FGL J0633.9+1746: Restoring from cache with key "PSR J0633+1746_data"<br></pre></div> </details></p>
-<figure style="margin-left: 5%" title="Figure 3">  <a href="images/source_fft_fig_03.png" title="images/source_fft_fig_03.png">    <img src="images/source_fft_fig_03.png" alt="Figure 3 at images/source_fft_fig_03.png" >   </a> </figure>
-</div>
-
-</div>
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h3 id="LS-5039">LS 5039<a class="anchor-link" href="#LS-5039"> </a></h3><p><details  class="nbdoc-description" >  <summary> setup printout </summary>  <div style="margin-left: 5%;"><pre>SourceData:  LS 5039: Restoring from cache with key "P88Y5020_data"<br></pre></div> </details></p>
-<p><figure style="margin-left: 5%" title="Figure 4">  <a href="images/source_fft_fig_04.png" title="images/source_fft_fig_04.png">    <img src="images/source_fft_fig_04.png" alt="Figure 4 at images/source_fft_fig_04.png" >   </a> </figure>
-Frequencies: 0.26, the orbital frequency; 0.52 is harmonic,and 15.1, the Fermi orbital frequency</p>
+<h2 id="Output-spectra-using-wtlike.TimeSeries">Output spectra using <code>wtlike.TimeSeries</code><a class="anchor-link" href="#Output-spectra-using-wtlike.TimeSeries"> </a></h2><p>This shows the results of analyses of the two sources that Matthew examined, plus Vela.
+Like Kerr's Figure 6, the upper blue plot is the profile likelihood estimator $P_1$, 
+and the bottom orange plot the background-fixed estimator $P_b$.</p>
+<p><details  class="nbdoc-description" >  <summary> Source setup output </summary>  <div style="margin-left: 5%;"><pre>SourceData:  PSR J0835-4510: Restoring from cache with key "PSR J0835-4510_data"<br>SourceData:  4FGL J0633.9+1746: Restoring from cache with key "PSR J0633+1746_data"<br>SourceData:  LS 5039: Restoring from cache with key "P88Y5020_data"<br></pre></div> </details></p>
+<figure style="margin-left: 5%" title="Figure 1">  <a href="images/source_ffts_fig_01.png" title="images/source_ffts_fig_01.png">    <img src="images/source_ffts_fig_01.png" alt="Figure 1 at images/source_ffts_fig_01.png" >   </a> </figure><p><details open class="nbdoc-description" >  <summary> Frequencies tagged in the above plot. </summary>  <div style="margin-left: 5%;"><pre>   frequency  period                  comment<br>0      0.011   91.31                   4/year<br>1      0.019   53.05         Fermi precession<br>2      0.256    3.91   LS 5039 orbital period<br>3      0.512    1.95         LS 5039 harmonic<br>4      1.000    1.00                    1 day<br>5      2.000    0.50                   2 days<br>6     15.100    0.07  Fermi orbital frequency<br></pre></div> </details></p>
 
 </div>
 
