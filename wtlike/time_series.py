@@ -9,7 +9,6 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from .config import *
 from .cell_data import CellData
-#from wtlike.source_data import SourceData
 
 # Cell
 def power_spectrum_fft(timeseries,dfgoal=None,tweak_exp=False,
@@ -126,10 +125,11 @@ def power_spectrum_fft(timeseries,dfgoal=None,tweak_exp=False,
 # Cell
 class TimeSeries(CellData):
     """
-    Generate special set of cells for Fourier analysis
+    Generate a special set of cells for Fourier analysis
     Object of this class can be passed to godot/core.power_spectrum_fft, an (almost) copy
     of which is here.
     """
+
     def make_cells(self, exposure_factor=1e-6, **kwargs):
         """ Override from superclass to use godot names,
             save only moments of weights
@@ -172,13 +172,30 @@ class TimeSeries(CellData):
     def power_spectrum(self, **kwargs):
         """
         Invoke the godot/core routine `power_spectrum_fft` to generate a power spectrum DataFrame
+
+        kwargs passed to power_spectrum_fft
+         - tweak_exp [True]
+         - dfgoal=None,
+         - exp_only=False
+         - get_amps=False
+         - exposure_correction=None
         """
-        if self.config.verbose>1:
-            print(f'TimeSeries: creating power spectra, {int(self.tspan/self.tsamp):,d} samples, size {self.tsamp*24:.2f} h ')
+        exp_only = kwargs.get('exp_only', False)
+        if self.power_df is not None and not exp_only: return self.power_df
+        if self.config.verbose>0:
+            print(f'TimeSeries: creating power spectra, {int(self.tspan/self.tsamp):,d} samples, '
+                  f'size {self.tsamp*24:.2f} h: Nyquist is {self.f_Nyquist} /d')
         kw = dict(tweak_exp=True)
         kw.update(kwargs)
 
         # invoke copy of Kerr's godot/core.power_spectru_fft
+        # return exposure spectrum, or P0,P1, and Pb
+        if exp_only:
+            f, p0 = power_spectrum_fft(self, **kw)
+            return pd.DataFrame.from_dict(dict(
+                f = f.astype(np.float32),
+                p_exp = p0.astype(np.float32)))
+
         f, p0, p1, pb = power_spectrum_fft(self, **kw)
         self.power_df = pd.DataFrame.from_dict(dict(
             f  = f.astype(np.float32),
@@ -219,7 +236,8 @@ class TimeSeries(CellData):
         """
         import matplotlib.ticker as ticker
 
-        df = getattr(self, 'power_df', self.power_spectrum())
+        df = self.power_spectrum()
+
         pmax = pmax or max(df.p1.max(), df.pb.max())* 1.1
 
         # default kwarg values

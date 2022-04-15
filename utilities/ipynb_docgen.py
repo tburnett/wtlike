@@ -46,7 +46,27 @@ __all__ = ['nbdoc', 'image', 'figure', 'monospace', 'capture', 'capture_hide', '
         'get_nb_namespace', 'special_prefix', 'figure_number'] #,'show_doc']
 
 special_prefix = ''
-figure_number = 0 # make this global
+
+# Manage the figure number
+class FigureNumber:
+    def __init__(self, v=0):
+        self.set(v)
+    def next(self):
+        self.fignum += 1
+        # print(f'next to {self.fignum}')
+        # if self.fignum==2:
+        #     raise Exception('?')
+        return  self.fignum
+    def __repr__(self): return f'Current FigureNumber: {self.fignum}'
+    def set(self, v=0):
+        self.fignum=v
+            
+
+    @property
+    def value(self):
+        return self.fignum
+
+figure_number = FigureNumber(0)
 
 # The decorator to run nbdoc on a function
 
@@ -185,7 +205,7 @@ class Wrapper(object):
 class FigureWrapper(Wrapper): 
     
     def __init__(self, *pars, **kwargs): 
-        global figure_number
+
         super().__init__(*pars, **kwargs)
         self.indent = kwargs.pop('indent', '5%')
 
@@ -198,8 +218,7 @@ class FigureWrapper(Wrapper):
         self.folder_name=kwargs.pop('folder_name', 'images')
         self.fig_folders=kwargs.pop('fig_folders', self.replacer.document_folders)
 
-        figure_number += 1
-        self.number = figure_number
+
         self.prefix = self.replacer.figure_prefix
         self.fig_class=kwargs.pop('fig_class', 'nbdoc_image') 
 
@@ -215,7 +234,7 @@ class FigureWrapper(Wrapper):
         
             # only has to do this once:
             fig=self.fig
-            n =self.number
+            n =  self.number = figure_number.next()
             prefix = self.prefix+'_' if self.prefix else ''
 
             # the caption, which may be absent.
@@ -329,7 +348,6 @@ class ObjectReplacer(dict):
 
         self.update(wrappers)
         self.set_folders(folders)
-        # self.figure_number=0
         self.figure_prefix = figure_prefix
         self.debug=False
         
@@ -338,11 +356,9 @@ class ObjectReplacer(dict):
         # folder management for these guys
         #global document_folders
         self.document_folders = folders
-        self.clear()
+#         self.clear()
 
-    def clear(self):
-        figure_number= 0
- 
+
     @property
     def folders(self):
         return self.document_folders
@@ -477,7 +493,7 @@ def get_nb_namespace():
     gns = InteractiveShell._instance.get_ipython().user_global_ns
     return {k:v for k,v in filter(lambda t: not t[0].startswith('_'), gns.items())}
 
-def nbdoc(fun, *pars, name=None, **kwargs):
+def nbdoc(fun, *pars, name=None, fignum=None, **kwargs):
     """Format the output from an IPython notebook cell using the function's docstring and computed variables.
      
     If name is specified, use it instead of the function name to distinguish figure file names, say for separate
@@ -485,7 +501,7 @@ def nbdoc(fun, *pars, name=None, **kwargs):
 
     The required docstring will be interpreted as markdown by IPython.
 
-    args and kwargs will be passed to the user function -- a way to pass information from the notebook environment
+    args and kwargs will be passed to the user function -- a way to pass information from the notebook environment.
     The function must end with "return locals()".
     """
     import inspect
@@ -498,6 +514,11 @@ def nbdoc(fun, *pars, name=None, **kwargs):
 
     fun_name =  getattr(fun, '__name__', 'unnamed_function')
     name = name or fun_name
+    # set the initial figure number -- increment
+
+    if fignum is not None: 
+        figure_number.set( fignum)
+
 
     # the the docstring and function name
     rawdoc = fun.__doc__
@@ -524,8 +545,8 @@ def nbdoc(fun, *pars, name=None, **kwargs):
         raise 
         #return
 
-    if user_vars is None or  type(user_vars)!=dict:
-        print( 'The function {fun_name} must end with "return locals()"', file=sys.stderr)
+    if user_vars is None or type(user_vars)!=dict:
+        print( f'The function {fun_name} must end with "return locals()"', file=sys.stderr)
         return
 
     # add convenient symbols

@@ -325,7 +325,7 @@ def bin_size_name(bins):
         binsize = np.mean(bins)
 
     def check_unit(x):
-        unit_table = dict(year=1/365.25, week=1/7, day=1, hour=24) #, min=24*60, s=24*3600)
+        unit_table = dict(year=1/365.25, week=1/7, day=1, hour=24, min=24*60) #, min=24*60, s=24*3600)
         for name, unit in unit_table.items():
             t = x*unit
             r = np.mod(t+1e-9,1)
