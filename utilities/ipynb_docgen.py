@@ -1,5 +1,5 @@
 """
-Support single-cell documents in jupyter
+Support single-cell documents in Jupyterlab
 
 Usage: Wtih code like this in a cell
 
@@ -16,7 +16,7 @@ Usage: Wtih code like this in a cell
 
     userdoc()
 
-will display the text, with the {} strings replaceed by representations of the variables, like an f-string, but actually equivalent to '...'.format(locals())
+one can display the docstring text, with the {} strings replaceed by representations of the variables, like an f-string, but actually equivalent to '...'.format(locals()).
 Note the decorator, and the "return locals()" as the last line of the function.
 
 
@@ -37,7 +37,7 @@ Names that are recognized:
 About image storage
 
 Images are made from plots, or imported directly, with HTML created to include the image. They are stored in a local folder "images".
-The file name by default is the 
+The file name by default is the name of the function, or via "userdoc(name='mydoc')". 
 """
 import sys, os, shutil, string, pprint, datetime
 
@@ -53,9 +53,6 @@ class FigureNumber:
         self.set(v)
     def next(self):
         self.fignum += 1
-        # print(f'next to {self.fignum}')
-        # if self.fignum==2:
-        #     raise Exception('?')
         return  self.fignum
     def __repr__(self): return f'Current FigureNumber: {self.fignum}'
     def set(self, v=0):
@@ -70,9 +67,9 @@ figure_number = FigureNumber(0)
 
 # The decorator to run nbdoc on a function
 
-def ipynb_doc(func, name=None):
+def ipynb_doc(func):
     def inner(*args, **kwargs):
-        nbdoc(func, *args, name=name, **kwargs)
+        nbdoc(func, *args, **kwargs)
     return inner
 
 def doc_formatter(
@@ -496,13 +493,15 @@ def get_nb_namespace():
 def nbdoc(fun, *pars, name=None, fignum=None, **kwargs):
     """Format the output from an IPython notebook cell using the function's docstring and computed variables.
      
-    If name is specified, use it instead of the function name to distinguish figure file names, say for separate
+    - fun -- User function, which must have a docstring, which will be interpreted as markdown by IPython, and end with `return locals()` 
+    - name -- If  specified, use it instead of the function name to distinguish figure file names, say for separate
     executions with differing parameters.
+    - fignum -- if specified, apply to the next figure
+    
+    - *pars, **kwargs -- passed to `fun`
+    
+    The required docstring 
 
-    The required docstring will be interpreted as markdown by IPython.
-
-    args and kwargs will be passed to the user function -- a way to pass information from the notebook environment.
-    The function must end with "return locals()".
     """
     import inspect
     import IPython.display as display
@@ -514,10 +513,14 @@ def nbdoc(fun, *pars, name=None, fignum=None, **kwargs):
 
     fun_name =  getattr(fun, '__name__', 'unnamed_function')
     name = name or fun_name
-    # set the initial figure number -- increment
+    
+    # set the "current" figure number -- will be increment for next figure
 
     if fignum is not None: 
-        figure_number.set( fignum)
+        figure_number.set( max(fignum-1,0))
+    debug = kwargs.pop('debug', False)
+    if debug:
+        print('Current figure number: ',figure_number)
 
 
     # the the docstring and function name

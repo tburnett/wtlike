@@ -23,15 +23,16 @@ class _Sampler():
         Assume histogram bins are 0 to 1.
     - a,b  -- limits (default 0,1)
     - n    -- table size (ignored if a histogram or value)
-
+    - rng --  a numpy.random.Generator object, or a seed
     """
 
-    def __init__(self, func, limits=(0,1), n=100):
+    def __init__(self, func, limits=(0,1), n=100, rng=None):
 
         a,b = limits
         self.x = np.linspace(a,b,n+1) # bin edges
         dx = (b-a)/(n)/2
         self.deltafun=None
+        self.rng=rng
 
         if callable(func):
             # A function
@@ -65,16 +66,17 @@ class _Sampler():
         """
         if self.deltafun: return np.full(size, self.deltafun)
 
-        return self._evaluate(stats.uniform.rvs(size=size))
+        return self._evaluate(stats.uniform.rvs(size=size, random_state=self.rng))
 
 # Cell
 sec_per_day = 24*3600
 
-def generate_times(start, stop, count):
+def generate_times(start, stop, count, rng=None):
     """ Generate a list of times, distributed randomly
 
     - start, stop: times
     - count : expected number to generate with rate=count/(stop-start)
+    - rng : random state generator
 
     returns : list of times between start and stop. Note that the actual number is Poisson-distributed
     """
@@ -83,8 +85,9 @@ def generate_times(start, stop, count):
     tt =[]
     t = start
     scale = (stop-start)/count
+    if rng is None: rng = np.random.default_rng()
     while True:
-        t += np.random.exponential(scale =scale)
+        t += rng.exponential(scale =scale)
         if t>stop: break
         tt.append(t)
     return tt
@@ -92,24 +95,31 @@ def generate_times(start, stop, count):
 # Cell
 class WeightFunction(object):
 
-    def __init__(self, s=1,b=1, wt_signif=0.1):
+    def __init__(self, s=1, b=1, wt_signif=0.1, rng=None):
         self.s = s
         self.b = b
         self.lam = wt_signif
+        self.rng = rng
 
-    def __call__(self, r):
-        """ implement
+    def psf(self, rsq, sig=0.2, gamma=2):
+        """ The PSF as a function of a radius**2
         """
-        return (self.s * np.exp(-r/self.lam)/(self.lam*(1-np.exp(-1/self.lam))) + self.b)
+        #return 1/(2*np.pi* sig**2) * (1-1/gamma) * (1 + rsq/sig**2/(2*gamma))**-gamma
+        return np.exp(-rsq/self.lam)/(self.lam*(1-np.exp(-1/self.lam)))
 
-    def sample(self, s,b, n):
+    def __call__(self, rsq):
+        """ The rsq distribution function
+        """
+        return self.s * self.psf(rsq) + self.b
+
+    def sample(self, s, n):
         self.s = s
-        self.b = b
-        return _Sampler(self, n=1000)(n);
+        return _Sampler(self, rng=self.rng)(n);
 
-    def weights(self, s, b, n):
-        h = self.sample(s,b,n)
-        return 1-b/self(h)
+    def weights(self, s, n):
+        h = self.sample(s,  n)
+        p = self.s * self.psf(h)
+        return 1/(1+self.b/p)
 
 # Cell
 def make_exposure(fexp, start, stop, interval=300):
@@ -145,17 +155,19 @@ def make_exposure(fexp, start, stop, interval=300):
 
 # Cell
 class Simulation(object):
+    """
+    - src_flux : source flux, scalar or function of days, typically around 1e-7
+    - tstart, tstop :(days)
+    - bkg_rate : background flux, scalar or function of day, typicaly 1e-6 for 4-deg cone
+    - efun : scalar | function (of time in days) of the exposure/s. Typically 3000 cm^2 for fermi
 
-    def __init__(self, name, src_flux, tstart, tstop, bkg_rate=1e-6,  efun=3000, wt_signif=0.1):
-        """
-        - src_flux : source flux, scalar or function of days, typically around 1e-7
-        - tstart, tstop :(days)
-        - bkg_rate : background flux, scalar or function of day, typicaly 1e-6 for 4-deg cone
-        - efun : scalar | function (of time in days) of the exposure/s. Typically 3000 cm^2 for fermi
+    - wt_signif : the width of the PSF in (r/rmax)**2 coordinates
+    - rng : random generator instance, or integer seed
 
-        - wt_signif : now the width of the PSF in (r/rmax)**2 coordinates
+    """
 
-        """
+    def __init__(self, name, src_flux, tstart, tstop, bkg_rate=1e-6,  efun=3000, wt_signif=0.1, debug=False, rng=None):
+
         def check_scalar( f):
             if np.isscalar(f):
                 fval = f
@@ -168,6 +180,12 @@ class Simulation(object):
         self.wt_signif=wt_signif
 
         self.exposure = make_exposure(efun, tstart, tstop)
+        if isinstance(rng, np.random.Generator):
+            self.rng = rng
+        else:
+            self.rng = np.random.default_rng(rng)
+        self.filename = None #flag that not a regular source
+        self.debug=debug
 
 
     def run(self):
@@ -178,11 +196,15 @@ class Simulation(object):
             src = self.src_fun((start+stop)/2)
             bkg = self.bkg_fun((start+stop)/2)
             delta_t = (stop-start)*sec_per_day # tolal tim
-            counts = (src+bkg) * exp #
-            #print(f'From {start} to {stop}, exposure/s {exp/delta_t:.0f}, counts {counts:.0f}')
-            new_times = generate_times(start, stop, counts)
-            wfun = WeightFunction(wt_signif=self.wt_signif)
-            new_wts = wfun.weights(s=src, b=bkg, n=len(new_times));
+            counts = (src+bkg) * exp
+            new_times = generate_times(start, stop, counts, rng=self.rng)
+            wfun = WeightFunction(wt_signif=self.wt_signif, s=src, b=bkg, rng=self.rng)
+            new_wts = wfun.weights(s=src, n=len(new_times))
+            if self.debug>0:
+                print(f'time: {start:.3f} - {stop:.3f}, source {src}, exposure/s {exp/delta_t:.0f}, expected/generated counts {counts:.0f}/{len(new_wts)}')
+            if self.debug>0:
+                print(f'\t weights {np.array(new_wts).round(2)}')
+                self.debug-=1
 
             assert len(new_times)==len(new_wts)
             times = np.append(times, new_times)

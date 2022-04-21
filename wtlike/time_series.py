@@ -225,6 +225,38 @@ class TimeSeries(CellData):
             usin = d.astype(np.float32),
             ))
 
+    def find_peaks(self, power='p0'):
+        """
+        Determine positions and values of the peaks in the given power spectrum
+
+        - power: Select p0, p1, or pb
+
+        return a DataFrame with columns f and p for the frequencies and power values
+        """
+        df = self.power_spectrum()
+        expect = 'p0 p1 pb'.split()
+        assert power in expect, f'TimeSeries.find_peaks: {power} not one of expected {expect}'
+        y = df[power].values
+        x = df.f.values
+        deltax = x[1]-x[0]
+
+        # get gradient
+        g = np.gradient(y)
+
+        # index of first point before peak, where gradient changes sign
+        qp = (g[:-1]>0) & (g[1:]<0)
+        qi = np.arange(len(g)-1)[qp]
+
+        # find peaks, interpolating the gradient to zero
+        g1,g2 = g[qi],g[qi+1]
+        xp = x[qi] + g1/(g1-g2)*deltax
+
+        # estimate peak value with largest of two points
+        yp = np.max(np.vstack([y[qi],y[qi+1]]),axis=0)
+
+        return pd.DataFrame.from_dict(dict(f=xp, p=yp))
+
+
     def power_plot(self,  pmax=None, profile=True,  ax=None, name=None,
                    fs=() ,**kwargs):
         """ Make a plot like Kerr Fig 6

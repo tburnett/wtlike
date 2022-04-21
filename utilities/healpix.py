@@ -18,14 +18,16 @@ class HPmap(object):
             name='', 
             cblabel=None,
             unit='',
-            sigma=None,):
+            sigma=None,
+            nest=False):
         """create from a HEALPix array
         """
         self.name = name
         self.cblabel = cblabel if cblabel is not None else unit 
         self.unit = unit
         self.nside = healpy.get_nside(hpmap)
-        self.map = hpmap
+        # reorder as defaut RING if nest is set
+        self.map = hpmap if not nest else healpy.reorder(hpmap, n2r=True)
 
         if sigma is not None:
             self.smooth(sigma)
