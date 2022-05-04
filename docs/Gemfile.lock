@@ -280,7 +280,7 @@ DEPENDENCIES
   github-pages
   jekyll (>= 3.7)
   kramdown (>= 2.3.0)
-  nokogiri (< 1.12.5)
+  nokogiri (< 1.13.4)
 
 BUNDLED WITH
    2.3.9
