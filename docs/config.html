@@ -192,9 +192,9 @@ Test: Restoring from cache with key &#34;four&#34;
 Before remove:
 Cache contents
  key                                    size  time                 name, folder /tmp/cache_test
-  one                                     18  2022-02-24 14:40     cache_file_4d32bff1013f1461.pkl
-  two                                     18  2022-02-24 14:40     cache_file_52efb515225bbde.pkl
-  four                                    23  2022-02-24 14:40     cache_file_613a9beacd44a14.pkl
+  one                                     18  2022-05-03 04:42     cache_file_6f8be229af54c761.pkl
+  two                                     18  2022-05-03 04:42     cache_file_39432e3c365956ca.pkl
+  four                                    23  2022-05-03 04:42     cache_file_5532bc2bc6bf921.pkl
 
 </pre>
 </div>
@@ -255,7 +255,8 @@ Cache contents
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">summary</span><span class="p">():</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nd">@ipynb_doc</span>
+<span class="k">def</span> <span class="nf">summary</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    </span>
 <span class="sd">    #### config.Config -- parameters are from three sources:</span>
@@ -293,7 +294,7 @@ Cache contents
 
 
     <span class="k">return</span> <span class="nb">locals</span><span class="p">()</span>
-<span class="n">nbdoc</span><span class="p">(</span><span class="n">summary</span><span class="p">)</span> 
+<span class="n">summary</span><span class="p">()</span> 
 </pre></div>
 
     </div>
@@ -358,7 +359,7 @@ Cache contents
 <h4 id="Config-contents-as-set-up-here">Config contents as set up here<a class="anchor-link" href="#Config-contents-as-set-up-here"> </a></h4><p><details  class="nbdoc-description" >  <summary> config parameter list </summary>  <div style="margin-left: 5%;"><pre>Configuration parameters <br>  verbose         : 1<br>  usermode        : True<br>  datapath        : /home/burnett/fermi/wtlike-data<br>  cachepath       : /home/burnett/.cache/wtlike<br>  catalog_file    : /home/burnett/fermi/catalog/gll_psc_v28.fit<br>  radius          : 4<br>  cos_theta_max   : 0.4<br>  z_max           : 100<br>  offset_size     : 2e-06<br>  energy_edge_pars : [2, 6, 17]<br>  etypes          : [0, 1]<br>  nside           : 1024<br>  nest            : True<br>  pool_size       : 1<br>  week_range      : (None, None)<br>  time_bins       : [0, 0, 7]<br>  exp_min         : 5<br>  use_kerr        : True<br>  likelihood_rep  : poisson<br>  poisson_tolerance : 0.2<br>  energy_edges    : [1.00000000e+02 1.77827941e+02 3.16227766e+02 5.62341325e+02<br> 1.00000000e+03 1.77827941e+03 3.16227766e+03 5.62341325e+03<br> 1.00000000e+04 1.77827941e+04 3.16227766e+04 5.62341325e+04<br> 1.00000000e+05 1.77827941e+05 3.16227766e+05 5.62341325e+05<br> 1.00000000e+06]<br>  energy_bins     : [1.33352143e+02 2.37137371e+02 4.21696503e+02 7.49894209e+02<br> 1.33352143e+03 2.37137371e+03 4.21696503e+03 7.49894209e+03<br> 1.33352143e+04 2.37137371e+04 4.21696503e+04 7.49894209e+04<br> 1.33352143e+05 2.37137371e+05 4.21696503e+05 7.49894209e+05]<br>  error_msg       : <br></pre></div> </details></p>
 <h5 id="config.cache----a-file-cache">config.cache -- a file cache<a class="anchor-link" href="#config.cache----a-file-cache"> </a></h5><p>The class <code>Cache</code>, available from <code>config.cache</code> implements a file cache in the folder
 <code>/home/burnett/.cache/wtlike</code></p>
-<p>(Failed: cannot import name 'update_data' from 'wtlike.data_man' (/mnt/c/users/thbur/OneDrive/work/wtlike/wtlike/data_man.py))</p>
+<p><details  class="nbdoc-description" >  <summary> current cache contents </summary>  <div style="margin-left: 5%;"><pre>Cache contents<br> key                                    size  time                 name, folder /home/burnett/.cache/wtlike<br>  P88Y0839_data                    135087218  2021-12-09 10:24     cache_file_8f49ffbb40f6cf6.pkl<br>  P88Y1621_data                    107292391  2021-12-09 10:35     cache_file_49a44b1cafa987f1.pkl<br>  PSR J1826-1256_data              136536785  2021-12-09 16:23     cache_file_a8ee594ce4a0d23.pkl<br>  P88Y4434_data                    115585160  2021-12-14 12:17     cache_file_ea9875c41d155b8.pkl<br>  PSR J0835-4510_data              163972071  2022-03-24 11:49     cache_file_399d710d5471fbc4.pkl<br>  PSR J0633+1746_data              117364633  2022-03-23 13:30     cache_file_57c899e951e2b4.pkl<br>  P88Y3243_data                     98383177  2021-12-15 08:03     cache_file_1e5998dac531f886.pkl<br>  P88Y4744_data                    142982565  2022-01-10 13:49     cache_file_2f39212c4f1593.pkl<br>  PSR J1709-4429_data              134198524  2022-01-10 13:56     cache_file_9d363406414a4fe.pkl<br>  PSR J0205+6449_data              142684766  2022-01-10 14:04     cache_file_59324d9896384e55.pkl<br>  P88Y5020_data                    133814110  2022-01-10 14:11     cache_file_d1961115fc8ad1a.pkl<br>  PSR J1813-1246_data              130999543  2022-01-10 14:18     cache_file_66c22c86184760b.pkl<br>  P88Y4996_data                    136648585  2022-01-10 14:41     cache_file_390f2ec0123e06a8.pkl<br>  PSR J1836+5925_data              138099988  2022-01-29 09:28     cache_file_4cf2c6ef9e8e4391.pkl<br>  PSR J0007+7303_data              144483213  2022-01-29 09:35     cache_file_9118b9b420eaeac.pkl<br>  PSR J1057-5226_data              111852404  2022-01-29 09:43     cache_file_36f08f8931993de.pkl<br>  PSR J0534+2200_data              120459827  2022-01-29 09:51     cache_file_5c194f3ba9839d.pkl<br>  PSR J0614-3329_data              102991649  2022-01-29 09:58     cache_file_e59455e871b54c2.pkl<br>  PSR J2021+3651_data              139760141  2022-01-29 10:06     cache_file_7edc70eff46418a.pkl<br>  PSR J1231-1411_data               97580750  2022-01-29 10:14     cache_file_48cde18e4ff8d7e.pkl<br>  504F-1187_data                   125944587  2022-01-30 09:30     cache_file_7aa9c4634b9bc359.pkl<br>  PSR J2021+4026_data              144574909  2022-02-10 13:45     cache_file_c6a0ca9d4d493c1.pkl<br>  PSR J1809-2332_data              129902712  2022-02-10 13:53     cache_file_7d0bdab4612d158.pkl<br>  PSR J1907+0602_data              131716816  2022-02-11 07:06     cache_file_2692651f8ebac87.pkl<br>  P88Y2741_data                    120835877  2022-03-15 15:27     cache_file_7ed05b488735d4.pkl<br>  P88Y0643_data                     94996984  2022-03-17 09:48     cache_file_cae40ada2d216cf.pkl<br>  504H-0317_data                   132398851  2022-03-20 03:04     cache_file_294d0d01edc3ec7.pkl<br>  P88Y4842_data                    124862808  2022-05-02 15:01     cache_file_8998e475010a987.pkl<br>  P88Y6076_data                    105662092  2022-05-02 15:21     cache_file_f77ebbb3092935b.pkl<br></pre></div> </details></p>
 
 </div>
 
@@ -445,6 +446,33 @@ Cache contents
 <div class="output_markdown rendered_html output_subarea ">
 <h4 id="UTCnow" class="doc_header"><code>UTCnow</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L313" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>UTCnow</code>()</p>
 </blockquote>
+<p>current UTC</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="mission_week" class="doc_header"><code>mission_week</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L318" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>mission_week</code>(<strong><code>mjd</code></strong>)</p>
+</blockquote>
+<p>return the mission week number for a MJD value
+(Note that week #0 starts on UTC Thursday 2008-05-29 00:00, the first data is in week 9, and that week 525 is missing)</p>
 
 </div>
 
@@ -487,9 +515,9 @@ Cache contents
 <div class="output_text output_subarea output_execute_result">
 <pre>(&#39;2001-01-01 00:01&#39;,
  &#39;2008-08-05 00:00&#39;,
- &#39;UTC 2022-02-24 22:40&#39;,
- 59634.94460890989,
- &#39;2022-02-24 22:40&#39;)</pre>
+ &#39;UTC 2022-05-3 11:44&#39;,
+ 59702.48934774685,
+ &#39;2022-05-03 11:44&#39;)</pre>
 </div>
 
 </div>
@@ -535,7 +563,7 @@ Cache contents
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="bin_size_name" class="doc_header"><code>bin_size_name</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L319" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>bin_size_name</code>(<strong><code>bins</code></strong>)</p>
+<h4 id="bin_size_name" class="doc_header"><code>bin_size_name</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L325" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>bin_size_name</code>(<strong><code>bins</code></strong>)</p>
 </blockquote>
 <p>Provide a nice name, e.g., 'day' for a time interval</p>
 
@@ -567,7 +595,7 @@ Cache contents
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="decorate_with" class="doc_header"><code>decorate_with</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L341" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>decorate_with</code>(<strong><code>other_func</code></strong>)</p>
+<h4 id="decorate_with" class="doc_header"><code>decorate_with</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L347" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>decorate_with</code>(<strong><code>other_func</code></strong>)</p>
 </blockquote>
 
 </div>
@@ -598,7 +626,7 @@ Cache contents
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="Timer" class="doc_header"><code>class</code> <code>Timer</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L350" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Timer</code>()</p>
+<h2 id="Timer" class="doc_header"><code>class</code> <code>Timer</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L356" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Timer</code>()</p>
 </blockquote>
 <p>Usage:</p>
 

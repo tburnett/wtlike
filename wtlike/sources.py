@@ -24,6 +24,9 @@ def get_wtzip_index(config, update=False):
     with  zipfile.ZipFile(wtzipfile) as wtzip:
         if 'index.pkl' in wtzip.namelist() and not update:
             zi =  pickle.load(wtzip.open('index.pkl'))
+#             if 'coord' in zi:
+#                 print('Updating coord in index.pkl')
+
             zi['coord'] = SkyCoord(zi['glon'], zi['glat'], unit='deg', frame='galactic').fk5
             return zi
 
@@ -38,7 +41,10 @@ def get_wtzip_index(config, update=False):
                 name.append(Path(filename).name.split('_weights.pkl')[0].replace('_',' ').replace('p','+') )
                 glon.append(l)
                 glat.append(b)
-        zip_index = dict(name=np.array(name),glon=np.array(glon), glat=np.array(glat))
+        zip_index = dict(name=np.array(name),
+                         glon=np.array(glon), glat=np.array(glat),
+                         coord= SkyCoord(glon, glat, unit='deg', frame='galactic'),
+                        )
 
                #      coord=SkyCoord(glon, glat, unit='deg', frame='galactic').fk5
                # )
@@ -48,7 +54,8 @@ def get_wtzip_index(config, update=False):
         pickle.dump(zip_index, open('/tmp/wtfile_index.pkl', 'wb'))
         with zipfile.ZipFile(wtzipfile, mode='a') as wtzip:
             wtzip.write('/tmp/wtfile_index.pkl', 'index.pkl')
-        zip_index['coord'] = SkyCoord(zip_index['glon'], zip_index['glat'], unit='deg', frame='galactic').fk5
+
+        # zip_index['coord'] = SkyCoord(zip_index['glon'], zip_index['glat'], unit='deg', frame='galactic').fk5
     return zip_index
 
 # Cell

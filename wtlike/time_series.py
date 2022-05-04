@@ -123,34 +123,49 @@ def power_spectrum_fft(timeseries,dfgoal=None,tweak_exp=False,
     return freqs[:(l//4+1)], dlogl_nobg, dlogl-dlogl_null, dlogl_null
 
 # Cell
-class TimeSeries(CellData):
+class TimeSeries():
     """
     Generate a special set of cells for Fourier analysis
     Object of this class can be passed to godot/core.power_spectrum_fft, an (almost) copy
     of which is here.
+
+    - source -- name of a source or an object inheriting from CellData
     """
 
-    def make_cells(self, exposure_factor=1e-6, **kwargs):
-        """ Override from superclass to use godot names,
-            save only moments of weights
+    def __init__(self, source, tsamp=1/24):
+
+        if type(source)==str:
+            ## string: create a CellData with binning
+            self.cd = CellData(source, time_bins=(0,0,tsamp))
+        elif isinstance(source, CellData): #, 'Expected a CellData object'
+            # existing CellData instance: make new rebined view without refitting
+            self.cd = source.view(0,0,tsamp, no_update=True)
+        else:
+            raise Exception('Expected a source name, or a CellData object')
+
+        self.make_time_cells()
+        self.config = self.cd.config
+
+    def make_time_cells(self, exposure_factor=1e-6, **kwargs):
+        """
+        Create cells from with moments of weights
 
         """
         # these needed by powwer_spectrum
-        self.tsamp = self.time_bins[2]
-        self.tspan = self.cell_edges[-1] - self.cell_edges[0]
+        self.tsamp = self.cd.time_bins[2]
+        self.tspan = self.cd.cell_edges[-1] - self.cd.cell_edges[0]
 
         # useful derived
         self.f_Nyquist = 1/self.tsamp/4
         self.delta_f = 1/self.tspan
 
-
-        ec = self.get_exposure_per_cell(exposure_factor)
+        ec = self.cd.get_exposure_per_cell(exposure_factor)
         cell_exp =  ec['exp']
-        etot = self.exptot*exposure_factor
-        Sk, Bk = self.S/etot, self.B/etot
+        etot = self.cd.exptot*exposure_factor
+        Sk, Bk = self.cd.S/etot, self.cd.B/etot
         #
         # get the weights per cell, and set moments
-        weights = self.get_weights_per_cell()
+        weights = self.cd.get_weights_per_cell()
 
         cell_dict = dict(
             counts = np.array( [len(w)   for w in weights], np.int32),
@@ -165,9 +180,9 @@ class TimeSeries(CellData):
         self.__dict__.update(cell_dict)
         self.power_df = None
 
-    def rebin(self, *pars, **kwargs):
-        super().rebin(*pars, **kwargs)
-        self.power_df = None
+    # def rebin(self, *pars, **kwargs):
+    #     super().rebin(*pars, **kwargs)
+    #     self.power_df = None
 
     def power_spectrum(self, **kwargs):
         """

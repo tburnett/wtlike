@@ -104,7 +104,7 @@ class CellData(SourceData):
 
         Invoke superclass to load photon data and exposure for the source.
 
-        * time_bins, default config.time_bins
+        * time_bins, default config.time_bins. If specified, set week_range and bypass cache.
 
         The `e` cell entry is the weighted exposure for the cell in units $cm^2\ Ms$.
         """
@@ -112,9 +112,16 @@ class CellData(SourceData):
     def __init__(self, *pars, **kwargs):
         """
         """
-        bins = kwargs.pop('bins', kwargs.pop('time_bins', Config().time_bins))
+
+        bins = kwargs.pop('time_bins', None)
+        if bins is not None:
+            week_range = (mission_week(bins[0]), mission_week(bins[1]))
+            kwargs.update(week_range=week_range)
+        else:
+            bins = Config().time_bins
 
         #  load source data
+
         super().__init__(*pars, **kwargs )
 
         self.rebin(bins)

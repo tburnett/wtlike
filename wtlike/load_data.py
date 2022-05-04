@@ -13,7 +13,28 @@ from .exposure import  binned_exposure, sc_data_selection, sc_process, weighted_
 from .data_man import get_week_files
 
 
-# Cell
+# Internal Cell
+class ConeSelect():
+    """Manage selection of pixels with cone
+
+    """
+
+    def __init__(self, config, l,b):
+
+        cart = lambda l,b: healpy.dir2vec(l,b, lonlat=True)
+        self.conepix = healpy.query_disc(config.nside, cart(l,b), np.radians(config.radius), nest=config.nest)
+
+    def __call__(self, pixels, shift=11):
+        """
+        For a set of pixels, return a mask for the cone
+        """
+        # select by comparing high-order pixels (faster)
+        a = np.right_shift(pixels, shift)
+        c = np.unique(np.right_shift(self.conepix, shift))
+        return np.isin(a,c)
+
+# Internal Cell
+
 def _get_photons_near_source(config, source, week): #tzero, photon_df):
     """
     Select the photons near a source
@@ -21,7 +42,8 @@ def _get_photons_near_source(config, source, week): #tzero, photon_df):
     - source : a PointSource object
     - week : dict with
         - tzero : start time for the photon
-        - photon_df : DataFrame with photon data
+        - photons : dict with photon data
+        - runlist : list of run numbers
 
     Returns a DF with
     - `band` index,
@@ -40,7 +62,8 @@ def _get_photons_near_source(config, source, week): #tzero, photon_df):
 
     center, conepix = _cone(config,source)
 
-    df = week['photons']
+    df = pd.DataFrame.from_dict(week['photons'])
+
     tstart = week['tstart']
     allpix = df.nest_index.values
 
@@ -62,19 +85,23 @@ def _get_photons_near_source(config, source, week): #tzero, photon_df):
     # cut df to entries in the cone
     dfc = df[incone].copy()
 
-    if 'trun' in dfc:
-        time = dfc.run_id.astype(float) + dfc.trun * config.offset_size
-    else:
-        # old: convert  to float, add tstart, convert to MJD
-        time = np.array(dfc.time, float)+tstart
-    dfc.loc[:,'time'] = MJD(time)
+    # # costruct the event time with run met value and offset in 'trun'
+    # if 'run_id' in dfc:
+    #     # old format--run id is a categorical list
+    #     time = dfc.run_id.astype(float) + dfc.trun * config.offset_size
+    # elif 'run_ref' in dfc:
+    #     # new format with referenct to list
+    #     time = week['runlist'][dfc.run_ref] + dfc.trun * config.offset_size
+    # else:
+    #     raise Exception('Expect either run_id or run_ref in photons table')
+    # dfc.loc[:,'time'] = MJD(time)
 
     # assemble the DataFrame, remove those outside the radius
     out_df = dfc
 
     # make sure times are monotonic by sorting (needed since runs not in order in most
     #  week-files after March 2018)
-    out_df = dfc.sort_values(by='time')
+    # out_df = dfc.sort_values(by='time')
 
     if config.verbose>2:
         print(f'selected photons:\n{out_df.head()}')
@@ -123,8 +150,11 @@ class ProcessWeek(object):
         """
         with open(week_file, 'rb') as inp:
             week = pickle.load(inp)
-        pdf = week['photons']
-        sc_data = edf = week['sc_data']
+
+        # convert the photon and spacecraft dicts to DataFrames
+        pdf = pd.DataFrame(week['photons'])
+        sc_data = edf = pd.DataFrame.from_dict(week['sc_data'])
+        self.runlist = week.get('runlist', None)
         self.start = MJD(week['tstart'])
         self.config = config
 
@@ -164,7 +194,11 @@ class ProcessWeek(object):
     def photon_times(self, pdf):
 
         # construct the time from the run number and offset
-        ptime = MJD(pdf.run_id.astype(float) + pdf.trun * self.config.offset_size)
+        if  'run_id' in pdf: run = pdf.run_id.astype(float)
+        elif 'run_ref' in pdf: run = self.runlist[pdf.run_ref]
+        else:
+            raise Exception('Expect run_id or run_ref')
+        ptime = MJD(run + pdf.trun * self.config.offset_size)
         pdf.loc[:,'time'] = ptime
 
         # select the subset with exposure info
@@ -217,7 +251,7 @@ def multiprocess_week_data(config, source, week_range, processes=None):
     txt = f', using {processes} processes ' if processes>1 else ''
 
     if config.verbose>0:
-        print(f'\tProcessing {len(week_files)} week files{txt}', end='', flush=True)
+        print(f'\tProcessing {len(week_files)} week files {week_files[0].name} - {week_files[-1].name} {txt}', end='', flush=True)
 
     process_week = TWeek(config, source)
 
@@ -244,13 +278,13 @@ def multiprocess_week_data(config, source, week_range, processes=None):
 # Cell
 def load_source_data(config, source, week_range=None, key='', clear=False):
     """
-    This is a client of SourceData.
+    Generate photon and exposure tables specific to the source.
 
     - week_range [None] -- if None, select all weeks
     - key ['']   -- key to use for cache, construct from name if not set
     - clear [False]
 
-    Returns a tuple of
+    For the given source returns a tuple of
     - photons
     - exposure
     - the key

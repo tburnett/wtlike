@@ -171,6 +171,73 @@ $$w'_1 = \frac{w_1}{1+\alpha_2\ w_2}\ \ .   $$
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">ls</span> <span class="o">-</span><span class="n">l</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">burnett</span><span class="o">/</span><span class="n">fermi</span><span class="o">/</span><span class="n">wtlike</span><span class="o">-</span><span class="n">data</span><span class="o">/</span><span class="n">weight_files</span><span class="o">.</span><span class="n">zip</span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>-rwxrwxrwx 1 burnett burnett 383189527 May  1 06:26 <span class="ansi-red-fg ansi-underline">/home/burnett/fermi/wtlike-data/weight_files.zip</span>*
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">wtzip</span><span class="p">[</span><span class="s1">&#39;index.pil&#39;</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_text output_error">
+<pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">TypeError</span>                                 Traceback (most recent call last)
+<span class="ansi-green-fg">/tmp/ipykernel_229/3900842101.py</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
+<span class="ansi-green-fg">----&gt; 1</span><span class="ansi-red-fg"> </span>wtzip<span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">&#39;index.pil&#39;</span><span class="ansi-blue-fg">]</span>
+
+<span class="ansi-red-fg">TypeError</span>: &#39;ZipFile&#39; object is not subscriptable</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
 
 <div class="output_wrapper">
 <div class="output">
@@ -179,7 +246,7 @@ $$w'_1 = \frac{w_1}{1+\alpha_2\ w_2}\ \ .   $$
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="WeightMan" class="doc_header"><code>class</code> <code>WeightMan</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/sources.py#L55" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>WeightMan</code>(<strong><code>config</code></strong>, <strong><code>source</code></strong>) :: <code>dict</code></p>
+<h2 id="WeightMan" class="doc_header"><code>class</code> <code>WeightMan</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/sources.py#L62" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>WeightMan</code>(<strong><code>config</code></strong>, <strong><code>source</code></strong>) :: <code>dict</code></p>
 </blockquote>
 <p>Weight Management</p>
 <ul>
@@ -215,7 +282,7 @@ $$w'_1 = \frac{w_1}{1+\alpha_2\ w_2}\ \ .   $$
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="weight_radius_plots" class="doc_header"><code>weight_radius_plots</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/sources.py#L201" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>weight_radius_plots</code>(<strong><code>photons</code></strong>)</p>
+<h4 id="weight_radius_plots" class="doc_header"><code>weight_radius_plots</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/sources.py#L208" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>weight_radius_plots</code>(<strong><code>photons</code></strong>)</p>
 </blockquote>
 
 </div>
@@ -246,7 +313,7 @@ $$w'_1 = \frac{w_1}{1+\alpha_2\ w_2}\ \ .   $$
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="findsource" class="doc_header"><code>findsource</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/sources.py#L217" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>findsource</code>(<strong>*<code>pars</code></strong>, <strong><code>gal</code></strong>=<em><code>False</code></em>)</p>
+<h4 id="findsource" class="doc_header"><code>findsource</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/sources.py#L224" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>findsource</code>(<strong>*<code>pars</code></strong>, <strong><code>gal</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 <p>Return a SkyCoord, looking up a name, or interpreting args</p>
 <p>Optional inputs: len(pars) is 1 for a source name or Jxxx, or 2 for coordinate pair</p>
@@ -285,7 +352,7 @@ $$w'_1 = \frac{w_1}{1+\alpha_2\ w_2}\ \ .   $$
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="FermiCatalog" class="doc_header"><code>class</code> <code>FermiCatalog</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/sources.py#L267" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>FermiCatalog</code>(<strong><code>config</code></strong>=<em><code>None</code></em>, <strong><code>max_sep</code></strong>=<em><code>0.1</code></em>)</p>
+<h2 id="FermiCatalog" class="doc_header"><code>class</code> <code>FermiCatalog</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/sources.py#L274" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>FermiCatalog</code>(<strong><code>config</code></strong>=<em><code>None</code></em>, <strong><code>max_sep</code></strong>=<em><code>0.1</code></em>)</p>
 </blockquote>
 
 </div>
@@ -323,7 +390,7 @@ $$w'_1 = \frac{w_1}{1+\alpha_2\ w_2}\ \ .   $$
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="SourceLookup" class="doc_header"><code>class</code> <code>SourceLookup</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/sources.py#L328" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>SourceLookup</code>(<strong><code>config</code></strong>)</p>
+<h2 id="SourceLookup" class="doc_header"><code>class</code> <code>SourceLookup</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/sources.py#L335" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>SourceLookup</code>(<strong><code>config</code></strong>)</p>
 </blockquote>
 <p>Use lists of the pointlike and catalog sources to check for correspondence of a name or position</p>
 
@@ -335,7 +402,7 @@ $$w'_1 = \frac{w_1}{1+\alpha_2\ w_2}\ \ .   $$
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="SourceLookup.__call__" class="doc_header"><code>SourceLookup.__call__</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/sources.py#L376" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>SourceLookup.__call__</code>(<strong>*<code>pars</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="SourceLookup.__call__" class="doc_header"><code>SourceLookup.__call__</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/sources.py#L383" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>SourceLookup.__call__</code>(<strong>*<code>pars</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
 <p>Search the catalog lists. Options are:</p>
 <ul>
@@ -373,7 +440,7 @@ $$w'_1 = \frac{w_1}{1+\alpha_2\ w_2}\ \ .   $$
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="PointSource" class="doc_header"><code>class</code> <code>PointSource</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/sources.py#L445" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>PointSource</code>(<strong>*<code>pars</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
+<h2 id="PointSource" class="doc_header"><code>class</code> <code>PointSource</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/sources.py#L452" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>PointSource</code>(<strong>*<code>pars</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
 <p>Manage the position and name of a point source</p>
 
@@ -385,7 +452,7 @@ $$w'_1 = \frac{w_1}{1+\alpha_2\ w_2}\ \ .   $$
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="PointSource.fk5" class="doc_header"><code>PointSource.fk5</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/sources.py#L505" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>PointSource.fk5</code>(<strong><code>name</code></strong>, <strong><code>position</code></strong>)</p>
+<h4 id="PointSource.fk5" class="doc_header"><code>PointSource.fk5</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/sources.py#L512" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>PointSource.fk5</code>(<strong><code>name</code></strong>, <strong><code>position</code></strong>)</p>
 </blockquote>
 <p>position: (ra,dec) tuple</p>
 
