@@ -164,10 +164,19 @@ Inherits from <a href="/wtlikecell_data.html#CellData"><code>CellData</code></a>
 </div>
     {% endraw %}
 
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Demonstrate-TimeSeries">Demonstrate TimeSeries<a class="anchor-link" href="#Demonstrate-TimeSeries"> </a></h2>
+</div>
+</div>
+</div>
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
-<div class="input">
+<details class="description">
+      <summary data-open="Hide Code" data-close="Show Code"></summary>
+        <summary></summary>
+        <div class="input">
 
 <div class="inner_cell">
     <div class="input_area">
@@ -175,16 +184,19 @@ Inherits from <a href="/wtlikecell_data.html#CellData"><code>CellData</code></a>
 <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;error&#39;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">RuntimeWarning</span><span class="p">)</span>
 <span class="n">config</span><span class="o">=</span><span class="n">Config</span><span class="p">()</span>
 <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">valid</span><span class="p">:</span>
-    <span class="n">lc</span> <span class="o">=</span> <span class="n">LightCurve</span><span class="p">(</span><span class="s1">&#39;3C 279&#39;</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">7</span><span class="p">),</span> <span class="n">clear</span><span class="o">=</span><span class="kc">False</span> <span class="p">);</span>
+    <span class="n">lc</span> <span class="o">=</span> <span class="n">LightCurve</span><span class="p">(</span><span class="s1">&#39;3C 279&#39;</span> <span class="p">);</span>
     <span class="n">lc</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">UTC</span><span class="o">=</span><span class="kc">True</span><span class="p">);</span>
-<span class="c1"># fig=lc.plot( show_flux=True, ylim=(2e-2,4),tzero=54720, fmt=&#39;o&#39;, xlim=(0,50), log=True, ms=8, </span>
-<span class="c1">#             error_pixsize=20)</span>
+    
+    <span class="kn">from</span> <span class="nn">wtlike.time_series</span> <span class="kn">import</span> <span class="n">TimeSeries</span>
+    <span class="n">ts</span> <span class="o">=</span> <span class="n">lc</span><span class="o">.</span><span class="n">periodogram</span><span class="p">()</span>
+    <span class="n">ts</span><span class="o">.</span><span class="n">power_plot</span><span class="p">(</span><span class="n">pmax</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span><span class="kc">None</span><span class="p">),</span> <span class="n">xscale</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">);</span>
 </pre></div>
 
     </div>
 </div>
 </div>
 
+    </details>
 <div class="output_wrapper">
 <div class="output">
 
@@ -198,6 +210,8 @@ SourceData: Source 3C 279 with:
 	 rates:  source 4.06e-07/s, background 3.57e-07/s, TS 183590.9
 CellData.rebin: Bin photon data into 696 1-week bins from 54683.0 to 59555.0
 LightCurve: select 684 cells for fitting with e&gt;35 &amp; n&gt;2
+CellData.rebin: Bin photon data into 116976 1-hour bins from 54683.0 to 59557.0
+TimeSeries: creating power spectra, 116,976 samples, size 1.00 h: Nyquist is 6.0 /d
 </pre>
 </div>
 </div>
@@ -212,69 +226,6 @@ LightCurve: select 684 cells for fitting with e&gt;35 &amp; n&gt;2
 >
 </div>
 
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">wtlike.time_series</span> <span class="kn">import</span> <span class="n">TimeSeries</span>
-<span class="n">ts</span> <span class="o">=</span> <span class="n">lc</span><span class="o">.</span><span class="n">periodogram</span><span class="p">()</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>CellData.rebin: Bin photon data into 116976 1-hour bins from 54683.0 to 59557.0
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">ts</span><span class="o">.</span><span class="n">power_plot</span><span class="p">(</span><span class="n">pmax</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span><span class="kc">None</span><span class="p">),</span> <span class="n">xscale</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">);</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>TimeSeries: creating power spectra, 116,976 samples, size 1.00 h: Nyquist is 6.0 /d
-</pre>
-</div>
 </div>
 
 <div class="output_area">

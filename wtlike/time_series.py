@@ -132,11 +132,11 @@ class TimeSeries():
     - source -- name of a source or an object inheriting from CellData
     """
 
-    def __init__(self, source, tsamp=1/24):
+    def __init__(self, source, config=None, tsamp=1/24):
 
         if type(source)==str:
             ## string: create a CellData with binning
-            self.cd = CellData(source, time_bins=(0,0,tsamp))
+            self.cd = CellData(source, config=config, time_bins=(0,0,tsamp))
         elif isinstance(source, CellData): #, 'Expected a CellData object'
             # existing CellData instance: make new rebined view without refitting
             self.cd = source.view(0,0,tsamp, no_update=True)

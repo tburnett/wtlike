@@ -115,8 +115,10 @@ class CellData(SourceData):
 
         bins = kwargs.pop('time_bins', None)
         if bins is not None:
-            week_range = (mission_week(bins[0]), mission_week(bins[1]))
-            kwargs.update(week_range=week_range)
+            if bins[0]>50000 and bins[1]>50000:
+                # kluge to at least accept (0,0) in constructor
+                week_range = (mission_week(bins[0]), mission_week(bins[1]))
+                kwargs.update(week_range=week_range)
         else:
             bins = Config().time_bins
 
