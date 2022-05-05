@@ -368,10 +368,10 @@ class FermiData(GSFCweekly):
         """
         from multiprocessing import Pool
 
-        processes = processes or config.pool_size
+        processes = processes or self.config.pool_size
         txt = f', using {processes} processes ' if processes>1 else ''
 
-        if config.verbose>0:
+        if self.config.verbose>0:
             print(f'\tDownloading {len(week_range)} week files{txt}\n', end='', flush=True)
 
         if processes>1:
@@ -396,6 +396,8 @@ class FermiData(GSFCweekly):
         ondisk = np.array(list(file_weeks))
 
         missing =  list(set(self.keys()).difference(set(ondisk)))
+        if len(ondisk)==0:
+            return missing
 
         last = ondisk[-1]
         if last not in missing and not self.check_week( last):
@@ -411,12 +413,17 @@ class FermiData(GSFCweekly):
         Return status: True if  anything changed
         """
         # will use multprocessing if len(todo)>1 and pool_size>1
+        from multiprocessing import Pool
         todo = self.needs_update(days)
         if len(todo)==0: return False
+
         if self.config.pool_size >1 and len(todo)>1:
-            print('multitasking not applied yet', file=sys.stderr)
-            pass
-        list(map(self, todo))
+            if self.config.verbose>1:
+                print(f'FermiData: downloading {len(todo)} week''s data')
+            with Pool(self, processes=self.config.pool_size) as pool:
+                list(pool.map(self, todo))
+        else:
+            list(map(self, todo))
         return True
 
     def get_run_times(self, week):
