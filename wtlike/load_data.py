@@ -85,17 +85,6 @@ def _get_photons_near_source(config, source, week): #tzero, photon_df):
     # cut df to entries in the cone
     dfc = df[incone].copy()
 
-    # # costruct the event time with run met value and offset in 'trun'
-    # if 'run_id' in dfc:
-    #     # old format--run id is a categorical list
-    #     time = dfc.run_id.astype(float) + dfc.trun * config.offset_size
-    # elif 'run_ref' in dfc:
-    #     # new format with referenct to list
-    #     time = week['runlist'][dfc.run_ref] + dfc.trun * config.offset_size
-    # else:
-    #     raise Exception('Expect either run_id or run_ref in photons table')
-    # dfc.loc[:,'time'] = MJD(time)
-
     # assemble the DataFrame, remove those outside the radius
     out_df = dfc
 
@@ -300,7 +289,7 @@ def load_source_data(config, source, week_range=None, key='', clear=False):
 
         # concatenate the two lists of DataFrames
         p_df = pd.concat(pp, ignore_index=True)
-        p_df.loc[:,'run_id'] = pd.Categorical(p_df.run_id)
+        #p_df.loc[:,'run_id'] = pd.Categorical(p_df.run_id)
         e_df = pd.concat(ee, ignore_index=True)
 
         return p_df, e_df

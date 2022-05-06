@@ -14,22 +14,22 @@ Here is a minimal demo:
 ```python
 from wtlike import *
 config = Config()
-if config.valid:
-    with Timer() as t:
-        wtl = WtLike('3C 273',week_range=(9,3*52+9))
-        print(t)
+
+with Timer() as t:
+    wtl = WtLike('3C 273',week_range=(9,3*52+9))
+    print(t)
 ```
 
     SourceData:  4FGL J1229.0+0202
-    LoadData: Loading weeks[9:165:]	Processing 157 week files, using 4 processes .............................................................................................................................................................
+    	Processing 157 week files week_009.pkl - week_165.pkl , using 4 processes .............................................................................................................................................................
     
     SourceData: Source 3C 273 with:
     	 data:        33,210 photons from 2008-08-04 to 2011-08-03
-    	 exposure:   713,320 intervals,  average effective area 2785 cm^2 for 21.3 Ms
-    	 rates:  source 2.02e-07/s, background 3.57e-07/s,
-    CellData: Bin photon data into 156 1-week bins from 54683.0 to 55775.0
+    	 exposure:   713,320 intervals,  average effective area 2783 cm^2 for 21.3 Ms
+    	 rates:  source 2.02e-07/s, background 3.58e-07/s,
+    CellData.rebin: Bin photon data into 156 1-week bins from 54683.0 to 55775.0
     LightCurve: select 156 cells for fitting with e>35 & n>2
-    elapsed time: 37.3s (0.6 min)
+    elapsed time: 57.1s (1.0 min)
 
 
 This created a `WtLike` object, loading the first 3 years of data, by specifying weeks from #9, the first data-taking week.
@@ -38,8 +38,7 @@ The reason to specify only the first three years here is to avoid the 10 min or 
 Now ask it to make a plot:
 
 ```python
-if config.valid:
-    wtl.plot(UTC=1);
+wtl.plot(UTC=1);
 ```
 
 
@@ -154,19 +153,19 @@ if config.valid:
     print(wtl.view(0,100,25).cells)
 ```
 
-    CellData: Bin photon data into 4 25-day bins from 54683.0 to 54783.0
+    CellData.rebin: Bin photon data into 4 25-day bins from 54683.0 to 54783.0
     LightCurve: select 4 cells for fitting with e>125 & n>2
              t    tw            e       ctm     n  \
-    0  54695.5  25.0  1489.317030  0.670382   553   
-    1  54720.5  25.0  1869.714868  0.681891  1438   
-    2  54745.5  25.0  1451.929805  0.679038  1183   
-    3  54770.5  25.0  1931.008354  0.682316  1175   
+    0  54695.5  25.0  1488.182373  0.670382   553   
+    1  54720.5  25.0  1868.273926  0.681891  1438   
+    2  54745.5  25.0  1450.828979  0.679038  1183   
+    3  54770.5  25.0  1929.570801  0.682316  1175   
     
                                                        w           S           B  
-    0  [0.48901367, 0.8066406, 0.11303711, 0.19165039...  300.857212  532.021028  
-    1  [0.4345703, 0.6064453, 0.0690918, 0.056274414,...  377.701451  667.908582  
-    2  [0.33911133, 0.3100586, 0.7089844, 0.06994629,...  293.304612  518.665383  
-    3  [0.09112549, 0.58251953, 0.07537842, 0.3457031...  390.083359  689.804138  
+    0  [4.8901367e-01, 0.8066406, 0.11303711, 0.19165...  300.871887  532.046936  
+    1  [0.4345703, 0.6064453, 0.0690918, 0.056274414,...  377.716553  667.935242  
+    2  [0.33911133, 0.3100586, 0.7089844, 0.06994629,...  293.320007  518.692566  
+    3  [0.09112549, 0.58251953, 0.07537842, 0.3457031...  390.109192  689.849792  
 
 
 ### Evaluate Likelihoods and make light curve plots
@@ -197,9 +196,8 @@ This code creates partitions between boundaries of a set of cells. Usage is via 
                      
 
 ```python
-if config.valid:
-    bb = wtl.bb_view()
-    bb.plot(UTC=1);
+bb = wtl.bb_view()
+bb.plot(UTC=1);
 ```
 
     Bayesian Blocks: partitioning 156 cells using LikelihoodFitness with penalty 5%

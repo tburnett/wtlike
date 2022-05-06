@@ -43,7 +43,7 @@ def get_wtzip_index(config, update=False):
                 glat.append(b)
         zip_index = dict(name=np.array(name),
                          glon=np.array(glon), glat=np.array(glat),
-                         coord= SkyCoord(glon, glat, unit='deg', frame='galactic'),
+                         #coord= SkyCoord(glon, glat, unit='deg', frame='galactic'),
                         )
 
                #      coord=SkyCoord(glon, glat, unit='deg', frame='galactic').fk5

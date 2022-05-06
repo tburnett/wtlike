@@ -213,11 +213,11 @@ expect ~105 runs. We save a table of the run numbers per week, and use a uint8 i
 
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>Exercise access from GSFC and FT1 data handling
-GSFCweekly: spacecraft/lat_spacecraft_weekly_w725_p310_v001.fits --&gt; week725_ft2.fits
-GSFCweekly: photon/lat_photon_weekly_w725_p305_v001.fits --&gt; week725_ft1.fits
-FT1: week725_ft1.fits, GTI range 672193803.7-672797715.1:  2,149,244 photons
-	Selection E &gt; 100 MeV. theta&lt;66.4 and z&lt;100 remove: 84.22%
-FT1 data from file week725_ft1.fits: tstart=672193803 (UTC 2022-04-21) selected 339,183/2,149,244 photons, in 106 runs.
+GSFCweekly: spacecraft/lat_spacecraft_weekly_w726_p310_v001.fits --&gt; week726_ft2.fits
+GSFCweekly: photon/lat_photon_weekly_w726_p305_v001.fits --&gt; week726_ft1.fits
+FT1: week726_ft1.fits, GTI range 672798075.7-673402652.1:  1,557,075 photons
+	Selection E &gt; 100 MeV. theta&lt;66.4 and z&lt;100 remove: 77.84%
+FT1 data from file week726_ft1.fits: tstart=672798075 (UTC 2022-04-28) selected 345,013/1,557,075 photons, in 106 runs.
 Contents of the output dict
  key      value type
   tstart     float
@@ -344,26 +344,9 @@ Contents of the output dict
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="bp">self</span> <span class="o">=</span> <span class="n">FermiData</span><span class="p">()</span>
-<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">valid</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">  need(s) update: &#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">needs_update</span><span class="p">())</span>
 </pre></div>
 
     </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>FermiData: 717 week files at GSFC, from (9, &#39;20220228224421&#39;) to (726, &#39;20220503220258&#39;) 
-  need(s) update:  [726]
-</pre>
-</div>
-</div>
-
 </div>
 </div>
 
@@ -377,7 +360,8 @@ Contents of the output dict
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">needs_update</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">valid</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">  need(s) update: &#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">needs_update</span><span class="p">())</span>
 </pre></div>
 
     </div>
@@ -389,12 +373,11 @@ Contents of the output dict
 
 <div class="output_area">
 
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>[726]</pre>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>FermiData: 718 week files at GSFC, from (9, &#39;20220228224421&#39;) to (727, &#39;20220506173447&#39;) 
+  need(s) update:  []
+</pre>
 </div>
-
 </div>
 
 </div>
@@ -432,23 +415,14 @@ Contents of the output dict
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="FermiData.process" class="doc_header"><code>FermiData.process</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L407" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>FermiData.process</code>(<strong><code>days</code></strong>=<em><code>1</code></em>)</p>
+<h4 id="FermiData.needs_update" class="doc_header"><code>FermiData.needs_update</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L385" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>FermiData.needs_update</code>(<strong><code>threshold</code></strong>=<em><code>0</code></em>)</p>
 </blockquote>
-<p>Download and process all weeks missing or needing an update, if within <code>days</code>
-from the present</p>
-<p>Return status: True if  anything changed</p>
-
-</div>
-
-</div>
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4 id="GSFCweekly.check_week" class="doc_header"><code>GSFCweekly.check_week</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L265" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>GSFCweekly.check_week</code>(<strong><code>week</code></strong>)</p>
-</blockquote>
-<p>Returns True if the local week needs updating</p>
+<p>Compare files on disk with the GSFC list and compile list that need to be downloaded</p>
+<p>Check the file date of the last one on disk and include it if it is:</p>
+<ul>
+<li>short and there is one or more GSFC weeks following it,</li>
+<li>the most recent week and is short by more than <em>threshold</em> days</li>
+</ul>
 
 </div>
 
@@ -456,48 +430,6 @@ from the present</p>
 
 </div>
 </div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">fd</span> <span class="o">=</span> <span class="n">FermiData</span><span class="p">()</span>
-<span class="k">if</span> <span class="n">fd</span><span class="o">.</span><span class="n">valid</span><span class="p">:</span>
-    <span class="n">check</span> <span class="o">=</span><span class="n">fd</span><span class="o">.</span><span class="n">needs_update</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">fd</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n\t</span><span class="s1">week(s) needing update: </span><span class="si">{</span><span class="n">check</span><span class="si">}</span><span class="s1">&#39;</span> <span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>FermiData: 717 week files at GSFC, from (9, &#39;20220228224421&#39;) to (726, &#39;20220503220258&#39;) 
-	week(s) needing update: []
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
 
 </div>
     {% endraw %}
@@ -513,173 +445,7 @@ from the present</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="check_data" class="doc_header"><code>check_data</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L434" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>check_data</code>(<strong><code>config</code></strong>=<em><code>None</code></em>)</p>
-</blockquote>
-<p>Return: sorted list of files, last week number, number of days in last week</p>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">check_data</span><span class="p">();</span>
-<span class="n">update_data</span><span class="p">();</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>Weekly folder &#34;/home/burnett/fermi/wtlike-data/data_files&#34; contains 717 weeks.
-	 Last week, # 726, has 5.252 days, ends at UTC 2022-05-03 06:24, filedate 20220503120345
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<details class="description">
-      <summary data-open="Hide Code" data-close="Show Code"></summary>
-        <summary></summary>
-        <div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># code to count the total number of photons in the local dataset</span>
-<span class="n">tz</span><span class="o">=</span><span class="p">[];</span> <span class="n">num</span><span class="o">=</span><span class="p">[];</span> <span class="n">elapsed</span><span class="o">=</span><span class="p">[];</span> <span class="n">week</span><span class="o">=</span><span class="p">[]</span>
-<span class="k">if</span> <span class="n">Config</span><span class="p">()</span><span class="o">.</span><span class="n">valid</span><span class="p">:</span>
-    <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">check_data</span><span class="p">()[</span><span class="mi">0</span><span class="p">]:</span>
-        <span class="n">week</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">name</span><span class="p">[</span><span class="o">-</span><span class="mi">7</span><span class="p">:</span><span class="o">-</span><span class="mi">4</span><span class="p">]))</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">imp</span><span class="p">:</span>
-            <span class="n">t</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">imp</span><span class="p">);</span>
-            <span class="n">g</span><span class="o">=</span> <span class="n">t</span><span class="p">[</span><span class="s1">&#39;photons&#39;</span><span class="p">]</span>
-            <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
-            <span class="n">num</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
-            <span class="n">count</span> <span class="o">+=</span> <span class="n">n</span>
-            <span class="n">h</span> <span class="o">=</span> <span class="n">t</span><span class="p">[</span><span class="s1">&#39;sc_data&#39;</span><span class="p">]</span>
-            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">h</span><span class="p">)</span><span class="o">==</span><span class="nb">dict</span><span class="p">:</span>
-                <span class="n">elapsed</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">h</span><span class="p">[</span><span class="s1">&#39;stop&#39;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">h</span><span class="p">[</span><span class="s1">&#39;start&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">elapsed</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">h</span><span class="p">[</span><span class="s1">&#39;stop&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">h</span><span class="p">[</span><span class="s1">&#39;start&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="p">)</span>
-            <span class="n">tz</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="s1">&#39;tstart&#39;</span><span class="p">])</span>
-        <span class="nb">print</span><span class="p">(</span> <span class="s1">&#39;.&#39;</span><span class="p">,</span><span class="n">end</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Total number of photons: </span><span class="si">{</span><span class="n">count</span><span class="si">:</span><span class="s1">,</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-
-    <span class="n">tz</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">tz</span><span class="p">);</span> 
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Run check, expect week gaps of 1 or 2&#39;</span><span class="p">,</span> 
-          <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="nb">int</span><span class="p">(</span><span class="n">week_number</span><span class="p">(</span><span class="n">x</span><span class="p">))</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">tz</span><span class="p">])),</span><span class="n">return_counts</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-    </details>
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>Weekly folder &#34;/home/burnett/fermi/wtlike-data/data_files&#34; contains 717 weeks.
-	 Last week, # 726, has 5.252 days, ends at UTC 2022-05-03 06:24, filedate 20220503120345
-.............................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................
-Total number of photons: 240,715,501
-Run check, expect week gaps of 1 or 2 (array([1, 2]), array([715,   1]))
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">week</span><span class="p">,</span><span class="n">elapsed</span><span class="p">,</span><span class="s1">&#39;o&#39;</span><span class="p">);</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlim</span><span class="o">=</span><span class="p">(</span><span class="mi">680</span><span class="p">,</span><span class="mi">730</span><span class="p">))</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">();</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-
-<div class="output_png output_subarea ">
-<img src="data:image/png;base64,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5OdeZOdu2dnZKigoiNj+wnokKzExUd26dQsM8Nlnn2nJkiVauXJlxAYBAABoTOr1OVl+v1+XL1+O9CwAAACNRshHsmbPnq2RI0fq3nvv1fnz5/XnP/9ZPp+Pz8oCAACoQ8iSVV5erokTJ6q8vFwtWrRQVlaWPvroIw0fPrwh5gMAAHClkCVr9erVDTAGAABA48LfLgQAALCAkgUAAGABJQsAAMACShYAAIAFlCwAAAALKFkAAAAWULIAAAAsoGQBAABYQMkCAACwgJIFAABgASULAADAAkoWAACABZQsAAAACyhZAAAAFlCyAAAALKBkAQAAWEDJAgAAsICSBQAAYAElCwAAwAJKFgAAgAWULAAAAAsoWQAAABZQsgAAACwIWbJef/119evXT82bN1daWppGjRqlzz//vCFmAwAAcK2QJcvn8+m5557Trl27tGXLFjVp0kTDhg3Tt99+2xDzAQAAuFKTUAs2bdoU9P+1a9eqRYsW2rlzp0aNGmVtMAAAADcLWbJudv78efn9frVq1eqWX/d6vfJ6vZKks2fPyufz3daAiJ7Kykrycymyczfycy+yw43ijDHGyTeMGzdORUVFKigoUHx8fJ1rPR6PCgsLb2tARI/P51NOTk60x0A9kJ27kZ97kZ27ZWdnq6CgIGL7c/RI1gsvvKAdO3Zox44dIQsWAADAnSzskjVz5kytW7dOW7duVdeuXW3OBAAA4Hphlaznn39e69atk8/nU48ePWzPBAAA4HohS9a0adO0du1a5efnq1WrViovL5ckpaamKjU11fqAAAAAbhTyc7LefPNNnT9/Xo888ojS09MD/954442GmA8AAMCVQj6S5fDNhwAAABB/uxAAAMAKShYAAIAFlCwAAAALKFkAAAAWULIAAAAsoGQBAABYQMkCAACwgJIFAABgASULAADAAkoWAACABZQsAAAACyhZAAAAFlCyAAAALKBkAQAAWEDJAgAAsICSBQAAYAElCwAAwAJKFgAAgAWULAAAAAsoWQAAABZQsgAAACygZAEAAFgQVsnavn27Ro8erQ4dOiguLk6rV6+2PBYAAIC7hVWyKisr1adPHy1dulTJycm2ZwIAAHC9JuEsGjFihEaMGCFJmjx5ss15AAAAGgVekwUAAGBBWI9kOeH1euX1eiVJZ8+elc/ni/RFoIFUVlaSn0uRnbuRn3uR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zBhJZBcLVq9eraZNm2rChAmBbV26dFH79u2Dcrl06ZI+/fTTQC5kFxtulV84yC/6asuuqqpK48eP16FDh7R169bALz3XkF1scHLb8/v9gdcp33Z+Tl6V/49//MM0adLEzJ8/3xQVFZn169eb5s2bm+XLlwfWDBkyxPTu3dts3brVFBcXm1WrVpmkpCSzbNmywJpnn33WZGRkmM2bN5v9+/ebnJwc3s5qWTjZrV+/3mzZssV89dVXJj8/32RmZprHH388aD9kFz1+v990797dTJkypcbXFixYYJo1a2Y2bNhgDh8+bMaPH3/Lj3Agu+ipK78zZ86YAwcOmK1btxpJJi8vzxw4cMCUlZUF1pBf9NSWXVVVlRkzZozJyMgw+/btC/qogO+//z6wjuyiq7b8zp07Z1566SWzZ88e8/XXX5uCggLz9NNPm8TERPPPf/4zsO528nNUsowx5sMPPzRZWVmmadOmpnv37mbp0qXG7/cHvl5WVmYmT55sMjIyTFJSkvF4PGbx4sVBay5evGimT59uWrdubZKTk81jjz1mSktLnY4Ch0Jlt3TpUtOxY0eTkJBgOnXqZH7961+by5cvB+2D7KJny5YtRpLZu3dvja/5/X7zyiuvmPbt25umTZuawYMHm8OHDwetIbvoqiu/VatWGUk1/r3yyiuBNeQXPbVlV1JScsvcJJlVq1YF1pFddNWW34ULF8zYsWNNenq6SUxMNOnp6Wb06NFmz549QetuJ784Y274/AUAAABEBH+7EAAAwAJKFgAAgAWULAAAAAsoWQAAABZQsgAAACygZAEAAFhAyQIAALCAkgUAAGDB/wATaBhJENGgXgAAAABJRU5ErkJggg==
-"
->
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h2 id="update_data" class="doc_header"><code>update_data</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L468" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>update_data</code>(<strong><code>update_threshold</code></strong>=<em><code>1</code></em>, <strong><code>config</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="update_data" class="doc_header"><code>update_data</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L464" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>update_data</code>(<strong><code>update_threshold</code></strong>=<em><code>1</code></em>, <strong><code>config</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <p>Bring all of the local week data summaries up to date, downloading the missing ones from GSFC.
 If the last one is the current week, check to see if needs updating, by comparing file date, in days,
@@ -713,7 +479,53 @@ from the last update with the current one at GSFC.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="plot_week" class="doc_header"><code>plot_week</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L507" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>plot_week</code>(<strong><code>week</code></strong>, <strong><code>nside</code></strong>=<em><code>32</code></em>, <strong>**<code>kwargs</code></strong>)</p>
+<h2 id="check_data" class="doc_header"><code>check_data</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L458" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>check_data</code>(<strong><code>config</code></strong>=<em><code>None</code></em>)</p>
+</blockquote>
+<p>Return: sorted list of files, last week number, number of days in last week</p>
+
+</div>
+
+</div>
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h2 id="update_data" class="doc_header"><code>update_data</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L464" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>update_data</code>(<strong><code>update_threshold</code></strong>=<em><code>1</code></em>, <strong><code>config</code></strong>=<em><code>None</code></em>)</p>
+</blockquote>
+<p>Bring all of the local week data summaries up to date, downloading the missing ones from GSFC.
+If the last one is the current week, check to see if needs updating, by comparing file date, in days,
+from the last update with the current one at GSFC.</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h2 id="plot_week" class="doc_header"><code>plot_week</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L503" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>plot_week</code>(<strong><code>week</code></strong>, <strong><code>nside</code></strong>=<em><code>32</code></em>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
 <p>Make an AIT plot of the given week's photon data</p>
 <p>Combine all energies for now</p>
