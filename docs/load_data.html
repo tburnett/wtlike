@@ -150,7 +150,7 @@ nb_path: "nbs/04_load_data.ipynb"
 <span class="kn">from</span> <span class="nn">wtlike.config</span> <span class="kn">import</span> <span class="n">Timer</span>
 <span class="n">config</span><span class="o">=</span><span class="n">Config</span><span class="p">();</span> 
 <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">valid</span><span class="p">:</span>
-    <span class="n">test_weeks</span> <span class="o">=</span> <span class="p">(</span><span class="mi">9</span><span class="p">,</span><span class="mi">108</span><span class="p">)</span>
+    <span class="n">test_weeks</span> <span class="o">=</span> <span class="p">(</span><span class="mi">11</span><span class="p">,</span><span class="mi">60</span><span class="p">)</span>
     <span class="n">source</span> <span class="o">=</span><span class="n">PointSource</span><span class="p">(</span><span class="s1">&#39;Geminga&#39;</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">)</span> 
     <span class="k">with</span> <span class="n">Timer</span><span class="p">()</span> <span class="k">as</span> <span class="n">t1</span><span class="p">:</span>
         <span class="n">config</span><span class="o">.</span><span class="n">pool_size</span><span class="o">=</span><span class="n">processes</span><span class="o">=</span><span class="mi">4</span>
@@ -177,12 +177,12 @@ nb_path: "nbs/04_load_data.ipynb"
 <pre>SourceData:  PSR J0633+1746
 	Processing 100 week files week_009.pkl - week_108.pkl , using 4 processes ....................................................................................................
 
-elapsed time: 33.2s (0.6 min)
+elapsed time: 30.3s (0.5 min)
 SourceData:  PSR J0633+1746
 	Processing 100 week files week_009.pkl - week_108.pkl 
 
-....................................................................................................elapsed time: 88.2s (1.5 min)
-Timing ratio using 4 proceses: 2.66
+....................................................................................................elapsed time: 85.8s (1.4 min)
+Timing ratio using 4 proceses: 2.83
 </pre>
 </div>
 </div>

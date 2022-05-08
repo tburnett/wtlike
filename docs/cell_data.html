@@ -270,7 +270,7 @@ a <code>time_bins</code> argument to describe the binning, generating a list, ac
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="CellData.view" class="doc_header"><code>CellData.view</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/cell_data.py#L217" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>CellData.view</code>(<strong>*<code>pars</code></strong>, <strong><code>exp_min</code></strong>=<em><code>None</code></em>, <strong><code>no_update</code></strong>=<em><code>False</code></em>)</p>
+<h4 id="CellData.view" class="doc_header"><code>CellData.view</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/cell_data.py#L221" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>CellData.view</code>(<strong>*<code>pars</code></strong>, <strong><code>exp_min</code></strong>=<em><code>None</code></em>, <strong><code>no_update</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 <p>Return a "view", a copy of this instance with a perhaps a different set of cells</p>
 <ul>
@@ -306,7 +306,7 @@ a <code>time_bins</code> argument to describe the binning, generating a list, ac
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="concatenate_cells" class="doc_header"><code>concatenate_cells</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/cell_data.py#L362" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>concatenate_cells</code>(<strong><code>cells</code></strong>)</p>
+<h4 id="concatenate_cells" class="doc_header"><code>concatenate_cells</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/cell_data.py#L366" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>concatenate_cells</code>(<strong><code>cells</code></strong>)</p>
 </blockquote>
 <p>Combine a group of cells to one</p>
 <ul>
@@ -344,7 +344,7 @@ Return a dict with summed n, S, B, and concatenated w</li>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="partition_cells" class="doc_header"><code>partition_cells</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/cell_data.py#L380" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>partition_cells</code>(<strong><code>config</code></strong>, <strong><code>cells</code></strong>, <strong><code>edges</code></strong>)</p>
+<h4 id="partition_cells" class="doc_header"><code>partition_cells</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/cell_data.py#L384" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>partition_cells</code>(<strong><code>config</code></strong>, <strong><code>cells</code></strong>, <strong><code>edges</code></strong>)</p>
 </blockquote>
 <p>Partition a set of cells</p>
 <ul>
@@ -408,7 +408,7 @@ Return a dict with summed n, S, B, and concatenated w</li>
         <span class="n">pr</span> <span class="o">=</span> <span class="n">PoissonRep</span><span class="p">(</span><span class="n">L</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">pr</span><span class="o">.</span><span class="n">info</span><span class="p">()))</span>
     <span class="k">return</span> <span class="nb">locals</span><span class="p">()</span>
-<span class="n">load_cell_data</span><span class="p">(</span><span class="n">use_kerr</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">full_exp</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">load_cell_data</span><span class="p">(</span><span class="n">use_kerr</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">full_exp</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -425,9 +425,9 @@ Return a dict with summed n, S, B, and concatenated w</li>
 <div class="output_markdown rendered_html output_subarea ">
 <h2 id="Study-cell-formation">Study cell formation<a class="anchor-link" href="#Study-cell-formation"> </a></h2><p>Set <code>config.full_exp=True</code> to get the energy-dependent exposure. Code that does is in <code>exposure.sc_data_selection</code></p>
 <p>Load first 4 weeks.</p>
-<h3 id="Load-data">Load data<a class="anchor-link" href="#Load-data"> </a></h3><p><details  class="nbdoc-description" >  <summary> setup: load 4 weeks of data for source "Geminga" </summary>  <div style="margin-left: 5%;"><pre>SourceData:  4FGL J0633.9+1746<br> Processing 4 week files week_009.pkl - week_012.pkl , using 4 processes <br><br>SourceData: Source 4FGL J0633.9+1746 with:<br>   data:         6,148 photons from 2008-08-04 to 2008-08-27<br>   exposure:    14,836 intervals,  average effective area 3174 cm^2 for 0.4 Ms<br>     rates:  source 3.30e-06/s, background 1.07e-06/s, TS 2290923.9<br>CellData.rebin: Bin photon data into 3 1-week bins from 54683.0 to 54704.0<br></pre></div> </details></p>
+<h3 id="Load-data">Load data<a class="anchor-link" href="#Load-data"> </a></h3><p><details  class="nbdoc-description" >  <summary> setup: load 4 weeks of data for source "Geminga" </summary>  <div style="margin-left: 5%;"><pre>SourceData:  PSR J0633+1746<br>LoadData: Loading weeks[9:12:]<br>  Processing 4 week files week_009.pkl - week_012.pkl , using 4 processes <br><br>SourceData: Source PSR J0633+1746 with:<br>  data:         6,148 photons from 2008-08-04 to 2008-08-27<br>   exposure:    14,835 intervals,  average effective area 3174 cm^2 for 0.4 Ms<br>     rates:  source 3.29e-06/s, background 1.07e-06/s, TS 2276709.9<br>CellData.rebin: Bin photon data into 3 1-week bins from 54683.0 to 54704.0<br></pre></div> </details></p>
 <p><figure style="margin-left: 5%" title="Figure 1">  <a href="images/load_cell_data_fig_01.png" title="images/load_cell_data_fig_01.png">    <img src="images/load_cell_data_fig_01.png" alt="Figure 1 at images/load_cell_data_fig_01.png" >   </a> </figure></p>
-<p><details open class="nbdoc-description" >  <summary> Parmeters from Poisson fit to full data set </summary>  <div style="margin-left: 5%;"><pre>flux                    1.0<br>ts                  13396.4<br>errors    (0.0169, -0.0168)<br>limit                1.0281<br>dtype: object<br></pre></div> </details></p>
+<p><details open class="nbdoc-description" >  <summary> Parmeters from Poisson fit to full data set </summary>  <div style="margin-left: 5%;"><pre>flux                   1.0<br>ts                 13309.2<br>errors    (0.017, -0.0168)<br>limit               1.0281<br>dtype: object<br></pre></div> </details></p>
 
 </div>
 
@@ -497,9 +497,9 @@ Return a dict with summed n, S, B, and concatenated w</li>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3 id="Exposure-vs.-energy">Exposure vs. energy<a class="anchor-link" href="#Exposure-vs.-energy"> </a></h3><p>With the 4FGL J0633.9+1746 data,</p>
-<p><details open class="nbdoc-description" >  <summary> Exposure Dataframe from "df.iloc[0]" </summary>  <div style="margin-left: 5%;"><pre>start                                             54682.656038<br>stop                                              54682.656375<br>livetime                                             25.041281<br>cos_theta                                             0.818114<br>exp                                                108394.3125<br>exp_fract    [0.1093, 0.135, 0.2428, 0.2141, 0.1603, 0.0918...<br>Name: 0, dtype: object<br></pre></div> </details></p>
-<p><details  class="nbdoc-description" >  <summary> Exposure dataframe info </summary>  <div style="margin-left: 5%;"><pre>&lt;class 'pandas.core.frame.DataFrame'&gt;<br>RangeIndex: 14836 entries, 0 to 14835<br>Data columns (total 6 columns):<br> #   Column     Non-Null Count  Dtype  <br>---  ------     --------------  -----  <br> 0   start      14836 non-null  float64<br> 1   stop       14836 non-null  float64<br> 2   livetime   14836 non-null  float32<br> 3   cos_theta  14836 non-null  float32<br> 4   exp        14836 non-null  float32<br> 5   exp_fract  14836 non-null  object <br>dtypes: float32(3), float64(2), object(1)<br>memory usage: 521.7+ KB<br>None<br></pre></div> </details>
+<h3 id="Exposure-vs.-energy">Exposure vs. energy<a class="anchor-link" href="#Exposure-vs.-energy"> </a></h3><p>With the PSR J0633+1746 data,</p>
+<p><details open class="nbdoc-description" >  <summary> Exposure Dataframe from "df.iloc[0]" </summary>  <div style="margin-left: 5%;"><pre>start                                             54682.656038<br>stop                                              54682.656375<br>livetime                                             25.041281<br>cos_theta                                             0.818062<br>exp                                              108401.359375<br>exp_fract    [0.10925, 0.135, 0.2428, 0.2141, 0.1604, 0.091...<br>Name: 0, dtype: object<br></pre></div> </details></p>
+<p><details  class="nbdoc-description" >  <summary> Exposure dataframe info </summary>  <div style="margin-left: 5%;"><pre>&lt;class 'pandas.core.frame.DataFrame'&gt;<br>RangeIndex: 14835 entries, 0 to 14834<br>Data columns (total 6 columns):<br> #   Column     Non-Null Count  Dtype  <br>---  ------     --------------  -----  <br> 0   start      14835 non-null  float64<br> 1   stop       14835 non-null  float64<br> 2   livetime   14835 non-null  float32<br> 3   cos_theta  14835 non-null  float32<br> 4   exp        14835 non-null  float32<br> 5   exp_fract  14835 non-null  object <br>dtypes: float32(3), float64(2), object(1)<br>memory usage: 521.7+ KB<br>None<br></pre></div> </details>
 Note the <code>exp_fract</code> values, which are the fraction of the total (<code>exp</code>) in each band.</p>
 <figure style="margin-left: 5%" title="Figure 2">  <a href="images/check_energy_exposure_fig_02.png" title="images/check_energy_exposure_fig_02.png">    <img src="images/check_energy_exposure_fig_02.png" alt="Figure 2 at images/check_energy_exposure_fig_02.png" >   </a> </figure>
 </div>
@@ -598,9 +598,9 @@ Note the <code>exp_fract</code> values, which are the fraction of the total (<co
 <div class="output_markdown rendered_html output_subarea ">
 <h3 id="Weight-sum-vs.-energy">Weight sum vs. energy<a class="anchor-link" href="#Weight-sum-vs.-energy"> </a></h3><p>The sum of weights is proportional to the flux.
 Exmamine the photon energy dependence for PSR J0633+1746.</p>
-<p><details  class="nbdoc-description" >  <summary> Photon dataframe info </summary>  <div style="margin-left: 5%;"><pre>&lt;class 'pandas.core.frame.DataFrame'&gt;<br>RangeIndex: 6148 entries, 0 to 6147<br>Data columns (total 4 columns):<br> #   Column  Non-Null Count  Dtype   <br>---  ------  --------------  -----   <br> 0   band    6148 non-null   uint8   <br> 1   run_id  6148 non-null   category<br> 2   weight  6148 non-null   float64 <br> 3   time    6148 non-null   float64 <br>dtypes: category(1), float64(2), uint8(1)<br>memory usage: 124.5 KB<br>None<br></pre></div> </details></p>
+<p><details  class="nbdoc-description" >  <summary> Photon dataframe info </summary>  <div style="margin-left: 5%;"><pre>&lt;class 'pandas.core.frame.DataFrame'&gt;<br>RangeIndex: 6148 entries, 0 to 6147<br>Data columns (total 4 columns):<br> #   Column   Non-Null Count  Dtype  <br>---  ------   --------------  -----  <br> 0   band     6148 non-null   uint8  <br> 1   run_ref  6148 non-null   uint8  <br> 2   weight   6148 non-null   float64<br> 3   time     6148 non-null   float64<br>dtypes: float64(2), uint8(2)<br>memory usage: 108.2 KB<br>None<br></pre></div> </details></p>
 <figure style="margin-left: 5%" title="Figure 3">  <a href="images/flux_energy_fig_03.png" title="images/flux_energy_fig_03.png">    <img src="images/flux_energy_fig_03.png" alt="Figure 3 at images/flux_energy_fig_03.png" >   </a> </figure><h3 id="Check-flux-per-energy-band">Check flux per energy band<a class="anchor-link" href="#Check-flux-per-energy-band"> </a></h3><p>Make the ratio of the sum of weights to exposure, a measure of the flux relative to the spectrum.</p>
-<p><details  class="nbdoc-description" >  <summary> Table of weights and Total exposure per band </summary>  <div style="margin-left: 5%;"><pre>         wtsum    exp  ratio<br>eindex                      <br>0        458.8  143.9   3.19<br>1        580.7  181.6   3.20<br>2       1121.4  344.2   3.26<br>3        980.8  307.7   3.19<br>4        810.4  231.3   3.50<br>5        448.9  131.8   3.41<br>6        182.6   52.9   3.45<br>7         60.9   14.1   4.33<br></pre></div> </details></p>
+<p><details  class="nbdoc-description" >  <summary> Table of weights and Total exposure per band </summary>  <div style="margin-left: 5%;"><pre>         wtsum    exp  ratio<br>eindex                      <br>0        457.6  143.8   3.18<br>1        579.4  181.5   3.19<br>2       1119.4  344.2   3.25<br>3        979.5  307.8   3.18<br>4        809.6  231.4   3.50<br>5        448.5  131.9   3.40<br>6        182.4   53.0   3.44<br>7         60.8   14.1   4.32<br></pre></div> </details></p>
 <p><figure style="margin-left: 5%" title="Figure 4">  <a href="images/flux_energy_fig_04.png" title="images/flux_energy_fig_04.png">    <img src="images/flux_energy_fig_04.png" alt="Figure 4 at images/flux_energy_fig_04.png" >   </a> </figure>
 Loods pretty good.</p>
 

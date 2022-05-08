@@ -44,6 +44,8 @@ class SourceData(object):
         self.simulated=False
         self.used_key = None
 
+        if self.verbose>0:
+            print(f'SourceData: week_range: {week_range}')
         ## source is either a name, a PointSource object, or a Simulation
         if type(source)==str:
 
@@ -72,16 +74,18 @@ class SourceData(object):
             self.source = source # do I need this?
             self.source_name = source.name
 
-
-        if self.source is not None:
-            key = f'{self.source.filename}_data' if key=='' else key
-            self.source.data_key = key
-        else: # no cache for sim, yet
-            key=None
+        # not sure why
+        # if self.source is not None:
+        #     key = f'{self.source.filename}_data' if key=='' else key
+        #     self.source.data_key = key
+        # else: # no cache for sim, yet
+        #     key=None
 
 
         if not self.simulated:
             # either load from data, or from a chache--also key used to retrieve data
+            if self.config.verbose>1:
+                print(f'Loading source data, week_range={week_range}, key={key}')
 
             ret =load_source_data( self.config, self.source, week_range, key, clear)
             self.photons, self.exposure = ret[:2]

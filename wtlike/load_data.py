@@ -297,15 +297,16 @@ def load_source_data(config, source, week_range=None, key='', clear=False):
     description=f'SourceData:  {source.name}'
 
     used_key = None # change if used cache
-    if week_range is not None or key is None:
+    weeks=f'weeks_{week_range[0]}-{week_range[1]}' if week_range is not None else 'data'
+    if key is None:
         # always load directly if weeks specified or key set to None
-        print(description)
+        if config.verbose>0: print(description)
         r = load_from_weekly_data(config, source, week_range=week_range)
     else:
         # use the cache
-        used_key = f'{source.filename}_data' if key=='' else key
+        used_key = f'{source.filename}_{weeks}' if key=='' else key
         r = config.cache(used_key,
-                    load_from_weekly_data, config, source, week_range=None,
+                    load_from_weekly_data, config, source, week_range=week_range,
                     overwrite=clear,
                     description=description)
     # append key used for retrieval

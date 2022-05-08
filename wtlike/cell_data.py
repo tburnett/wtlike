@@ -119,12 +119,16 @@ class CellData(SourceData):
                 # kluge to at least accept (0,0) in constructor
                 week_range = (mission_week(bins[0]), mission_week(bins[1]))
                 kwargs.update(week_range=week_range)
+                setweeks=True
         else:
             bins = Config().time_bins
+            setweeks=False
 
         #  load source data
 
         super().__init__(*pars, **kwargs )
+        if self.config.verbose>1 and setweeks:
+            print(f'CellData: set week range to {week_range}')
 
         self.rebin(bins)
         self.parent = None
