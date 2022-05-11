@@ -160,12 +160,13 @@ def image(filename,
 
 try:
     import matplotlib.pyplot as plt
-    def figure(fig, caption=None, width=None, height=None, num=0):
+    def figure(fig, caption=None, width=None, height=None, base64=False, num=0):
         """ Set the caption, and possibly width and height attributes of a plt.Figuare object
             num -- allow setting starting
         """
         assert isinstance(fig, plt.Figure), 'Must be a plt.Figure object'
         fig.caption=caption
+        fig.base64 = base64
         if width: fig.width=width
         if height: fig.height=height
         return fig
@@ -205,6 +206,7 @@ class FigureWrapper(Wrapper):
 
         super().__init__(*pars, **kwargs)
         self.indent = kwargs.pop('indent', '5%')
+        self.base64 = kwargs.pop('base64', getattr(self.obj, 'base64', False))
 
         self.fig = fig = self.obj
         self.__dict__.update(fig.__dict__)
@@ -226,6 +228,7 @@ class FigureWrapper(Wrapper):
             assert os.path.isdir(t), f'{t} not found'
  
     def __str__(self):
+        from IPython.core import pylabtools
         
         if not hasattr(self, '_html') :
         
@@ -248,33 +251,33 @@ class FigureWrapper(Wrapper):
             
             # actually save it for the document, perhaps both in the local, and document folders
             # note uses rcParams['savefig.pad_inches']
-            for folder in self.fig_folders:
-                fig.savefig(os.path.join(folder,fn), bbox_inches='tight') #, pad_inches=0.5)#, **fig_kwargs)
+            if not self.base64:
+                for folder in self.fig_folders:
+                    fig.savefig(os.path.join(folder,fn), bbox_inches='tight') #, pad_inches=0.5)#, **fig_kwargs)
             if plt: plt.close(getattr(fig, 'number', None) )
             img_width = f'width={fig.width}' if hasattr(fig,'width') else ''
 
-            # add the HTML as an attribute, to insert the image, including  caption
-#             self._html =\
-#                 f'<div class="{self.fig_class}">\n'\
-#                     f'<figure style="margin-left: {self.indent}" title="Figure {n}">'\
-#                     f'  <a href="{browser_fn}" title="{browser_fn}">'\
-#                     f'    <img src="{browser_fn}" alt="Figure {n} at {browser_fn}" {img_width}>'\
-#                      '   </a>'\
-#                     f' {figcaption}' \
-#                      '</figure>'\
-#                 '</div>\n'
-            self._html =\
+            # add the HTML as an attribute, to insert the image, either as base64 or a ref to png file, including  caption
+
+            if self.base64:
+                b64 = pylabtools.print_figure(self.fig, base64=True)
+                self._html =\
+                    f'<figure style="margin-left: {self.indent}" title="Figure {n}">'\
+                    f'   <img src="data:image/png;base64,{b64}" alt="Figure {n}" '\
+                    f' <br> {figcaption}' \
+                     '</figure>'
+        
+            else:
+                self._html =\
                     f'<figure style="margin-left: {self.indent}" title="Figure {n}">'\
                     f'  <a href="{browser_fn}" title="{browser_fn}">'\
                     f'    <img src="{browser_fn}" alt="Figure {n} at {browser_fn}" {img_width}>'\
                      '   </a>'\
                     f' {figcaption}' \
-                     '</figure>'\
-            #print(f'HTML:\n{self._html}')
+                     '</figure>'
+                
         return self._html
 
-    # def __str__(self):
-    #     return str(self.img)
 
 if plt: wrappers['Figure']  = (FigureWrapper, {} )
 wrappers['NBimage'] = (FigureWrapper, {} )
