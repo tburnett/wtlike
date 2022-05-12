@@ -199,7 +199,8 @@ Here is the 4FGL source 4FGL J0237.8+2848 (associated with 4C 28.07), as shown o
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>  <span class="c1"># seems needed to get nbdev to generate the doc?  </span>
     <span class="k">return</span> <span class="nb">locals</span><span class="p">()</span>
     
-<span class="n">lcr_about_example</span><span class="p">()</span>
+<span class="k">if</span> <span class="n">Config</span><span class="p">()</span><span class="o">.</span><span class="n">valid</span><span class="p">:</span>
+    <span class="n">lcr_about_example</span><span class="p">()</span>
         
 </pre></div>
 

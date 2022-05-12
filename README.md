@@ -20,16 +20,15 @@ with Timer() as t:
     print(t)
 ```
 
-    SourceData:  4FGL J1229.0+0202
-    	Processing 157 week files week_009.pkl - week_165.pkl , using 4 processes .............................................................................................................................................................
-    
+    SourceData: week_range: (9, 165)
+    SourceData:  3C 273: Restoring from cache with key "P88Y3157_weeks_9-165"
     SourceData: Source 3C 273 with:
-    	 data:        33,210 photons from 2008-08-04 to 2011-08-03
-    	 exposure:   713,320 intervals,  average effective area 2783 cm^2 for 21.3 Ms
-    	 rates:  source 2.02e-07/s, background 3.58e-07/s,
+    	 data:        35,895 photons from 2008-08-04 to 2011-08-03
+    	 exposure:   713,330 intervals,  average effective area 2783 cm^2 for 21.3 Ms
+    	 rates:  source 2.05e-07/s, background 4.00e-07/s, TS 30341.0
     CellData.rebin: Bin photon data into 156 1-week bins from 54683.0 to 55775.0
     LightCurve: select 156 cells for fitting with e>35 & n>2
-    elapsed time: 57.1s (1.0 min)
+    elapsed time: 0.8s (0.0 min)
 
 
 This created a `WtLike` object, loading the first 3 years of data, by specifying weeks from #9, the first data-taking week.
@@ -156,16 +155,16 @@ if config.valid:
     CellData.rebin: Bin photon data into 4 25-day bins from 54683.0 to 54783.0
     LightCurve: select 4 cells for fitting with e>125 & n>2
              t    tw            e       ctm     n  \
-    0  54695.5  25.0  1488.182373  0.670382   553   
-    1  54720.5  25.0  1868.273926  0.681891  1438   
-    2  54745.5  25.0  1450.828979  0.679038  1183   
-    3  54770.5  25.0  1929.570801  0.682316  1175   
+    0  54695.5  25.0  1488.251709  0.670376   616   
+    1  54720.5  25.0  1868.208862  0.681914  1523   
+    2  54745.5  25.0  1450.841553  0.679041  1281   
+    3  54770.5  25.0  1929.609741  0.682303  1258   
     
                                                        w           S           B  
-    0  [4.8901367e-01, 0.8066406, 0.11303711, 0.19165...  300.871887  532.046936  
-    1  [0.4345703, 0.6064453, 0.0690918, 0.056274414,...  377.716553  667.935242  
-    2  [0.33911133, 0.3100586, 0.7089844, 0.06994629,...  293.320007  518.692566  
-    3  [0.09112549, 0.58251953, 0.07537842, 0.3457031...  390.109192  689.849792  
+    0  [4.8901367e-01, 0.7885742, 0.11303711, 0.19165...  305.076996  595.216980  
+    1  [0.4345703, 0.6064453, 0.0690918, 0.062561035,...  382.964508  747.178467  
+    2  [0.33911133, 0.3100586, 0.6225586, 0.06994629,...  297.408295  580.255005  
+    3  [0.09112549, 0.58251953, 0.07537842, 0.3457031...  395.551086  771.735352  
 
 
 ### Evaluate Likelihoods and make light curve plots

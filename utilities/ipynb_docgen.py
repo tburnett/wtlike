@@ -208,7 +208,7 @@ class FigureWrapper(Wrapper):
 
         super().__init__(*pars, **kwargs)
         self.indent = kwargs.pop('indent', '5%')
-        self.base64 = kwargs.pop('base64', getattr(self.obj, 'base64', False))
+        self.base64 = kwargs.pop('base64', getattr(self.obj, 'base64', True))
 
         self.fig = fig = self.obj
         self.__dict__.update(fig.__dict__)
@@ -256,7 +256,8 @@ class FigureWrapper(Wrapper):
             # add the HTML as an attribute, to insert the image, either as base64 or a ref to png file, including  caption
 
             if self.base64:
-                if fig.width is not None:
+                width = getattr(fig,'width', None)
+                if  width is not None:
                     # adjust size to match width spec
                     size_inches = fig.get_size_inches()
                     wpix = size_inches[0] * fig.get_dpi(); 
@@ -264,7 +265,7 @@ class FigureWrapper(Wrapper):
                
                 # use IPython tool to create the base64 string for the image
                 b64 = pylabtools.print_figure(fig, base64=True, facecolor='white')
-                if fig.width is not None:
+                if width is not None:
                     fig.set_size_inches(size_inches)
                 self._html =\
                     f'<figure style="margin-left: {self.indent}" title="Figure {n}">'\

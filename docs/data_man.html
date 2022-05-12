@@ -213,11 +213,11 @@ expect ~105 runs. We save a table of the run numbers per week, and use a uint8 i
 
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>Exercise access from GSFC and FT1 data handling
-GSFCweekly: spacecraft/lat_spacecraft_weekly_w726_p310_v001.fits --&gt; week726_ft2.fits
-GSFCweekly: photon/lat_photon_weekly_w726_p305_v001.fits --&gt; week726_ft1.fits
-FT1: week726_ft1.fits, GTI range 672798075.7-673402652.1:  1,557,075 photons
-	Selection E &gt; 100 MeV. theta&lt;66.4 and z&lt;100 remove: 77.84%
-FT1 data from file week726_ft1.fits: tstart=672798075 (UTC 2022-04-28) selected 345,013/1,557,075 photons, in 106 runs.
+GSFCweekly: spacecraft/lat_spacecraft_weekly_w727_p310_v001.fits --&gt; week727_ft2.fits
+GSFCweekly: photon/lat_photon_weekly_w727_p305_v001.fits --&gt; week727_ft1.fits
+FT1: week727_ft1.fits, GTI range 673402665.7-674007056.1:  1,664,425 photons
+	Selection E &gt; 100 MeV. theta&lt;66.4 and z&lt;100 remove: 79.54%
+FT1 data from file week727_ft1.fits: tstart=673402665 (UTC 2022-05-05) selected 340,562/1,664,425 photons, in 106 runs.
 Contents of the output dict
  key      value type
   tstart     float
@@ -226,40 +226,6 @@ Contents of the output dict
   runlist    ndarray
 </pre>
 </div>
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">week_number</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">met</span><span class="p">:</span> <span class="p">(</span><span class="n">met</span><span class="o">-</span><span class="mi">233711940</span><span class="p">)</span><span class="o">//</span><span class="p">(</span><span class="mi">7</span><span class="o">*</span><span class="mi">24</span><span class="o">*</span><span class="mi">3600</span><span class="p">)</span>
-<span class="n">week_number</span><span class="p">(</span><span class="mi">671587140</span><span class="p">),</span> <span class="n">week_number</span><span class="p">(</span><span class="mi">671587130</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>(724, 723)</pre>
-</div>
-
 </div>
 
 </div>
@@ -317,7 +283,7 @@ Contents of the output dict
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="FermiData.needs_update" class="doc_header"><code>FermiData.needs_update</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L385" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>FermiData.needs_update</code>(<strong><code>threshold</code></strong>=<em><code>0</code></em>)</p>
+<h4 id="FermiData.needs_update" class="doc_header"><code>FermiData.needs_update</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L391" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>FermiData.needs_update</code>(<strong><code>threshold</code></strong>=<em><code>0</code></em>)</p>
 </blockquote>
 <p>Compare files on disk with the GSFC list and compile list that need to be downloaded</p>
 <p>Check the file date of the last one on disk and include it if it is:</p>
@@ -374,8 +340,8 @@ Contents of the output dict
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>FermiData: 718 week files at GSFC, from (9, &#39;20220228224421&#39;) to (727, &#39;20220506173447&#39;) 
-  need(s) update:  []
+<pre>FermiData: 719 week files at GSFC, from (9, &#39;20220228224421&#39;) to (728, &#39;20220512172515&#39;) 
+  need(s) update:  [728]
 </pre>
 </div>
 </div>
@@ -397,7 +363,7 @@ Contents of the output dict
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="FermiData.__call__" class="doc_header"><code>FermiData.__call__</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L308" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>FermiData.__call__</code>(<strong><code>week</code></strong>, <strong><code>test</code></strong>=<em><code>False</code></em>, <strong><code>tries_left</code></strong>=<em><code>2</code></em>)</p>
+<h4 id="FermiData.__call__" class="doc_header"><code>FermiData.__call__</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L314" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>FermiData.__call__</code>(<strong><code>week</code></strong>, <strong><code>test</code></strong>=<em><code>False</code></em>, <strong><code>tries_left</code></strong>=<em><code>2</code></em>)</p>
 </blockquote>
 <p>Download and convert the given week:</p>
 <ul>
@@ -415,7 +381,7 @@ Contents of the output dict
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="FermiData.needs_update" class="doc_header"><code>FermiData.needs_update</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L385" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>FermiData.needs_update</code>(<strong><code>threshold</code></strong>=<em><code>0</code></em>)</p>
+<h4 id="FermiData.needs_update" class="doc_header"><code>FermiData.needs_update</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L391" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>FermiData.needs_update</code>(<strong><code>threshold</code></strong>=<em><code>0</code></em>)</p>
 </blockquote>
 <p>Compare files on disk with the GSFC list and compile list that need to be downloaded</p>
 <p>Check the file date of the last one on disk and include it if it is:</p>
@@ -445,7 +411,7 @@ Contents of the output dict
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="update_data" class="doc_header"><code>update_data</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L464" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>update_data</code>(<strong><code>update_threshold</code></strong>=<em><code>1</code></em>, <strong><code>config</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="update_data" class="doc_header"><code>update_data</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L470" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>update_data</code>(<strong><code>update_threshold</code></strong>=<em><code>1</code></em>, <strong><code>config</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <p>Bring all of the local week data summaries up to date, downloading the missing ones from GSFC.
 If the last one is the current week, check to see if needs updating, by comparing file date, in days,
@@ -479,7 +445,7 @@ from the last update with the current one at GSFC.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="check_data" class="doc_header"><code>check_data</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L458" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>check_data</code>(<strong><code>config</code></strong>=<em><code>None</code></em>)</p>
+<h2 id="check_data" class="doc_header"><code>check_data</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L464" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>check_data</code>(<strong><code>config</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <p>Return: sorted list of files, last week number, number of days in last week</p>
 
@@ -491,7 +457,7 @@ from the last update with the current one at GSFC.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="update_data" class="doc_header"><code>update_data</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L464" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>update_data</code>(<strong><code>update_threshold</code></strong>=<em><code>1</code></em>, <strong><code>config</code></strong>=<em><code>None</code></em>)</p>
+<h2 id="update_data" class="doc_header"><code>update_data</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L470" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>update_data</code>(<strong><code>update_threshold</code></strong>=<em><code>1</code></em>, <strong><code>config</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <p>Bring all of the local week data summaries up to date, downloading the missing ones from GSFC.
 If the last one is the current week, check to see if needs updating, by comparing file date, in days,
@@ -525,7 +491,7 @@ from the last update with the current one at GSFC.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="plot_week" class="doc_header"><code>plot_week</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L503" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>plot_week</code>(<strong><code>week</code></strong>, <strong><code>nside</code></strong>=<em><code>32</code></em>, <strong>**<code>kwargs</code></strong>)</p>
+<h2 id="plot_week" class="doc_header"><code>plot_week</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L509" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>plot_week</code>(<strong><code>week</code></strong>, <strong><code>nside</code></strong>=<em><code>32</code></em>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
 <p>Make an AIT plot of the given week's photon data</p>
 <p>Combine all energies for now</p>
@@ -558,7 +524,8 @@ from the last update with the current one at GSFC.</p>
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">plot_week</span><span class="p">(</span><span class="mi">725</span><span class="p">)</span>  
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">if</span> <span class="n">Config</span><span class="p">()</span><span class="o">.</span><span class="n">valid</span><span class="p">:</span>
+    <span class="n">plot_week</span><span class="p">(</span><span class="mi">725</span><span class="p">)</span>  
 </pre></div>
 
     </div>

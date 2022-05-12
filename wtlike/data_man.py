@@ -206,9 +206,9 @@ class GSFCweekly(dict):
         keys= week numbers, values=mofification date strings
         """
         self.config = config or Config()
-        self.wtlike_data_file_path = Path(self.config.datapath/'data_files')
-        assert self.wtlike_data_file_path.is_dir(), 'Data path invalid'
-        os.makedirs(self.local_path, exist_ok=True)
+        # self.wtlike_data_file_path = Path(self.config.datapath/'data_files')
+        # assert self.wtlike_data_file_path.is_dir(), 'Data path invalid'
+        # os.makedirs(self.local_path, exist_ok=True)
         try:
             with FTP(self.ftp_site) as ftp:
                 ftp.login()
@@ -278,6 +278,12 @@ class FermiData(GSFCweekly):
     * downloading a week at a time to a local tmp
     * Converting to condensed format and saving to pickled dicts in wtlike_data
     """
+
+    def __init__(self, config=None):
+        super().__init__(config)
+        self.wtlike_data_file_path = Path(self.config.datapath/'data_files')
+        assert self.wtlike_data_file_path.is_dir(), 'Data path is invalid'
+        os.makedirs(self.local_path, exist_ok=True)
 
     @property
     def local_filedate(self):

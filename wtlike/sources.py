@@ -46,16 +46,13 @@ def get_wtzip_index(config, update=False):
                          #coord= SkyCoord(glon, glat, unit='deg', frame='galactic'),
                         )
 
-               #      coord=SkyCoord(glon, glat, unit='deg', frame='galactic').fk5
-               # )
-
         ### write to temp file, insert back into the zip
         ### SHould be a way to just stream
         pickle.dump(zip_index, open('/tmp/wtfile_index.pkl', 'wb'))
         with zipfile.ZipFile(wtzipfile, mode='a') as wtzip:
             wtzip.write('/tmp/wtfile_index.pkl', 'index.pkl')
 
-        # zip_index['coord'] = SkyCoord(zip_index['glon'], zip_index['glat'], unit='deg', frame='galactic').fk5
+        zip_index['coord'] = SkyCoord(zip_index['glon'], zip_index['glat'], unit='deg', frame='galactic').fk5
     return zip_index
 
 # Cell
