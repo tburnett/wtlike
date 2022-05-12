@@ -14,10 +14,10 @@ Here is a minimal demo:
 ```python
 from wtlike import *
 config = Config()
-
-with Timer() as t:
-    wtl = WtLike('3C 273',week_range=(9,3*52+9))
-    print(t)
+if config.valid:
+    with Timer() as t:
+        wtl = WtLike('3C 273',week_range=(9,3*52+9))
+        print(t)
 ```
 
     SourceData: week_range: (9, 165)
@@ -195,8 +195,9 @@ This code creates partitions between boundaries of a set of cells. Usage is via 
                      
 
 ```python
-bb = wtl.bb_view()
-bb.plot(UTC=1);
+if config.valid:
+    bb = wtl.bb_view()
+    bb.plot(UTC=1);
 ```
 
     Bayesian Blocks: partitioning 156 cells using LikelihoodFitness with penalty 5%
