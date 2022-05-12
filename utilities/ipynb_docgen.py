@@ -160,15 +160,17 @@ def image(filename,
 
 try:
     import matplotlib.pyplot as plt
-    def figure(fig, caption=None, width=None, height=None, base64=False, num=0):
-        """ Set the caption, and possibly width and height attributes of a plt.Figuare object
-            num -- allow setting starting
+    def figure(fig, caption=None, width=None,  base64=True, num=0):
+        """ Set the caption, and possibly width of a plt.Figuare object
+            width -- in pixels - if set, adjust size for pixels
+            num -- set figure number starting value
+            base64 -- [True] insert as a "base64" map of pixels. If False, write out as a png file, insert link
         """
         assert isinstance(fig, plt.Figure), 'Must be a plt.Figure object'
         fig.caption=caption
         fig.base64 = base64
-        if width: fig.width=width
-        if height: fig.height=height
+        fig.width=width
+
         return fig
 except:
     def figure(): pass
@@ -249,18 +251,21 @@ class FigureWrapper(Wrapper):
             fn = os.path.join(self.folder_name, name )
             browser_fn =fn
             
-            # actually save it for the document, perhaps both in the local, and document folders
-            # note uses rcParams['savefig.pad_inches']
-            if not self.base64:
-                for folder in self.fig_folders:
-                    fig.savefig(os.path.join(folder,fn), bbox_inches='tight') #, pad_inches=0.5)#, **fig_kwargs)
             if plt: plt.close(getattr(fig, 'number', None) )
-            img_width = f'width={fig.width}' if hasattr(fig,'width') else ''
 
             # add the HTML as an attribute, to insert the image, either as base64 or a ref to png file, including  caption
 
             if self.base64:
-                b64 = pylabtools.print_figure(self.fig, base64=True)
+                if fig.width is not None:
+                    # adjust size to match width spec
+                    size_inches = fig.get_size_inches()
+                    wpix = size_inches[0] * fig.get_dpi(); 
+                    fig.set_size_inches(size_inches*fig.width/wpix)
+               
+                # use IPython tool to create the base64 string for the image
+                b64 = pylabtools.print_figure(fig, base64=True, facecolor='white')
+                if fig.width is not None:
+                    fig.set_size_inches(size_inches)
                 self._html =\
                     f'<figure style="margin-left: {self.indent}" title="Figure {n}">'\
                     f'   <img src="data:image/png;base64,{b64}" alt="Figure {n}" '\
@@ -268,6 +273,12 @@ class FigureWrapper(Wrapper):
                      '</figure>'
         
             else:
+                # actually save it for the document, perhaps both in the local, and document folders
+                # note uses rcParams['savefig.pad_inches']
+                img_width = f'width={fig.width}' if hasattr(fig,'width') else ''
+
+                for folder in self.fig_folders:
+                    fig.savefig(os.path.join(folder,fn), bbox_inches='tight') #, pad_inches=0.5)#, **fig_kwargs)
                 self._html =\
                     f'<figure style="margin-left: {self.indent}" title="Figure {n}">'\
                     f'  <a href="{browser_fn}" title="{browser_fn}">'\
