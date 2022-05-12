@@ -28,7 +28,7 @@ if config.valid:
     	 rates:  source 2.05e-07/s, background 4.00e-07/s, TS 30341.0
     CellData.rebin: Bin photon data into 156 1-week bins from 54683.0 to 55775.0
     LightCurve: select 156 cells for fitting with e>35 & n>2
-    elapsed time: 0.8s (0.0 min)
+    elapsed time: 0.6s (0.0 min)
 
 
 This created a `WtLike` object, loading the first 3 years of data, by specifying weeks from #9, the first data-taking week.
@@ -37,7 +37,8 @@ The reason to specify only the first three years here is to avoid the 10 min or 
 Now ask it to make a plot:
 
 ```python
-wtl.plot(UTC=1);
+if config.valid: 
+    wtl.plot(UTC=1);
 ```
 
 

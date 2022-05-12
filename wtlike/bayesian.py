@@ -203,10 +203,11 @@ def get_bb_partition(config, lc, fitness_class=LikelihoodFitness, p0=0.05, key=N
                   f' with penalty {100*fitness.p0:.0f}%')
         return fitness.fit()
 
-    key = f'BB_edges_' if key == '' else key
+    # not clear need to cache this -- fails if cache not set up
+#     key = f'BB_edges_' if key == '' else key
+#     edges = config.cache(key, doit,  description=key if config.verbose>0 else '', overwrite=clear)
 
-    edges = config.cache(key, doit,  description=key if config.verbose>0 else '', overwrite=clear)
-
+    edges = doit()
     if config.verbose>0:
         print(f'\tfound {len(edges)-1} / {len(lc)} blocks.' )
     return edges

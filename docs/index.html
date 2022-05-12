@@ -72,7 +72,7 @@ SourceData: Source 3C 273 with:
 	 rates:  source 2.05e-07/s, background 4.00e-07/s, TS 30341.0
 CellData.rebin: Bin photon data into 156 1-week bins from 54683.0 to 55775.0
 LightCurve: select 156 cells for fitting with e&gt;35 &amp; n&gt;2
-elapsed time: 0.8s (0.0 min)
+elapsed time: 0.6s (0.0 min)
 </pre>
 </div>
 </div>
@@ -99,7 +99,8 @@ The reason to specify only the first three years here is to avoid the 10 min or 
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">wtl</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">UTC</span><span class="o">=</span><span class="mi">1</span><span class="p">);</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">valid</span><span class="p">:</span> 
+    <span class="n">wtl</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">UTC</span><span class="o">=</span><span class="mi">1</span><span class="p">);</span>
 </pre></div>
 
     </div>
