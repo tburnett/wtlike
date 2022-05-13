@@ -506,19 +506,21 @@ def get_week_files(config, week_range=None):
     return data_files
 
 # Cell
-def plot_week(week, nside=32, **kwargs):
+def plot_week(week=None, mjd=None, nside=32, **kwargs):
     """
     Make an AIT plot of the given week's photon data
 
     Combine all energies for now
 
     - week -- the week number from 9
+    - mjd -- [None] If set, derive the week from it
     - nside [32] -- HEALPix nside to project data before plotting.
     - kwargs -- args for healpix.ait_plot
 
     """
     import matplotlib.pyplot as plt
     from utilities import healpix as hpx
+    from .config import mission_week
 
     assert nside & (nside-1) == 0, 'nside must be power of 2'
     config = Config()
@@ -528,7 +530,7 @@ def plot_week(week, nside=32, **kwargs):
     kw = dict(log=True, tick_labels=False, vmin=5, vmax=1e3,
              cblabel=f'counts per nside={nside} pixel')
     kw.update(kwargs)
-
+    if mjd is not None: week=mission_week(mjd)
 
     file = get_week_files(config,(week,week))[0]
     with open(file, 'rb') as inp:
