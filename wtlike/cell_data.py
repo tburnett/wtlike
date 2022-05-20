@@ -100,7 +100,7 @@ def contiguous_bins(exposure, min_gap=20, min_duration=600):
 
 # Cell
 class CellData(SourceData):
-    """Manage a set of cells generated from a data set
+    r"""Manage a set of cells generated from a data set
 
         Invoke superclass to load photon data and exposure for the source.
 
@@ -149,7 +149,7 @@ class CellData(SourceData):
 
         self.make_cells()
 
-    def get_exposure_per_cell(self, exposure_factor=1e-6):
+    def get_exposure_per_cell(self, exposure_factor=1e-6, set_costh=False):
         """
         Return a dict of arrays per cell:
         - exp -- exposure, in cm^2 Ms units, if exposure_factor==1e-6
@@ -165,7 +165,9 @@ class CellData(SourceData):
         # the cell index list
         eci = np.searchsorted(self.exposure.stop, self.cell_edges).reshape(len(self.cell_edges)//2,2)
         cell_exp = np.array([exp[slice(*ecx)].sum()*exposure_factor for ecx in eci], np.float32) #np.float32)
-        cell_costh =np.array([costh[slice(*ecx)].mean() for ecx in eci], np.float32) #np.float32)
+        if set_costh:
+            cell_costh =np.array([costh[slice(*ecx)].mean() for ecx in eci], np.float32)
+        else: cell_costh=None
 
         ef = self.exposure.get('exp_fract', None)
         if ef is not None:
@@ -185,11 +187,12 @@ class CellData(SourceData):
         photon_cell = np.searchsorted(self.photons.time, self.cell_edges).reshape(len(self.cell_edges)//2,2)
         return  [wts[slice(*cell)] for cell in photon_cell]
 
-    def make_cells(self, exposure_factor=1e-6):
-        """
+    def make_cells(self, exposure_factor=1e-6, set_costh=False):
+        r"""
         Generate a "cells" DataFrame, binning according to self.cell_edges
 
         - exposure_factor --  recast exposure as cm^2 * Ms if `exposure_factor`==1e-6`
+        - set_costh [False] -- if set, include mean cos(theta) in cell info as `ctm`.
 
         Thus the `e` cell entry is the weighted exposure for the cell in units $\mathrm{cm^2 Ms}$.
         """
@@ -202,19 +205,20 @@ class CellData(SourceData):
 
         # invoke the helper functions to make lists to incorporate
         weights = self.get_weights_per_cell()
-        ec = self.get_exposure_per_cell(exposure_factor)
+        ec = self.get_exposure_per_cell(exposure_factor, set_costh)
         cell_exp, cell_costh = ec['exp'], ec['costh']
 
         self.cells = pd.DataFrame.from_dict(dict(
             t=center,
             tw=width,
             e = cell_exp,
-            ctm = cell_costh,
             n = [len(w) for w in weights],
             w = weights,
             S = cell_exp*Sk,
             B = cell_exp*Bk,
         ))
+        if set_costh:
+            self.cells.iloc[:,'ctm']= cell_costh;
 
     def update(self): pass # virtual
 

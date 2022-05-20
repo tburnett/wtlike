@@ -257,7 +257,7 @@ class Gaussian2dRep(GaussianRep):
 
 # Cell
 class PoissonRep(object):
-    """Manage the representation of the log likelihood of a cell by a `Poisson`.
+    r"""Manage the representation of the log likelihood of a cell by a `Poisson`.
 
     - loglike: a LogLike object
     - ts_min : tolerance for if use fitter

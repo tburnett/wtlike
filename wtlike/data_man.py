@@ -36,7 +36,7 @@ def get_ft1_data( config, ft1_file):
            - `band` (uint8):    energy band index*2 + 0,1 for Front/Back
            - `nest_index`  if nest else `ring_index` (uint32): HEALPIx index for the nside
            - `run_ref` (uint8) reference to the run number, in the array `runs`
-           - `trun` (unit32): time since the run id in 2 $\mu s$ units
+           - `trun` (unit32): time since the run id in 2 $\\mu s$ units
 
         - `gti_times` -- GTI times as an interleaved start, stop array.
         - `runs` -- a list of the run numbers, each a MET time. Expect 109 per week
@@ -267,7 +267,8 @@ class GSFCweekly(dict):
         data = self.load_week(week)
         if 'file_date' not in data:
             return True
-        return data['file_date'] == self[week]
+        # check that file date agrees
+        return data['file_date'] != self[week]
 
 
 
@@ -357,7 +358,7 @@ class FermiData(GSFCweekly):
         week_summary['file_date'] = self[week]
         week_summary['sc_data'] = sc_data
         filename = self.wtlike_data_file_path/f'week_{week:03d}.pkl'
-        if filename.exists() and config.verbose>0:
+        if filename.exists() and self.config.verbose>0:
             print(f'FermiData: replacing existing {filename}',flush=True)
         if not test:
             with open(filename, 'wb') as out:
@@ -384,33 +385,25 @@ class FermiData(GSFCweekly):
             with Pool(processes=processes) as pool:
                 pool.map(self, week_range)
         else:
-            map(self,  week_range)
+            list(map(self,  week_range))
 
-
-
-    def needs_update(self, threshold=0):
+    def needs_update(self):
         """ Compare files on disk with the GSFC list and compile list that need to be downloaded
 
-        Check the file date of the last one on disk and include it if it is:
-
-        * short and there is one or more GSFC weeks following it,
-        * the most recent week and is short by more than *threshold* days
+        Check the file date of the last one on disk and update it as well if it has a different filedate
         """
         gg =self.wtlike_data_file_path.glob('*.pkl')
-
         file_weeks= map(lambda n: int(n.name[5:8]), gg)
         ondisk = np.array(list(file_weeks))
 
-        missing =  list(set(self.keys()).difference(set(ondisk)))
+        missing =  set(self.keys()).difference(set(ondisk))
         if len(ondisk)==0:
-            return missing
+            return list(missing)
 
-        last = ondisk[-1]
-        if last not in missing and not self.check_week( last):
-            delta = (self.gsfc_filedate -self.local_filedate).seconds/24/3600
-            if delta> threshold:
-                missing.append(last)
-        return missing
+        last = sorted(ondisk)[-1]
+        if self.check_week(last):
+             missing.add(last)
+        return sorted(list(missing))
 
     def check_data(self):
         """
@@ -431,19 +424,19 @@ class FermiData(GSFCweekly):
             days = (gti[-1]-gti[0])/(24*3600)
             if config.verbose>0:
                 print(f'Weekly folder "{weekly_folder}" contains {len(wk)} weeks.'\
-                      f'\n\t Last week, # {wk[-1]}, has {days:.3f} days, ends at UTC {UTC(MJD(gti[-1]))}, filedate {file_date}' )
+                      f'\n\t Last week in local dataset, #{wk[-1]}, has {days:.3f} days, ends at UTC {UTC(MJD(gti[-1]))}, filedate {file_date}' )
             #return ff, wk[-1], days
         else:
             print(f'Config not valid, {config.errors}', file=sys.stderr)
             return None
 
-    def update_data(self, threshold=1):
+    def update_data(self):
         """Bring all of the local week data summaries up to date, downloading the missing ones from GSFC.
         If the last one is the current week, check to see if needs updating, by comparing file date, in days,
         from the last update with the current one at GSFC.
         """
         self.check_data()
-        needs = self.needs_update(threshold)
+        needs = self.needs_update()
         if len(needs)==0:
             print('--> Up to date!')
             return
@@ -467,13 +460,13 @@ def check_data(config=None):
     ff = FermiData(config)
     ff.check_data()
 
-def update_data(update_threshold=1, config=None):
+def update_data( config=None):
     """Bring all of the local week data summaries up to date, downloading the missing ones from GSFC.
     If the last one is the current week, check to see if needs updating, by comparing file date, in days,
     from the last update with the current one at GSFC.
     """
     ff = FermiData(config)
-    return ff.update_data(update_threshold)
+    return ff.update_data()
 
 # Internal Cell
 def get_week_files(config, week_range=None):

@@ -210,8 +210,42 @@ SourceData: Source 3C 279 with:
 	 rates:  source 4.06e-07/s, background 3.57e-07/s, TS 182134.1
 CellData.rebin: Bin photon data into 696 1-week bins from 54683.0 to 59555.0
 LightCurve: select 684 cells for fitting with e&gt;35 &amp; n&gt;2
-CellData.rebin: Bin photon data into 116976 1-hour bins from 54683.0 to 59557.0
-TimeSeries: creating power spectra, 116,976 samples, size 1.00 h: Nyquist is 6.0 /d
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>/home/burnett/miniconda3-220301/envs/astro/lib/python3.9/site-packages/scipy/optimize/minpack.py:175: RuntimeWarning: The iteration is not making good progress, as measured by the 
+  improvement from the last ten iterations.
+  warnings.warn(msg, RuntimeWarning)
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>CellData.rebin: Bin photon data into 116976 1-hour bins from 54683.0 to 59557.0
+TimeSeries: making periodogram with, 116,976 samples, size 1.00 h: Nyquist is 6.0 /d
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>/mnt/c/users/thbur/OneDrive/work/wtlike/wtlike/time_series.py:133: RuntimeWarning: invalid value encountered in true_divide
+  alpha_sin0 = WmS_sin/WW_sin
+/mnt/c/users/thbur/OneDrive/work/wtlike/wtlike/time_series.py:135: RuntimeWarning: invalid value encountered in true_divide
+  beta_sin0  = WbmB_sin/WbWb_sin
+/mnt/c/users/thbur/OneDrive/work/wtlike/wtlike/time_series.py:139: RuntimeWarning: divide by zero encountered in true_divide
+  denom_sin = 1./(WW_sin*WbWb_sin-WWb_sin**2)
+/mnt/c/users/thbur/OneDrive/work/wtlike/wtlike/time_series.py:141: RuntimeWarning: invalid value encountered in multiply
+  alpha_sin = (WbWb_sin*WmS_sin-WWb_sin*WbmB_sin)*denom_sin
+/mnt/c/users/thbur/OneDrive/work/wtlike/wtlike/time_series.py:143: RuntimeWarning: invalid value encountered in multiply
+  beta_sin  = (WW_sin*WbmB_sin-WWb_sin*WmS_sin)*denom_sin
 </pre>
 </div>
 </div>

@@ -44,8 +44,8 @@ class SourceData(object):
         self.simulated=False
         self.used_key = None
 
-        if self.verbose>0:
-            print(f'SourceData: week_range: {week_range}')
+        # if self.verbose>0:
+        #     print(f'SourceData: week_range: {week_range}')
         ## source is either a name, a PointSource object, or a Simulation
         if type(source)==str:
 

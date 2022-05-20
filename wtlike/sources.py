@@ -275,15 +275,20 @@ class FermiCatalog():
         self.max_sep=max_sep
         if config is None:
             config = Config()
-
-        if config.catalog_file is None or not Path(config.catalog_file).expanduser().is_file():
-            print('There is no link to 4FGL catalog file: set "catalog_file" in your config.yaml'
-                  ' or specify if in the Config() call',
-                        file=sys.stderr)
-        else:
+        fail=False
+        # look for 4FGL catalog file, gll_psc_v28.fit currently
+        if config.catalog_file is None:
+                fail = True
+        elif Path(config.catalog_file).is_file():
             self.catalog_file = Path(config.catalog_file).expanduser()
+        else: fail=True
 
+        if fail:
+            warning.warn('There is no link to 4FGL catalog file: set "catalog_file" in your config.yaml'
+                  ' or specify if in the Config() call', RuntimeError)
+        else:
             # make this optional
+            config.catalog_file = self.catalog_file
             with fits.open(self.catalog_file) as hdus:
                 self.data = data = hdus[1].data
 
@@ -347,21 +352,13 @@ class SourceLookup():
         self.pt_dirs=zip_index['coord']
         self.pt_names = zip_index['name']
 
-        if config.catalog_file is None or not Path(config.catalog_file).expanduser().is_file():
-            print('There is no link to 4FGL catalog file: set "catalog_file" in your config.yaml'
-                  ' or specify if in the Config() call',
-                        file=sys.stderr)
-            self.cat_names=[]
-            self.cat_dirs =[]
+        catalog_file = Path(config.catalog_file).expanduser()
 
-        else:
-            catalog_file = Path(config.catalog_file).expanduser()
-
-            # make this optional
-            with fits.open(catalog_file) as hdus:
-                data = hdus[1].data
-            self.cat_names = list(map(lambda x: x.strip() , data['Source_Name']))
-            self.cat_dirs = SkyCoord(data['RAJ2000'], data['DEJ2000'], unit='deg', frame='fk5')
+        # make this optional
+        with fits.open(catalog_file) as hdus:
+            data = hdus[1].data
+        self.cat_names = list(map(lambda x: x.strip() , data['Source_Name']))
+        self.cat_dirs = SkyCoord(data['RAJ2000'], data['DEJ2000'], unit='deg', frame='fk5')
 
     def check_folder(self, *pars):
         if len(pars)>1: return None

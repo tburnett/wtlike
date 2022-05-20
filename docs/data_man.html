@@ -245,6 +245,77 @@ Contents of the output dict
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">needs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">needs_update</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">needs</span><span class="p">)</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">download_and_convert</span><span class="p">(</span><span class="n">needs</span><span class="p">,</span> <span class="n">processes</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[728]
+	Downloading 1 week files, using 2 processes 
+GSFCweekly: spacecraft/lat_spacecraft_weekly_w728_p310_v001.fits --&gt; week728_ft2.fits
+GSFCweekly: photon/lat_photon_weekly_w728_p305_v001.fits --&gt; week728_ft1.fits
+FermiData: replacing existing /home/burnett/wtlike-data/data_files/week_728.pkl
+FermiData: Saved to /home/burnett/wtlike-data/data_files/week_728.pkl
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">update_data</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Weekly folder &#34;/home/burnett/wtlike-data/data_files&#34; contains 719 weeks.
+	 Last week in local dataset, #728, has 6.691 days, ends at UTC 2022-05-18 16:47, filedate 20220518211750
+--&gt; Up to date!
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
 
 <div class="output_wrapper">
 <div class="output">
@@ -253,7 +324,7 @@ Contents of the output dict
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="FermiData" class="doc_header"><code>class</code> <code>FermiData</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L275" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>FermiData</code>(<strong><code>config</code></strong>=<em><code>None</code></em>) :: <a href="/wtlikedata_man.html#GSFCweekly"><code>GSFCweekly</code></a></p>
+<h2 id="FermiData" class="doc_header"><code>class</code> <code>FermiData</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L276" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>FermiData</code>(<strong><code>config</code></strong>=<em><code>None</code></em>) :: <a href="/wtlikedata_man.html#GSFCweekly"><code>GSFCweekly</code></a></p>
 </blockquote>
 <p>Manage the full data set in weekly chunks</p>
 <ul>
@@ -284,14 +355,10 @@ Contents of the output dict
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="FermiData.needs_update" class="doc_header"><code>FermiData.needs_update</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L391" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>FermiData.needs_update</code>(<strong><code>threshold</code></strong>=<em><code>0</code></em>)</p>
+<h4 id="FermiData.needs_update" class="doc_header"><code>FermiData.needs_update</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L390" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>FermiData.needs_update</code>()</p>
 </blockquote>
 <p>Compare files on disk with the GSFC list and compile list that need to be downloaded</p>
-<p>Check the file date of the last one on disk and include it if it is:</p>
-<ul>
-<li>short and there is one or more GSFC weeks following it,</li>
-<li>the most recent week and is short by more than <em>threshold</em> days</li>
-</ul>
+<p>Check the file date of the last one on disk and update it as well if it has a different filedate</p>
 
 </div>
 
@@ -314,55 +381,7 @@ Contents of the output dict
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="FermiData.__call__" class="doc_header"><code>FermiData.__call__</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L314" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>FermiData.__call__</code>(<strong><code>week</code></strong>, <strong><code>test</code></strong>=<em><code>False</code></em>, <strong><code>tries_left</code></strong>=<em><code>2</code></em>)</p>
-</blockquote>
-<p>Download and convert the given week:</p>
-<ul>
-<li>download FT1 and FT2 from GSFC to scratch space</li>
-<li>convert each</li>
-<li>save pickled dict summary</li>
-<li>remove files</li>
-</ul>
-
-</div>
-
-</div>
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4 id="FermiData.needs_update" class="doc_header"><code>FermiData.needs_update</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L391" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>FermiData.needs_update</code>(<strong><code>threshold</code></strong>=<em><code>0</code></em>)</p>
-</blockquote>
-<p>Compare files on disk with the GSFC list and compile list that need to be downloaded</p>
-<p>Check the file date of the last one on disk and include it if it is:</p>
-<ul>
-<li>short and there is one or more GSFC weeks following it,</li>
-<li>the most recent week and is short by more than <em>threshold</em> days</li>
-</ul>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4 id="update_data" class="doc_header"><code>update_data</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L470" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>update_data</code>(<strong><code>update_threshold</code></strong>=<em><code>1</code></em>, <strong><code>config</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="update_data" class="doc_header"><code>update_data</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L463" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>update_data</code>(<strong><code>config</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <p>Bring all of the local week data summaries up to date, downloading the missing ones from GSFC.
 If the last one is the current week, check to see if needs updating, by comparing file date, in days,
@@ -396,7 +415,7 @@ from the last update with the current one at GSFC.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="check_data" class="doc_header"><code>check_data</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L464" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>check_data</code>(<strong><code>config</code></strong>=<em><code>None</code></em>)</p>
+<h2 id="check_data" class="doc_header"><code>check_data</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L457" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>check_data</code>(<strong><code>config</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <p>Return: sorted list of files, last week number, number of days in last week</p>
 
@@ -408,7 +427,7 @@ from the last update with the current one at GSFC.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="update_data" class="doc_header"><code>update_data</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L470" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>update_data</code>(<strong><code>update_threshold</code></strong>=<em><code>1</code></em>, <strong><code>config</code></strong>=<em><code>None</code></em>)</p>
+<h2 id="update_data" class="doc_header"><code>update_data</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L463" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>update_data</code>(<strong><code>config</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <p>Bring all of the local week data summaries up to date, downloading the missing ones from GSFC.
 If the last one is the current week, check to see if needs updating, by comparing file date, in days,
@@ -442,7 +461,7 @@ from the last update with the current one at GSFC.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="plot_week" class="doc_header"><code>plot_week</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L509" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>plot_week</code>(<strong><code>week</code></strong>=<em><code>None</code></em>, <strong><code>mjd</code></strong>=<em><code>None</code></em>, <strong><code>nside</code></strong>=<em><code>32</code></em>, <strong>**<code>kwargs</code></strong>)</p>
+<h2 id="plot_week" class="doc_header"><code>plot_week</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L502" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>plot_week</code>(<strong><code>week</code></strong>=<em><code>None</code></em>, <strong><code>mjd</code></strong>=<em><code>None</code></em>, <strong><code>nside</code></strong>=<em><code>32</code></em>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
 <p>Make an AIT plot of the given week's photon data</p>
 <p>Combine all energies for now</p>

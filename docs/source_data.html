@@ -117,12 +117,11 @@ Use a Simulation object to generate data</p>
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>SourceData: week_range: None
-generated 509 photons
+<pre>generated 547 photons
 SourceData: Source test_sim with:
-	 data:           509 simulated photons over 1.0 days.
+	 data:           547 simulated photons over 1.0 days.
 	 exposure:       288 intervals,  average effective area 3000 cm^2 for 0.1 Ms
-	 rates:  source 1.00e-06/s, background 9.60e-07/s,
+	 rates:  source 1.09e-06/s, background 1.02e-06/s,
 </pre>
 </div>
 </div>
@@ -207,12 +206,17 @@ SourceData: Source test_sim with:
 
 <div class="output_area">
 
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>SourceData: week_range: (9, 11)
-SourceData:  PSR J0633+1746: Saving to cache with key &#34;PSR J0633+1746_weeks_9-11&#34;
-	Processing 3 week files week_009.pkl - week_011.pkl , using 4 processes ...
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>There is no link to 4FGL catalog file: set &#34;catalog_file&#34; in your config.yaml or specify if in the Config() call
+</pre>
+</div>
+</div>
 
-SourceData: Source PSR J0633+1746 with:
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>SourceData:  Geminga: Restoring from cache with key &#34;PSR J0633+1746_weeks_9-11&#34;
+SourceData: Source Geminga with:
 	 data:         4,606 photons from 2008-08-04 to 2008-08-20
 	 exposure:    11,300 intervals,  average effective area 3025 cm^2 for 0.3 Ms
 	 rates:  source 3.40e-06/s, background 1.11e-06/s, TS 2276709.9
@@ -223,9 +227,23 @@ Power-law weighted exposure
 2  54682.656722  54682.657069  25.907866   0.817781  110765.039062
 3  54682.657069  54682.657416  25.952616   0.816321  110695.335938
 4  54682.657416  54682.657764  26.067915   0.813964  110763.945312
-SourceData: week_range: (9, 11)
-SourceData:  PSR J0633+1746: Restoring from cache with key &#34;PSR J0633+1746_weeks_9-11&#34;
-SourceData: Source PSR J0633+1746 with:
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>There is no link to 4FGL catalog file: set &#34;catalog_file&#34; in your config.yaml or specify if in the Config() call
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>SourceData:  Geminga: Restoring from cache with key &#34;PSR J0633+1746_weeks_9-11&#34;
+SourceData: Source Geminga with:
 	 data:         4,606 photons from 2008-08-04 to 2008-08-20
 	 exposure:    11,300 intervals,  average effective area 3025 cm^2 for 0.3 Ms
 	 rates:  source 3.40e-06/s, background 1.11e-06/s, TS 2276709.9

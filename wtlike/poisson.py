@@ -3,7 +3,7 @@
 __all__ = ['Poisson', 'PoissonFitter']
 
 # Cell
-import sys
+import sys, warnings
 import numpy as np
 from numpy import polyfit
 from scipy import optimize, special, stats
@@ -180,7 +180,7 @@ class Poisson(object):
 
     @classmethod
     def from_fit(cls, counts, flux, sig_flux, tol=5):
-        """
+        r"""
         Create a Poisson instance using the fit parameters from an analysis
         of a likelihood function.
 
@@ -378,8 +378,9 @@ class PoissonFitter(object):
         deltas = np.array([np.exp(self.func(x)-offset)-np.exp(self._poiss(x)) for x in dom])
         t = np.abs(deltas).max()
         if t>tol:
-            print(f'PoissonFitter warning: max dev= {t:.3f} > tol= {tol}. (wprime={self.wprime:.2f})', file=sys.stderr )
-            #raise Exception(f'PoissonFitter: max dev= {t:.3f} > tol= {tol}. (wprime={self.wprime:.2f})' )
+            #print(f'PoissonFitter warning: max dev= {t:.3f} > tol= {tol}. (wprime={self.wprime:.2f})', file=sys.stderr )
+            warnings.warn(f'PoissonFitter: max dev= {t:.3f} > tol= {tol}. (wprime={self.wprime:.2f}' ,
+                         RuntimeWarning)
         return t, deltas
 
     def plot(self, ax=None, xticks=True, legend=True ):

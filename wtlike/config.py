@@ -175,13 +175,16 @@ class Config():
     defaults=\
     """
         verbose         : 1 # set to zero for no output
-        usermode        : true # default suppress warnings
+        warnings        : ignore #
 
-        datapath        : None # where to find data--must be set
+        datapath        : ~/wtlike-data # where to find data--must be set
         cachepath       : ~/.cache/wtlike #
 
         # Expect 4FGL FITS file, e.g.,  gll_psc_v28.fit
         catalog_file    :
+
+        # multiprocessing
+        pool_size       : 1 # number of pool processes to use
 
         # data cuts, processing
         radius          : 4
@@ -195,9 +198,6 @@ class Config():
         nside           : 1024
         nest            : True
 
-        # multiprocessing
-        pool_size       : 1 # number of pool processes to use
-
         # data selection for cell creation
         week_range      : []  # default all weeks found
         time_bins       : [0, 0, 7] # full MJD range, 7-day cells
@@ -210,29 +210,24 @@ class Config():
 
     """
 
-
-
-
     def __init__(self, **kwargs):
-        import yaml
+        import yaml, warnings
         from yaml import SafeLoader
 
         # parameters: first defaults, then from ~/.config/wtlike/config.yaml, then kwars
         pars = yaml.load(self.defaults, Loader=SafeLoader)
         dp = Path('~/.config/wtlike/config.yaml').expanduser()
         if dp.is_file():
-            userpars = yaml.load(open(dp,'r'), Loader=SafeLoader)
+            with open(dp, 'r') as inp:
+                userpars = yaml.load(inp, Loader=SafeLoader)
             pars.update(userpars)
             #print(f'update from user file {dp}: {userpars}')
         pars.update(kwargs)
 
         self.__dict__.update(pars)
 
-        # suppress warnings unless testing or in usermode
-        if self.usermode:
-            if not sys.warnoptions:
-                import warnings
-                warnings.simplefilter("ignore")
+        # set warnings filter
+        warnings.simplefilter(self.warnings)
 
         self.energy_edges = ee=np.logspace(*self.energy_edge_pars)
         self.energy_bins = np.sqrt(ee[1:] * ee[:-1])
@@ -256,6 +251,24 @@ class Config():
         os.makedirs(self.cachepath, exist_ok=True)
         if not self.cachepath.is_dir():
             self.error_msg +=f'cachepath {self.cachepath} is not a folder.'
+
+        # look for 4FGL catalog file, gll_psc_v28.fit currently
+        fail = False
+        if self.catalog_file is None:
+            t = Path(self.datapath).expanduser()
+            u = sorted(list(t.glob('gll_psc_v*.fit')))
+            if len(u)>0:
+                self.catalog_file = u[-1]
+            else:
+                fail = True
+        elif Path(config.catalog_file).expanduser().is_file():
+            self.catalog_file = Path(config.catalog_file).expanduser()
+        else: fail=True
+
+        if fail:
+            warning.warn('There is no link to 4FGL catalog file: set "catalog_file" in your config.yaml'
+                  ' or specify if in the Config() call', RuntimeError)
+
 
     @property
     def cache(self):

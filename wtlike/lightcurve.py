@@ -381,7 +381,7 @@ class LightCurve(CellData):
         if  kwargs.pop('show_flux', False):
             kwargs['flux_factor'] = self.src_flux * 1e6
             if kwargs.get('ylabel', None) is None:
-                kwargs['ylabel'] = 'Photon flux [$\mathrm{10^{-6} cm^{-2} s^{-1}}$]'
+                kwargs['ylabel'] = r'Photon flux [$\mathrm{10^{-6} cm^{-2} s^{-1}}$]'
         utc_flag = kwargs.pop('UTC', False)
         if utc_flag:
             # even years if True else interpret as int

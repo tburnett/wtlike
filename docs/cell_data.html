@@ -32,11 +32,11 @@ nb_path: "nbs/08_cell_data.ipynb"
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Creating-and-fitting-cells">Creating and fitting cells<a class="anchor-link" href="#Creating-and-fitting-cells"> </a></h2><p>As set out in Kerr, we create "cells" by binning in time to form light curves. For each cell, we determine its likelihood function, which is then optimized to estimate the relative signal rate for that duration.</p>
-<p>Eqn. 2 of Kerr presents the log likelihood as a function of the incremental relative flux $\alpha$ (with $\beta=0$). The log likelihood for a cell,</p>
+<p>Eqn. 2 of Kerr presents the log likelihood as a function of the incremental relative flux $\alpha$ (with $\beta=0$). The log likelihood for a cell is</p>
 <p>{% raw %}
-$$ \displaystyle\log\mathcal{L}(\alpha)\ = \sum_w  \log \big( 1 + \alpha\ w \big) - \alpha\ S \tag{1}  $$
+$$ \displaystyle\log\mathcal{L}(\alpha)\ = \sum_w  \log \big( 1 + \alpha\ w \big) - \alpha\ S \tag{1} , $$
 {% endraw %}</p>
-<p>The sum is over the photon weights $w$ for that cell, and $S$ is the expected value for sum of weights, determined from the total sum and the fraction of the energy-weighted exposure for the cell:</p>
+<p>where the sum is over the photon weights $w$ for that cell, and $S$ is the expected value for sum of weights, determined from the total sum and the fraction of the energy-weighted exposure for the cell,</p>
 <p>{% raw %}
 $$ S =  \frac{f_{cell}}{ f_{total}}\ \sum{w},  $$
 {% endraw %}
@@ -47,7 +47,7 @@ where $f$ represents the energy-weighted exposure.</p>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><em>Fermi</em> data is broken into distinct <em>runs</em>, corresponding at most to a single orbit. The effective area, or $\frac{df}{dt}$, which varies by a factor of 2 or 3 for each 90-min orbit, is typically  $ 3 000\ \mathrm{cm}^2$, or $0.3\ \mathrm{m^2}$. This is measured in 30-s intervals. Exposure is the sum, for each interval in contained in the cell, of the effective area times livetime in the direcion of the source. Since it depends on energy, the Kerr strategy is to perform a weighted average with a spectrum. This can be improved on, see below.</p>
+<p><em>Fermi</em> data is broken into distinct <em>runs</em>, corresponding at most to a single orbit. The effective area, or $\frac{df}{dt}$, varies by a factor of 2 or 3 for each 90-min orbit, is typically  $ 3 000\ \mathrm{cm}^2$, or $0.3\ \mathrm{m^2}$. This is measured in 30-s intervals. Exposure is the sum, for each interval in contained in the cell, of the effective area times livetime in the direcion of the source. Since it depends on energy, the Kerr strategy is to perform a weighted average with a spectrum. This can be improved on, see below.</p>
 
 </div>
 </div>
@@ -78,14 +78,14 @@ $$ -\frac{d^2\ \log(\mathcal{L})}{d\ \alpha^2} = \sum_{w} \frac{w^2}{(1+\hat{\al
 $$ \displaystyle\log\mathcal{L}(\alpha)\ \approx   \alpha\ \ (W-S) - \tfrac{1}{2} \alpha^2\ U ,  \tag{2}$$
 {% endraw %}</p>
 <p>and the maximum likelihood solution is analytic: $\hat{\alpha} =  (W-S)/U$
-and the inverse variance simply $U$.</p>
+with the inverse variance simply $U$.</p>
 
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Accounting-for-spectral-dependence">Accounting for spectral dependence<a class="anchor-link" href="#Accounting-for-spectral-dependence"> </a></h3><p>The development above does not consider energy. The sum over weights includes all photons of all energies, and the coresponding exposure uses a weighted average of the energy-dependent effective area. The Kerr 
+<h3 id="Accounting-for-spectral-dependence">Accounting for spectral dependence<a class="anchor-link" href="#Accounting-for-spectral-dependence"> </a></h3><p>The development above does not consider energy. The sum over weights includes photons of all energies, and the coresponding exposure uses a weighted average of the energy-dependent effective area. The Kerr 
 application uses a power-law spectral shape for this--since we have the actual spectrum available, we can use it instead.</p>
 
 </div>
@@ -270,7 +270,7 @@ a <code>time_bins</code> argument to describe the binning, generating a list, ac
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="CellData.view" class="doc_header"><code>CellData.view</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/cell_data.py#L221" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>CellData.view</code>(<strong>*<code>pars</code></strong>, <strong><code>exp_min</code></strong>=<em><code>None</code></em>, <strong><code>no_update</code></strong>=<em><code>False</code></em>)</p>
+<h4 id="CellData.view" class="doc_header"><code>CellData.view</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/cell_data.py#L225" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>CellData.view</code>(<strong>*<code>pars</code></strong>, <strong><code>exp_min</code></strong>=<em><code>None</code></em>, <strong><code>no_update</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 <p>Return a "view", a copy of this instance with a perhaps a different set of cells</p>
 <ul>
@@ -306,7 +306,7 @@ a <code>time_bins</code> argument to describe the binning, generating a list, ac
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="concatenate_cells" class="doc_header"><code>concatenate_cells</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/cell_data.py#L366" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>concatenate_cells</code>(<strong><code>cells</code></strong>)</p>
+<h4 id="concatenate_cells" class="doc_header"><code>concatenate_cells</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/cell_data.py#L370" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>concatenate_cells</code>(<strong><code>cells</code></strong>)</p>
 </blockquote>
 <p>Combine a group of cells to one</p>
 <ul>
@@ -344,7 +344,7 @@ Return a dict with summed n, S, B, and concatenated w</li>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="partition_cells" class="doc_header"><code>partition_cells</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/cell_data.py#L384" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>partition_cells</code>(<strong><code>config</code></strong>, <strong><code>cells</code></strong>, <strong><code>edges</code></strong>)</p>
+<h4 id="partition_cells" class="doc_header"><code>partition_cells</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/cell_data.py#L388" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>partition_cells</code>(<strong><code>config</code></strong>, <strong><code>cells</code></strong>, <strong><code>edges</code></strong>)</p>
 </blockquote>
 <p>Partition a set of cells</p>
 <ul>

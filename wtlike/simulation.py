@@ -166,13 +166,16 @@ class Simulation(object):
 
     """
 
-    def __init__(self, name, src_flux, tstart, tstop, bkg_rate=1e-6,  efun=3000, wt_signif=0.1, debug=False, rng=None):
+    def __init__(self, name, src_flux, tstart, tstop,
+                 bkg_rate=1e-6,  efun=3000, wt_signif=0.1,
+                 debug=False, rng=None, config=None):
 
         def check_scalar( f):
             if np.isscalar(f):
                 fval = f
                 return lambda t: fval
             return f
+        self.config = config or Config()
         self.name = name
         self.src_fun = check_scalar(src_flux)
         self.bkg_fun = check_scalar(bkg_rate)
