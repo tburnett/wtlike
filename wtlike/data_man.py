@@ -454,11 +454,15 @@ class FermiData(GSFCweekly):
         return MJD(runs)
 
 # Cell
-def check_data(config=None):
+def check_data(config=None, update=False):
     """
-    Return: sorted list of files, last week number, number of days in last week"""
+    Print current status, and update if requested
+    """
     ff = FermiData(config)
     ff.check_data()
+    print(f'Weeks needing download: {ff.needs_update()}')
+    if update:
+        ff.update_data()
 
 def update_data( config=None):
     """Bring all of the local week data summaries up to date, downloading the missing ones from GSFC.

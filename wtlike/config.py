@@ -261,7 +261,7 @@ class Config():
                 self.catalog_file = u[-1]
             else:
                 fail = True
-        elif Path(config.catalog_file).expanduser().is_file():
+        elif Path(self.catalog_file).expanduser().is_file():
             self.catalog_file = Path(config.catalog_file).expanduser()
         else: fail=True
 
