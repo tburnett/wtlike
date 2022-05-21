@@ -180,7 +180,7 @@ class TimeSeries():
 
         self.config = config or Config()
         self.tsamp = tsamp
-        issim=False
+
         tbins = (0,0,tsamp)
         if type(source)==str:
             ## string: create a CellData with binning
@@ -190,11 +190,8 @@ class TimeSeries():
             self.cd = source.view(0,0,tsamp, no_update=True)
         elif isinstance(source,Simulation):
             self.cd = source
-            issim =True
         else:
             raise Exception('Expected a source name, or a CellData or Simulation object')
-
-        # if issim:
 
         cell_dict  = make_time_cells(self.cd, (0,0,tsamp))
         self.cells = pd.DataFrame.from_dict(cell_dict)
@@ -205,80 +202,7 @@ class TimeSeries():
         self.f_Nyquist = 1/self.tsamp/4
         self.delta_f = 1/self.tspan
 
-        # else:
-        #     self.make_time_cells()
 
-#     def make_time_cells(self, exposure_factor=1e-6, **kwargs):
-#         """
-#         Create cells from with moments of weights
-
-#         """
-#         # these needed by powwer_spectrum
-#         self.tsamp = self.cd.time_bins[2]
-#         self.tspan = self.cd.cell_edges[-1] - self.cd.cell_edges[0]
-
-#         # useful derived
-#         self.f_Nyquist = 1/self.tsamp/4
-#         self.delta_f = 1/self.tspan
-
-#         ec = self.cd.get_exposure_per_cell(exposure_factor)
-#         cell_exp =  ec['exp']
-#         etot = self.cd.exptot*exposure_factor
-#         Sk, Bk = self.cd.S/etot, self.cd.B/etot
-#         #
-#         # get the weights per cell, and set moments
-#         weights = self.cd.get_weights_per_cell()
-
-#         cell_dict = dict(
-#             counts = np.array( [len(w)   for w in weights], np.int32),
-#             weights= np.array( [sum(w)   for w in weights], np.float32),
-#             weights2=np.array( [sum(w*w) for w in weights], np.float32),
-#             sexp   = cell_exp * Sk,
-#             bexp   = cell_exp * Bk,
-#         )
-#         # create a cell DataFrame for convenience ...
-#         self.cells = pd.DataFrame.from_dict(cell_dict)
-#         # and add to this object's dict for compatibility with the godot version
-#         self.__dict__.update(cell_dict)
-#         self.power_df = None
-
-#     # def rebin(self, *pars, **kwargs):
-#     #     super().rebin(*pars, **kwargs)
-#     #     self.power_df = None
-#     def make_time_cells(self, time_bins):
-#         """Return a dict of time-sample cells with moments of the weights
-
-#         -- self : an object with config, exposure, photons
-#         -- time_bins : a 3-tuple  (start, stop, delta)
-#         """
-#         # get data, exposure and photons from self
-#         config   = getattr(self, 'config', None) or Config()
-#         exposure = self.exposure
-#         photons  = self.photons
-
-#         # process exposure
-#         expdict =  cell_exposure(config,  exposure, time_bins)
-#         cell_edges = expdict['edges']
-#         cell_exp   = expdict['exp']
-#         etot = expdict['etot'] #sum(cell_exp)
-
-#         # get the estimates from the full dataset for signal and background counts/exposure
-#         S = sum(photons.weight)
-#         B = len(photons)-S
-#         Sk,Bk = S/etot, B/etot
-
-#         # use photon times to get cell index range into photon list
-#         photon_cell = np.searchsorted(photons.time, cell_edges).reshape(len(cell_edges)//2,2)
-#         wts = photons.weight.values.astype(np.float32)
-#         weight_cell = [wts[slice(*cell)] for cell in photon_cell]
-
-#         return  dict(
-#             counts = np.array( [len(w)   for w in weight_cell], np.int32),
-#             weights= np.array( [sum(w)   for w in weight_cell], np.float32),
-#             weights2=np.array( [sum(w*w) for w in weight_cell], np.float32),
-#             sexp   = cell_exp * Sk,
-#             bexp   = cell_exp * Bk,
-#             )
 
     def power_spectrum(self, **kwargs):
         """
