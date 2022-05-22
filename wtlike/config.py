@@ -233,8 +233,10 @@ class Config():
 
        # set up, check files paths
         self.error_msg=''
-        if self.datapath is None:
+        if self.datapath is None or not Path(self.datapath).is_dir():
             self.error_msg+='\ndatapath must be a folder with wtlike data'
+            self.datapath=''
+
         else:
             self.datapath = df = Path(self.datapath).expanduser()
             if not (self.datapath.is_dir() or  self.datapath.is_symlink()):
@@ -251,7 +253,7 @@ class Config():
 
         # look for 4FGL catalog file, gll_psc_v28.fit currently
         fail = False
-        if self.catalog_file is None:
+        if self.catalog_file is None or self.datapath is None:
             t = Path(self.datapath).expanduser()
             u = sorted(list(t.glob('gll_psc_v*.fit')))
             if len(u)>0:
@@ -264,7 +266,7 @@ class Config():
 
         if fail:
             warnings.warn('There is no link to 4FGL catalog file: set "catalog_file" in your config.yaml'
-                  ' or specify if in the Config() call', RuntimeError)
+                  ' or specify if in the Config() call')
 
 
     @property

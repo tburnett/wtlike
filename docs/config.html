@@ -192,9 +192,9 @@ Test: Restoring from cache with key &#34;four&#34;
 Before remove:
 Cache contents
  key                                    size  time                 name, folder /tmp/cache_test
-  one                                     18  2022-05-22 13:03     cache_file_d42a698e01d1d5.pkl
-  two                                     18  2022-05-22 13:03     cache_file_f5e4b5e5dc19af.pkl
-  four                                    23  2022-05-22 13:03     cache_file_6d2d3c0a38045f09.pkl
+  one                                     18  2022-05-22 13:51     cache_file_3dd59a2cb405996a.pkl
+  two                                     18  2022-05-22 13:51     cache_file_719e95f72f6cbdc7.pkl
+  four                                    23  2022-05-22 13:51     cache_file_1b40e2c53acfaf6.pkl
 
 </pre>
 </div>
@@ -217,6 +217,24 @@ Cache contents
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_text output_error">
+<pre>
+<span class="ansi-cyan-fg">  File </span><span class="ansi-green-fg">&#34;/tmp/ipykernel_4360/3816243385.py&#34;</span><span class="ansi-cyan-fg">, line </span><span class="ansi-green-fg">69</span>
+<span class="ansi-red-fg">    self.datapath=&#39;&#39;)</span>
+                    ^
+<span class="ansi-red-fg">SyntaxError</span><span class="ansi-red-fg">:</span> unmatched &#39;)&#39;
+</pre>
+</div>
+</div>
+
+</div>
+</div>
 
 </div>
     {% endraw %}
@@ -248,69 +266,6 @@ Cache contents
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">Config</span><span class="p">()</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>Configuration parameters 
-  verbose         : 1
-  warnings        : ignore
-  datapath        : /mnt/g/My Drive/wtlike-data
-  cachepath       : /home/burnett/.cache/wtlike
-  catalog_file    : /mnt/g/My Drive/wtlike-data/gll_psc_v28.fit
-  pool_size       : 4
-  radius          : 4
-  cos_theta_max   : 0.4
-  z_max           : 100
-  offset_size     : 2e-06
-  energy_edge_pars : [2, 6, 17]
-  etypes          : [0, 1]
-  nside           : 1024
-  nest            : True
-  week_range      : (None, None)
-  time_bins       : [0, 0, 7]
-  exp_min         : 5
-  use_kerr        : True
-  likelihood_rep  : poisson
-  poisson_tolerance : 0.2
-  energy_edges    : [1.00000000e+02 1.77827941e+02 3.16227766e+02 5.62341325e+02
- 1.00000000e+03 1.77827941e+03 3.16227766e+03 5.62341325e+03
- 1.00000000e+04 1.77827941e+04 3.16227766e+04 5.62341325e+04
- 1.00000000e+05 1.77827941e+05 3.16227766e+05 5.62341325e+05
- 1.00000000e+06]
-  energy_bins     : [1.33352143e+02 2.37137371e+02 4.21696503e+02 7.49894209e+02
- 1.33352143e+03 2.37137371e+03 4.21696503e+03 7.49894209e+03
- 1.33352143e+04 2.37137371e+04 4.21696503e+04 7.49894209e+04
- 1.33352143e+05 2.37137371e+05 4.21696503e+05 7.49894209e+05]
-  error_msg       : </pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
 <details class="description">
       <summary data-open="Hide Code" data-close="Show Code"></summary>
         <summary></summary>
@@ -319,7 +274,7 @@ Cache contents
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="nd">@ipynb_doc</span>
-<span class="k">def</span> <span class="nf">summary</span><span class="p">():</span>
+<span class="k">def</span> <span class="nf">config_summary</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    </span>
 <span class="sd">    #### config.Config -- parameters are from three sources:</span>
@@ -357,7 +312,7 @@ Cache contents
 
 
     <span class="k">return</span> <span class="nb">locals</span><span class="p">()</span>
-<span class="n">summary</span><span class="p">()</span> 
+<span class="n">config_summary</span><span class="p">()</span> 
 </pre></div>
 
     </div>
@@ -365,72 +320,6 @@ Cache contents
 </div>
 
     </details>
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4 id="config.Config----parameters-are-from-three-sources:">config.Config -- parameters are from three sources:<a class="anchor-link" href="#config.Config----parameters-are-from-three-sources:"> </a></h4><ul>
-<li>defaults</li>
-<li>the file <code>~/.config/wtlike/config.yaml</code> if it exists</li>
-<li>keyword args in Config constructor. For example, to suppress all printout:
-<pre><code>config = Config(verbose=0)</code></pre>
-</li>
-</ul>
-<h5 id="Config-defaults">Config defaults<a class="anchor-link" href="#Config-defaults"> </a></h5><p>This is yaml-format, corresponding to <code>config.yaml</code>.</p>
-
-<pre><code>    verbose         : 1 # set to zero for no output
-    warnings        : ignore # 
-
-    datapath        : ~/wtlike-data # where to find data--must be set
-    cachepath       : ~/.cache/wtlike #
-
-    # Expect 4FGL FITS file, e.g.,  gll_psc_v28.fit
-    catalog_file    : 
-
-    # multiprocessing
-    pool_size       : 1 # number of pool processes to use
-
-    # data cuts, processing
-    radius          : 4
-    cos_theta_max   : 0.4
-    z_max           : 100
-    offset_size     : 2.e-06  # scale factor used for event time
-
-    # binning -- actually determined by weight run
-    energy_edge_pars : [2,6,17] # pars for np.logspace
-    etypes          : [0, 1] # front, back
-    nside           : 1024
-    nest            : True
-
-    # data selection for cell creation
-    week_range      : []  # default all weeks found
-    time_bins       : [0, 0, 7] # full MJD range, 7-day cells
-    exp_min         : 5    # threshold for exposure per day, in cm^2 Ms units.
-
-    # cell fitting
-    use_kerr        : True  # Use the Kerr power-law exposure weighting
-    likelihood_rep  : poisson
-    poisson_tolerance : 0.2
-
-
-
-
-</code></pre>
-<h4 id="Config-contents-as-set-up-here">Config contents as set up here<a class="anchor-link" href="#Config-contents-as-set-up-here"> </a></h4><p><details  class="nbdoc-description" >  <summary> config parameter list </summary>  <div style="margin-left: 5%;"><pre>Configuration parameters <br>  verbose         : 1<br>  warnings        : ignore<br>  datapath        : /mnt/g/My Drive/wtlike-data<br>  cachepath       : /home/burnett/.cache/wtlike<br>  catalog_file    : /mnt/g/My Drive/wtlike-data/gll_psc_v28.fit<br>  pool_size       : 4<br>  radius          : 4<br>  cos_theta_max   : 0.4<br>  z_max           : 100<br>  offset_size     : 2e-06<br>  energy_edge_pars : [2, 6, 17]<br>  etypes          : [0, 1]<br>  nside           : 1024<br>  nest            : True<br>  week_range      : (None, None)<br>  time_bins       : [0, 0, 7]<br>  exp_min         : 5<br>  use_kerr        : True<br>  likelihood_rep  : poisson<br>  poisson_tolerance : 0.2<br>  energy_edges    : [1.00000000e+02 1.77827941e+02 3.16227766e+02 5.62341325e+02<br> 1.00000000e+03 1.77827941e+03 3.16227766e+03 5.62341325e+03<br> 1.00000000e+04 1.77827941e+04 3.16227766e+04 5.62341325e+04<br> 1.00000000e+05 1.77827941e+05 3.16227766e+05 5.62341325e+05<br> 1.00000000e+06]<br>  energy_bins     : [1.33352143e+02 2.37137371e+02 4.21696503e+02 7.49894209e+02<br> 1.33352143e+03 2.37137371e+03 4.21696503e+03 7.49894209e+03<br> 1.33352143e+04 2.37137371e+04 4.21696503e+04 7.49894209e+04<br> 1.33352143e+05 2.37137371e+05 4.21696503e+05 7.49894209e+05]<br>  error_msg       : <br></pre></div> </details></p>
-<h5 id="config.cache----a-file-cache">config.cache -- a file cache<a class="anchor-link" href="#config.cache----a-file-cache"> </a></h5><p>The class <code>Cache</code>, available from <code>config.cache</code> implements a file cache in the folder
-<code>/home/burnett/.cache/wtlike</code></p>
-<p><details  class="nbdoc-description" >  <summary> current cache contents </summary>  <div style="margin-left: 5%;"><pre>Cache contents<br> key                                    size  time                 name, folder /home/burnett/.cache/wtlike<br>  P88Y0839_data                    135087218  2021-12-09 10:24     cache_file_8f49ffbb40f6cf6.pkl<br>  P88Y1621_data                    107292391  2021-12-09 10:35     cache_file_49a44b1cafa987f1.pkl<br>  PSR J1826-1256_data              136536785  2021-12-09 16:23     cache_file_a8ee594ce4a0d23.pkl<br>  P88Y4434_data                    115585160  2021-12-14 12:17     cache_file_ea9875c41d155b8.pkl<br>  PSR J0835-4510_data              163972071  2022-03-24 11:49     cache_file_399d710d5471fbc4.pkl<br>  PSR J0633+1746_data              117364633  2022-03-23 13:30     cache_file_57c899e951e2b4.pkl<br>  P88Y3243_data                     98383177  2021-12-15 08:03     cache_file_1e5998dac531f886.pkl<br>  P88Y4744_data                    142982565  2022-01-10 13:49     cache_file_2f39212c4f1593.pkl<br>  PSR J1709-4429_data              134198524  2022-01-10 13:56     cache_file_9d363406414a4fe.pkl<br>  PSR J0205+6449_data              142684766  2022-01-10 14:04     cache_file_59324d9896384e55.pkl<br>  P88Y5020_data                    133814110  2022-01-10 14:11     cache_file_d1961115fc8ad1a.pkl<br>  PSR J1813-1246_data              130999543  2022-01-10 14:18     cache_file_66c22c86184760b.pkl<br>  P88Y4996_data                    136648585  2022-01-10 14:41     cache_file_390f2ec0123e06a8.pkl<br>  PSR J1836+5925_data              138099988  2022-01-29 09:28     cache_file_4cf2c6ef9e8e4391.pkl<br>  PSR J0007+7303_data              144483213  2022-01-29 09:35     cache_file_9118b9b420eaeac.pkl<br>  PSR J1057-5226_data              111852404  2022-01-29 09:43     cache_file_36f08f8931993de.pkl<br>  PSR J0534+2200_data              120459827  2022-01-29 09:51     cache_file_5c194f3ba9839d.pkl<br>  PSR J0614-3329_data              102991649  2022-01-29 09:58     cache_file_e59455e871b54c2.pkl<br>  PSR J2021+3651_data              139760141  2022-01-29 10:06     cache_file_7edc70eff46418a.pkl<br>  PSR J1231-1411_data               97580750  2022-01-29 10:14     cache_file_48cde18e4ff8d7e.pkl<br>  504F-1187_data                   125944587  2022-01-30 09:30     cache_file_7aa9c4634b9bc359.pkl<br>  PSR J2021+4026_data              144574909  2022-02-10 13:45     cache_file_c6a0ca9d4d493c1.pkl<br>  PSR J1809-2332_data              129902712  2022-02-10 13:53     cache_file_7d0bdab4612d158.pkl<br>  PSR J1907+0602_data              131716816  2022-02-11 07:06     cache_file_2692651f8ebac87.pkl<br>  P88Y2741_data                    120835877  2022-03-15 15:27     cache_file_7ed05b488735d4.pkl<br>  P88Y0643_data                     94996984  2022-03-17 09:48     cache_file_cae40ada2d216cf.pkl<br>  504H-0317_data                   132398851  2022-03-20 03:04     cache_file_294d0d01edc3ec7.pkl<br>  P88Y4842_data                    123793361  2022-05-07 21:41     cache_file_8998e475010a987.pkl<br>  P88Y6076_data                    105662092  2022-05-02 15:21     cache_file_f77ebbb3092935b.pkl<br>  P88Y3157_data                     88127038  2022-05-05 05:13     cache_file_2d532405a1af1dd.pkl<br>  P88Y6057_data                     88182197  2022-05-07 16:06     cache_file_4a6f5336809df12.pkl<br>  P88Y3588_data                     88767707  2022-05-07 16:11     cache_file_3b887b2a9a94d679.pkl<br>  PSR J0633+1746_weeks_100-110       1846262  2022-05-07 22:55     cache_file_dac27bb26dc19a2.pkl<br>  PSR J0633+1746_weeks_9-11           400481  2022-05-08 00:55     cache_file_39cee0756750c88.pkl<br>  P88Y4842_weeks_597-690            18491388  2022-05-08 01:03     cache_file_7cd7f2b50c95ab7e.pkl<br>  P88Y6076_weeks_635-692             9835177  2022-05-08 01:06     cache_file_3e3f04045cfe712f.pkl<br>  P88Y6057_weeks_269-412            18610286  2022-05-08 01:07     cache_file_ab76cb4881ea2b4.pkl<br>  P88Y3588_weeks_626-640             1810026  2022-05-08 01:07     cache_file_21ce461cf46750c.pkl<br>  P88Y3157_weeks_9-165              20620549  2022-05-08 01:14     cache_file_b33182277033051.pkl<br>  P88Y6266_data                     99505531  2022-05-09 00:15     cache_file_2da413fa18791127.pkl<br>  P88Y6266_weeks_10-110             15621997  2022-05-20 09:46     cache_file_669fbabea340afba.pkl<br>  PSR J0633+1746_weeks_10-110       17625095  2022-05-20 10:23     cache_file_c854ce708b56bbf.pkl<br></pre></div> </details></p>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
 </div>
     {% endraw %}
 
@@ -457,7 +346,7 @@ Cache contents
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="MJD" class="doc_header"><code>MJD</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L304" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>MJD</code>(<strong><code>arg</code></strong>)</p>
+<h4 id="MJD" class="doc_header"><code>MJD</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L306" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>MJD</code>(<strong><code>arg</code></strong>)</p>
 </blockquote>
 <p>convert MET or UTC to MJD</p>
 
@@ -482,7 +371,7 @@ Cache contents
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="UTC" class="doc_header"><code>UTC</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L318" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>UTC</code>(<strong><code>mjd</code></strong>)</p>
+<h4 id="UTC" class="doc_header"><code>UTC</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L320" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>UTC</code>(<strong><code>mjd</code></strong>)</p>
 </blockquote>
 <p>convert MJD value to ISO date string</p>
 
@@ -507,7 +396,7 @@ Cache contents
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="UTCnow" class="doc_header"><code>UTCnow</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L324" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>UTCnow</code>()</p>
+<h4 id="UTCnow" class="doc_header"><code>UTCnow</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L326" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>UTCnow</code>()</p>
 </blockquote>
 <p>current UTC</p>
 
@@ -532,7 +421,7 @@ Cache contents
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="mission_week" class="doc_header"><code>mission_week</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L329" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>mission_week</code>(<strong><code>mjd</code></strong>)</p>
+<h4 id="mission_week" class="doc_header"><code>mission_week</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L331" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>mission_week</code>(<strong><code>mjd</code></strong>)</p>
 </blockquote>
 <p>return the mission week number for a MJD value
 (Note that week #0 starts on UTC Thursday 2008-05-29 00:00, the first data is in week 9, and that week 525 is missing)</p>
@@ -565,26 +454,6 @@ Cache contents
 </pre></div>
 
     </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>(&#39;2001-01-01 00:01&#39;,
- &#39;2008-08-05 00:00&#39;,
- &#39;UTC 2022-05-22 20:06&#39;,
- 59721.83755635074,
- &#39;2022-05-22 20:06&#39;)</pre>
-</div>
-
-</div>
-
 </div>
 </div>
 
@@ -631,7 +500,7 @@ Cache contents
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="bin_size_name" class="doc_header"><code>bin_size_name</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L336" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>bin_size_name</code>(<strong><code>bins</code></strong>)</p>
+<h4 id="bin_size_name" class="doc_header"><code>bin_size_name</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L338" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>bin_size_name</code>(<strong><code>bins</code></strong>)</p>
 </blockquote>
 <p>Provide a nice name, e.g., 'day' for a time interval</p>
 
@@ -666,20 +535,6 @@ Cache contents
 </div>
 </div>
 
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>[&#39;15-min&#39;, &#39;1-day&#39;, &#39;2-day&#39;, &#39;1-week&#39;, &#39;10656-min&#39;, &#39;1-year&#39;]
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
 </div>
     {% endraw %}
 
@@ -694,7 +549,7 @@ Cache contents
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="decorate_with" class="doc_header"><code>decorate_with</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L358" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>decorate_with</code>(<strong><code>other_func</code></strong>)</p>
+<h4 id="decorate_with" class="doc_header"><code>decorate_with</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L360" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>decorate_with</code>(<strong><code>other_func</code></strong>)</p>
 </blockquote>
 
 </div>
@@ -725,7 +580,7 @@ Cache contents
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="Timer" class="doc_header"><code>class</code> <code>Timer</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L366" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Timer</code>()</p>
+<h2 id="Timer" class="doc_header"><code>class</code> <code>Timer</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L369" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Timer</code>()</p>
 </blockquote>
 <p>Usage:</p>
 
@@ -760,7 +615,7 @@ print(t)</code></pre>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">with</span> <span class="n">Timer</span><span class="p">()</span> <span class="k">as</span> <span class="n">t</span><span class="p">:</span>
-    <span class="kn">import</span> <span class="nn">time</span>
+
     <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;intemediate&#39;</span><span class="p">,</span><span class="n">t</span><span class="p">)</span>
     <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
@@ -773,36 +628,6 @@ print(t)</code></pre>
 </div>
 
     </details>
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-<div class="output_subarea output_text output_error">
-<pre>
-<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
-<span class="ansi-red-fg">AttributeError</span>                            Traceback (most recent call last)
-<span class="ansi-green-fg">/tmp/ipykernel_2178/319190291.py</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
-<span class="ansi-green-intense-fg ansi-bold">      1</span> <span class="ansi-red-fg"># collapse-show</span>
-<span class="ansi-green-fg">----&gt; 2</span><span class="ansi-red-fg"> </span><span class="ansi-green-fg">with</span> Timer<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span> <span class="ansi-green-fg">as</span> t<span class="ansi-blue-fg">:</span>
-<span class="ansi-green-intense-fg ansi-bold">      3</span>     <span class="ansi-green-fg">import</span> time
-<span class="ansi-green-intense-fg ansi-bold">      4</span>     time<span class="ansi-blue-fg">.</span>sleep<span class="ansi-blue-fg">(</span><span class="ansi-cyan-fg">2</span><span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">      5</span>     print<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">&#39;intemediate&#39;</span><span class="ansi-blue-fg">,</span>t<span class="ansi-blue-fg">)</span>
-
-<span class="ansi-green-fg">/tmp/ipykernel_2178/277215092.py</span> in <span class="ansi-cyan-fg">__init__</span><span class="ansi-blue-fg">(self)</span>
-<span class="ansi-green-intense-fg ansi-bold">     12</span> 
-<span class="ansi-green-intense-fg ansi-bold">     13</span>     <span class="ansi-green-fg">def</span> __init__<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
-<span class="ansi-green-fg">---&gt; 14</span><span class="ansi-red-fg">         </span>self<span class="ansi-blue-fg">.</span>t<span class="ansi-blue-fg">=</span>time<span class="ansi-blue-fg">.</span>time<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">     15</span>         self<span class="ansi-blue-fg">.</span>exit_time<span class="ansi-blue-fg">=</span><span class="ansi-cyan-fg">1e6</span>
-<span class="ansi-green-intense-fg ansi-bold">     16</span> 
-
-<span class="ansi-red-fg">AttributeError</span>: module &#39;astropy.time&#39; has no attribute &#39;time&#39;</pre>
-</div>
-</div>
-
-</div>
-</div>
-
 </div>
     {% endraw %}
 
