@@ -458,6 +458,10 @@ def check_data(config=None, update=False):
     """
     Print current status, and update if requested
     """
+    config = config or Config()
+    if not config.valid:
+        print('Config datapath is not valid', file=sys.stderr)
+        return
     ff = FermiData(config)
     ff.check_data()
     print(f'Weeks needing download: {ff.needs_update()}')

@@ -268,6 +268,7 @@ class WTSkyCoord(SkyCoord):
         return f'({ra:.3f},{dec:.3f})'
 
 # Cell
+import warnings
 class FermiCatalog():
 
     def __init__(self,config=None, max_sep=0.1):
@@ -284,8 +285,8 @@ class FermiCatalog():
         else: fail=True
 
         if fail:
-            warning.warn('There is no link to 4FGL catalog file: set "catalog_file" in your config.yaml'
-                  ' or specify if in the Config() call', RuntimeError)
+            warnings.warn('There is no link to 4FGL catalog file: set "catalog_file" in your config.yaml'
+                  ' or specify if in the Config() call')
         else:
             # make this optional
             config.catalog_file = self.catalog_file
