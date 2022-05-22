@@ -235,7 +235,6 @@ class Config():
         self.error_msg=''
         if self.datapath is None or not Path(self.datapath).is_dir():
             self.error_msg+='\ndatapath must be a folder with wtlike data'
-            self.datapath=''
 
         else:
             self.datapath = df = Path(self.datapath).expanduser()
