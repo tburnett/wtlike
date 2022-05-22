@@ -4,15 +4,12 @@ __all__ = ['Cache', 'Config', 'MJD', 'UTC', 'UTCnow', 'mission_week', 'day', 'fi
            'bin_size_name', 'decorate_with', 'Timer']
 
 # Cell
-from astropy.time import Time
-# from astropy.coordinates import SkyCoord, Angle
-import astropy.units as u
+import os, sys, warnings, pickle
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Tuple
-import os, sys
 import numpy as np
-import pickle
+
 
 # Cell
 
@@ -266,7 +263,7 @@ class Config():
         else: fail=True
 
         if fail:
-            warning.warn('There is no link to 4FGL catalog file: set "catalog_file" in your config.yaml'
+            warnings.warn('There is no link to 4FGL catalog file: set "catalog_file" in your config.yaml'
                   ' or specify if in the Config() call', RuntimeError)
 
 
@@ -302,6 +299,7 @@ first_data=54683
 # MJDREFF =  0.00074287037037037 / Fractional part of MJD corresponding to SC cloc
 mission_start = 51910.00074287037
 from datetime import datetime
+from astropy.time import Time
 
 def MJD(arg):
     """ convert MET or UTC to MJD
@@ -374,6 +372,7 @@ class Timer():
     print(t)
     ```
     """
+
     def __init__(self):
         self.t=time.time()
         self.exit_time=1e6

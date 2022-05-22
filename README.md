@@ -267,7 +267,6 @@ To install from pyPI:
 ```
 pip install wtlike
 ```
-
 or
 ```
 pip install -U wtlike
@@ -282,8 +281,10 @@ There are three data sources which `wtlike` needs to function:
 -	A table of weights for each source
 -	An effective area table, a grid in energy/angle for "front" and "back" events 
 
-These must be found in a folder, which by default is `~/wtlike_data`. In that folder there must be (perhaps links to) three folders named `data_files`, `weight_files`, `aeff_files`, and a zip file, `weight_file.zip`.  
+These must be found in a folder, which by default is `~/wtlike-data`. In that folder there must be (perhaps links to) three folders named `data_files`, `weight_files`, `aeff_files`, and a zip file, `weight_file.zip`.  A current copy can be found in my [Google Drive](https://drive.google.com/drive/folders/1YxQRpZ4MI945-GZ2bK3CgTo6ViqoQ2Xt?lfhs=2).
 
 ## Google colab setup
 
-An easy way to test this system is to use a Jupyter notebook hosted by Google. 
+An easy way to test, or even use, this system is with [Goggle's colab](https://colab.research.google.com/). To use it, you need a Google account.
+All the data files are in my shared folder [wtlike-data](https://drive.google.com/drive/folders/1YxQRpZ4MI945-GZ2bK3CgTo6ViqoQ2Xt?lfhs=2).
+It includes a [setup notebook](https://colab.research.google.com/drive/1Dy29VRE3M28W_uMJruDxrBElFpyg0Iyl) which demonstrates setting up a free Google-hosted VM to run wtlike code and makes a few demo plots.

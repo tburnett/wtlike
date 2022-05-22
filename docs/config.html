@@ -60,7 +60,7 @@ nb_path: "nbs/00_config.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="Cache" class="doc_header"><code>class</code> <code>Cache</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L19" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Cache</code>(<strong><code>path</code></strong>, <strong><code>clear</code></strong>:<code>bool</code>=<em><code>False</code></em>) :: <code>dict</code></p>
+<h2 id="Cache" class="doc_header"><code>class</code> <code>Cache</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L16" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Cache</code>(<strong><code>path</code></strong>, <strong><code>clear</code></strong>:<code>bool</code>=<em><code>False</code></em>) :: <code>dict</code></p>
 </blockquote>
 <p>Manage a file cache</p>
 <ul>
@@ -99,7 +99,7 @@ filename in a file <code>index.pkl</code> in the same folder.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="Cache.__call__" class="doc_header"><code>Cache.__call__</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L115" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Cache.__call__</code>(<strong><code>key</code></strong>, <strong><code>func</code></strong>, <strong>*<code>pars</code></strong>, <strong><code>description</code></strong>=<em><code>''</code></em>, <strong><code>overwrite</code></strong>=<em><code>False</code></em>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="Cache.__call__" class="doc_header"><code>Cache.__call__</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L112" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Cache.__call__</code>(<strong><code>key</code></strong>, <strong><code>func</code></strong>, <strong>*<code>pars</code></strong>, <strong><code>description</code></strong>=<em><code>''</code></em>, <strong><code>overwrite</code></strong>=<em><code>False</code></em>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
 <p>One-line usage interface for cache use</p>
 <ul>
@@ -192,9 +192,9 @@ Test: Restoring from cache with key &#34;four&#34;
 Before remove:
 Cache contents
  key                                    size  time                 name, folder /tmp/cache_test
-  one                                     18  2022-05-20 12:32     cache_file_45ca620c5cabecb7.pkl
-  two                                     18  2022-05-20 12:32     cache_file_28c84f365280388.pkl
-  four                                    23  2022-05-20 12:32     cache_file_bf5084cab45d313.pkl
+  one                                     18  2022-05-22 13:03     cache_file_d42a698e01d1d5.pkl
+  two                                     18  2022-05-22 13:03     cache_file_f5e4b5e5dc19af.pkl
+  four                                    23  2022-05-22 13:03     cache_file_6d2d3c0a38045f09.pkl
 
 </pre>
 </div>
@@ -232,7 +232,7 @@ Cache contents
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="Config" class="doc_header"><code>class</code> <code>Config</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L174" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Config</code>(<strong>**<code>kwargs</code></strong>)</p>
+<h2 id="Config" class="doc_header"><code>class</code> <code>Config</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L171" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Config</code>(<strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
 
 </div>
@@ -269,7 +269,7 @@ Cache contents
 <div class="output_text output_subarea output_execute_result">
 <pre>Configuration parameters 
   verbose         : 1
-  warnings        : always
+  warnings        : ignore
   datapath        : /mnt/g/My Drive/wtlike-data
   cachepath       : /home/burnett/.cache/wtlike
   catalog_file    : /mnt/g/My Drive/wtlike-data/gll_psc_v28.fit
@@ -288,7 +288,6 @@ Cache contents
   use_kerr        : True
   likelihood_rep  : poisson
   poisson_tolerance : 0.2
-  usermode        : True
   energy_edges    : [1.00000000e+02 1.77827941e+02 3.16227766e+02 5.62341325e+02
  1.00000000e+03 1.77827941e+03 3.16227766e+03 5.62341325e+03
  1.00000000e+04 1.77827941e+04 3.16227766e+04 5.62341325e+04
@@ -458,7 +457,7 @@ Cache contents
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="MJD" class="doc_header"><code>MJD</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L306" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>MJD</code>(<strong><code>arg</code></strong>)</p>
+<h4 id="MJD" class="doc_header"><code>MJD</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L304" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>MJD</code>(<strong><code>arg</code></strong>)</p>
 </blockquote>
 <p>convert MET or UTC to MJD</p>
 
@@ -483,7 +482,7 @@ Cache contents
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="UTC" class="doc_header"><code>UTC</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L320" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>UTC</code>(<strong><code>mjd</code></strong>)</p>
+<h4 id="UTC" class="doc_header"><code>UTC</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L318" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>UTC</code>(<strong><code>mjd</code></strong>)</p>
 </blockquote>
 <p>convert MJD value to ISO date string</p>
 
@@ -508,7 +507,7 @@ Cache contents
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="UTCnow" class="doc_header"><code>UTCnow</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L326" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>UTCnow</code>()</p>
+<h4 id="UTCnow" class="doc_header"><code>UTCnow</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L324" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>UTCnow</code>()</p>
 </blockquote>
 <p>current UTC</p>
 
@@ -533,7 +532,7 @@ Cache contents
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="mission_week" class="doc_header"><code>mission_week</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L331" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>mission_week</code>(<strong><code>mjd</code></strong>)</p>
+<h4 id="mission_week" class="doc_header"><code>mission_week</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L329" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>mission_week</code>(<strong><code>mjd</code></strong>)</p>
 </blockquote>
 <p>return the mission week number for a MJD value
 (Note that week #0 starts on UTC Thursday 2008-05-29 00:00, the first data is in week 9, and that week 525 is missing)</p>
@@ -579,9 +578,9 @@ Cache contents
 <div class="output_text output_subarea output_execute_result">
 <pre>(&#39;2001-01-01 00:01&#39;,
  &#39;2008-08-05 00:00&#39;,
- &#39;UTC 2022-05-20 19:32&#39;,
- 59719.81438598808,
- &#39;2022-05-20 19:32&#39;)</pre>
+ &#39;UTC 2022-05-22 20:06&#39;,
+ 59721.83755635074,
+ &#39;2022-05-22 20:06&#39;)</pre>
 </div>
 
 </div>
@@ -612,7 +611,12 @@ Cache contents
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Miscellaneous-utilities">Miscellaneous utilities<a class="anchor-link" href="#Miscellaneous-utilities"> </a></h3>
+<h3 id="Miscellaneous-utilities">Miscellaneous utilities<a class="anchor-link" href="#Miscellaneous-utilities"> </a></h3><ul>
+<li>bins_size_name</li>
+<li>decorate_with</li>
+<li>Timer</li>
+</ul>
+
 </div>
 </div>
 </div>
@@ -627,7 +631,7 @@ Cache contents
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="bin_size_name" class="doc_header"><code>bin_size_name</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L338" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>bin_size_name</code>(<strong><code>bins</code></strong>)</p>
+<h4 id="bin_size_name" class="doc_header"><code>bin_size_name</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L336" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>bin_size_name</code>(<strong><code>bins</code></strong>)</p>
 </blockquote>
 <p>Provide a nice name, e.g., 'day' for a time interval</p>
 
@@ -651,6 +655,37 @@ Cache contents
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">([</span><span class="n">bin_size_name</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mi">96</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span> <span class="mf">7.4</span><span class="p">,</span> <span class="mf">365.25</span><span class="p">)])</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[&#39;15-min&#39;, &#39;1-day&#39;, &#39;2-day&#39;, &#39;1-week&#39;, &#39;10656-min&#39;, &#39;1-year&#39;]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
 
 <div class="output_wrapper">
 <div class="output">
@@ -659,7 +694,7 @@ Cache contents
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="decorate_with" class="doc_header"><code>decorate_with</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L360" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>decorate_with</code>(<strong><code>other_func</code></strong>)</p>
+<h4 id="decorate_with" class="doc_header"><code>decorate_with</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L358" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>decorate_with</code>(<strong><code>other_func</code></strong>)</p>
 </blockquote>
 
 </div>
@@ -690,7 +725,7 @@ Cache contents
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="Timer" class="doc_header"><code>class</code> <code>Timer</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L369" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Timer</code>()</p>
+<h2 id="Timer" class="doc_header"><code>class</code> <code>Timer</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L366" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Timer</code>()</p>
 </blockquote>
 <p>Usage:</p>
 
@@ -711,6 +746,62 @@ print(t)</code></pre>
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<details class="description" open>
+      <summary data-open="Hide Code" data-close="Show Code"></summary>
+        <div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">with</span> <span class="n">Timer</span><span class="p">()</span> <span class="k">as</span> <span class="n">t</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">time</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;intemediate&#39;</span><span class="p">,</span><span class="n">t</span><span class="p">)</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Final&#39;</span><span class="p">,</span><span class="n">t</span><span class="p">)</span>
+<span class="k">assert</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">elapsed</span> <span class="o">-</span><span class="mi">5</span><span class="p">)</span><span class="o">&lt;</span><span class="mf">0.1</span><span class="p">),</span> <span class="sa">f</span><span class="s1">&#39;wrong elapsed time: </span><span class="si">{</span><span class="n">t</span><span class="o">.</span><span class="n">elapsed</span><span class="si">}</span><span class="s1">&#39;</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+    </details>
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_text output_error">
+<pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">AttributeError</span>                            Traceback (most recent call last)
+<span class="ansi-green-fg">/tmp/ipykernel_2178/319190291.py</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
+<span class="ansi-green-intense-fg ansi-bold">      1</span> <span class="ansi-red-fg"># collapse-show</span>
+<span class="ansi-green-fg">----&gt; 2</span><span class="ansi-red-fg"> </span><span class="ansi-green-fg">with</span> Timer<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span> <span class="ansi-green-fg">as</span> t<span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">      3</span>     <span class="ansi-green-fg">import</span> time
+<span class="ansi-green-intense-fg ansi-bold">      4</span>     time<span class="ansi-blue-fg">.</span>sleep<span class="ansi-blue-fg">(</span><span class="ansi-cyan-fg">2</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">      5</span>     print<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">&#39;intemediate&#39;</span><span class="ansi-blue-fg">,</span>t<span class="ansi-blue-fg">)</span>
+
+<span class="ansi-green-fg">/tmp/ipykernel_2178/277215092.py</span> in <span class="ansi-cyan-fg">__init__</span><span class="ansi-blue-fg">(self)</span>
+<span class="ansi-green-intense-fg ansi-bold">     12</span> 
+<span class="ansi-green-intense-fg ansi-bold">     13</span>     <span class="ansi-green-fg">def</span> __init__<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-fg">---&gt; 14</span><span class="ansi-red-fg">         </span>self<span class="ansi-blue-fg">.</span>t<span class="ansi-blue-fg">=</span>time<span class="ansi-blue-fg">.</span>time<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">     15</span>         self<span class="ansi-blue-fg">.</span>exit_time<span class="ansi-blue-fg">=</span><span class="ansi-cyan-fg">1e6</span>
+<span class="ansi-green-intense-fg ansi-bold">     16</span> 
+
+<span class="ansi-red-fg">AttributeError</span>: module &#39;astropy.time&#39; has no attribute &#39;time&#39;</pre>
+</div>
+</div>
+
+</div>
+</div>
 
 </div>
     {% endraw %}
