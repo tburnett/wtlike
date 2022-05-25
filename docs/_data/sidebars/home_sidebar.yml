@@ -31,6 +31,9 @@ entries:
       title: Simulation
       url: simulation.html
     - output: web,pdf
+      title: Skymap
+      url: skymaps.html
+    - output: web,pdf
       title: Source Data analysis
       url: source_data.html
     - output: web,pdf

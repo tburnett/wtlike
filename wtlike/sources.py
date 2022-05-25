@@ -259,7 +259,7 @@ def findsource(*pars, gal=False):
         skycoord=SkyCoord(*pars, unit='deg', frame='galactic' if gal else 'fk5')
     else:
         raise TypeError('require name or ra,dec or l,b,gal=True')
-    return skycoord
+    return skycoord.galactic if gal else skycoord
 
 # Internal Cell
 class WTSkyCoord(SkyCoord):

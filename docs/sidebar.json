@@ -8,6 +8,7 @@
     "Sources and weights": "sources.html",
     "Load data": "load_data.html",
     "Simulation": "simulation.html",
+    "Skymap": "skymaps.html",
     "Source Data analysis": "source_data.html",
     "Poisson-like likelihood function": "poisson.html",
     "Log Likelihood tools": "loglike.html",
