@@ -142,7 +142,7 @@ class LogLike(object):
             if debug or self.verbose>2:
                 print(f'Fit error, cell {self},\n\t{msg}')
         except Exception as msg:
-            print(f'exception: {msg}')
+            print(f'exception: s, h: {s},{h}-- {msg}', file=sys.stderr)
             raise
         print( '***********Failed?')
 
@@ -151,9 +151,9 @@ class LogLike(object):
         kw = dict(disp=False)
         kw.update(**fmin_kw)
         f = lambda pars: -self(pars)
-        return optimize.fmin_cg(f, estimate[0:1] if fix_beta else estimate, **kw)
+        return optimize.fmin_cg(f, estimate[0.:1.] if fix_beta else estimate, **kw)
 
-    def solve(self, fix_beta=True, debug=True, estimate=[1,0],**fit_kw):
+    def solve(self, fix_beta=True, debug=True, estimate=[1.,0],**fit_kw):
         """Solve non-linear equation(s) from setting gradient to zero
         note that the hessian is a jacobian
         """
@@ -174,8 +174,23 @@ class LogLike(object):
         kw.update(**fit_kw)
         f = self.gradient
         try:
-            ret = optimize.fsolve(f, estimate[0] if fix_beta else estimate , **kw)
+            if fix_beta:
+                # this may fix an issue with known positive root
+                est = estimate[0]
+                ret = [1]
+
+                while True:
+                    #print(f'***** est, ret: {est}, {ret}')
+                    ret = optimize.fsolve(f, est, **kw)
+                    est /=2
+                    if ret[0]>0 or est<0.1: break
+
+            else:
+                ret = optimize.fsolve(f, estimate , **kw)
+
+            #ret = optimize.fsolve(f, estimate[0] if fix_beta else estimate , **kw)
         except RuntimeWarning as msg:
+            #print(f'RuntimeWarning: {msg}', file=sys.stderr)
             # fall back
             if fix_beta:
                 ret = optimize.root_scalar(f, x0=0.5, bracket=[0,2],  method='brentq', xtol=1e-3)
@@ -300,11 +315,13 @@ class PoissonRep(object):
             try:
                 self.pf = PoissonFitter(loglike, fmax=fmax, scale=sig if rate>0 else 1,  dd=-10., tol=tol)
             except Exception as msg:
-                print(f'PoissonRep: Fail poisson fit for {loglike}: {msg}', file=sys.stderr)
+                print(f'PoissonRep: Fail poisson fit for {loglike}: {msg}'
+                      f'\n\tfmax={fmax}, scale={sig if rate>0 else 1,}'
+                      , file=sys.stderr)
                 with open('failed_loglike.pkl', 'wb') as file:
                     pickle.dump(loglike, file)
                 print('Saved LogLike file for study')
-                assert False, 'breakpoint'
+                raise Exception(msg) #assert False, 'breakpoint'
             self.poiss =  self.pf.poiss
 
         if self.ts>ts_min: # can use the simple non-truncated scaled Poisson distribution.

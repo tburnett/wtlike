@@ -1,6 +1,6 @@
 ---
 
-title: Skymap
+title: Sky maps
 
 
 keywords: fastai
@@ -26,12 +26,42 @@ nb_path: "nbs/04_skymaps.ipynb"
     
 <div class="cell border-box-sizing code_cell rendered">
 
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>/mnt/c/Users/thbur/onedrive/work/wtlike/wtlike/config.py:267: UserWarning: There is no link to 4FGL catalog file: set &#34;catalog_file&#34; in your config.yaml or specify if in the Config() call
+  warnings.warn(&#39;There is no link to 4FGL catalog file: set &#34;catalog_file&#34; in your config.yaml&#39;
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
 </div>
     {% endraw %}
 
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>/mnt/c/Users/thbur/onedrive/work/wtlike/wtlike/config.py:267: UserWarning: There is no link to 4FGL catalog file: set &#34;catalog_file&#34; in your config.yaml or specify if in the Config() call
+  warnings.warn(&#39;There is no link to 4FGL catalog file: set &#34;catalog_file&#34; in your config.yaml&#39;
+</pre>
+</div>
+</div>
+
+</div>
+</div>
 
 </div>
     {% endraw %}
@@ -258,11 +288,12 @@ nb_path: "nbs/04_skymaps.ipynb"
     <span class="n">swcs</span> <span class="o">=</span> <span class="n">SquareWCS</span><span class="p">(</span><span class="n">sc</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">90</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">annotate</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">frame</span><span class="p">):</span>
-        <span class="k">def</span> <span class="nf">source_lonlat</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">gal</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-            
+        
+        <span class="k">def</span> <span class="nf">source_lonlat</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">gal</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>            
             <span class="n">sky</span> <span class="o">=</span> <span class="n">findsource</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">gal</span><span class="o">=</span><span class="n">gal</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">gal</span><span class="p">:</span> <span class="k">return</span> <span class="n">sky</span><span class="o">.</span><span class="n">galactic</span><span class="o">.</span><span class="n">l</span><span class="o">.</span><span class="n">deg</span><span class="p">,</span> <span class="n">sky</span><span class="o">.</span><span class="n">galactic</span><span class="o">.</span><span class="n">b</span><span class="o">.</span><span class="n">deg</span>
             <span class="k">return</span> <span class="n">sky</span><span class="o">.</span><span class="n">ra</span><span class="o">.</span><span class="n">deg</span><span class="p">,</span> <span class="n">sky</span><span class="o">.</span><span class="n">dec</span><span class="o">.</span><span class="n">deg</span>
+        
         <span class="n">tf</span> <span class="o">=</span><span class="n">ax</span><span class="o">.</span><span class="n">get_transform</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span> <span class="c1"># need the transformation from pixel to world</span>
         <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;Geminga&#39;</span><span class="p">,</span> <span class="s1">&#39;Crab pulsar&#39;</span><span class="p">]:</span>
             <span class="n">glb</span> <span class="o">=</span> <span class="n">source_lonlat</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">gal</span><span class="o">=</span><span class="n">frame</span><span class="o">==</span><span class="s1">&#39;galactic&#39;</span><span class="p">)</span>

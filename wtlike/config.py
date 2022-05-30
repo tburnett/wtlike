@@ -64,11 +64,11 @@ class Cache(dict):
                 print(f'Warning: cached object for key "{key}" exists', file=sys.stderr)
             filename = self[key]
         else:
-            filename = self.path/f'cache_file_{hex(key.__hash__())[3:]}.pkl'
+            filename = f'cache_file_{hex(key.__hash__())[3:]}.pkl'
             self[key] = filename
             self._dump_index()
 
-        with open(filename, 'wb') as file:
+        with open(self.path/filename, 'wb') as file:
             pickle.dump(object, file )
 
 
@@ -76,12 +76,15 @@ class Cache(dict):
         if key not in self:
             return None
         filename = self[key]
-        if not filename.exists():
+        # temp fix
+        if str(filename)[0]=='/': filename=self.path/filename.name
+
+        if not (self.path/filename).exists():
             # perhaps deleted by another instance?
             print(f'File for Cache key {key} not found, removing entry', file='sys.stderr')
             selt.pop(key)
             return None
-        with open(filename, 'rb') as file:
+        with open(self.path/filename, 'rb') as file:
             ret = pickle.load(file)
         return ret
 
@@ -100,11 +103,12 @@ class Cache(dict):
         if key not in self:
             print(f'Cache: key {key} not found', file=sys.stderr)
             return
-        filename = self[key]
+        filename = self.path/self[key]
         try:
             filename.unlink()
         except:
-            print(f'Failed to unlink file {filename}')
+            print(f'Failed to unlink file {filename}', file=sys.stderr)
+            raise
         super().pop(key)
         self._dump_index()
 
@@ -154,14 +158,18 @@ class Cache(dict):
         title = 'Cache contents' if not starts_with else f'Cache entries starting with {starts_with}'
         s = f'{title}\n {"key":30}   {"size":>10}  {"time":20} {"name"}, folder {self.path}\n'
         for name, value in self.items():
+            # temporary: override file's path if set
+            if str(value)[0]=='/':
+                value = self.path/value.name
             if name is None or not name.startswith(starts_with) : continue
             try:
-                stat = value.stat()
+                stat = (self.path/value).stat()
                 size = stat.st_size
                 mtime= str(datetime.datetime.fromtimestamp(stat.st_mtime))[:16]
-                s += f'  {name:30s}  {size:10}  {mtime:20} {value.name}\n'
+                s += f'  {name:30s}  {size:10}  {mtime:20} {value}\n'
             except Exception as msg:
                 s += f'{name} -- file not found\n'
+                raise
         return s
 
     def __str__(self):
@@ -223,8 +231,10 @@ class Config():
 
         self.__dict__.update(pars)
 
-        # set warnings filter
-        warnings.simplefilter(self.warnings)
+        # set warnings filter if requested
+        if self.warnings is not None and self.warnings != 'None':
+            #print(f'*** set warnings filter to "{self.warnings}" ***')
+            warnings.simplefilter(self.warnings)
 
         self.energy_edges = ee=np.logspace(*self.energy_edge_pars)
         self.energy_bins = np.sqrt(ee[1:] * ee[:-1])

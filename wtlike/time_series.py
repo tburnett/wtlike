@@ -17,7 +17,7 @@ def make_time_cells(self, time_bins):
     """Return a dict of time-sample cells with moments of the weights
 
     -- self : an object with config, exposure, photons
-    -- time_bins : a 3-tuple  (start, stop, delta)
+    -- time_bins : a 3-tuple  (start, stop, delta), which may be (0,0,delta) for full range
     """
     # get data, exposure and photons from self
     config   = getattr(self, 'config', None) or Config()
@@ -27,6 +27,9 @@ def make_time_cells(self, time_bins):
     # process exposure
     expdict =  cell_exposure(config,  exposure, time_bins)
     cell_edges = expdict['edges']
+    tspan = cell_edges[-1]-cell_edges[0]
+    tsamp = time_bins[2]
+
     cell_exp   = expdict['exp']
     etot = expdict['etot'] #sum(cell_exp)
 
@@ -40,12 +43,17 @@ def make_time_cells(self, time_bins):
     wts = photons.weight.values.astype(np.float32)
     weight_cell = [wts[slice(*cell)] for cell in photon_cell]
 
+    # this is the list of attributes (plus tstart)  needed for the "timeseries" object to be passed to power_spectrum_fft
     return  dict(
         counts = np.array( [len(w)   for w in weight_cell], np.int32),
         weights= np.array( [sum(w)   for w in weight_cell], np.float32),
         weights2=np.array( [sum(w*w) for w in weight_cell], np.float32),
         sexp   = cell_exp * Sk,
         bexp   = cell_exp * Bk,
+        tstart = cell_edges[0],
+        tspan = tspan,
+        tsamp = tsamp,
+        f_Nyquist = 1/tsamp/4,
         )
 
 
@@ -193,16 +201,25 @@ class TimeSeries():
         else:
             raise Exception('Expected a source name, or a CellData or Simulation object')
 
-        cell_dict  = make_time_cells(self.cd, (0,0,tsamp))
-        self.cells = pd.DataFrame.from_dict(cell_dict)
-        self.__dict__.update(cell_dict)
+        self.setup_cells(0,0,tsamp)
+
+    def setup_cells(self, *pars, **kwargs):
+        """
+        """
+        self.cell_dict  = make_time_cells(self.cd, pars)
+        self.__dict__.update(self.cell_dict)
         self.power_df = None
-        e = self.cd.exposure
-        self.tspan = e.stop.values[-1]-e.start[0]
-        self.f_Nyquist = 1/self.tsamp/4
-        self.delta_f = 1/self.tspan
+
+    def __repr__(self):
+        n = len(self.counts)
+        return f'TimeSeries: {n} cells for MJD {self.tstart}-{self.tstart+self.tspan}'
 
 
+    @property
+    def cells(self):
+        """create a DataFrame as a property
+        """
+        return pd.DataFrame(dict( [(k, getattr(self,k) ) for k in 'counts weights weights2 sexp bexp'.split()]))
 
     def power_spectrum(self, **kwargs):
         """

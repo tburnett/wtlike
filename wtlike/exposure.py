@@ -28,7 +28,7 @@ def time_bin_edges(config, exposure, tbin=None):
 
     """
     # nominal total range, MJD edges
-    start = np.round(exposure.start.values[0])
+    tstart = start = np.round(exposure.start.values[0])
     stop =  np.round(exposure.stop.values[-1])
 
     a, b, step = tbin if tbin is not None else config.time_bins
@@ -36,10 +36,10 @@ def time_bin_edges(config, exposure, tbin=None):
 
     if a>50000: start=a
     elif a<0: start = stop+a
-    else : start += a
+    else : start = tstart + a
 
     if b>50000: stop=b
-    elif b>0: stop = start+b
+    elif b>0: stop = tstart+b
     else: stop += b
 
     if step<=0:
@@ -133,8 +133,8 @@ def sc_process(config, source, sc_data):
 
     return  pd.DataFrame(
         dict(
-            start=sc_data.start[mask].astype(np.float),
-            stop=sc_data.stop[mask].astype(np.float),
+            start=sc_data.start[mask].astype(np.float64),
+            stop=sc_data.stop[mask].astype(np.float64),
             livetime=livetime,
             cos_theta=cos_thetas[mask],
             )

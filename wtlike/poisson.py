@@ -379,8 +379,9 @@ class PoissonFitter(object):
         t = np.abs(deltas).max()
         if t>tol:
             #print(f'PoissonFitter warning: max dev= {t:.3f} > tol= {tol}. (wprime={self.wprime:.2f})', file=sys.stderr )
-            warnings.warn(f'PoissonFitter: max dev= {t:.3f} > tol= {tol}. (wprime={self.wprime:.2f}' ,
-                         RuntimeWarning)
+            txt = f'PoissonFitter: max dev= {t:.3f} > tol= {tol}. (wprime={self.wprime:.2f}'
+            #warnings.warn(txt , RuntimeWarning)
+            raise Exception(txt) ########################################################
         return t, deltas
 
     def plot(self, ax=None, xticks=True, legend=True ):

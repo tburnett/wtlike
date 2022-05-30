@@ -131,18 +131,18 @@ def getCellFitter(config,  source, cell_query='e>1e-6',  key=''):
 #         return doit()
 
 # Internal Cell
-def fit_table(lc, expect=1.0):
-    """Generate a summary table from a light curve dataframe"""
-    fits = lc.fit
-    flux = fits.apply(lambda f: f.flux)
-    errors = fits.apply(lambda f: (round(f.errors[0]-f.flux,3), rorebinnedund(f.errors[1]-f.flux ,3) ) )
-    sigma_dev = fits.apply(lambda f: round(f.poiss.sigma_dev(expect),1) )
-    df = lc['t tw n e'.split()].copy() # maybe fix warnings?
-    df.loc[:,'flux'] = flux.values.round(4)
-    df.loc[:, 'errors'] = errors.values
-    df.loc[:, 'sigma_dev'] = sigma_dev.values
-    df.loc[:, 'limit'] =  fits.apply(lambda f: f.limit)
-    return df
+# def fit_table(lc, expect=1.0):
+#     """Generate a summary table from a light curve dataframe"""
+#     fits = lc.fit
+#     flux = fits.apply(lambda f: f.flux)
+#     errors = fits.apply(lambda f: (round(f.errors[0]-f.flux,3), rorebinnedund(f.errors[1]-f.flux ,3) ) )
+#     sigma_dev = fits.apply(lambda f: round(f.poiss.sigma_dev(expect),1) )
+#     df = lc['t tw n e'.split()].copy() # maybe fix warnings?
+#     df.loc[:,'flux'] = flux.values.round(4)
+#     df.loc[:, 'errors'] = errors.values
+#     df.loc[:, 'sigma_dev'] = sigma_dev.values
+#     df.loc[:, 'limit'] =  fits.apply(lambda f: f.limit)
+#     return df
 
 # Cell
 def flux_plot(cell_fits,

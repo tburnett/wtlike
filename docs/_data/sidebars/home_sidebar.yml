@@ -31,7 +31,7 @@ entries:
       title: Simulation
       url: simulation.html
     - output: web,pdf
-      title: Skymap
+      title: Sky maps
       url: skymaps.html
     - output: web,pdf
       title: Source Data analysis
@@ -49,7 +49,7 @@ entries:
       title: Light Curve Generation
       url: lightcurve.html
     - output: web,pdf
-      title: Frequency Domain
+      title: Periodograms
       url: 10-time_series.html
     - output: web,pdf
       title: Bayesian Blocks
