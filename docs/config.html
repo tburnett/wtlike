@@ -99,7 +99,7 @@ filename in a file <code>index.pkl</code> in the same folder.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="Cache.__call__" class="doc_header"><code>Cache.__call__</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L115" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Cache.__call__</code>(<strong><code>key</code></strong>, <strong><code>func</code></strong>, <strong>*<code>pars</code></strong>, <strong><code>description</code></strong>=<em><code>''</code></em>, <strong><code>overwrite</code></strong>=<em><code>False</code></em>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="Cache.__call__" class="doc_header"><code>Cache.__call__</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L116" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Cache.__call__</code>(<strong><code>key</code></strong>, <strong><code>func</code></strong>, <strong>*<code>pars</code></strong>, <strong><code>description</code></strong>=<em><code>''</code></em>, <strong><code>overwrite</code></strong>=<em><code>False</code></em>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
 <p>One-line usage interface for cache use</p>
 <ul>
@@ -168,6 +168,7 @@ result = mycache('mykey', myfun, x=99,  description='My data')
     <span class="k">assert</span> <span class="s1">&#39;four&#39;</span> <span class="ow">in</span> <span class="n">c</span>
     <span class="n">c</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s1">&#39;four&#39;</span><span class="p">)</span>
     <span class="k">assert</span> <span class="s1">&#39;four&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">c</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;After remove:</span><span class="se">\n</span><span class="si">{</span><span class="n">c</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
     <span class="n">c</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
 
 <span class="n">test_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;/tmp/cache_test&#39;</span><span class="p">)</span>
@@ -192,11 +193,16 @@ Test: Restoring from cache with key &#34;four&#34;
 Before remove:
 Cache contents
  key                                    size  time                 name, folder /tmp/cache_test
-one -- file not found
-two -- file not found
-four -- file not found
+  one                                     18  2022-05-30 14:39     cache_file_9b3052369b594e6.pkl
+  two                                     18  2022-05-30 14:39     cache_file_4533165e1ac16e41.pkl
+  four                                    23  2022-05-30 14:39     cache_file_2b4a212c1676a7ed.pkl
 
-Failed to unlink file cache_file_afe732f1ec71484.pkl
+After remove:
+Cache contents
+ key                                    size  time                 name, folder /tmp/cache_test
+  one                                     18  2022-05-30 14:39     cache_file_9b3052369b594e6.pkl
+  two                                     18  2022-05-30 14:39     cache_file_4533165e1ac16e41.pkl
+
 </pre>
 </div>
 </div>
@@ -233,7 +239,7 @@ Failed to unlink file cache_file_afe732f1ec71484.pkl
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="Config" class="doc_header"><code>class</code> <code>Config</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L177" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Config</code>(<strong>**<code>kwargs</code></strong>)</p>
+<h2 id="Config" class="doc_header"><code>class</code> <code>Config</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L179" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Config</code>(<strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
 
 </div>
@@ -357,10 +363,10 @@ Failed to unlink file cache_file_afe732f1ec71484.pkl
 
 
 </code></pre>
-<h4 id="Config-contents-as-set-up-here">Config contents as set up here<a class="anchor-link" href="#Config-contents-as-set-up-here"> </a></h4><p><details  class="nbdoc-description" >  <summary> config parameter list </summary>  <div style="margin-left: 5%;"><pre>Configuration parameters <br>  verbose         : 1<br>  warnings        : None<br>  datapath        : /mnt/g/My Drive/wtlike-data<br>  cachepath       : /mnt/g/My Drive/.cache/wtlike<br>  catalog_file    : /mnt/g/My Drive/wtlike-data/gll_psc_v28.fit<br>  pool_size       : 4<br>  radius          : 4<br>  cos_theta_max   : 0.4<br>  z_max           : 100<br>  offset_size     : 2e-06<br>  energy_edge_pars : [2, 6, 17]<br>  etypes          : [0, 1]<br>  nside           : 1024<br>  nest            : True<br>  week_range      : (None, None)<br>  time_bins       : [0, 0, 7]<br>  exp_min         : 5<br>  use_kerr        : True<br>  likelihood_rep  : poisson<br>  poisson_tolerance : 0.2<br>  energy_edges    : [1.00000000e+02 1.77827941e+02 3.16227766e+02 5.62341325e+02<br> 1.00000000e+03 1.77827941e+03 3.16227766e+03 5.62341325e+03<br> 1.00000000e+04 1.77827941e+04 3.16227766e+04 5.62341325e+04<br> 1.00000000e+05 1.77827941e+05 3.16227766e+05 5.62341325e+05<br> 1.00000000e+06]<br>  energy_bins     : [1.33352143e+02 2.37137371e+02 4.21696503e+02 7.49894209e+02<br> 1.33352143e+03 2.37137371e+03 4.21696503e+03 7.49894209e+03<br> 1.33352143e+04 2.37137371e+04 4.21696503e+04 7.49894209e+04<br> 1.33352143e+05 2.37137371e+05 4.21696503e+05 7.49894209e+05]<br>  error_msg       : <br></pre></div> </details></p>
+<h4 id="Config-contents-as-set-up-here">Config contents as set up here<a class="anchor-link" href="#Config-contents-as-set-up-here"> </a></h4><p><details  class="nbdoc-description" >  <summary> config parameter list </summary>  <div style="margin-left: 5%;"><pre>Configuration parameters <br>  verbose         : 1<br>  warnings        : None<br>  datapath        : /mnt/g/My Drive/wtlike-data<br>  cachepath       : /home/burnett/.cache/wtlike<br>  catalog_file    : /mnt/g/My Drive/wtlike-data/gll_psc_v28.fit<br>  pool_size       : 4<br>  radius          : 4<br>  cos_theta_max   : 0.4<br>  z_max           : 100<br>  offset_size     : 2e-06<br>  energy_edge_pars : [2, 6, 17]<br>  etypes          : [0, 1]<br>  nside           : 1024<br>  nest            : True<br>  week_range      : (None, None)<br>  time_bins       : [0, 0, 7]<br>  exp_min         : 5<br>  use_kerr        : True<br>  likelihood_rep  : poisson<br>  poisson_tolerance : 0.2<br>  energy_edges    : [1.00000000e+02 1.77827941e+02 3.16227766e+02 5.62341325e+02<br> 1.00000000e+03 1.77827941e+03 3.16227766e+03 5.62341325e+03<br> 1.00000000e+04 1.77827941e+04 3.16227766e+04 5.62341325e+04<br> 1.00000000e+05 1.77827941e+05 3.16227766e+05 5.62341325e+05<br> 1.00000000e+06]<br>  energy_bins     : [1.33352143e+02 2.37137371e+02 4.21696503e+02 7.49894209e+02<br> 1.33352143e+03 2.37137371e+03 4.21696503e+03 7.49894209e+03<br> 1.33352143e+04 2.37137371e+04 4.21696503e+04 7.49894209e+04<br> 1.33352143e+05 2.37137371e+05 4.21696503e+05 7.49894209e+05]<br>  error_msg       : <br></pre></div> </details></p>
 <h5 id="config.cache----a-file-cache">config.cache -- a file cache<a class="anchor-link" href="#config.cache----a-file-cache"> </a></h5><p>The class <code>Cache</code>, available from <code>config.cache</code> implements a file cache in the folder
-<code>/mnt/g/My Drive/.cache/wtlike</code></p>
-<p><details  class="nbdoc-description" >  <summary> current cache contents </summary>  <div style="margin-left: 5%;"><pre>Cache contents<br> key                                    size  time                 name, folder /mnt/g/My Drive/.cache/wtlike<br>  PSR J0633+1746_data              115578059  2022-05-30 07:06     cache_file_1887be305bf33a1.pkl<br></pre></div> </details></p>
+<code>/home/burnett/.cache/wtlike</code></p>
+<p><details  class="nbdoc-description" >  <summary> current cache contents </summary>  <div style="margin-left: 5%;"><pre>Cache contents<br> key                                    size  time                 name, folder /home/burnett/.cache/wtlike<br>  PSR J0835-4510_data              156120367  2022-05-30 10:08     cache_file_ca2d4c76a63c75b.pkl<br>  PSR J0633+1746_data              115577595  2022-05-30 10:17     cache_file_2ec83386d04ef7b.pkl<br>  PSR J1709-4429_data              120303131  2022-05-30 10:27     cache_file_27cc1f2e96c6fbeb.pkl<br>  PSR J2021+4026_data              130940729  2022-05-30 10:53     cache_file_29acb315a924238a.pkl<br>  PSR J0633+1746_weeks_9-11           400481  2022-05-30 10:54     cache_file_4818951afcc4bbe.pkl<br>  P88Y3157_weeks_9-165              20620549  2022-05-30 11:01     cache_file_eb9b08c5cc43dd6.pkl<br>  P88Y3243_data                     88630555  2022-05-30 11:11     cache_file_32a9f0c7fc71158.pkl<br>  P88Y5020_data                    119817913  2022-05-30 11:21     cache_file_fe5f2e427e65d9.pkl<br>  PSR J1836+5925_data              125537569  2022-05-30 11:33     cache_file_d55fd4a73599b6c.pkl<br>  PSR J2021+3651_data              126539471  2022-05-30 11:39     cache_file_7d1832ec12cdef6.pkl<br>  PSR J0007+7303_data              131067165  2022-05-30 11:45     cache_file_1e5f7891677e0a6.pkl<br>  PSR J1809-2332_data              116347883  2022-05-30 11:51     cache_file_2ee43da050c07d59.pkl<br>  PSR J1826-1256_data              122240951  2022-05-30 11:57     cache_file_9b6220c027454de.pkl<br>  PSR J1907+0602_data              118468339  2022-05-30 12:02     cache_file_cd971e601a80b47.pkl<br>  PSR J1418-6058_data              132775053  2022-05-30 12:08     cache_file_1555a71ce82a8da.pkl<br>  PSR J1057-5226_data              101444077  2022-05-30 12:13     cache_file_1a673288e804e7ef.pkl<br>  PSR J1813-1246_data              117386407  2022-05-30 12:19     cache_file_1759263b61d1035d.pkl<br>  PSR J1028-5819_data              122583649  2022-05-30 12:25     cache_file_23c0f0152247f92.pkl<br>  PSR J2229+6114_data              133820383  2022-05-30 12:32     cache_file_7f0b7f3c81daf726.pkl<br>  PSR J1048-5832_data              120018647  2022-05-30 12:38     cache_file_f0ff06ba8242d77.pkl<br>  PSR J1732-3131_data              123636019  2022-05-30 12:45     cache_file_4f0d686e3850494.pkl<br>  PSR J1413-6205_data              132165683  2022-05-30 12:51     cache_file_25ebd9731eb6b3ac.pkl<br>  PSR J1747-2958_data              126607289  2022-05-30 12:58     cache_file_5f45617eed8adcef.pkl<br>  PSR J1952+3252_data              114920081  2022-05-30 13:04     cache_file_397142330f2acbe.pkl<br>  P88Y0643_data                     96268001  2022-05-30 13:32     cache_file_8cd95f92bf77197.pkl<br>  504H-0317_data                   130475249  2022-05-30 13:50     cache_file_41a6b475e340cebd.pkl<br></pre></div> </details></p>
 
 </div>
 
@@ -395,7 +401,7 @@ Failed to unlink file cache_file_afe732f1ec71484.pkl
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="MJD" class="doc_header"><code>MJD</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L313" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>MJD</code>(<strong><code>arg</code></strong>)</p>
+<h4 id="MJD" class="doc_header"><code>MJD</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L316" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>MJD</code>(<strong><code>arg</code></strong>)</p>
 </blockquote>
 <p>convert MET or UTC to MJD</p>
 
@@ -420,7 +426,7 @@ Failed to unlink file cache_file_afe732f1ec71484.pkl
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="UTC" class="doc_header"><code>UTC</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L327" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>UTC</code>(<strong><code>mjd</code></strong>)</p>
+<h4 id="UTC" class="doc_header"><code>UTC</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L330" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>UTC</code>(<strong><code>mjd</code></strong>)</p>
 </blockquote>
 <p>convert MJD value to ISO date string</p>
 
@@ -445,7 +451,7 @@ Failed to unlink file cache_file_afe732f1ec71484.pkl
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="UTCnow" class="doc_header"><code>UTCnow</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L333" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>UTCnow</code>()</p>
+<h4 id="UTCnow" class="doc_header"><code>UTCnow</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L336" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>UTCnow</code>()</p>
 </blockquote>
 <p>current UTC</p>
 
@@ -470,7 +476,7 @@ Failed to unlink file cache_file_afe732f1ec71484.pkl
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="mission_week" class="doc_header"><code>mission_week</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L338" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>mission_week</code>(<strong><code>mjd</code></strong>)</p>
+<h4 id="mission_week" class="doc_header"><code>mission_week</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L341" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>mission_week</code>(<strong><code>mjd</code></strong>)</p>
 </blockquote>
 <p>return the mission week number for a MJD value
 (Note that week #0 starts on UTC Thursday 2008-05-29 00:00, the first data is in week 9, and that week 525 is missing)</p>
@@ -516,9 +522,9 @@ Failed to unlink file cache_file_afe732f1ec71484.pkl
 <div class="output_text output_subarea output_execute_result">
 <pre>(&#39;2001-01-01 00:01&#39;,
  &#39;2008-08-05 00:00&#39;,
- &#39;UTC 2022-05-30 15:54&#39;,
- 59729.66309199503,
- &#39;2022-05-30 15:54&#39;)</pre>
+ &#39;UTC 2022-05-30 21:39&#39;,
+ 59729.902776816496,
+ &#39;2022-05-30 21:39&#39;)</pre>
 </div>
 
 </div>
@@ -569,7 +575,7 @@ Failed to unlink file cache_file_afe732f1ec71484.pkl
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="bin_size_name" class="doc_header"><code>bin_size_name</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L345" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>bin_size_name</code>(<strong><code>bins</code></strong>)</p>
+<h4 id="bin_size_name" class="doc_header"><code>bin_size_name</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L348" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>bin_size_name</code>(<strong><code>bins</code></strong>)</p>
 </blockquote>
 <p>Provide a nice name, e.g., 'day' for a time interval</p>
 
@@ -632,7 +638,7 @@ Failed to unlink file cache_file_afe732f1ec71484.pkl
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="decorate_with" class="doc_header"><code>decorate_with</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L367" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>decorate_with</code>(<strong><code>other_func</code></strong>)</p>
+<h4 id="decorate_with" class="doc_header"><code>decorate_with</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L370" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>decorate_with</code>(<strong><code>other_func</code></strong>)</p>
 </blockquote>
 
 </div>
@@ -663,7 +669,7 @@ Failed to unlink file cache_file_afe732f1ec71484.pkl
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="Timer" class="doc_header"><code>class</code> <code>Timer</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L376" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Timer</code>()</p>
+<h2 id="Timer" class="doc_header"><code>class</code> <code>Timer</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L379" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Timer</code>()</p>
 </blockquote>
 <p>Usage:</p>
 

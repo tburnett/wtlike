@@ -538,6 +538,7 @@ def get_week_map(week=None,  nside=32  ):
     # convert to RING ordering
     return healpy.reorder(pmap, n2r=True)
 
+# Cell
 def plot_week(week=None, mjd=None, nside=32, **kwargs):
     """
     Make an AIT plot of the given week's photon data

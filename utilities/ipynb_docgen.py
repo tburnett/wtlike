@@ -263,8 +263,9 @@ class FigureWrapper(Wrapper):
                     wpix = size_inches[0] * fig.get_dpi(); 
                     fig.set_size_inches(size_inches*fig.width/wpix)
                
-                # use IPython tool to create the base64 string for the image
+                # use IPython tool to create the base64 string for the image -- but seem to need to strip trailing NL
                 b64 = pylabtools.print_figure(fig, base64=True, facecolor='white')
+                if b64[-1]=='\n': b64=b64[:-1]
                 if width is not None:
                     fig.set_size_inches(size_inches)
                 self._html =\
