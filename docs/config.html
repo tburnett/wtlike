@@ -193,15 +193,15 @@ Test: Restoring from cache with key &#34;four&#34;
 Before remove:
 Cache contents
  key                                    size  time                 name, folder /tmp/cache_test
-  one                                     18  2022-05-30 14:39     cache_file_9b3052369b594e6.pkl
-  two                                     18  2022-05-30 14:39     cache_file_4533165e1ac16e41.pkl
-  four                                    23  2022-05-30 14:39     cache_file_2b4a212c1676a7ed.pkl
+  one                                     18  2022-06-06 05:11     cache_file_3660195fa3901618.pkl
+  two                                     18  2022-06-06 05:11     cache_file_45a494fc4728d131.pkl
+  four                                    23  2022-06-06 05:11     cache_file_20e1ca05d729cf1.pkl
 
 After remove:
 Cache contents
  key                                    size  time                 name, folder /tmp/cache_test
-  one                                     18  2022-05-30 14:39     cache_file_9b3052369b594e6.pkl
-  two                                     18  2022-05-30 14:39     cache_file_4533165e1ac16e41.pkl
+  one                                     18  2022-06-06 05:11     cache_file_3660195fa3901618.pkl
+  two                                     18  2022-06-06 05:11     cache_file_45a494fc4728d131.pkl
 
 </pre>
 </div>
@@ -495,6 +495,34 @@ Cache contents
     
 <div class="cell border-box-sizing code_cell rendered">
 
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="mjd_range" class="doc_header"><code>mjd_range</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L347" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>mjd_range</code>(<strong><code>start</code></strong>, <strong><code>stop</code></strong>, <strong><code>make_round</code></strong>=<em><code>True</code></em>)</p>
+</blockquote>
+<p>Return a tuple with a valid MJD range
+If either is greater than first_data, interpret as MJD
+otherwise offset from first_data, or now</p>
+<p>So 0,0 is full range, -7, 0 is last 7 days, 0,7 is first 7 days</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
 </div>
     {% endraw %}
 
@@ -505,7 +533,7 @@ Cache contents
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">UTC</span><span class="p">(</span><span class="n">MJD</span><span class="p">(</span><span class="mi">0</span><span class="p">)),</span> <span class="n">UTC</span><span class="p">(</span><span class="n">first_data</span><span class="p">),</span> <span class="n">UTCnow</span><span class="p">(),</span> <span class="n">MJD</span><span class="p">(</span><span class="s1">&#39;now&#39;</span><span class="p">),</span> <span class="n">UTC</span><span class="p">(</span><span class="n">MJD</span><span class="p">(</span><span class="s1">&#39;now&#39;</span><span class="p">))</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">UTC</span><span class="p">(</span><span class="n">MJD</span><span class="p">(</span><span class="mi">0</span><span class="p">)),</span> <span class="n">UTC</span><span class="p">(</span><span class="n">first_data</span><span class="p">),</span> <span class="n">UTCnow</span><span class="p">(),</span> <span class="n">MJD</span><span class="p">(</span><span class="s1">&#39;now&#39;</span><span class="p">),</span> <span class="n">UTC</span><span class="p">(</span><span class="n">MJD</span><span class="p">(</span><span class="s1">&#39;now&#39;</span><span class="p">)),</span> <span class="n">mjd_range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -522,9 +550,43 @@ Cache contents
 <div class="output_text output_subarea output_execute_result">
 <pre>(&#39;2001-01-01 00:01&#39;,
  &#39;2008-08-05 00:00&#39;,
- &#39;UTC 2022-05-30 21:39&#39;,
- 59729.902776816496,
- &#39;2022-05-30 21:39&#39;)</pre>
+ &#39;UTC 2022-06-6 12:11&#39;,
+ 59736.508210441774,
+ &#39;2022-06-06 12:11&#39;,
+ (54683, 59737))</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">*</span><span class="p">[</span><span class="n">mission_week</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">mjd_range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">100</span><span class="p">)])</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>array([ 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23])</pre>
 </div>
 
 </div>
@@ -575,7 +637,7 @@ Cache contents
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="bin_size_name" class="doc_header"><code>bin_size_name</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L348" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>bin_size_name</code>(<strong><code>bins</code></strong>)</p>
+<h4 id="bin_size_name" class="doc_header"><code>bin_size_name</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L366" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>bin_size_name</code>(<strong><code>bins</code></strong>)</p>
 </blockquote>
 <p>Provide a nice name, e.g., 'day' for a time interval</p>
 
@@ -603,7 +665,7 @@ Cache contents
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">([</span><span class="n">bin_size_name</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mi">96</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span> <span class="mf">7.4</span><span class="p">,</span> <span class="mf">365.25</span><span class="p">)])</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">([</span><span class="n">bin_size_name</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mi">96</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mf">365.25</span><span class="p">)])</span>
 </pre></div>
 
     </div>
@@ -616,7 +678,7 @@ Cache contents
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>[&#39;15-min&#39;, &#39;1-day&#39;, &#39;2-day&#39;, &#39;1-week&#39;, &#39;10656-min&#39;, &#39;1-year&#39;]
+<pre>[&#39;15-min&#39;, &#39;1-day&#39;, &#39;2-day&#39;, &#39;1-week&#39;, &#39;2-week&#39;, &#39;1-year&#39;]
 </pre>
 </div>
 </div>
@@ -638,7 +700,7 @@ Cache contents
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="decorate_with" class="doc_header"><code>decorate_with</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L370" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>decorate_with</code>(<strong><code>other_func</code></strong>)</p>
+<h4 id="decorate_with" class="doc_header"><code>decorate_with</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L388" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>decorate_with</code>(<strong><code>other_func</code></strong>)</p>
 </blockquote>
 
 </div>
@@ -669,7 +731,7 @@ Cache contents
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="Timer" class="doc_header"><code>class</code> <code>Timer</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L379" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Timer</code>()</p>
+<h2 id="Timer" class="doc_header"><code>class</code> <code>Timer</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/config.py#L397" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Timer</code>()</p>
 </blockquote>
 <p>Usage:</p>
 

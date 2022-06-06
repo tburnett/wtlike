@@ -506,13 +506,13 @@ def get_nb_namespace():
     gns = InteractiveShell._instance.get_ipython().user_global_ns
     return {k:v for k,v in filter(lambda t: not t[0].startswith('_'), gns.items())}
 
-def nbdoc(fun, *pars, name=None, fignum=None, **kwargs):
+def nbdoc(fun, *pars, name=None, fignum=1, **kwargs):
     """Format the output from an IPython notebook cell using the function's docstring and computed variables.
      
     - fun -- User function, which must have a docstring, which will be interpreted as markdown by IPython, and end with `return locals()` 
     - name -- If  specified, use it instead of the function name to distinguish figure file names, say for separate
     executions with differing parameters.
-    - fignum -- if specified, apply to the next figure
+    - fignum -- apply to the next figure
     
     - *pars, **kwargs -- passed to `fun`
     

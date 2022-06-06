@@ -16,7 +16,7 @@ from astropy.wcs import WCS
 from utilities import healpix as hpx
 
 from .config import *
-from .data_man import get_week_map
+from .data_man import DataView, get_week_map
 from .sources import findsource
 valid = Config().valid;
 
@@ -100,7 +100,7 @@ class SquareWCS(WCS):
 
     def plot(self, hmap, name='' , log=False, cmap='jet', colorbar=True,
              cblabel='', vmin=None, vmax=None, cb_kw={},
-             annotator=None):
+             annotator=None, title=None):
 
         import healpy as hp
         from matplotlib import colors
@@ -127,7 +127,7 @@ class SquareWCS(WCS):
         nx, ny = wcs.array_shape
         ax.set(xlabel=self.axis_labels[0], xlim=(-0.5, nx-0.5),
                ylabel=self.axis_labels[1], ylim=(-0.5, ny-0.5),
-              title=f'centered on {name}')
+              title=f'{name}' if not title else title)
         ax.grid();
         if colorbar:
             ticklabels = cb_kw.pop('ticklabels', None)
