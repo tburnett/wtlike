@@ -294,7 +294,7 @@ def load_source_data(config, source, week_range=None, key='', clear=False):
 
         return p_df, e_df
 
-    description=f'SourceData:  {source.name}'
+    description=f'SourceData:  {source.name}' if config.verbose>0 else ''
 
     used_key = None # change if used cache
     weeks=f'weeks_{week_range[0]}-{week_range[1]}' if week_range is not None else 'data'

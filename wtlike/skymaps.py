@@ -98,9 +98,13 @@ class SquareWCS(WCS):
         lon, lat = (cgrid.l.deg, cgrid.b.deg)
         return lon, lat
 
-    def plot(self, hmap, name='' , log=False, cmap='jet', colorbar=True,
+    def plot(self, hmap, log=False, cmap='jet', colorbar=True,
              cblabel='', vmin=None, vmax=None, cb_kw={},
              annotator=None, title=None):
+        """
+        - hmap -- a HEALPix map
+
+        """
 
         import healpy as hp
         from matplotlib import colors
@@ -127,7 +131,7 @@ class SquareWCS(WCS):
         nx, ny = wcs.array_shape
         ax.set(xlabel=self.axis_labels[0], xlim=(-0.5, nx-0.5),
                ylabel=self.axis_labels[1], ylim=(-0.5, ny-0.5),
-              title=f'{name}' if not title else title)
+              title= title)
         ax.grid();
         if colorbar:
             ticklabels = cb_kw.pop('ticklabels', None)

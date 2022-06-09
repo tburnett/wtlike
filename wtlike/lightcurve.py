@@ -475,7 +475,7 @@ class LightCurve(CellData):
         - tsamp -- sample size, default 1/24 or 1 hour, giving a Nyquist frequency of 6 cycles/day.
         """
         from .time_series import TimeSeries
-        return TimeSeries(self, tsamp=tsamp, **kwargs)
+        return TimeSeries(self, config=self.config, tsamp=tsamp, **kwargs)
 
     @property
     def fluxes(self):
