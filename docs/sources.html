@@ -110,12 +110,15 @@ is in NEST order.</p>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Accounting-for-variations-from-neighboring-sources">Accounting for variations from neighboring sources<a class="anchor-link" href="#Accounting-for-variations-from-neighboring-sources"> </a></h3><p>Consider the case where sources $S_1$ and $S_2$ have overlapping pixels. For a given pixel the corresponding weights are
+<h3 id="Accounting-for-variations-from-neighboring-sources">Accounting for variations from neighboring sources<a class="anchor-link" href="#Accounting-for-variations-from-neighboring-sources"> </a></h3><p>Consider the case where sources $S_1$ and $S_2$ have overlapping pixels. For a given pixel and band, the corresponding weights are
 $w_1$ and $w_2$, and we investigate the effect on $S_1$ from a fractional variation $\alpha_2 \ne 0$ of $S_2$, such that
 its flux for that pixel, $s_2$, becomes $(1+\alpha )\ s_2$. With the background $b$, the flux of all
-sources besides $S_1$ and $S_2$, we have for the $S_1$ weight,
-$$ w_1 = \frac{s_1}{s_1+s_2+b}\ \ ,$$ and similarly for $S_2$.</p>
-<p>Replacing $s_2$ with $(1+\alpha ) s_2$, we have for the modified weight $w_1'$ that we should use for  $S_1$,
+sources besides $S_1$ and $S_2$, we have for the $S_1$ weight,</p>
+<p>{% raw %}
+$$ w_1 = \frac{s_1}{s_1+s_2+b}\ \ ,$$
+{% endraw %}</p>
+<p>and similarly for $S_2$.
+Replacing $s_2$ with $(1+\alpha ) s_2$, we have for the modified weight $w_1'$ that we should use for  $S_1$,
 {% raw %}
 $$w'_1 = \frac{w_1}{1+\alpha_2\ w_2}\ \ .   $$
 {% endraw %}</p>
