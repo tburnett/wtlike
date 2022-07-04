@@ -9,9 +9,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from .config import (Config, UTC, MJD)
-from .exposure import  binned_exposure, sc_data_selection, sc_process, weighted_aeff #KerrAeff, SourceAeff
+from .exposure import binned_exposure, sc_data_selection, sc_process, weighted_aeff
 from .data_man import get_week_files
-
 
 # Internal Cell
 class ConeSelect():
@@ -218,8 +217,8 @@ class ProcessWeek(object):
         )
 
 # Internal Cell
-class TWeek():
-    # This is a funtcor wrapping ProcessWeek needed to be global.
+class _TWeek():
+    # This is a functor wrapping ProcessWeek which needs to be global for multprocessing.
     def __init__(self, config, source):
         self.config=config
         self.source=source
@@ -242,7 +241,7 @@ def multiprocess_week_data(config, source, week_range, processes=None):
     if config.verbose>0:
         print(f'\tProcessing {len(week_files)} week files {week_files[0].name} - {week_files[-1].name} {txt}', end='', flush=True)
 
-    process_week = TWeek(config, source)
+    process_week = _TWeek(config, source)
 
     if processes>1:
         with Pool(processes=processes) as pool:

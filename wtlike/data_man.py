@@ -550,8 +550,8 @@ class DataView(object):
 
         self.time_filter = lambda time: (time>self.time_range[0]) & (time<self.time_range[1])
 
-    def sky_map(self, nside=64, bmin=0):
-        """ all-sky map
+    def count_map(self, nside=64, bmin=0):
+        """ all-sky count map
 
         - nside [64] Project map to this value, from data's 1024
         - bmin [0] minimum band index (8 for 1 GeV cut)
@@ -583,6 +583,11 @@ class DataView(object):
                 pmap += get_map(week)
         # finally reorder
         return healpy.reorder(pmap, n2r=True)
+
+    def exposure_map(self, nside=64, bmin=0):
+        """
+        """
+        pass
 
 
 

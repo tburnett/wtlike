@@ -60,7 +60,7 @@ def make_time_cells(self, time_bins):
 # Cell
 def power_spectrum_fft(timeseries,dfgoal=None,tweak_exp=False,
         exp_only=False,get_amps=False,exposure_correction=None,
-                      minf=0):
+                      minf=0,):
     """ Use FFT to evalute the sums in the maximum likelihood expression.
 
     This version matches the notation in the paper.
@@ -81,8 +81,10 @@ def power_spectrum_fft(timeseries,dfgoal=None,tweak_exp=False,
     is needed if examining the distribution of the PSD, e.g. with a KS
     test, the effective sqrt(N) is smaller than otherwise might seem.
 
-    THB: add `minf`: for lowest frequency to return. If set to one, avoid runtime warnings
-    at zero frequency
+    THB:
+    * add `minf`,default 0, to set lowest frequency to return. If set to one, avoid runtime warnings
+       at zero frequency
+
     """
 
 
@@ -103,11 +105,13 @@ def power_spectrum_fft(timeseries,dfgoal=None,tweak_exp=False,
 
     if exp_only:
         # this will cause the primary FFT to be of the exposure (with mean
-        # subtracted to avoid spectral leage).  The other estimators will be
+        # subtracted to avoid spectral leakage).  The other estimators will be
         # garbage.
         W = 2*S-S.mean()
 
+
     # come up with a nice power of 2 for doing the FFT portion
+    # THB: this is "zero-padding" to increase resolution
     if dfgoal is None:
         dfgoal = 0.2/cells.tspan
     nfft = 1./(cells.tsamp * dfgoal)
@@ -121,6 +125,7 @@ def power_spectrum_fft(timeseries,dfgoal=None,tweak_exp=False,
     Wb = np.append(Wb,zeros)
     WbWb = np.append(WbWb,zeros)
     B = np.append(B,zeros)
+
 
     freqs = np.fft.rfftfreq(l)/cells.tsamp # ()
 
@@ -206,9 +211,9 @@ def power_spectrum_plot(power_df,  pmax=None, profile=True,  ax=None, name=None,
     ax.set( **kw)
     # y-axis: no display abs to account for negatives
     ax.yaxis.set_major_formatter(ticker.FuncFormatter(lambda x,p: f'{abs(x):.0f}' ))
-    # x-axis: prettry if log scale
+    # x-axis: pretty if log scale
     if kw.get('xscale',None)=='log': ax.xaxis.set_major_formatter(
-          lambda val,pos: { 0.01:'0.01', 0.1:'0.1', 1.0:'1', 10.0:'10',}.get(val,''))
+          lambda val,pos: { 0.001:'0.001', 0.01:'0.01', 0.1:'0.1', 1.0:'1', 10.0:'10',}.get(val,''))
     ax.grid(alpha=0.5)
 
     if name is not None:
@@ -374,40 +379,3 @@ class TimeSeries():
         df = self.power_spectrum()
 
         power_spectrum_plot(df, pmax=pmax, profile=profile, ax=ax, name=name, fs=fs, **kwargs)
-#         pmax = pmax or max(df.p1.max(), df.pb.max())* 1.1
-
-#         # default kwarg values
-#         kw = dict(xlim=(0,self.f_Nyquist),
-#                   ylim=(-pmax, pmax),
-#                   xlabel=r'$\mathrm{Frequency\ (cycles\ d^{-1})}$',
-#                   ylabel=r'$\leftarrow P_b \ \ \ \ P_1 \rightarrow $' if profile else \
-#                           r'$\leftarrow P_b \ \ \ \ P_0 \rightarrow $',)
-#         kw.update(kwargs)
-
-#         fig, ax = plt.subplots(figsize=(8,4)) if ax is None else (ax.figure, ax)
-
-#         ax.plot(df.f,  df.p1 if profile else df.p0, '-', color='cornflowerblue', lw=2)
-#         ax.plot(df.f, -df.pb, '-', color='orange', lw=2)
-
-#         ax.axhline(0, color='grey')
-#         ax.set( **kw)
-#         # y-axis: no display abs to account for negatives
-#         ax.yaxis.set_major_formatter(ticker.FuncFormatter(lambda x,p: f'{abs(x):.0f}' ))
-#         # x-axis: prettry if log scale
-#         if kw.get('xscale',None)=='log': ax.xaxis.set_major_formatter(
-#               lambda val,pos: { 0.01:'0.01', 0.1:'0.1', 1.0:'1', 10.0:'10',}.get(val,''))
-#         ax.grid(alpha=0.5)
-
-#         if name is not None:
-#             ax.text(0.02,0.96,  name, va='top', transform=ax.transAxes)
-
-#         ap = dict(arrowstyle='->',color='k', lw=3)
-
-#         for f in fs:
-#             ax.annotate('', xy=(f, 0.85*pmax), xytext=(f, pmax),# transform=ax.transData,
-#                         arrowprops=ap);
-#             ax.annotate('', xy=(f, -0.85*pmax), xytext=(f, -pmax),# transform=ax.transData,
-#                         arrowprops=ap);
-#         # mark standard frequencies
-
-#         return fig

@@ -113,3 +113,62 @@ class WtLike(LightCurve):
         ax.set(**kwargs );
         ax.axhline(1.0, color='grey');
         return fig
+
+    def reweighted_view(self, other):
+        """
+        Return a view in which the weights have been modifed to account for a variable neighbor
+
+        * other -- the WtLike BB view of the neighbor.
+        """
+        import copy
+        assert getattr(other, 'isBB', False), 'Expected a bb_view'
+        r = copy.copy(self)
+        r.parent = self
+        r.photons = photons = self.photons.copy()
+
+        def get_w2():
+            nborwtman = other.source.wtman
+            mod_photons = nborwtman.add_weights(photons.copy())
+            return mod_photons.weight
+
+        def get_alpha2():
+            bbf = other.fluxes
+            t,tw = bbf.t.values, bbf.tw.values
+            bb_edges = np.append(t-tw/2, t[-1]+tw[-1]/2)
+            ssi = np.searchsorted(bb_edges, photons.time)
+            # isert nans at both ends of bb blux
+            bbflux = np.append(np.insert(bbf.flux.values, 0, np.nan), np.nan)
+            return bbflux[ssi]-1
+
+        def wprime(row):
+            """ Apply
+            $$w'_1 = \frac{w_1}{1+\alpha_2\ w_2}\ \    $$
+            """
+            w1 = row['weight']
+            a2 = row['alpha2']
+            w2 = row['w2']
+            return w1/(1+a2*w2)
+
+        # alpha2 = get_alpha2()
+        # w2 = get_w2()
+
+        r.photons.loc[:,'w2'] = get_w2().astype(np.float32)
+        r.photons.loc[:,'alpha2'] = get_alpha2().astype(np.float32)
+
+        def fix_weights(df):
+            """ return modified weights """
+            w1 = df.weight
+            w2 = df.w2
+            a2 = df.alpha2
+            return np.where( np.isnan(w2) | np.isnan(a2),
+                           w1,
+                           w1/(1+a2*w2) )
+
+        #photons.loc[:,'oldw'] = photons.weight
+        r.photons.loc[:,'weight'] = fix_weights(photons).astype(np.float32)
+
+        # new weights, so must rebin, then fit them
+        r.rebin(self.time_bins)
+        r.update()
+
+        return r

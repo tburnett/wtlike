@@ -145,6 +145,7 @@ def image(filename,
             self.width = width
             self.height = height
             self.caption = caption
+            self.base64=False
             self.fullfilename = fullfilename #????
 
             if error: 
