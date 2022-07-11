@@ -546,8 +546,9 @@ a special <code>annotate</code>  function identifies Geminga and the Crab.</p>
 <span class="sd">    </span>
 <span class="sd">    The following command will make an animated gif</span>
 <span class="sd">    ```</span>
-<span class="sd">    ffmpeg -i livetime/month_%03d.png -vf fps=20 monthly_livetime.gif</span>
+<span class="sd">    ffmpeg -i livetime/month_%03d.png -loop -1 framerate 1 monthly_livetime.gif</span>
 <span class="sd">    ```</span>
+<span class="sd">    The framerate (frames/sec) does not seem to work</span>
 <span class="sd">    #### First and last months</span>
 <span class="sd">    The orange band is the path of the Sun during the 30 days.</span>
 <span class="sd">    {fig1}</span>
