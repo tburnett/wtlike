@@ -298,6 +298,19 @@ class WeightedAeff():
         # return np.array(r)
         return np.diff(np.insert(self.cumint(costh),0,0,axis=1))
 
+    def beam_window(self, lmax=12):
+        """ Return an array of Legendre coefficients
+            Corresponds to a healpy "beam_window" function
+        """
+
+        import healpy
+        func2 = lambda z : np.where( z>0.2, self(z), 0)
+        lmax=12
+        theta = np.linspace(0,np.pi,181)
+        z = np.cos(theta)
+        bl = healpy.sphtfunc.beam2bl(func2(z), theta, lmax=lmax);
+        return bl
+
 class NewSourceAeff(WeightedAeff):
     def __init__(self, config, source):
         super().__init__(config, spectrum=source.spectral_model, imin=(0,4),)

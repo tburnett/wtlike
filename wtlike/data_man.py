@@ -527,12 +527,11 @@ def get_week_files(config, week_range=None):
     return data_files
 
 # Cell
-
 class DataView(object):
     """
     Manage various views of the data set
     """
-    def __init__(self,  times:tuple=(0,0), config=None, ):
+    def __init__(self,  times:tuple=(0,0),  config=None, ):
         """
         Constructor selects a time range
         """
@@ -549,6 +548,15 @@ class DataView(object):
         self.week_files = get_week_files(self.config, (start, stop))
 
         self.time_filter = lambda time: (time>self.time_range[0]) & (time<self.time_range[1])
+
+    def get_week_data(self, i):
+        file = self.week_files[i]
+        with open(file, 'rb') as inp:
+            return pickle.load(inp)
+
+    def __len__(self):
+        return len(self.week_files)
+
 
     def count_map(self, nside=64, bmin=0):
         """ all-sky count map
@@ -584,11 +592,39 @@ class DataView(object):
         # finally reorder
         return healpy.reorder(pmap, n2r=True)
 
-    def exposure_map(self, nside=64, bmin=0):
-        """
-        """
-        pass
+    def livetime_map(self, nside=64, sigma=0):
+        """ all-sky pointing livetime map
 
+        - nside [64]
+        - sigma: Gaussian smooting parameter (degrees)
+
+        Return a HEALPix map, RING ordering, of the integrated livetime per pixel
+        """
+        import pandas as pd
+        from astropy.coordinates import SkyCoord
+
+        N = 12*nside**2
+
+        def get_ltmap(file):
+            with open(file, 'rb') as inp:
+                u =pickle.load(inp)
+            sc_data = u['sc_data']
+            filter = self.time_filter(sc_data['start'])
+            #print('filter:', sum(filter), '/', len(filter))
+            df = pd.DataFrame(sc_data)[filter]
+
+            coords =  SkyCoord(df.ra_scz, df.dec_scz, unit='deg', frame='fk5').galactic
+            indx= healpy.ang2pix(nside, coords.l.deg, coords.b.deg, lonlat=True)
+            ltmap, _ = np.histogram( indx, bins=np.arange(N+1),  weights=df.livetime)
+            return ltmap
+
+        ltmap = get_ltmap(self.week_files[0],)
+        if len(self.week_files)>1:
+            for week in self.week_files[1:]:
+                ltmap += get_ltmap(week)
+        if sigma>0:
+            ltmap = healpy.smoothing(ltmap, np.radians(sigma))
+        return ltmap
 
 
 # Cell

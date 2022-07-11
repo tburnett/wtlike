@@ -470,7 +470,7 @@ def ait_plot(mappable,
 
     if ax:
         fig = ax.figure
-        assert ax.__class__.__name__=='AitoffAxesSubplot', 'Require that be a AitoffAxesSubplot object'
+        assert ax.__class__.__name__.startswith('AitoffAxes'), 'Require that be a AitoffAxes object'
     else:
         fig = plt.figure(figsize=figsize, num=fignum) if fig is None else fig
         # this needs to be more flexible
