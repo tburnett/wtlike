@@ -1,13 +1,14 @@
 """useful plot utilities
 """
 import matplotlib.pyplot as plt
+import numpy as np
 import pandas as pd
 from scipy import stats 
-import numpy as np
+
 
    
 
-def profile_plot(x, y, bins, ax=None, grid=True, **kwargs):
+def profile_plot(x, y, bins, ax=None, grid=0.5, **kwargs):
     """ Make a "profile" plot 
       Show <y> with rms errors for each bin in x
       
@@ -31,6 +32,6 @@ def profile_plot(x, y, bins, ax=None, grid=True, **kwargs):
     fig, ax = plt.subplots() if ax is None else (ax.figure, ax)
     ax.errorbar(x, y, yerr, xerr,  ls=ls, marker=ms, color=color, lw=lw )
     ax.set(**kwargs)
-    if grid: ax.grid(alpha=0.5)
+    if grid: ax.grid(alpha=grid)
     
     

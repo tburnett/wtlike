@@ -57,6 +57,14 @@ class CatDF():
         incone = self.loc[cone, :].copy()
         incone['sep'] = sep[cone]
         return incone if query=='' else incone.query(query)
+
+    def find_nearest(self, other, cone_size=0.1):
+        try:
+            return self.select_cone(other, cone_size=cone_size).iloc[0].name
+        except Exception as msg:
+            print(f'Failed to find a source near "{other}" : {msg}', file=sys.stderr)
+            
+
    
 class LATpsr(CatDF, pd.DataFrame):
     

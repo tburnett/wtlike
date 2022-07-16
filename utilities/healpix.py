@@ -33,7 +33,7 @@ class HPmap(object):
             self.smooth(sigma)
 
     def __str__(self):
-        return f'<{self.__class__.__name__}>, nside {self.nside} label "{self.label}"'
+        return f'<{self.__class__.__name__}>, name "{self.name}" nside {self.nside} colorbar label "{self.cblabel}"'
     def __repr__(self): return str(self)
 
     def __call__(self, skydir:'SkyDir') -> 'value[s]':
@@ -53,7 +53,7 @@ class HPmap(object):
     def from_FITS(cls, filename, *pars, **kwargs):
         with fits.open(filename) as hdus:
             header, data = hdus[1].header, hdus[1].data
-        kw = dict(unit=header['TUNIT1'], name=header['TTYPE1'])
+        kw = dict(unit=header.get('TUNIT1', ''), name=header['TTYPE1'])
         kw.update(**kwargs)
         return cls(data.field(0), *pars, **kw)
 
