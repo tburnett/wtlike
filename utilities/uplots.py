@@ -5,7 +5,16 @@ import numpy as np
 import pandas as pd
 from scipy import stats 
 
-
+def make_profile(x,y,bins):
+    from scipy import stats 
+    # get <y> and <y**2> for each bin in  x; calculate rms
+    (my, myy), bins,_ = stats.binned_statistic(x, [y, y*y], bins=bins)
+    std = np.sqrt(myy-my**2)
+    # my, std, bins = profile_stats(x,y,bins)
+    good = ~pd.isna(my) * ~pd.isna(std)
+    x, xerr = ((bins[:-1]+bins[1:])/2)[good], (bins[1]-bins[0])/2
+    y, yerr  = my[good], std[good]
+    return pd.DataFrame(dict(x=x, y=y, xerr=xerr, yerr=yerr))
    
 
 def profile_plot(x, y, bins, ax=None, grid=0.5, **kwargs):
@@ -14,23 +23,18 @@ def profile_plot(x, y, bins, ax=None, grid=0.5, **kwargs):
       
       - **kwargs -- apply ms, ls, lw, color to errorbar; rest apply to the Axes object
     """
+    # process the data
+    pf = make_profile(x,y,bins)
+    
     # useful kwargs for errorbar
     ms=   kwargs.pop('ms', 'o')    # marker symbol
     ls =  kwargs.pop('ls', 'none') # line style
     lw =  kwargs.pop('lw', 2)      # line wiedth
     color=kwargs.pop('color', None)# color
     
-    # get <y> and <y**2> for each bin in  x; calculate rms
-    (my, myy), bins,_ = stats.binned_statistic(x, [y, y*y], bins=bins)
-    std = np.sqrt(myy-my**2)
-    # my, std, bins = profile_stats(x,y,bins)
-    good = ~pd.isna(my) * ~pd.isna(std)
-    x, xerr = ((bins[:-1]+bins[1:])/2)[good], (bins[1]-bins[0])/2
-    y, yerr  = my[good], std[good]
-    
     # make the errorbar plot
     fig, ax = plt.subplots() if ax is None else (ax.figure, ax)
-    ax.errorbar(x, y, yerr, xerr,  ls=ls, marker=ms, color=color, lw=lw )
+    ax.errorbar(pf.x, pf.y, pf.yerr, pf.xerr,  ls=ls, marker=ms, color=color, lw=lw )
     ax.set(**kwargs)
     if grid: ax.grid(alpha=grid)
     

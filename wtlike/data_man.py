@@ -378,14 +378,15 @@ class FermiData(GSFCweekly):
         week_summary['file_date'] = self[week]
         week_summary['sc_data'] = sc_data
         filename = self.wtlike_data_file_path/f'week_{week:03d}.pkl'
-        if filename.exists() and self.config.verbose>0:
-            print(f'FermiData: replacing existing {filename}',flush=True)
+
         if not test:
             with open(filename, 'wb') as out:
                 pickle.dump(week_summary, out)
 
-        if self.config.verbose>0:
-            print(f'FermiData: Saved to {filename}', flush=True)
+            if self.config.verbose>0:
+                print(f'FermiData: {"replaced" if filename.exists() else "saved to" } {filename.name}', flush=True)
+        else:
+            print(f'testing... no change to {filename.name}')
 
     def download_and_convert(self, week_range,  processes=None):
         """Download FT1 and FT2 files from GSFC and create summary files for the weeks
