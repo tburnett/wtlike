@@ -46,7 +46,7 @@ def wc_intro():
     
     We will test this, with $S_1$ as the pulsar {name1} and $S_2$ the AGN {name2}. 
     The separation is 1 deg.
-    {out1}
+
     {fig}
     """
     name1, name2=S1,S2

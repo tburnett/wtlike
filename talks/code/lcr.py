@@ -136,7 +136,7 @@ class LCR():
                  size='large', transform=ax1.transAxes)
         ax1.legend()
 
-        self.wtl.plot(ax=ax2,ts_bar_min=9, source_name='', **kwargs);
+        self.wtl.plot(ax=ax2,ts_bar_min=4, source_name='', **kwargs);
         fig.suptitle(f'{self.name}: Weekly light curves by wtlike and LCR', fontsize=16);
         ax2.text(0.5,0.85, 'wtlike', ha='center', color='BLUE',
                  size='large', transform=ax2.transAxes)
@@ -278,7 +278,7 @@ def show_profile(name, **kwargs):
     return locals()
     
 @ipynb_doc
-def lcr_check(name, fmax=10, umax=0.4):
+def lcr_check(name, fmax=10, umax=0.4, ylim=None):
     """
     #### {name}: wtlike vs. LCR
     {fig1}
@@ -286,7 +286,15 @@ def lcr_check(name, fmax=10, umax=0.4):
     """
     with capture_hide('setup output') as out1:
         lcr = LCR(name, key='', lcr_dir='/home/burnett/work/lcr_data')
-    fig1 = lcr.plot()
+
+    fig1 = lcr.plot(ylim=ylim) if ylim is not None else lcr.plot()
     fig2 = lcr.compare_all(fmax=fmax, umax=umax)   
     
     return locals()
+
+def lcr_all():
+    lcr_check('3C 273')
+    lcr_check('PKS 0208-512')
+    lcr_check('4FGL J1555.7+1111', fmax=5)
+    lcr_check('PSR J2021+4026', fmax=2, ylim=(0.4,1.6))
+    lcr_check('Cyg X-3', fmax=15)
