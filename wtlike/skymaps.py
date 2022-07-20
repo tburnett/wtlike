@@ -301,7 +301,7 @@ def ait_plot(mappable,
 
     # reverse longitude sign here for display
     if pctlim is not None:
-        vlim=np.percentile(mappable.map, np.array(pctlim).round()) #[40, 99.98])).round(),
+        vlim=np.percentile(mappable.map, np.array(pctlim)).round() #[40, 99.98])).round(),
 
     if vlim is not None:
         vmin, vmax = vlim

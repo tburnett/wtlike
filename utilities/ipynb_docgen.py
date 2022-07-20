@@ -112,6 +112,18 @@ def doc_formatter(
 
     return MimeBundleObject()
 
+#### This might be useful
+# import base64
+# image_64_encode = base64.encodebytes(open(png_filename,'rb').read())
+# image_string = str(image_64_encode)
+# # replace the newline characters
+# image_string = image_string.replace("\\n", "")
+# # replace the initial binary
+# image_string = image_string.replace("b'", "")
+# # replace the final question mark
+# image_string = image_string.replace("'", "")
+# # add the image tags
+# image_string = '<p><img src="data:image/png;base64,' + image_string + '"></p>'
 
 
 
