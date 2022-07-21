@@ -33,8 +33,6 @@ def intro():
 
     They claim significant periodicity for the six sources PKS 0208512, PKS 0454234, S5 0716+714, OJ 014, PG 1553+113 and PKS 2155304.
     
-    {txt}
-    
     I use data to 2022-07-02, MJD 59762, 13.9 yr total. 
     The analysis uses [wtlike](https://github.con/tburnett/wtlike), displaying a weekly light curve and the 
     low-frequency portion of the Kerr periodogram extracted using hourly time samples. 
@@ -153,7 +151,6 @@ def compare_with_LCR(name='4FGL J0210.7-5101'):
     This uses a light curve file downloaded from the 
     [_Fermi_ Light Curve Repository](https://fermi.gsfc.nasa.gov/ssc/data/access/lat/LightCurveRepository),
     to compare with the wtlike analysis of the same source.
-    {txt}
     {fig}
     """
     gname = name.replace(' ','_')+'*.csv'
@@ -185,7 +182,6 @@ def phase_plots(reference='2008'):
     ## Phase plots
     Plots of relative flux vs. phase with the Peñil+ measured periods. 
     The phase is measured relative to UTC {reference}.
-    {txt}
     {fig}
     """
     def make_phase(index=0, ax=None, ):
@@ -315,8 +311,7 @@ def lowfreqplot(pgm, ax=None, over=None, pticks=None, penil=None, **kwargs):
 def sinc_overlay(power='p1'):
     """
     ### Periodograms with sinc overlays
-    <!--
-    {txt} -->
+
     These plots, in frequency units, show the result of overlaying a sinc squared distribution at the
     position of the nearest observed peak to the frequency determined by the Peñil et al. analysls. Its width
     is set by the full time interval, {T:.0f} days
