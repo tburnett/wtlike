@@ -33,13 +33,15 @@ def intro():
 
     They claim significant periodicity for the six sources PKS 0208512, PKS 0454234, S5 0716+714, OJ 014, PG 1553+113 and PKS 2155304.
     
+    Their locations:
+    {fig}
+
     I use data to 2022-07-02, MJD 59762, 13.9 yr total. 
     The analysis uses [wtlike](https://github.con/tburnett/wtlike), displaying a weekly light curve and the 
     low-frequency portion of the Kerr periodogram extracted using hourly time samples. 
     Shown on the periodograms are the measurements from Peñil+ of the periods, derived at least in part from Lomb-Scargle periodograms.
     
-    The positions:
-    {fig}
+
     """
     with capture_hide('processing output') as txt:
         pgms = setup_pgms(names)
@@ -136,11 +138,14 @@ def summary():
     A small, but perhaps significant difference for PG 1553+113 may be hard to account for.
     
     The paper shows, in Figure 1, an example Lomb-Scargle periodogram for PKS 0454-234, which looks quite similar to mine. 
+    {penil_fig1}
+    
     A question is whether a similar significance analysis would give a better result, since the use of weights is 
     in principle more precise.
     
     Also, I would like to be able to generate a similar color map showing periodicity vs. time.
     """
+    penil_fig1 = image('penil_fig1.png')
     return locals()
 
 @ipynb_doc
@@ -344,8 +349,10 @@ def sinc_overlay(power='p1'):
         lowfreqplot(pgm,ax=ax, over=sinc, penil=period,  pticks=[1,1.5,2,3,5,10] if k<3 else None,
                     ylim=(0,None), ylabel='',);
     fig.text(0.07, 0.5, f'Power {power}', rotation='vertical', va='center')
-    fig.caption="""Low frequency periodograms for the six claimed Peñil et al. periodic blazars. The overlaid red plots are the
-            expected sinc functions plotted at the closest peak to the claimed frequency uncertainty range, denoted by a grey bar."""
+    fig.caption="""Low frequency periodograms for the six claimed Peñil et al. periodic blazars. 
+        The overlaid red plots are the
+            expected sinc functions plotted at the closest peak to the claimed frequency, 
+            the uncertainty range of which is denoted by a grey bar."""
                 
     return locals()   
 
