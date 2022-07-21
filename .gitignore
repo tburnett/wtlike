@@ -9,7 +9,7 @@
 _tmp*
 tmp*
 tags
-
+cache/
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
