@@ -110,7 +110,7 @@ def power_plots():
     The Kerr periodogram analysis checks the variation of the background to the source, and
     produces a "profile" estimate of the source power $P_1$ and the background power $P_b$.
     These plots, patterned after the Kerr paper, show both for low frequency.
-    {txt}
+
     {fig}
     The vertical dashed lines are the frequencies identified by Peñil+.
     """    
