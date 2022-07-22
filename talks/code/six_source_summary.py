@@ -133,17 +133,13 @@ def summary():
     ### Discussion
     
     Note the dramatic discrepancy with the Peñil+ result for PKS 0208-512. But that might be explained by the large
-    background component that implies a nearby variable source.
+    background component that implies a nearby variable source. The last periodogram shows a pretty clear 1/f noise component.
 
     A small, but perhaps significant difference for PG 1553+113 may be hard to account for.
     
-    The paper shows, in Figure 1, an example Lomb-Scargle periodogram for PKS 0454-234, which looks quite similar to mine. 
+    The paper shows, in Figure 1, an example Lomb-Scargle periodogram in period units, for PKS 0454-234, which looks quite similar to mine. 
     {penil_fig1}
     
-    A question is whether a similar significance analysis would give a better result, since the use of weights is 
-    in principle more precise.
-    
-    Also, I would like to be able to generate a similar color map showing periodicity vs. time.
     """
     penil_fig1 = image('penil_fig1.png')
     return locals()
@@ -219,10 +215,6 @@ def check_nearby(name, radius_cut=4, var_cut=50):
     df = near_df['name sep significance variability'.split()].sort_values('sep')
 
     return locals()
-
-names = ['PKS 0208-512', 'PKS 0454-234', 'S5 0716+714', 'OJ 014','PG 1553+113', 'PKS 2155-304',]
-periods= [(2.6,0.2), (3.6,0.4), (2.7,0.4), (4.1,0.5), (2.2,0.2), (1.7,0.1)]
-
 
 
 def skyplot(skymap):

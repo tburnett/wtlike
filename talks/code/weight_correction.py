@@ -1,5 +1,5 @@
 #----------------------------------------------------------------------   
-from tkinter import FALSE
+# from tkinter import FALSE
 from wtlike import *
 from utilities.ipynb_docgen import *
 
@@ -10,10 +10,9 @@ wtl1, wtl2, bb2 = None,None,None
 near_df = None
 
 
-
 S1, S2='PSR J0007+7303', '4FGL J0019.6+7327'
 
-#@Cache(cache_dir='cache/setup')
+@Cache(cache_dir='cache')
 def setup_wtlike(clear=FALSE):
     
     global wtl1, wtl2, bb2
@@ -51,7 +50,7 @@ def wc_intro():
     """
     name1, name2=S1,S2
     with capture_hide('Wtlike and BB processing output') as out1:
-        wtl1,wtl2,bb2 = get_wtl()
+        wtl1,wtl2,bb2 = setup_wtlike()
         wtlx = wtl1.reweighted_view(bb2)
         
     fig, (ax1,ax2) = plt.subplots(nrows=2, figsize=(12,5), sharex=True)
