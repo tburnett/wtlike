@@ -217,6 +217,23 @@ class HPmap(object):
         swcs = SquareWCS(skycoord, size, pixsize)
         return swcs.plot(self.map, size=figsize, **kwargs)
 
+    def convolve(self, beam_window=None, sigma=0):
+        """Convolve the map with a "beam", or PSF
+
+        - beam_window: Legendre coefficients or None
+        - sigma  Gaussian sigma in degrees
+
+        return a HEALPix array
+        """
+        import healpy
+
+        return healpy.alm2map(
+            healpy.smoothalm( healpy.map2alm(self.map),
+                              sigma=np.radians(sigma),
+                              beam_window=beam_window
+                            ),
+            nside=self.nside
+            )
 
     def to_FITS(self,  filename=''):
         """return a HDUlist object with one skymap column
@@ -251,13 +268,14 @@ class HPmap(object):
             print(f'Wrote FITS file {filename}')
         return hdus
 
+
 # Cell
 
 def ait_plot(mappable,
         pars=[],
         label='',
         title='',
-        fig=None, ax=None, fignum=1, figsize=(15,8),
+        fig=None, ax=None, fignum=1, figsize=(12,6),
         pixelsize:'pixel size in deg'=1,
         projection='aitoff',
         cmap='jet',
@@ -266,10 +284,11 @@ def ait_plot(mappable,
         colorbar:bool=True,
         cblabel='',
         unit='',
+        grid_color='grey',
         cb_kw={},
         axes_pos=111,
         axes_kw={},
-        tick_labels=True,
+        tick_labels=False,
         alpha:'apply to pcolormesh'=None,
         annotator:'callback'=None,
         ):
@@ -326,7 +345,7 @@ def ait_plot(mappable,
         cb = plt.colorbar(im, ax=ax, **cb_kw)
         if ticklabels is not None:
             cb.ax.set_yticklabels(ticklabels)
-    ax.grid(color='grey')
+    if grid_color: ax.grid(color=grid_color)
     if label:
         ax.text( 0., 0.97, label, transform=ax.transAxes)
     if title:
@@ -474,7 +493,6 @@ def make_ltmap(time_range, sigma=1, show_sun=True,
     """Make a livetime map.
     """
 
-    from utilities.healpix import HPmap
 
     from .data_man import DataView
     from .config import first_data, MJD
