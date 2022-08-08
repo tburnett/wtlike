@@ -252,11 +252,11 @@ the run_ref and trun fields. The latter removed.</p>
 
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>Exercise access from GSFC and FT1 data handling
-GSFCweekly: spacecraft/lat_spacecraft_weekly_w735_p310_v001.fits --&gt; week735_ft2.fits
-GSFCweekly: photon/lat_photon_weekly_w735_p305_v001.fits --&gt; week735_ft1.fits
-FT1: week735_ft1.fits, GTI range 678243294.7-678844799.1:  1,993,917 photons
-	Selection E &gt; 100 MeV. theta&lt;66.4 and z&lt;100 remove: 81.82%
-FT1 data from file week735_ft1.fits: tstart=678243294 (UTC 2022-06-30) selected 362,456/1,993,917 photons, in 106 runs.
+GSFCweekly: spacecraft/lat_spacecraft_weekly_w739_p310_v001.fits --&gt; week739_ft2.fits
+GSFCweekly: photon/lat_photon_weekly_w739_p305_v001.fits --&gt; week739_ft1.fits
+FT1: week739_ft1.fits, GTI range 680660629.7-681264887.1:  1,566,842 photons
+	Selection E &gt; 100 MeV. theta&lt;66.4 and z&lt;100 remove: 78.26%
+FT1 data from file week739_ft1.fits: tstart=680660629 (UTC 2022-07-28) selected 340,615/1,566,842 photons, in 106 runs.
 Contents of the output dict
  key      value type
   tstart     float
@@ -494,7 +494,7 @@ from the last update with the current one at GSFC.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_week_map" class="doc_header"><code>get_week_map</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L632" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_week_map</code>(<strong><code>week</code></strong>=<em><code>None</code></em>, <strong><code>nside</code></strong>=<em><code>32</code></em>)</p>
+<h4 id="get_week_map" class="doc_header"><code>get_week_map</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L650" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_week_map</code>(<strong><code>week</code></strong>=<em><code>None</code></em>, <strong><code>nside</code></strong>=<em><code>32</code></em>)</p>
 </blockquote>
 <p>Return a HEALPix count map for the given week, selected by week index</p>
 <ul>

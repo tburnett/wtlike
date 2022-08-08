@@ -627,6 +627,24 @@ class DataView(object):
             ltmap = healpy.smoothing(ltmap, np.radians(sigma))
         return ltmap
 
+    def exposure_map(self, beam_window, nside=64,):
+        """ ### all-sky exposure map
+
+        - beam_window --a list of coefficients of a Legendre polynomial expansion
+        - nside [64]
+
+        Return a HEALPix map of the weighted exposure
+        """
+        ltmap = self.livetime_map(nside=nside)
+
+        # do a spherical convolution of the live-time map with a aeff beam window
+        return healpy.alm2map(
+                healpy.smoothalm(
+                    healpy.map2alm(ltmap),
+                    beam_window=beam_window,
+                    ),
+                nside=nside,
+                )
 
 # Cell
 def get_week_map(week=None,  nside=32  ):
@@ -638,8 +656,6 @@ def get_week_map(week=None,  nside=32  ):
     Return:
         a HEALPix array, RING ordering
     """
-
-    import healpy
 
     assert nside & (nside-1) == 0, 'nside must be power of 2'
     config = Config()
