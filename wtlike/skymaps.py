@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 
 
 import healpy
-from healpy.rotator import Rotator
+
 
 from astropy.coordinates import SkyCoord
 from astropy.wcs import WCS
@@ -183,9 +183,10 @@ class HPmap(object):
 
     def __call__(self, sc:'SkyCoord') -> 'value[s]':
         """
-        Return value of corresponding pixel
+        Return value of corresponding pixel(s)
         """
-        skyindex = healpy.ang2pix(self.nside, sc.l.deg, sc.b.deg, lonlat=True)
+        sp = sc.spherical # avoid dependence on specific frame
+        skyindex = healpy.ang2pix(self.nside, sp.lon.deg, sp.lat.deg, lonlat=True)
         return self.map[skyindex]
 
     def get_all_neighbors(self, pix):
@@ -202,7 +203,7 @@ class HPmap(object):
         kw.update(**kwargs)
         return cls(data.field(0), *pars, **kw)
 
-    def ait_plot(self,  **kwargs):
+    def ait_plot(self, **kwargs):
         """
         Invoke the function ait_plot to draw a representation
 
@@ -307,7 +308,7 @@ def ait_plot(mappable,
 
     #  an arrary of values corresponding to the grid
     # dirs = SkyDir.from_galactic(Lon, Lat)
-    dirs = SkyCoord(Lon, Lat, unit='deg', frame='galactic')
+    dirs = SkyCoord(Lon, Lat, unit='deg')
     arr = mappable(dirs, *np.atleast_1d(pars))
 
     if ax:

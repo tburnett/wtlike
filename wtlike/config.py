@@ -366,13 +366,21 @@ class FermiInterval():
     """
     def __init__(self, interval=30, offset=0):
         from .config import  MJD, first_data
+        self.interval=interval
         a,b = first_data+offset, MJD('now')
         self.mm = np.arange(a,round(b),interval)
 
     def __len__(self):
         return len(self.mm)-1
+
     def __getitem__(self, k):
-        return (self.mm[k], self.mm[k+1]) if k>=0 else (self.mm[k-1],self.mm[k])
+        return (self.mm[k], self.mm[k+1],) if k>=0 else (self.mm[k-1],self.mm[k])
+
+    def __call__(self, k):
+        """ Return a timeinterval tuple
+        """
+        a,b = self[k]
+        return (a,b,self.interval)
 
 class FermiMonth(FermiInterval):
     def __init__(self):

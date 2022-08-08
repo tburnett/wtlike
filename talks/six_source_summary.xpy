@@ -241,37 +241,6 @@ def skyplot(skymap):
     return skymap.ait_plot( log=True, tick_labels=False, pixelsize=0.1, figsize=(12,5), colorbar=False,
              vlim=vlim, annotator=six, cmap='Greys', alpha=0.75, title='The six periodic blazars');  
 
-
-
-class Sinc():
-    def __init__(self, A, freq, delf):
-        """
-        * A amplitude
-        * freq frequency
-        * delf -- frequency delta = 1/T 
-        """
-        self.A, self.freq, self.delf = A,freq, delf
-        self.sincsq =  lambda x: A*np.sinc((x-freq)/delf)**2 
-    def __call__(self, x):
-        return self.sincsq(x)
-    
-    def lim(self, f=2):
-        return  (self.freq-f*self.delf, self.freq+f*self.delf) 
-    
-    def plot(self, width=2, ax=None, pticks=None, **kwargs):
-        xlim = self.lim(width) 
-        x = np.linspace(*xlim)
-        fig, ax = plt.subplots(figsize=(4,3)) if ax is None else (ax.figure, ax)
-        ax.plot(x, self.sincsq(x),'-')
-        ax.set(xlim=xlim, **kwargs)
-        ax.grid(0.5)
-        
-        if pticks is None: return
-        a,b = np.array(xlim)
-        x2 = lambda p: (1/p-a)/(b-a)
-        ax.twiny().set(xlabel='Period',
-                xticks=x2(np.array(pticks)), 
-                xticklabels=[ f'{t}' for t in pticks])  
                 
 def lowfreqplot(pgm, ax=None, over=None, pticks=None,
                 query='f<0.0208', penil=None, **kwargs):
