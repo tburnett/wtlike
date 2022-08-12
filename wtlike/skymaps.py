@@ -321,7 +321,7 @@ def ait_plot(mappable,
 
     # reverse longitude sign here for display
     if pctlim is not None:
-        vlim=np.percentile(mappable.map, np.array(pctlim)).round() #[40, 99.98])).round(),
+        vlim=np.percentile(mappable.map, np.array(pctlim)) #[40, 99.98])).round(),
 
     if vlim is not None:
         vmin, vmax = vlim
@@ -488,44 +488,46 @@ def sun_dir(mjd):
     s =  get_sun(Time(mjd, format='mjd'))
     return SkyCoord(s.ra, s.dec, frame='fk5').galactic
 
-def draw_map(mapper, time_range, name='',  show_sun=False,
-               figsize=(9,4), utc_flag=True, fignum=1,
-               **kwargs):
-    """Draw a map.
+def draw_map(mapper, time_range, name='', show_sun=False, sigma=0,
+                figsize=(9,4), label='', fignum=1, **kwargs):
 
-    - mapper : a function of a (start,stop) time range that returns a HEALPix map
+    """Draw an aitoff map.
+
+    - mapper : the HEALPix map, or a function of a (start,stop) time range that returns one
     - time_range : (start,stop) tuple
+    - name ['']: name to give to the map which will be drawn in UL corner
+    - label ['']: text to draw in LL corner for time interval, e.g., month number
+    - sigma [0]: smoothing parameter (degrees)
     - show_sun [False] : flag to show the sun path
     - utc_flage [True] : show progress bar in UTC, else MJD
     - ** kwargs : pass to the ait_plot function, e.g. vmin, vmax log, colorbar, title
     """
-    from .data_man import DataView
     from .config import first_data, MJD
 
-    # set up the figure and an Axes object for Aitoff plot
+    # set up the figure and an aitoff Axes
     fig = plt.figure(figsize=figsize, num=fignum)
-    ax1 = fig.add_axes([0.15,0.2,0.95,0.95], projection='aitoff')
+    ax1 = fig.add_axes([0.10,0.2,0.9,0.9], projection='aitoff')
     kw = dict(log=False, tick_labels=False, vmin=None, vmax=None, title='', colorbar=True)
     kw.update(**kwargs)
-
-    # make and then plot the healpix map for the time range
-    HPmap(mapper(time_range), name).ait_plot( ax=ax1, **kw)
+    hpm=HPmap( mapper(time_range) if callable(mapper) else mapper, name, sigma=sigma)
+    hpm.ait_plot(  ax=ax1,  **kw);
 
     if show_sun:
-        sd = sun_dir(np.linspace(*time_range, num=30))
+        sd = sun_dir(np.linspace(*time_range, num=100))
         l = sd.l.radian
         l[l>np.pi] -= 2*np.pi
-        ax1.plot(-l, sd.b.radian, '.', color='orange')
+        sdf = pd.DataFrame(dict(l=-l, b=sd.b.radian)).sort_values('l')
+        ax1.plot(sdf.l, sdf.b, '-', color='yellow')
 
     # set up a secod Axes object to show the time range
     ax2 = fig.add_axes([0.35, 0.1, 0.55, 0.11])
-    kw2 = dict( xlim=(first_data, MJD('now')), ylim=(0,100),yticks=[], aspect=1 )
+    yrs = list(range(2008,2024,2))
+
     ax2.axvspan(*time_range, color='orange')
-    if utc_flag:
-        # even years if True else interpret as int
-        cnt = 2 if type(utc_flag)==bool else utc_flag
-        yrs = [str(yr) for yr in range(2008,2024, cnt)] #get this from kwarg maybe
-        yrkw = dict( xticks=[MJD(yr) for yr in yrs], xticklabels=yrs,)#  xlabel='UTC',)
-        kw2.update(**yrkw)
-    ax2.set(**kw2)
+    ax2.axvspan(MJD('2008'), first_data, color='grey')
+    yrs = [str(yr) for yr in range(2008,2024, 2)]
+    ax2.set( xlim=(first_data, MJD('now')), ylim=(0,120), yticks=[], aspect=1,
+            xticks=[MJD(yr) for yr in yrs],
+            xticklabels=yrs,);
+    if label: fig.text(0.25, 0.15, label,fontsize=14)
     return fig
