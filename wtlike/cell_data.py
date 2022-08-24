@@ -365,7 +365,6 @@ class CellData(SourceData):
         view.period = period
         return  view
 
-
 # Cell
 def concatenate_cells( cells):
     """

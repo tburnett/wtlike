@@ -140,7 +140,6 @@ def sc_process(config, source, sc_data):
             )
          )
 
-
 # Cell
 from scipy.integrate import simpson
 
@@ -160,7 +159,6 @@ def cumsimpson(y, dx):
     v[1::3] = 4*y[1::2]
     v[2::3] = y[2::2]
     return (np.cumsum(v)*dx/3)[2::3]
-
 
 # Cell
 from abc import abstractmethod
@@ -255,13 +253,14 @@ class WeightedAeff():
     """Manage the weighted effective area calculation
     """
 
-    def __init__(self, config,
+    def __init__(self, config=None,
+                 spectrum = None,
                  nebins:int=16,
                  imin:tuple=(0,0),
-                 spectrum = None,
                  **kwargs):
         """
         """
+        config = config or Config()
         self.nebins = nebins
         self.imin = imin
         self.spectrum = spectrum or (lambda E: (E/1000)**-2.1)
@@ -327,7 +326,6 @@ def weighted_aeff(config, source):
         return WeightedAeff(config)
     ### source spectrum, cut low back
     return WeightedAeff(config, spectrum=source.spectral_model, imin=(0,4))
-
 
 # Cell
 def sc_data_selection(config, source, sc_data):

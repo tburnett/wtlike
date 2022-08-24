@@ -182,10 +182,13 @@ class ProcessWeek(object):
     def photon_times(self, pdf):
 
         # construct the time from the run number and offset
-        if  'run_id' in pdf: run = pdf.run_id.astype(float)
-        elif 'run_ref' in pdf: run = self.runlist[pdf.run_ref]
-        else:
-            raise Exception('Expect run_id or run_ref')
+        # if  'run_id' in pdf: run = pdf.run_id.astype(float)
+        # elif 'run_ref' in pdf: run = self.runlist[pdf.run_ref]
+        # else:
+        #     raise Exception('Expect run_id or run_ref')
+        if not 'run_ref' in pdf:
+            raise Exception('Old format data: recreate to insert run_ref')
+        run = self.runlist[pdf.run_ref]
         ptime = MJD(run + pdf.trun * self.config.offset_size)
         pdf.loc[:,'time'] = ptime
 
@@ -195,7 +198,7 @@ class ProcessWeek(object):
         pdfg = pdf[good_exp].copy()
         if len(pdfg)==0:
             return None
-        pdfg.drop(columns=['trun'], inplace=True)
+        pdfg.drop(columns=['trun', 'run_ref'], inplace=True)
         # time edges-- same for each band
         #xp = np.append(self.stime[0::2],self.stime[-1])
 

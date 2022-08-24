@@ -56,7 +56,6 @@ def make_time_cells(self, time_bins):
         f_Nyquist = 1/tsamp/4,
         )
 
-
 # Cell
 def power_spectrum_fft(timeseries,dfgoal=None,tweak_exp=False,
         exp_only=False,get_amps=False,exposure_correction=None,
@@ -270,7 +269,6 @@ class PeakFinder(pd.DataFrame):
         # allows renaming of first col
         t = np.abs(self.iloc[:,0] -x)
         return np.where(t==t.min())[0][0]
-
 
 # Cell
 
@@ -532,8 +530,6 @@ class TimeSeries():
 #         kw = dict(ylabel='Time (MJD)', xlabel='Frequency (cycles $d^{-1})$',)
 #         kw.update(kwargs)
 #         ax.set(**kw)
-
-
 
 # Cell
 class Sinc():

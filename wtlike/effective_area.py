@@ -6,6 +6,7 @@ __all__ = ['EffectiveArea']
 import os
 import numpy as np
 from astropy.io import fits
+from .config import Config
 
 class EffectiveArea(object):
     """ manage the effective area calculation from a CALDB FITS file
@@ -124,6 +125,26 @@ class EffectiveArea(object):
         ax2.set(xlabel =r'$\cos\ \theta$',ylabel='relative to normal at 1 GeV')
         ax2.grid(alpha=0.5)
         fig.set_facecolor('white')
+
+
+    def tabulate(self, ctstep=0.05,  logestep=0.25, ctmin=0.4):
+        """
+        Create a table in bins of front/back, log10e, cos theta
+
+        - ctstep [0.05] step size from ctmin [0.4] to 1
+        - logestep [0.25] log10 energy step from 2 (100 MeV) to 6 (1 TeV)
+        """
+
+        binvals = lambda a,b,d: np.arange(a+d/2, b, d)
+
+        ctvals = binvals(ctmin, 1.0, ctstep)
+        ee = np.power(10, binvals(2,6, logestep))
+        A = np.zeros( (2, len(ee), len(ctvals)) )
+        for i, ct in enumerate(ctvals):
+            f,b =  self(ee, ct)
+            A[0,:,i] = f
+            A[1,:,i] = b
+        return A
 
 class _InterpTable(object):
     """Helper class -- does 2-d interpolation

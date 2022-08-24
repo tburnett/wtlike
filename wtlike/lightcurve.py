@@ -76,7 +76,6 @@ class CellFitter(object):
     def dataframe(self):
         return self.ll_fits
 
-
 # Internal Cell
 def fit_cells(config,
             input_cells,

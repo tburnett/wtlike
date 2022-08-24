@@ -185,4 +185,3 @@ class SourceData(object):
             ax3.set(xlabel='Band index')
             ax4.hist(self.photons.weight, 100, histtype='step')
             ax4.set(xlabel='weight')
-
