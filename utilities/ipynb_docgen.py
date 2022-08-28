@@ -296,7 +296,7 @@ if pd:
                 self._html = self._df.to_html(**self.kw)                
             return self._html
     df_kwargs= dict( notebook=False, ### True confuses latex genereration 
-                    max_rows=6, 
+                    max_rows=30, 
                     index=False,
                     show_dimensions=False, #True, 
                     justify='right',
