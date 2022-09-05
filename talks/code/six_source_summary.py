@@ -339,10 +339,10 @@ def sinc_overlay(power='p1'):
         # print(name, penil_f, sum(close), df)
         if sum(close)>0: # 'Not found'
             peak = df[close].iloc[0]
-            sinc = Sinc(peak.p, peak.f*yr, yr/T) 
+            sinc = Sinc(peak[power], peak.f*yr, yr/T) 
         else: sinc=None
         lowfreqplot(pgm,ax=ax, over=sinc, penil=period,  pticks=[1,1.5,2,3,5,10] if k<3 else None,
-                    ylim=(0,None), ylabel='',);
+                    ylim=(0,None), ylabel='',xlim=(0,1));
     fig.text(0.07, 0.5, f'Power {power}', rotation='vertical', va='center')
     fig.caption="""Low frequency periodograms for the six claimed Peñil et al. periodic blazars. 
         The overlaid red plots are the
@@ -350,6 +350,55 @@ def sinc_overlay(power='p1'):
             the uncertainty range of which is denoted by a grey bar."""
                 
     return locals()   
+
+@ipynb_doc
+def study_0208():
+    """ <h2 align="center"> A look at PKS 0208-512</h2>
+        
+    <h6 align="right">{date}</h6>
+    
+    Since the Kerr periodogram does not support the existence of oscillations with a period $2.2\pm 0.2$, 
+    and the behavior of the low frequency spectrum suggested 1/f noise, and further there is a suggestion
+    from the phase plot that the period is actually half that, I looked in more detail to try to 
+    check both hypotheses.
+
+    
+    ### The analysis
+    I redid the last plot in the previous analysis, but expanded the frequency scale, made it semilogy,
+    and overplotted an empirical look at the low energy behavior
+    {fig}
+    A peak is indeed close to the hypothesized half frequency, but the low frequency behavior appears to be exponential, with 
+    a 0.25 yr constant, rather than 1/f.
+    
+    In fact, there are two other peaks equidistant in frequency. To be investigated, 
+    especially to see if there is a similar behavior with other blazars.
+    """
+    with capture_hide('setup printout') as txt:
+        names=['PKS 0208-512']
+        pgm = setup_pgms(names)[0]
+    
+    period=[2.6,0.2]
+    power='p1'; T= pgm.tspan
+    yr=365.25
+    penil_f = 1/(yr*period[0])
+    df = pgm.find_peaks(power=power).query('f<3e-3')
+
+    close = np.abs(2*penil_f-df.f)< 1/T
+    df.loc[:,'close'] = close
+    # print(name, penil_f, sum(close), df)
+    if sum(close)>0: # 'found'
+        peak = df[close].iloc[0]
+        sinc = Sinc(peak.p1, peak.f*yr, yr/T) 
+    else: sinc=None
+
+    fig, ax = plt.subplots(figsize=(12,5))
+    x=np.linspace(0.0,2)
+    ax.plot(x, 9e3*(np.exp(-x*4)), '--g',label=r'$\propto e^{-4f}$');
+    lowfreqplot(pgm, ax=ax, yscale='log', ylim=(10,None), xlim=(0,3),
+               pticks=[0.3,0.4,0.5,1,1.5,2,4], penil=period,
+               over=sinc)
+    return locals()
+
 
 def main():
 
@@ -361,3 +410,4 @@ def main():
     phase_plots()
     sinc_overlay(fignum=5)
     summary()
+    study_0208()

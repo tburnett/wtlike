@@ -96,7 +96,7 @@ expect ~105 runs. We save a table of the run numbers per week, and use a uint8 i
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="get_ft1_data" class="doc_header"><code>get_ft1_data</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L20" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>get_ft1_data</code>(<strong><code>config</code></strong>, <strong><code>ft1_file</code></strong>)</p>
+<h2 id="get_ft1_data" class="doc_header"><code>get_ft1_data</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L19" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>get_ft1_data</code>(<strong><code>config</code></strong>, <strong><code>ft1_file</code></strong>)</p>
 </blockquote>
 <p>Read in a photon data (FT1) file, bin in energy and position to convert to a compact table</p>
 <ul>
@@ -154,7 +154,7 @@ expect ~105 runs. We save a table of the run numbers per week, and use a uint8 i
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="photon_week" class="doc_header"><code>photon_week</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L140" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>photon_week</code>(<strong><code>config</code></strong>, <strong><code>week_dict</code></strong>)</p>
+<h4 id="photon_week" class="doc_header"><code>photon_week</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L139" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>photon_week</code>(<strong><code>config</code></strong>, <strong><code>week_dict</code></strong>)</p>
 </blockquote>
 <p>Return a dict with photon info for the week, with a 'time' field, in MJD reconstructed from
 the run_ref and trun fields. The latter removed.</p>
@@ -191,7 +191,7 @@ the run_ref and trun fields. The latter removed.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="get_ft2_info" class="doc_header"><code>get_ft2_info</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L158" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>get_ft2_info</code>(<strong><code>config</code></strong>, <strong><code>filename</code></strong>, <strong><code>gti</code></strong>=<em><code>&lt;lambda&gt;</code></em>)</p>
+<h2 id="get_ft2_info" class="doc_header"><code>get_ft2_info</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L157" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>get_ft2_info</code>(<strong><code>config</code></strong>, <strong><code>filename</code></strong>, <strong><code>gti</code></strong>=<em><code>&lt;lambda&gt;</code></em>)</p>
 </blockquote>
 <p>Process a FT2 file, with S/C history data, and return a summary dict</p>
 <p>Parameters:</p>
@@ -291,7 +291,7 @@ Contents of the output dict
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="FermiData" class="doc_header"><code>class</code> <code>FermiData</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L295" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>FermiData</code>(<strong><code>config</code></strong>=<em><code>None</code></em>) :: <a href="/wtlikedata_man.html#GSFCweekly"><code>GSFCweekly</code></a></p>
+<h2 id="FermiData" class="doc_header"><code>class</code> <code>FermiData</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L292" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>FermiData</code>(<strong><code>config</code></strong>=<em><code>None</code></em>) :: <a href="/wtlikedata_man.html#GSFCweekly"><code>GSFCweekly</code></a></p>
 </blockquote>
 <p>Manage the full data set in weekly chunks</p>
 <ul>
@@ -308,7 +308,7 @@ Contents of the output dict
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="GSFCweekly.download" class="doc_header"><code>GSFCweekly.download</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L249" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>GSFCweekly.download</code>(<strong><code>week</code></strong>)</p>
+<h4 id="GSFCweekly.download" class="doc_header"><code>GSFCweekly.download</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L248" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>GSFCweekly.download</code>(<strong><code>week</code></strong>)</p>
 </blockquote>
 <p>Download the given week's files to the local folder</p>
 <p>week -- the mission week number, starting at 9. If negative, get recent one</p>
@@ -322,7 +322,7 @@ Contents of the output dict
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="FermiData.needs_update" class="doc_header"><code>FermiData.needs_update</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L410" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>FermiData.needs_update</code>()</p>
+<h4 id="FermiData.needs_update" class="doc_header"><code>FermiData.needs_update</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L407" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>FermiData.needs_update</code>()</p>
 </blockquote>
 <p>Compare files on disk with the GSFC list and compile list that need to be downloaded</p>
 <p>Check the file date of the last one on disk and update it as well if it has a different filedate</p>
@@ -348,7 +348,7 @@ Contents of the output dict
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="update_data" class="doc_header"><code>update_data</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L491" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>update_data</code>(<strong><code>config</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="update_data" class="doc_header"><code>update_data</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L488" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>update_data</code>(<strong><code>config</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <p>Bring all of the local week data summaries up to date, downloading the missing ones from GSFC.
 If the last one is the current week, check to see if needs updating, by comparing file date, in days,
@@ -382,7 +382,7 @@ from the last update with the current one at GSFC.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="check_data" class="doc_header"><code>check_data</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L477" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>check_data</code>(<strong><code>config</code></strong>=<em><code>None</code></em>, <strong><code>update</code></strong>=<em><code>False</code></em>)</p>
+<h2 id="check_data" class="doc_header"><code>check_data</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L474" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>check_data</code>(<strong><code>config</code></strong>=<em><code>None</code></em>, <strong><code>update</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 <p>Print current status, and update if requested</p>
 
@@ -394,7 +394,7 @@ from the last update with the current one at GSFC.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="update_data" class="doc_header"><code>update_data</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L491" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>update_data</code>(<strong><code>config</code></strong>=<em><code>None</code></em>)</p>
+<h2 id="update_data" class="doc_header"><code>update_data</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L488" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>update_data</code>(<strong><code>config</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <p>Bring all of the local week data summaries up to date, downloading the missing ones from GSFC.
 If the last one is the current week, check to see if needs updating, by comparing file date, in days,
@@ -452,7 +452,7 @@ from the last update with the current one at GSFC.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="DataView" class="doc_header"><code>class</code> <code>DataView</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L530" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>DataView</code>(<strong><code>times</code></strong>:<code>tuple</code>=<em><code>(0, 0)</code></em>, <strong><code>config</code></strong>=<em><code>None</code></em>, <strong><code>nside</code></strong>=<em><code>128</code></em>, <strong><code>bmin</code></strong>=<em><code>0</code></em>)</p>
+<h2 id="DataView" class="doc_header"><code>class</code> <code>DataView</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L527" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>DataView</code>(<strong><code>times</code></strong>:<code>tuple</code>=<em><code>(0, 0)</code></em>, <strong><code>config</code></strong>=<em><code>None</code></em>, <strong><code>nside</code></strong>=<em><code>128</code></em>, <strong><code>bmin</code></strong>=<em><code>0</code></em>)</p>
 </blockquote>
 <p>Manage various views of the data set</p>
 
@@ -464,7 +464,7 @@ from the last update with the current one at GSFC.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="DataView.count_map" class="doc_header"><code>DataView.count_map</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L568" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>DataView.count_map</code>(<strong><code>nside</code></strong>=<em><code>None</code></em>, <strong><code>bmin</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="DataView.count_map" class="doc_header"><code>DataView.count_map</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L565" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>DataView.count_map</code>(<strong><code>nside</code></strong>=<em><code>None</code></em>, <strong><code>bmin</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <p>all-sky count map</p>
 <ul>

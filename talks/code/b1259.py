@@ -316,3 +316,26 @@ def examine_peaks():
 
     fig1, fig2= figs
     return locals()
+
+@ipynb_doc
+def check_2011_flare():
+    """
+    ## Check the 2011 Periastron
+    
+    There is a remarkable flare, which is responsible for the "ringing" observed in the spectrogram.
+    
+    The following figure is a blow-up of the region.
+    {fig}
+    The uppper plot has the spectrogram, the lower the 30-day period centered on MJD 58088.
+    """
+    ts = get_global('pg')
+    if ts is None:
+        ts=get_global('weekly').periodogram()
+    sg = ts.spectogram(interval=30)
+    pk = sg.loc[58000:58180, :]
+    fig, (ax,ax2) = plt.subplots(nrows=2, figsize=(15,8), sharex=False)
+    pk.sgplot(ax=ax,imshow_kw=dict(vmin=0,vmax=20,aspect=0.008), grid='orange')
+    pk.iloc[2,:].plot(ax=ax2, marker='.', ls='-')
+    ax2.set(xlim=(0,6), ylim=(0,50))
+    ax2.grid()
+    return locals()

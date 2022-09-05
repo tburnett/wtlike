@@ -316,8 +316,11 @@ class Spectogram(pd.DataFrame):
             # make the row index and column index lists
             ny,nx = sgdata.shape
             columns = np.linspace(f[0], f[-1], nx)
-            deltat = (tstop-tstart)/ny
-            index = np.linspace(tstart, tstop-deltat, ny) + deltat/2
+
+            #deltat = (tstop-tstart)/ny
+            index = np.arange(tstart, tstop, self.interval)[:ny] + self.interval/2
+            assert len(index)==ny, 'row indexing problem?'
+            #index = np.linspace(tstart, tstop-deltat, ny) + deltat/2
 
             # restore the TimeSeries object's cells
             ts.setup_cells(tstart, tstop, self.tsamp)
@@ -390,7 +393,7 @@ class TimeSeries():
 
     def __repr__(self):
         n = len(self.counts)
-        return f'TimeSeries: {n} cells for MJD {self.tstart}-{self.tstart+self.tspan},FFT factor {self.fft_factor:.1f}'
+        return f'TimeSeries: {n} cells for MJD {self.tstart}-{self.tstart+self.tspan},FFT factor {self.rfact:.1f}'
 
 
     @property

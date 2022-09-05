@@ -68,6 +68,8 @@ class SquareWCS(WCS):
     - pixsize [0.1] : pixel size
     - frame [None] : The frame is taken from the center SkyCoord, unless specified here --  only accept "galactic" or "fk5"
     - proj ["ZEA"] : projection to use
+
+    To get the WCS properties from the generated Axes object (actually WCSAxesSubplot): ax.wcs.wcs.crval for (l,b)
     """
 
     def __init__(self, center, size, pixsize=0.1, frame=None, proj='ZEA', unit=''):

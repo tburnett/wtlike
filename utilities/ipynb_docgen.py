@@ -3,7 +3,7 @@ Support single-cell documents in Jupyterlab
 
 Usage: Wtih code like this in a cell
 
-    from utilities.ipynb.docgen import *
+    from utilities.ipynb_docgen import *
 
     @ipynb_doc
     def userdoc():
@@ -16,7 +16,8 @@ Usage: Wtih code like this in a cell
 
     userdoc()
 
-one can display the docstring text, with the {} strings replaceed by representations of the variables, like an f-string, but actually equivalent to '...'.format(locals()).
+one can display the docstring text, with the {} strings replaceed by representations of the variables, like an f-string, 
+but actually equivalent to '...'.format(locals()).
 Note the decorator, and the "return locals()" as the last line of the function.
 
 
@@ -34,10 +35,9 @@ Names that are recognized:
 
 - date
 
-About image storage
+About images:
 
-Images are made from plots, or imported directly, with HTML created to include the image. They are stored in a local folder "images".
-The file name by default is the name of the function, or via "userdoc(name='mydoc')". 
+Images are made from plots, or imported directly, with HTML created to include the image as a base64 string.
 """
 import sys, os, shutil, string, pprint, datetime
 
@@ -194,7 +194,7 @@ class Wrapper(object):
     def __init__(self, *pars, **kwargs):
         self.obj = pars[0]
         self.vars=pars[1]
-        self.indent = kwargs.pop('indent', '5%')
+        self.indent = kwargs.pop('indent', '20px') # '5%')
         self.replacer = kwargs.pop('replacer')
 
     def __repr__(self): return str(self)

@@ -601,7 +601,7 @@ class DataView(object):
     def livetime_map(self, nside=None,  sigma=0):
         """ all-sky pointing livetime map
 
-        - nside [64]
+        - nside [None]
         - sigma: Gaussian smooting parameter (degrees)
 
         Return a HEALPix map, RING ordering, of the integrated livetime per pixel
@@ -636,7 +636,7 @@ class DataView(object):
         """ ### all-sky exposure map
 
         - beam_window --a list of coefficients of a Legendre polynomial expansion
-        - nside [64]
+        - nside [None]
 
         Return a HEALPix map of the weighted exposure
         """
@@ -655,6 +655,9 @@ class DataView(object):
                 )
     def flux_map(self, beam_window=None):
         """
-        Return a flux map, the ratio of counts/exposure
+        Return a flux map, the ratio of counts/exposure / sr
+
+        where the counts are now divided by the pixel solid angle.
+        So units are now: counts cm-2 s-1 sr-1
         """
-        return self.count_map()/self.exposure_map(beam_window)
+        return self.count_map()/self.exposure_map(beam_window) * 12*self.nside**2/(4*np.pi)
