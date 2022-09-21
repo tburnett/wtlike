@@ -404,7 +404,8 @@ class LightCurve(CellData):
         # special treatment for log and xlim
         self.check_plot_kwargs(kwargs)
 
-        fig = flux_plot(self.fits, source_name=source_name,
+        fig = flux_plot(self.fits,
+                        source_name=source_name,
                         label=f'{self.step_name} bins',  **kwargs)
         fig.set_facecolor('white')
         return fig

@@ -510,29 +510,8 @@ class TimeSeries():
                imshow_kw={},  **kwargs):
         """Return a Spectrogram object
         """
-        return Spectogram(self, ax=ax, interval=interval, overlap=overlap, tsamp=tsamp)
-#         from wtlike.config import FermiInterval, MJD
+        return Spectogram(self, ax=ax, interval=interval, overlap=overlap, tsamp=tsamp, **kwargs)
 
-#         pmaps= []
-#         tnow = MJD('now')
-#         for r in FermiInterval(interval):
-#             stop= r[0] + overlap*interval # overlap
-#             if stop > tnow: break
-#             self.setup_cells(r[0], stop, tsamp)
-#             f = self.power_df.f.values
-#             pmaps.append(self.power_df.p1.values)
-
-#         z = np.vstack(pmaps)
-#         extent=( f[0], f[-1], first_data, tnow,)
-
-#         fig, ax = plt.subplots(figsize=(10,8)) if ax is None else (ax.figure, ax)
-#         imkw= dict(cmap='jet',vmin=5, vmax=25, origin='lower', aspect=1/1500,)
-#         imkw.update(imshow_kw)
-#         ax.imshow(z, extent=extent,**imkw);
-#         ax.grid(color='lightgrey');
-#         kw = dict(ylabel='Time (MJD)', xlabel='Frequency (cycles $d^{-1})$',)
-#         kw.update(kwargs)
-#         ax.set(**kw)
 
 # Cell
 class Sinc():

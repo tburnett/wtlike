@@ -109,7 +109,7 @@ class WtLike(LightCurve):
         kw = dict(ylim=(0.975, 1.025), xlim=(0,1) )
         kw.update(kwargs)
         fig, ax = plt.subplots(figsize=(10,5)) if ax is None else (ax.figure, ax)
-        fig = super().plot(ax=ax, xlabel=f'phase for {self.period}-day period');
+        fig = super().plot( ax=ax, xlabel=f'phase for {self.period}-day period');
         ax.set(**kwargs );
         ax.axhline(1.0, color='grey');
         return fig

@@ -163,17 +163,26 @@ def image(filename,
 
 try:
     import matplotlib.pyplot as plt
-    def figure(fig, caption=None, width=None,  base64=True, num=0):
-        """ Set the caption, and possibly width of a plt.Figuare object
-            width -- in pixels - if set, adjust size for pixels
-            num -- set figure number starting value
-            base64 -- [True] insert as a "base64" map of pixels. If False, write out as a png file, insert link
+
+    def figure(figx, *pars, caption=None, width=None,  base64=True, **kwargs):
+        """ 
+        - figx -- A plt.Figure object or a function that returns one. If a function, use its docstring as a caption                 
+        - width -- in pixels - if set, adjust size for pixels
+        - base64 -- [True] insert as a "base64" map of pixels. If False, write out as a png file, insert link
         """
-        assert isinstance(fig, plt.Figure), 'Must be a plt.Figure object'
+        if callable(figx):
+            fig = figx(*pars, **kwargs)
+            if caption is None:
+                caption = figx.__doc__.format(**kwargs)
+
+        elif isinstance(figx, plt.Figure):
+            fig = figx
+        else:
+            print( 'The arg {figx} ust be either a plt.Figure object or a callable returning one', file=sys.stderr)
+            return None
         fig.caption=caption
         fig.base64 = base64
         fig.width=width
-
         return fig
 except:
     def figure(): pass
@@ -194,7 +203,7 @@ class Wrapper(object):
     def __init__(self, *pars, **kwargs):
         self.obj = pars[0]
         self.vars=pars[1]
-        self.indent = kwargs.pop('indent', '20px') # '5%')
+        self.indent = kwargs.pop('indent', '25px') # '5%')
         self.replacer = kwargs.pop('replacer')
 
     def __repr__(self): return str(self)
@@ -212,7 +221,7 @@ class FigureWrapper(Wrapper):
     def __init__(self, *pars, **kwargs): 
 
         super().__init__(*pars, **kwargs)
-        self.indent = kwargs.pop('indent', '5%')
+        self.indent = kwargs.pop('indent', '25px')
         self.base64 = kwargs.pop('base64', getattr(self.obj, 'base64', True))
 
         self.fig = fig = self.obj
@@ -303,6 +312,15 @@ if pd:
                     float_format=lambda x: f'{x:.3f}',
                     )
     wrappers['DataFrame'] = (DataFrameWrapper,  df_kwargs) 
+
+    class SeriesWrapper(DataFrameWrapper):
+        # have to convert to DF 
+        def __init__(self, *pars, **kwargs):
+            super().__init__(*pars, **kwargs)
+            self._df = self.obj.to_frame()
+
+
+    wrappers['Series']= (SeriesWrapper, df_kwargs)
 
 class PPWrapper(Wrapper):
     """Use PrettyPrint
@@ -403,9 +421,12 @@ class ObjectReplacer(dict):
 def monospace(text:'Either a string, or an object',
                 summary:'string for <details>'=None,
                 show:'initially show details'=False, 
-                indent='5%',
+                indent='25px',
                 style='',
+                raw:bool=False,
                 )->str:
+    if raw:
+        return text
 
     text = str(text).replace('<','&lt;').replace('>','&gt;').replace('\n', '<br>')
     out = f'<div style="margin-left: {indent};{style}"><pre>{text}</pre></div>'

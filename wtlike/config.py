@@ -373,6 +373,9 @@ class FermiInterval():
         return len(self.mm)-1
 
     def __getitem__(self, k):
+        """Return a (start, end) MJD tuple for the kth interval, k=0...N-1.
+        if k<0, return the range for the full interval.
+        """
         return (self.mm[k], self.mm[k+1],) if k>=0 else (self.mm[k-1],self.mm[k])
 
     def __call__(self, k):

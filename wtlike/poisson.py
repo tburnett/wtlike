@@ -384,7 +384,7 @@ class PoissonFitter(object):
             raise Exception(txt) ########################################################
         return t, deltas
 
-    def plot(self, ax=None, xticks=True, legend=True ):
+    def plot(self, ax=None, xticks=True, legend=True, **kwargs ):
         """Return a figure showing the fit"""
         import matplotlib.pyplot as plt
         xp = self.dom
@@ -397,7 +397,9 @@ class PoissonFitter(object):
         ax.plot(xp, np.exp(self(xp)-pfmax), 'o', color='orange', label='points used for approx.')
         ax.plot(x, np.exp(self._poiss(x)), '--', lw=2,color='orange', label='Poisson approx.')
         if legend: ax.legend(loc='upper right', prop=dict(size=8) )
-        ax.set(xlim=(0,None), ylim=(0,1.05))
+        kw = dict(xlim=(0,None), ylim=(0,1.05))
+        kw.update(kwargs)
+        ax.set(**kw)
         if xticks:
             ax.set_xticks([0, xp[-1]])
         ax.grid(alpha=0.4)

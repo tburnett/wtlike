@@ -361,6 +361,12 @@ class CellData(SourceData):
 
         view.cells = pd.DataFrame(fcells)
         view.update() # does fit
+
+        # now duplicate fits bins for two periods
+        a = view.fits
+        b = a.copy()
+        b.t += 1 # t column is actually phase
+        view.fits = pd.concat([a,b], ignore_index=True)
         view.is_phase = True # tag to choose proper plot
         view.period = period
         return  view

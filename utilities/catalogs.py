@@ -1,4 +1,4 @@
-import os, glob
+import os, sys, glob
 import numpy as np
 import pylab as plt
 import pandas as pd
@@ -145,6 +145,7 @@ class Fermi4FGL(CatDF, pd.DataFrame):
             dec         = cvar('DEJ2000'), 
             glat        = cvar('GLAT'),
             glon        = cvar('GLON'),
+            r95         = cvar('Conf_95_SemiMajor'),
             spectype    = cname('SpectrumType'),
             eflux       = cvar('Energy_Flux100'), # erg cm-2 s-1
             significance= cvar('Signif_Avg'),
@@ -161,6 +162,7 @@ class Fermi4FGL(CatDF, pd.DataFrame):
         self.__dict__.update(data=data, filename=filename.name,)
         self.index = name
         self.index.name = 'name'
+        self.fitscols = data.columns
         
     def field(self, name):
         return self.data.field(name)

@@ -66,14 +66,15 @@ def title():
     return locals()
 
 @ipynb_doc
-def j1227(name='PSR J1227-4853'):
+def j1227(name='PSR J1227-4853', period=0.287887, tsamp=1/24):
     """
     ## {name}
 
     
     ### Bayesian-Block Light curve
     {fig1}
-    The BB analysis identiview three blocks.
+    The BB analysis identified {nbb} blocks, here is a table with columns for time, width, relative flux and errors:
+    {bb_table}
     
     ### Periodogram
 
@@ -82,11 +83,17 @@ def j1227(name='PSR J1227-4853'):
     
     {fig4}
     
-    ### Look at the expected orbital frequency:
+    ### Look at the orbital frequency:
     {fig3}
     
     There is a certainly a peak consistent with that frequency, but at a level that is not
     significant.
+
+    ### Phase plot using orbital period
+    A sharp peak here could be consistent with little power at the orbital frequency...
+    {fig5}
+    ... but nothing visible.
+
     {printout}
     """
     
@@ -94,31 +101,36 @@ def j1227(name='PSR J1227-4853'):
         wtlx = WtLike(name) #XSS 12270-4859')
 
         fig1, ax = plt.subplots(figsize=(12,4))
-        wtlx.view(30).bb_view().plot(ax=ax);
+        bb = wtlx.view(30).bb_view()
+        bb.plot(ax=ax, UTC=True)
+        bb_table = bb.fluxes['t tw flux errors'.split()]
+        nbb = len(bb_table)
 
-        px = wtlx.periodogram()
+        px = wtlx.periodogram(tsamp=tsamp)
         fig2, ax = plt.subplots(figsize=(12,3))
         px.power_plot(ax=ax, pmax=50)
 
-        orbital_freq = 1/0.287887
+        orbital_freq = 1/period
 
         fig3,ax = plt.subplots(figsize=(6,3))
         simple_power_plot(px, ax=ax, xlim=(3.4724, 3.475), power='p0', pticks=[0.290,0.292, 0.294, 0.296], ylim=(0,20))
 
         # px.power_plot(ax=ax, xlim=(orbital_freq-0.005,orbital_freq+0.005),ylim=(0,30));
-        ax.axvline(orbital_freq, ls='--', color='orange', label='known orbital period')
-        # ax.set(title='1FGL J1018.6-5856');
+        ax.axvline(orbital_freq, ls='-', color='orange', label='orbital frequency')
         ax.legend();
 
         # px.power_plot(xlim=(0,0.005))
 
         fig4, ax = plt.subplots(figsize=(6,3))
         lowfreqplot(px, ax=ax, yscale='log', ylim=(1,None), xlim=(0,2),pticks=[0.3,0.4,0.5,1,1.5,2,4],);
+
+        fig5, ax =plt.subplots(figsize=(9,4))
+        wtlx.phase_view(period=period, ).plot(ax=ax,ylim=(0.5,1.8))
         
     return locals()
 
 @ipynb_doc
-def j1018(name='1FGL J1018.6-5856'):
+def j1018(name='1FGL J1018.6-5856', phase_ref=UTC(57258.23) ):
     r"""## {name}
     
     ###  Bayesian-Block Light curve and periodogram:
@@ -131,6 +143,11 @@ def j1018(name='1FGL J1018.6-5856'):
     ### Blow-up around orbital frequency:
     {fig3}
     The peak corresponds to a period of ${period:.2f} \pm 0.02\ \mathrm{d}$.
+    
+    ### Folded with the orbital period
+    This uses as a phase reference, {phase_ref}, maeasured previously by the LAT with 1/2 year.
+    {fig4}
+  
     
     {out}
     """
@@ -147,14 +164,90 @@ def j1018(name='1FGL J1018.6-5856'):
         period = 1/dfp.f.values[0]
         print(f'Source period: {period:.2f} d')
         fig3, ax = plt.subplots(figsize=(6,3))
-
-
         simple_power_plot(py, ax=ax, xlim=(0.0595,0.0615), pticks=[16.4,16.5, 16.6])
     
+        fig4, ax =plt.subplots(figsize=(9,4))
+        wtly.phase_view(period=16.55, reference=phase_ref ).plot(ax=ax,ylim=(0.5,1.8))
+
     return locals()
 
-def main():
+@ipynb_doc
+def footer(fname):
+    """
+    ---
+    ### These files can be found on Google drive
+    * [notebook "{fname}.ipynb"](https://drive.google.com/file/d/11f4OHFFKrfknWpRHSwa8luDJ5SwqWtKT/view?usp=sharing)
+
+    * [code "{fname}.py"](https://drive.google.com/file/d/11hkX_91T74BENxqHtXRNTwf-ZwGMTiNF/view?usp=sharing)
+    """
+    from nbdev.export2html import convert_nb
+    import shutil
+    nfile = Path(f'./{fname}.ipynb'); 
+    pfile = Path(f'code/{fname}.py')
+    assert nfile.is_file(), f'no {nfile} ?'
+    assert pfile.is_file(), f'no {pfile} ?'
+    dest = Path('/mnt/g/My Drive/public')
+    assert dest.is_dir(), f'No {dest} ?'
+    shutil.copy(nfile, dest)
+    shutil.copy(pfile, dest)
+
+    # kills the kernel sometimes? 
+    # convert_nb(f'{fname}.ipynb', dest='html')
+    return locals()
+
+def main(name='Two Binaries'):
+    fname= name.replace(' ', '_').lower()
+
     title()
     j1227()
     j1018()
+    footer(fname)
     
+    
+if __name__=='__main__':
+    main()
+
+
+@ipynb_doc
+def j2032(name='PSR J2032+4127', tsamp=1/24):
+    """
+    ## {name}
+
+    [Paper about this](https://arxiv.org/pdf/1502.01465.pdf)
+
+    __Note contamination from Cyg-X3__
+
+    ### Bayesian-Block Light curve
+    {fig1}
+    The BB analysis identified {nbb} blocks, here is a table with columns for time, width, relative flux and errors:
+    {bb_table}
+    
+    ### Kerr Periodogram
+
+    {fig2}
+
+    
+    {fig4}
+    
+
+    {printout}
+    """
+    
+    with capture_hide('printout') as printout:
+        wtlx = WtLike(name) #XSS 12270-4859')
+
+        fig1, ax = plt.subplots(figsize=(12,4))
+        bb = wtlx.view(30).bb_view()
+        bb.plot(ax=ax, UTC=True)
+        bb_table = bb.fluxes['t tw flux errors'.split()]
+        nbb = len(bb_table)
+
+        px = wtlx.periodogram(tsamp=tsamp)
+        fig2, ax = plt.subplots(figsize=(12,3))
+        px.power_plot(ax=ax, pmax=50)
+
+
+        fig4, ax = plt.subplots(figsize=(6,3))
+        lowfreqplot(px, ax=ax, yscale='log', ylim=(1,None), xlim=(0,2),pticks=[0.3,0.4,0.5,1,1.5,2,4],);
+        
+    return locals()

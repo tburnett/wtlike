@@ -15,6 +15,7 @@
     "Manage cell data": "cell_data.html",
     "Light Curve Generation": "lightcurve.html",
     "Periodograms": "10-time_series.html",
+    "Energy-dependent Likelidood": "energyflux.html",
     "Bayesian Blocks": "bayesian.html",
     "wtlike interface": "main.html",
     "Presentation to the Fermi Collaboration": "presentation.html",

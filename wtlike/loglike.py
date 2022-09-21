@@ -209,7 +209,7 @@ class LogLike(object):
         """ Make a plot of the likelihood, with fit
         """
         fig, ax = plt.subplots(figsize=(4,2)) if ax is None else (ax.figure, ax)
-        kw = dict( ylim=(-2,0.1), ylabel='log likelihood', xlabel='relative flux')
+        kw = dict( ylim=(-2,0.2), ylabel='log likelihood', xlabel='relative flux')
         kw.update(**kwargs)
         ax.set(**kw)
 
@@ -239,7 +239,8 @@ class LogLike(object):
         for x in (a-s,a+s):
             ax.plot([x,x], [f(x)-0.1, f(x)+0.1], '-k',lw=2)
         ax.plot(a, f(a)-0.5, '-ok', ms=10,
-                label=rf"{fit['flux']:.3f} $\pm$ {fit['sig_flux']:.3f}, TS={ts:.1f}]")
+                label=rf"{fit['flux']:.3f} $\pm$ {fit['sig_flux']:.3f}"
+                    +f"\n TS = {ts:.0f}")
 
         ax.legend(loc='lower center', fontsize=12)
         ax.grid(alpha=0.5)
