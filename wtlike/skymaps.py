@@ -25,37 +25,53 @@ from .sources import findsource
 valid = Config().valid;
 
 # Cell
+def _trans(*args):
+    """ Translate degrees to radians, reverse x-axis (cleaner if aitoff did it)
+    Expect either
+    * first arg is a SkyCoord object (perhabs a list of positions)
+    - or -
+    * first two args are lists of l, b in degrees
+    """
+    nargs = len(args)
+    if nargs>0 and isinstance(args[0], SkyCoord):
+        sc = args[0].galactic
+        l, b = sc.l.deg, sc.b.deg
+        rest = args[1:]
+    elif nargs>1:
+        l, b = args[:2]
+        rest = args[2:]
+    else:
+        raise ValueError('Expect positional parameters l,b, or skycoord')
+
+    # convert and reverse l,b
+    x  = -np.radians(np.atleast_1d(l))
+    x[x<-np.pi] += 2*np.pi
+    y = np.radians(np.atleast_1d(b))
+    return [x,y] + list(rest) #(() if nargs==0 else args[nargs:])
+
+# Cell
 class AitoffFigure():
 
     """ Implement plot and text converting from (l,b) in degrees, or a SkyCoord.
 
     """
-    def __init__(self, fig):
-        self.fig = fig
-        self.ax = fig.axes[0]
+    def __init__(self, fig=None):
+        self.fig = fig or plt.figure(figsize=(10,5))
+        if len(self.fig.axes)==0:
+            ax=self.fig.add_subplot(111, projection='aitoff')
+            ax.set(xticklabels=[], yticklabels=[], visible=True)
+            ax.grid(color='grey')
+        self.ax = self.fig.axes[0]
         assert self.ax.__class__.__name__ == 'AitoffAxesSubplot', 'expect figure to have aitoff axes instance'
 
-    def _trans(self, *args):
-        if len(args)==2 and isinstance(args[0], SkyCoord):
-            sc = args[0].galactic
-            l, y, a = sc.l.rad, sc.b.rad, args[1]
-            x = -(l if l<=np.pi else l- 2*np.pi)
-        elif len(args)==3:
-            l, b, a = args
-            x = -np.radians( (l if l<=180 else l-360 ))
-            y = np.radians(b)
-        else:
-            raise Exception('Expect positional parameters l,b,a, or skycoord,a')
-        return x,y, a
-
     def plot(self, *args, **kwargs):
-        self.ax.plot(*self._trans(*args), **kwargs)
+        self.ax.plot(*_trans(*args), **kwargs)
 
     def text(self, *args, **kwargs):
-        self.ax.text(*self._trans(*args), **kwargs)
+        self.ax.text(*_trans(*args), **kwargs)
 
-    def scatter(self, *args, **kwargs): # not checked yet
-        self.ax.scatter(self._trans(*args), **kwags)
+    def scatter(self, *args, **kwargs):
+        return self.ax.scatter(*_trans(*args), **kwargs)
 
 # Cell
 

@@ -43,7 +43,7 @@ import sys, os, shutil, string, pprint, datetime
 
 
 __all__ = ['nbdoc', 'image', 'figure', 'monospace', 'capture', 'capture_hide', 'capture_show', 'shell', 'create_file', 'ipynb_doc',
-        'get_nb_namespace', 'special_prefix', 'figure_number'] #,'show_doc']
+        'get_nb_namespace', 'special_prefix', 'figure_number', 'display_markdown'] #,'show_doc']
 
 special_prefix = ''
 
@@ -598,3 +598,10 @@ def nbdoc(fun, *pars, name=None, fignum=1, **kwargs):
 
     # have IPython display the generated markdown
     display.display( md_data )  
+
+def display_markdown(text, vars={}):
+    """Add the text to the IPython display
+    - vars -- optional dictionary of replacement values
+    """
+    import IPython.display as display
+    display.display(doc_formatter(text, vars))

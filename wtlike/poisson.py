@@ -65,16 +65,17 @@ class Poisson(object):
         return f - const
 
     def __str__(self):
-
-        e, beta, mu = self.altpars()
-        return f'Poisson: mu,beta= {mu:.1f}, {beta:.1f}'
+        return self.__repr__()
+        # e, beta, mu = self.altpars()
+        # return f'Poisson: mu,beta= {mu:.1f}, {beta:.1f}'
 
     def __repr__(self):
         if self.flux==0:
-            return 'flux is zero for source'
+            return '0'
         t = np.array(self.errors)/self.flux-1
         relerr = np.abs(np.array(self.errors)/self.flux-1)
-        return f'{self.__module__}.{self.__class__.__name__}: {self.flux:.3f}[1+{relerr[0]:.3f}-{relerr[1]:.3f}]'
+        # return f'{self.__module__}.{self.__class__.__name__}: {self.flux:.3f}[1+{relerr[0]:.3f}-{relerr[1]:.3f}]'
+        return f'{self.flux:.3f}[1+{relerr[0]:.3f}-{relerr[1]:.3f}]'
 
     @property
     def flux(self):
@@ -83,6 +84,11 @@ class Poisson(object):
     @property
     def errors(self):
         return self.find_delta()
+
+    @property
+    def limit(self):
+        """ 95% confidence interval"""
+        return self.cdfcinv(0.05)
 
     @property
     def ts(self):
@@ -214,6 +220,23 @@ class Poisson(object):
 
         assert np.abs(P(flux))<1e-3, f'Fail validity: peak {P(mean)}'
         return P
+
+    @classmethod
+    def from_list(cls, plist, tol=0.2):
+        """ Combine a list of poisson objects, adding log likelihoods
+        """
+        # from wtlike.poisson import PoissonFitter
+        plist = np.atleast_1d(plist)
+        fn = lambda x: sum([p(x) for p in plist])
+        fit = PoissonFitter(fn, tol=tol)
+        return fit.poiss
+
+    @classmethod
+    def from_function(cls, fn, tol=0.2):
+        """Create by fitting a function
+        """
+        return PoissonFitter(fn, tol=tol).poiss
+
 
 # Cell
 class PoissonFitter(object):

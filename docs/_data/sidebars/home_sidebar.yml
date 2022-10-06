@@ -52,7 +52,7 @@ entries:
       title: Periodograms
       url: 10-time_series.html
     - output: web,pdf
-      title: Energy-dependent Likelidood
+      title: Energy-dependent Likelihood
       url: energyflux.html
     - output: web,pdf
       title: Bayesian Blocks
