@@ -6,17 +6,14 @@ __all__ = ['valid', 'AitoffFigure', 'SquareWCS', 'FITSimage', 'HPmap', 'ait_plot
 import os, sys
 import numpy as np
 import pandas as pd
-import numpy as np
 import matplotlib.pyplot as plt
 from pathlib import Path
 
 import healpy
 
-
 from astropy.coordinates import SkyCoord
 from astropy.wcs import WCS
 from astropy.io import fits
-#from utilities import healpix as hpx
 
 from .config import *
 from .data_man import DataView
@@ -26,7 +23,8 @@ valid = Config().valid;
 
 # Cell
 def _trans(*args):
-    """ Translate degrees to radians, reverse x-axis (cleaner if aitoff did it)
+    """
+    Helper for AitoffFigure: Translate degrees to radians (cleaner if aitoff did it)
     Expect either
     * first arg is a SkyCoord object (perhabs a list of positions)
     - or -
@@ -43,26 +41,26 @@ def _trans(*args):
     else:
         raise ValueError('Expect positional parameters l,b, or skycoord')
 
-    # convert and reverse l,b
+    # convert to radians
     x  = -np.radians(np.atleast_1d(l))
-    x[x<-np.pi] += 2*np.pi
+    x[x<-np.pi] += 2*np.pi # equivalent to mod(l+pi,2pi)-pi I think
     y = np.radians(np.atleast_1d(b))
-    return [x,y] + list(rest) #(() if nargs==0 else args[nargs:])
+    return [x,y] + list(rest)
 
 # Cell
 class AitoffFigure():
 
-    """ Implement plot and text converting from (l,b) in degrees, or a SkyCoord.
+    """ Implement plot and text conversion from (l,b) in degrees, or a SkyCoord.
 
     """
-    def __init__(self, fig=None):
-        self.fig = fig or plt.figure(figsize=(10,5))
+    def __init__(self, fig=None, figsize=(10,5)):
+        self.fig = fig or plt.figure(figsize=figsize)
         if len(self.fig.axes)==0:
             ax=self.fig.add_subplot(111, projection='aitoff')
             ax.set(xticklabels=[], yticklabels=[], visible=True)
             ax.grid(color='grey')
         self.ax = self.fig.axes[0]
-        assert self.ax.__class__.__name__ == 'AitoffAxesSubplot', 'expect figure to have aitoff axes instance'
+        assert self.ax.__class__.__name__ == 'AitoffAxesSubplot', 'expect figure to have aitoff Axes instance'
 
     def plot(self, *args, **kwargs):
         self.ax.plot(*_trans(*args), **kwargs)
