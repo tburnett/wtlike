@@ -59,7 +59,7 @@ class LogLike(object):
                 sig_flux=err[0]
                 sig_beta=err[1]
                 corr = var[0,1]/(err[0]*err[1])
-                outdict.update(flux=1+pars[0], beta=beta,
+                outdict.update(flux=pars[0], beta=beta,
                             sig_flux=sig_flux, sig_beta=sig_beta,corr=corr)
             except LinAlgError as e:
                 # flag as nan
@@ -144,7 +144,7 @@ class LogLike(object):
         except Exception as msg:
             print(f'exception: s, h: {s},{h}-- {msg}', file=sys.stderr)
             raise
-        print( '***********Failed?')
+        print( '***********Failed?', file=sys.stderr)
 
     def minimize(self,   fix_beta=True,estimate=[0.,0], **fmin_kw):
         """Minimize the -Log likelihood """
@@ -262,7 +262,7 @@ class GaussianRep(object):
         fit = self.fit
         beta_fit = f"\n\tbeta: {fit['beta']:.3f} +/- {fit['sig_beta']:.3f}" if not self.fix_beta else ''
         r = f"{self.__class__.__name__}: {fit['counts']:,} counts"\
-            f"\n\tflux: {1+fit['flux']:.3f} +/- {fit['sig_flux']:.3f} {beta_fit}"
+            f"\n\tflux: {fit['flux']:.3f} +/- {fit['sig_flux']:.3f} {beta_fit}"
         return r
 
 # Cell

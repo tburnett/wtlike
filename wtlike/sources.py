@@ -232,6 +232,9 @@ def findsource(*pars, gal=False):
     import astropy.units as u
     if len(pars)==1:
         name = tname= pars[0]
+        if name.startswith('4FGL '):
+            # SkyCoord.from_name not updated for DR3. Use as Jname, ignoring that 'c'
+            name = name[4:].replace('c','')
         if name.startswith('J') and (len(name)==10 or len(name)==12) and ('+' in name or '-' in name):
             # parse the name for (ra,dec)
             if name[5]!='.':
@@ -247,6 +250,8 @@ def findsource(*pars, gal=False):
 #         elif name.startswith('J'):
 #             print(f'The name "{name}" starts with a "J", but cannot be parsed for ra,dec', file=sys.stderr)
 #             return None
+
+
         else:
             try:
                 skycoord = SkyCoord.from_name(name)
@@ -465,7 +470,7 @@ class PointSource():
                 name = lookup.cat_name
         else:
             gal = kwargs.get('gal', False)
-            name=f'{"fk5" if gal else "gal"} ({pars[0]},{pars[1]}) '
+            name=f'{"fk5" if not gal else "gal"} ({pars[0]},{pars[1]}) '
         self.name = name
         gal = self.skycoord.galactic
         self.l, self.b = gal.l.deg, gal.b.deg
