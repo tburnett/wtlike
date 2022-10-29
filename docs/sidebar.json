@@ -2,7 +2,7 @@
   "wtlike": {
     "Overview": "/",
     "Configuration data and basic functions": "config.html",
-    "Data management": "data_man.html",
+    "Data management--build `data_man`": "data_man.html",
     "Effective Area": "effective_area.html",
     "Exposure processing": "exposure.html",
     "Sources and weights": "sources.html",

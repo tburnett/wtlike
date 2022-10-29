@@ -13,7 +13,7 @@ entries:
       title: Configuration data and basic functions
       url: config.html
     - output: web,pdf
-      title: Data management
+      title: Data management--build `data_man`
       url: data_man.html
     - output: web,pdf
       title: Effective Area

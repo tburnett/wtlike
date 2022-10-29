@@ -1,6 +1,6 @@
 ---
 
-title: Data management
+title: Data management--build `data_man`
 
 
 keywords: fastai
@@ -31,7 +31,7 @@ nb_path: "nbs/01_data_man.ipynb"
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Overview">Overview<a class="anchor-link" href="#Overview"> </a></h3><p>Fermi-LAT weekly data files are extracted from the <a href="https://heasarc.gsfc.nasa.gov/FTP/fermi/data/lat/weekly">GSFC FTP server </a>, 
+<h2 id="Overview">Overview<a class="anchor-link" href="#Overview"> </a></h2><p>Fermi-LAT weekly data files are extracted from the <a href="https://heasarc.gsfc.nasa.gov/FTP/fermi/data/lat/weekly">GSFC FTP server </a>, 
 with subfolders for the photon data, <code>photon</code> and spacecraft data, <code>spacecraft</code>. It is <a href="http://fermi.gsfc.nasa.gov/ssc/data/access/http://fermi.gsfc.nasa.gov/ssc/data/access/">described here</a></p>
 <p>The class <a href="/wtlikedata_man.html#FermiData"><code>FermiData</code></a> downloads these to temporary files and constructs a dict for each week with
 contents</p>
@@ -64,7 +64,7 @@ inspected with <code>plot_week</code>.</p>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="Run-numbers-and-timing">Run numbers and timing<a class="anchor-link" href="#Run-numbers-and-timing"> </a></h4><p>The run number is an integer correspnding to the MET at the start of the run. For a week, with 15 orbits/day, we 
+<h3 id="Run-numbers-and-timing">Run numbers and timing<a class="anchor-link" href="#Run-numbers-and-timing"> </a></h3><p>The run number is an integer correspnding to the MET at the start of the run. For a week, with 15 orbits/day, we 
 expect ~105 runs. We save a table of the run numbers per week, and use a uint8 index in the photon table.</p>
 <p>A run is typically an orbit or less, at most 6 ks. Integerizing the offset from the run start, or the run number, using 32 bits, one has 5e5 intervals/s, so we choose 2$\mu$s. Thus we generate the time for each event from three sources: the 2$\mu$s time offset for the run, the index of the run number into the  runs table, and the runs table itself.</p>
 
@@ -74,6 +74,112 @@ expect ~105 runs. We save a table of the run numbers per week, and use a uint8 i
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    {% endraw %}
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="GTI">GTI<a class="anchor-link" href="#GTI"> </a></h2><p>GTI, for Good Time Interval, is a mechanism to select event times, and corresponding spacecraft 
+information if exposure is needed.
+There is a section for this information in the FT1 photon data files, but, for the GSFC-generated
+weekly files we use here, we do not use it, since the 
+photon data itself respects it, as do the space craft information in the FT2 files. This code is intended to support external use.</p>
+
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h3 id="GTI" class="doc_header"><code>class</code> <code>GTI</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L21" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>GTI</code>(<strong><code>times</code></strong>:<code>interleaved (start,stop) times in MJD</code>, <strong><code>name</code></strong>:<code>str name to associate</code>=<em><code>''</code></em>, <strong>**<code>kwargs</code></strong>)</p>
+</blockquote>
+<p>Define a functor that returns acceptability of times
+Note, internally use MJD time scale</p>
+
+</div>
+
+</div>
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="GTI.__call__" class="doc_header"><code>GTI.__call__</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L62" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>GTI.__call__</code>(<strong><code>times</code></strong>:<code>array of MJD times</code>)</p>
+</blockquote>
+<p>return array of bool for accepability of times</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Apply-an-external-GTI">Apply an external GTI<a class="anchor-link" href="#Apply-an-external-GTI"> </a></h3><p>Copied the files nogrb.gti and nosolorflares.gti from /nfs/farm/g/glast/g/catalog/P8_P305 to config.datapath</p>
+
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">display_markdown</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span><span class="se">\</span>
+<span class="s2">## FT1 and FT2 -- data access</span>
+
+<span class="s2">Fermi data is distributed in two FITS file formats:</span>
+<span class="s2">- FT1: photon data</span>
+<span class="s2">- FT2: spacecraft history</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h2 id="FT1-and-FT2----data-access">FT1 and FT2 -- data access<a class="anchor-link" href="#FT1-and-FT2----data-access"> </a></h2><p>Fermi data is distributed in two FITS file formats:</p>
+<ul>
+<li>FT1: photon data</li>
+<li>FT2: spacecraft history</li>
+</ul>
+
+</div>
+
+</div>
+
+</div>
+</div>
 
 </div>
     {% endraw %}
@@ -96,7 +202,7 @@ expect ~105 runs. We save a table of the run numbers per week, and use a uint8 i
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="get_ft1_data" class="doc_header"><code>get_ft1_data</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L19" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>get_ft1_data</code>(<strong><code>config</code></strong>, <strong><code>ft1_file</code></strong>)</p>
+<h3 id="get_ft1_data" class="doc_header"><code>get_ft1_data</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L104" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>get_ft1_data</code>(<strong><code>config</code></strong>, <strong><code>ft1_file</code></strong>)</p>
 </blockquote>
 <p>Read in a photon data (FT1) file, bin in energy and position to convert to a compact table</p>
 <ul>
@@ -122,7 +228,7 @@ expect ~105 runs. We save a table of the run numbers per week, and use a uint8 i
 </li>
 <li><p><code>gti_times</code> -- GTI times as an interleaved start, stop array.</p>
 </li>
-<li><code>runs</code> -- a list of the run numbers, each a MET time. Expect 109 per week</li>
+<li><code>runs</code> -- a list of the run numbers, each a MET time. Expect ~109 per week</li>
 </ul>
 <p>For the selected events above 100 MeV, this represents 10 bytes per photon, vs. 27 in the FT1 data</p>
 
@@ -154,44 +260,7 @@ expect ~105 runs. We save a table of the run numbers per week, and use a uint8 i
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="photon_week" class="doc_header"><code>photon_week</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L139" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>photon_week</code>(<strong><code>config</code></strong>, <strong><code>week_dict</code></strong>)</p>
-</blockquote>
-<p>Return a dict with photon info for the week, with a 'time' field, in MJD reconstructed from
-the run_ref and trun fields. The latter removed.</p>
-<ul>
-<li>week_dict -- standard photon info for the week</li>
-<li>config -- used for config.offset_size</li>
-</ul>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h2 id="get_ft2_info" class="doc_header"><code>get_ft2_info</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L157" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>get_ft2_info</code>(<strong><code>config</code></strong>, <strong><code>filename</code></strong>, <strong><code>gti</code></strong>=<em><code>&lt;lambda&gt;</code></em>)</p>
+<h3 id="get_ft2_info" class="doc_header"><code>get_ft2_info</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L214" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>get_ft2_info</code>(<strong><code>config</code></strong>, <strong><code>filename</code></strong>, <strong><code>gti</code></strong>=<em><code>&lt;lambda&gt;</code></em>)</p>
 </blockquote>
 <p>Process a FT2 file, with S/C history data, and return a summary dict</p>
 <p>Parameters:</p>
@@ -218,6 +287,13 @@ the run_ref and trun fields. The latter removed.</p>
 </div>
     {% endraw %}
 
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="FermiData">FermiData<a class="anchor-link" href="#FermiData"> </a></h2><p>With superclass GSFCweekly, organize the weekly FT1 and FT2 files from GSFC into local weekly summary files</p>
+
+</div>
+</div>
+</div>
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
@@ -228,15 +304,23 @@ the run_ref and trun fields. The latter removed.</p>
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span> <span class="s1">&#39;Exercise access from GSFC and FT1 data handling&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">display_markdown</span><span class="p">(</span> <span class="s2">&quot;&quot;&quot;### Test download from GSFC and data handling</span>
+<span class="s2">Download, then process FT1 and FT2 files.</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
 <span class="n">gd</span> <span class="o">=</span> <span class="n">GSFCweekly</span><span class="p">(</span><span class="n">Config</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="mi">3</span><span class="p">))</span>
 <span class="k">if</span> <span class="n">gd</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">valid</span><span class="p">:</span>
     <span class="n">ft2</span><span class="p">,</span> <span class="n">ft1</span> <span class="o">=</span> <span class="n">gd</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span>
-    <span class="n">v</span> <span class="o">=</span> <span class="n">get_ft1_data</span><span class="p">(</span><span class="n">gd</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="n">Path</span><span class="p">(</span><span class="n">gd</span><span class="o">.</span><span class="n">local_path</span><span class="p">)</span><span class="o">/</span><span class="n">ft1</span><span class="p">);</span>
+    <span class="n">v1</span> <span class="o">=</span> <span class="n">get_ft1_data</span><span class="p">(</span><span class="n">gd</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="n">Path</span><span class="p">(</span><span class="n">gd</span><span class="o">.</span><span class="n">local_path</span><span class="p">)</span><span class="o">/</span><span class="n">ft1</span><span class="p">);</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Contents of the output dict</span><span class="se">\n</span><span class="s1">&#39;</span>
-          <span class="s1">&#39; key      value type&#39;</span><span class="p">)</span>
-    <span class="k">for</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span><span class="n">x</span><span class="p">)</span> <span class="ow">in</span> <span class="n">v</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Contents of FT1 summary output dict</span><span class="se">\n</span><span class="s1">&#39;</span>
+          <span class="s1">&#39; key        value type&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span><span class="n">x</span><span class="p">)</span> <span class="ow">in</span> <span class="n">v1</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;  </span><span class="si">{</span><span class="n">k</span><span class="si">:</span><span class="s1">10</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    
+    <span class="n">v2</span> <span class="o">=</span> <span class="n">get_ft2_info</span><span class="p">(</span><span class="n">gd</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="n">Path</span><span class="p">(</span><span class="n">gd</span><span class="o">.</span><span class="n">local_path</span><span class="p">)</span><span class="o">/</span><span class="n">ft2</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Contents of FT2 summary output dict</span><span class="se">\n</span><span class="s1">&#39;</span>
+          <span class="s1">&#39; key        value type&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span><span class="n">x</span><span class="p">)</span> <span class="ow">in</span> <span class="n">v2</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;  </span><span class="si">{</span><span class="n">k</span><span class="si">:</span><span class="s1">10</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 </pre></div>
 
@@ -250,21 +334,97 @@ the run_ref and trun fields. The latter removed.</p>
 
 <div class="output_area">
 
+
+<div class="output_markdown rendered_html output_subarea ">
+<h3 id="Test-download-from-GSFC-and-data-handling">Test download from GSFC and data handling<a class="anchor-link" href="#Test-download-from-GSFC-and-data-handling"> </a></h3><p>Download, then process FT1 and FT2 files.</p>
+
+</div>
+
+</div>
+
+<div class="output_area">
+
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Exercise access from GSFC and FT1 data handling
-GSFCweekly: spacecraft/lat_spacecraft_weekly_w741_p310_v001.fits --&gt; week741_ft2.fits
-GSFCweekly: photon/lat_photon_weekly_w741_p305_v001.fits --&gt; week741_ft1.fits
-FT1: week741_ft1.fits, GTI range 681869208.7-682476252.1:  2,437,830 photons
-	Selection E &gt; 100 MeV. theta&lt;66.4 and z&lt;100 remove: 83.62%
-FT1 data from file week741_ft1.fits: tstart=681869208 (UTC 2022-08-11) selected 399,240/2,437,830 photons, in 107 runs.
-Contents of the output dict
- key      value type
+<pre>GSFCweekly: spacecraft/lat_spacecraft_weekly_w751_p310_v001.fits --&gt; week751_ft2.fits
+GSFCweekly: photon/lat_photon_weekly_w751_p305_v001.fits --&gt; week751_ft1.fits
+FT1: week751_ft1.fits, GTI range 687917276.7-688520848.1:  1,986,768 photons
+	Selection E &gt; 100 MeV. theta&lt;66.4 and z&lt;100 remove: 82.50%
+FT1 data from file week751_ft1.fits: tstart=687917276 (UTC 2022-10-20) selected 347,624/1,986,768 photons, in 107 runs.
+Contents of FT1 summary output dict
+ key        value type
   tstart     float
   photons    dict
   gti_times  ndarray
   runlist    ndarray
+FT2: week751_ft2.fits, MET range 687917276.7-688520848.1, 17263 entries, 17263 (100.0%) in GTI
+Contents of FT2 summary output dict
+ key        value type
+  start      ndarray
+  stop       ndarray
+  livetime   ndarray
+  ra_scz     ndarray
+  dec_scz    ndarray
+  ra_zenith  ndarray
+  dec_zenith ndarray
 </pre>
 </div>
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">gti</span> <span class="o">=</span> <span class="n">v1</span><span class="p">[</span><span class="s1">&#39;gti_times&#39;</span><span class="p">]</span>
+<span class="n">gti</span><span class="o">-</span><span class="n">gti</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">g</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">gti</span><span class="p">)[</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">]</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">gti</span><span class="p">)[</span><span class="mi">0</span><span class="p">::</span><span class="mi">2</span><span class="p">]</span>
+<span class="n">gti</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">gti</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">g</span><span class="p">)</span><span class="o">.</span><span class="n">describe</span><span class="p">(),</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">b</span><span class="p">)</span><span class="o">.</span><span class="n">describe</span><span class="p">(),</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">g</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(603571.4286704063,
+ count     106.000000
+ mean      823.182803
+ std       716.703561
+ min        13.564546
+ 25%        13.582048
+ 50%      1101.074372
+ 75%      1484.577808
+ max      1818.581802
+ dtype: float64,
+ count     107.000000
+ mean     4825.364968
+ std       936.300554
+ min       224.607790
+ 25%      4398.919107
+ 50%      4796.432692
+ 75%      5686.417211
+ max      5956.435452
+ dtype: float64,
+ 87257.3771084547,
+ 516314.05156195164)</pre>
+</div>
+
 </div>
 
 </div>
@@ -291,7 +451,7 @@ Contents of the output dict
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="FermiData" class="doc_header"><code>class</code> <code>FermiData</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L292" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>FermiData</code>(<strong><code>config</code></strong>=<em><code>None</code></em>) :: <a href="/wtlikedata_man.html#GSFCweekly"><code>GSFCweekly</code></a></p>
+<h3 id="FermiData" class="doc_header"><code>class</code> <code>FermiData</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L347" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>FermiData</code>(<strong><code>config</code></strong>=<em><code>None</code></em>) :: <a href="/wtlikedata_man.html#GSFCweekly"><code>GSFCweekly</code></a></p>
 </blockquote>
 <p>Manage the full data set in weekly chunks</p>
 <ul>
@@ -308,7 +468,7 @@ Contents of the output dict
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="GSFCweekly.download" class="doc_header"><code>GSFCweekly.download</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L248" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>GSFCweekly.download</code>(<strong><code>week</code></strong>)</p>
+<h4 id="GSFCweekly.download" class="doc_header"><code>GSFCweekly.download</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L303" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>GSFCweekly.download</code>(<strong><code>week</code></strong>)</p>
 </blockquote>
 <p>Download the given week's files to the local folder</p>
 <p>week -- the mission week number, starting at 9. If negative, get recent one</p>
@@ -322,7 +482,7 @@ Contents of the output dict
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="FermiData.needs_update" class="doc_header"><code>FermiData.needs_update</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L407" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>FermiData.needs_update</code>()</p>
+<h4 id="FermiData.needs_update" class="doc_header"><code>FermiData.needs_update</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L462" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>FermiData.needs_update</code>()</p>
 </blockquote>
 <p>Compare files on disk with the GSFC list and compile list that need to be downloaded</p>
 <p>Check the file date of the last one on disk and update it as well if it has a different filedate</p>
@@ -331,28 +491,13 @@ Contents of the output dict
 
 </div>
 
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
 <div class="output_area">
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="update_data" class="doc_header"><code>update_data</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L488" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>update_data</code>(<strong><code>config</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="FermiData.check_data" class="doc_header"><code>FermiData.check_data</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L480" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>FermiData.check_data</code>()</p>
 </blockquote>
-<p>Bring all of the local week data summaries up to date, downloading the missing ones from GSFC.
-If the last one is the current week, check to see if needs updating, by comparing file date, in days,
-from the last update with the current one at GSFC.</p>
+<p>Return: sorted list of summary files, last week number, number of days in last week</p>
 
 </div>
 
@@ -360,13 +505,6 @@ from the last update with the current one at GSFC.</p>
 
 </div>
 </div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
 
 </div>
     {% endraw %}
@@ -382,7 +520,7 @@ from the last update with the current one at GSFC.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="check_data" class="doc_header"><code>check_data</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L474" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>check_data</code>(<strong><code>config</code></strong>=<em><code>None</code></em>, <strong><code>update</code></strong>=<em><code>False</code></em>)</p>
+<h4 id="check_data" class="doc_header"><code>check_data</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L529" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>check_data</code>(<strong><code>config</code></strong>=<em><code>None</code></em>, <strong><code>update</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 <p>Print current status, and update if requested</p>
 
@@ -390,11 +528,24 @@ from the last update with the current one at GSFC.</p>
 
 </div>
 
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
 <div class="output_area">
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="update_data" class="doc_header"><code>update_data</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L488" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>update_data</code>(<strong><code>config</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="update_data" class="doc_header"><code>update_data</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L543" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>update_data</code>(<strong><code>config</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <p>Bring all of the local week data summaries up to date, downloading the missing ones from GSFC.
 If the last one is the current week, check to see if needs updating, by comparing file date, in days,
@@ -413,6 +564,50 @@ from the last update with the current one at GSFC.</p>
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    {% endraw %}
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="DataView">DataView<a class="anchor-link" href="#DataView"> </a></h2>
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h3 id="DataView" class="doc_header"><code>class</code> <code>DataView</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L582" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>DataView</code>(<strong><code>interval</code></strong>:<code>tuple</code>=<em><code>(0, 0)</code></em>, <strong><code>config</code></strong>:<code>Config  | None</code>=<em><code>None</code></em>, <strong><code>gti</code></strong>:<code>GTI  | None</code>=<em><code>None</code></em>, <strong><code>nside</code></strong>:<code>int</code>=<em><code>128</code></em>, <strong><code>bmin</code></strong>:<code>int</code>=<em><code>0</code></em>)</p>
+</blockquote>
+<p>Manage various views of the data set</p>
+<p>Constructor selects a time range</p>
+
+<pre><code>- interval : a (start,stop) tuple (MJD). If (0,0), access all data
+- gti : GTI
+- nside [128] default HEALPix nside to use for maps
+- bmin [0] minimum energy band index</code></pre>
+
+</div>
+
+</div>
+
+</div>
+</div>
 
 </div>
     {% endraw %}
@@ -424,14 +619,170 @@ from the last update with the current one at GSFC.</p>
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># dv = DataView()</span>
-<span class="c1"># file = dv.week_files[1]</span>
-<span class="c1"># with open(file, &#39;rb&#39;) as inp:</span>
-<span class="c1">#     u = pickle.load(inp)</span>
-<span class="c1"># # sc = SkyCoord(0,0,unit=&#39;deg&#39;, frame=&#39;galactic&#39;)z</span>
-<span class="c1"># sc_data = pd.DataFrame(u[&#39;sc_data&#39;])</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">display_markdown</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;### Test GTI</span>
+<span class="s2">Extract photon data for a week containing two solar flares, check that </span>
+<span class="s2">they get excluded.</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
+<span class="n">interval</span> <span class="o">=</span> <span class="p">(</span><span class="mi">55990</span><span class="p">,</span> <span class="mi">55995</span><span class="p">)</span>
+<span class="n">dv</span> <span class="o">=</span> <span class="n">DataView</span><span class="p">(</span><span class="n">interval</span><span class="p">,</span> <span class="n">gti</span><span class="o">=</span><span class="n">GTI</span><span class="p">(</span><span class="s1">&#39;nosolarflares.gti&#39;</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">dv</span><span class="p">)</span>
+<span class="n">wk</span> <span class="o">=</span><span class="n">dv</span><span class="o">.</span><span class="n">photon_week</span><span class="p">(</span><span class="n">dv</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">wk</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">]</span>
+<span class="n">dv_nocut</span> <span class="o">=</span> <span class="n">DataView</span><span class="p">(</span><span class="n">interval</span><span class="p">)</span>
+<span class="n">wk_nocut</span> <span class="o">=</span> <span class="n">dv_nocut</span><span class="o">.</span><span class="n">photon_week</span><span class="p">(</span><span class="n">dv_nocut</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">bins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">t</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="mi">100</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">wk_nocut</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">],</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;lightgrey&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;all data&#39;</span><span class="p">);</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">t</span><span class="p">,</span><span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;green&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;selected&#39;</span><span class="p">);</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;MJD&#39;</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="n">interval</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span>
+</pre></div>
 
-<span class="c1"># %time sc_process(Config(verbose=1), sc, sc_data).info()</span>
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h3 id="Test-GTI">Test GTI<a class="anchor-link" href="#Test-GTI"> </a></h3><p>Extract photon data for a week containing two solar flares, check that 
+they get excluded.</p>
+
+</div>
+
+</div>
+
+<div class="output_area">
+
+<div class="output_subarea output_text output_error">
+<pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">ValueError</span>                                Traceback (most recent call last)
+<span class="ansi-green-fg">/tmp/ipykernel_3114/1863565176.py</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
+<span class="ansi-green-intense-fg ansi-bold">      4</span> &#34;&#34;&#34;)
+<span class="ansi-green-intense-fg ansi-bold">      5</span> interval <span class="ansi-blue-fg">=</span> <span class="ansi-blue-fg">(</span><span class="ansi-cyan-fg">55990</span><span class="ansi-blue-fg">,</span> <span class="ansi-cyan-fg">55995</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-fg">----&gt; 6</span><span class="ansi-red-fg"> </span>dv <span class="ansi-blue-fg">=</span> DataView<span class="ansi-blue-fg">(</span>interval<span class="ansi-blue-fg">,</span> gti<span class="ansi-blue-fg">=</span>GTI<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">&#39;nosolarflares.gti&#39;</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">      7</span> print<span class="ansi-blue-fg">(</span>dv<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">      8</span> wk <span class="ansi-blue-fg">=</span>dv<span class="ansi-blue-fg">.</span>photon_week<span class="ansi-blue-fg">(</span>dv<span class="ansi-blue-fg">[</span><span class="ansi-cyan-fg">0</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">)</span>
+
+<span class="ansi-green-fg">/tmp/ipykernel_3114/1345195245.py</span> in <span class="ansi-cyan-fg">__init__</span><span class="ansi-blue-fg">(self, times, name, **kwargs)</span>
+<span class="ansi-green-intense-fg ansi-bold">     12</span>         self<span class="ansi-blue-fg">.</span>times <span class="ansi-blue-fg">=</span> times
+<span class="ansi-green-intense-fg ansi-bold">     13</span>         self<span class="ansi-blue-fg">.</span>name <span class="ansi-blue-fg">=</span> name
+<span class="ansi-green-fg">---&gt; 14</span><span class="ansi-red-fg">         </span><span class="ansi-green-fg">if</span> np<span class="ansi-blue-fg">.</span>any<span class="ansi-blue-fg">(</span>np<span class="ansi-blue-fg">.</span>diff<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">.</span>times<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">&lt;</span><span class="ansi-cyan-fg">0</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">     15</span>             <span class="ansi-green-fg">raise</span> ValueError<span class="ansi-blue-fg">(</span> <span class="ansi-blue-fg">f&#39;Bad input data from expect ascending time values.&#39;</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">     16</span> 
+
+<span class="ansi-green-fg">&lt;__array_function__ internals&gt;</span> in <span class="ansi-cyan-fg">diff</span><span class="ansi-blue-fg">(*args, **kwargs)</span>
+
+<span class="ansi-green-fg">~/miniconda3-220301/envs/astro/lib/python3.9/site-packages/numpy/lib/function_base.py</span> in <span class="ansi-cyan-fg">diff</span><span class="ansi-blue-fg">(a, n, axis, prepend, append)</span>
+<span class="ansi-green-intense-fg ansi-bold">   1256</span>     nd <span class="ansi-blue-fg">=</span> a<span class="ansi-blue-fg">.</span>ndim
+<span class="ansi-green-intense-fg ansi-bold">   1257</span>     <span class="ansi-green-fg">if</span> nd <span class="ansi-blue-fg">==</span> <span class="ansi-cyan-fg">0</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-fg">-&gt; 1258</span><span class="ansi-red-fg">         </span><span class="ansi-green-fg">raise</span> ValueError<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">&#34;diff requires input that is at least one dimensional&#34;</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">   1259</span>     axis <span class="ansi-blue-fg">=</span> normalize_axis_index<span class="ansi-blue-fg">(</span>axis<span class="ansi-blue-fg">,</span> nd<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">   1260</span> 
+
+<span class="ansi-red-fg">ValueError</span>: diff requires input that is at least one dimensional</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">debug</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>&gt; <span class="ansi-green-fg">/home/burnett/miniconda3-220301/envs/astro/lib/python3.9/site-packages/numpy/lib/function_base.py</span>(1258)<span class="ansi-cyan-fg">diff</span><span class="ansi-blue-fg">()</span>
+<span class="ansi-green-fg">   1256 </span><span class="ansi-red-fg">    </span>nd <span class="ansi-blue-fg">=</span> a<span class="ansi-blue-fg">.</span>ndim
+<span class="ansi-green-fg">   1257 </span><span class="ansi-red-fg">    </span><span class="ansi-green-fg">if</span> nd <span class="ansi-blue-fg">==</span> <span class="ansi-cyan-fg">0</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-fg">-&gt; 1258 </span><span class="ansi-red-fg">        </span><span class="ansi-green-fg">raise</span> ValueError<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">&#34;diff requires input that is at least one dimensional&#34;</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-fg">   1259 </span><span class="ansi-red-fg">    </span>axis <span class="ansi-blue-fg">=</span> normalize_axis_index<span class="ansi-blue-fg">(</span>axis<span class="ansi-blue-fg">,</span> nd<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-fg">   1260 </span>
+
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+
+</div>
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>&gt; <span class="ansi-green-fg">&lt;__array_function__ internals&gt;</span>(5)<span class="ansi-cyan-fg">diff</span><span class="ansi-blue-fg">()</span>
+
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<hr>
+
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">display_markdown</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;## PixelView</span>
+<span class="s2">Manage the data as a FITS file accepted by pointlike</span>
+
+<span class="s2">This class uses a DataView, or a FITS file to load a set of pixels with counts</span>
+<span class="s2">for a time interval.</span>
+
+<span class="s2">The FITS format has two HDUs with columns as shown.</span>
+
+<span class="s2">__BANDS__ </span>
+<span class="s2">* NSIDE (J) -- power of 2 up to 4096</span>
+<span class="s2">* E_MIN (D), E_MAX (D) </span>
+<span class="s2">* EVENT_TYPE (J) -- 0 or 1 for Front, Back</span>
+
+<span class="s2">__SKYMAP__</span>
+<span class="s2">* PIX (I) -- pixel index (RING) ordering now, but can be specified in header.</span>
+<span class="s2">* CHANNEL (I) -- band index</span>
+<span class="s2">* VALUE (J) -- number of events</span>
+
+<span class="s2">Currently the wtlike photons are all stored with nside 1024, while the pointlike files </span>
+<span class="s2">go up to 4096, simply because that it the largest for 32 bits.</span>
+
+
+<span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -445,6 +796,13 @@ from the last update with the current one at GSFC.</p>
     
 <div class="cell border-box-sizing code_cell rendered">
 
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
 <div class="output_wrapper">
 <div class="output">
 
@@ -452,31 +810,92 @@ from the last update with the current one at GSFC.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="DataView" class="doc_header"><code>class</code> <code>DataView</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L527" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>DataView</code>(<strong><code>times</code></strong>:<code>tuple</code>=<em><code>(0, 0)</code></em>, <strong><code>config</code></strong>=<em><code>None</code></em>, <strong><code>nside</code></strong>=<em><code>128</code></em>, <strong><code>bmin</code></strong>=<em><code>0</code></em>)</p>
+<h3 id="PixelView" class="doc_header"><code>class</code> <code>PixelView</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L777" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>PixelView</code>(<strong><code>dataview</code></strong>)</p>
 </blockquote>
-<p>Manage various views of the data set</p>
+<p>Define a pixel-based database, associating a total count with
+a set of pixels for each band.
+That, is make a view that is integrated over time.</p>
 
 </div>
 
 </div>
 
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4 id="DataView.count_map" class="doc_header"><code>DataView.count_map</code><a href="https://github.com/tburnett/wtlike/tree/master/wtlike/data_man.py#L565" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>DataView.count_map</code>(<strong><code>nside</code></strong>=<em><code>None</code></em>, <strong><code>bmin</code></strong>=<em><code>None</code></em>)</p>
-</blockquote>
-<p>all-sky count map</p>
-<ul>
-<li>nside [64] Project map to this value, from data's 1024</li>
-<li>bmin [0] minimum band index (8 for 1 GeV cut)</li>
-</ul>
-<p>Return a HEALPix counts map, in RING ordering</p>
-
+</div>
 </div>
 
 </div>
+    {% endraw %}
 
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">pmap</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">get_map</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">64</span><span class="p">)</span>
+<span class="n">pm</span><span class="o">.</span><span class="n">mollview</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span><span class="nb">max</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="c1">#pm.mollview(6); # second time works--mystery TODO</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">bands</span><span class="o">.</span><span class="n">dtype</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">nside</span> <span class="o">=</span> <span class="n">bands</span><span class="o">.</span><span class="n">NSIDE</span>
+<span class="n">e_min</span> <span class="o">=</span> <span class="n">bands</span><span class="o">.</span><span class="n">E_MIN</span>
+<span class="n">e_max</span> <span class="o">=</span> <span class="n">bands</span><span class="o">.</span><span class="n">E_MAX</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dr3pfile</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expandvars</span><span class="p">(</span>
+    <span class="s1">&#39;$FERMI/pointlike-data/12years_zmax100_4bpd_v2.fits&#39;</span><span class="p">))</span>
+<span class="k">assert</span> <span class="n">dr3pfile</span><span class="o">.</span><span class="n">is_file</span><span class="p">()</span>
+<span class="n">hdus</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">dr3pfile</span><span class="p">)</span>
+<span class="n">hdus</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+</pre></div>
+
+    </div>
 </div>
 </div>
 
