@@ -144,3 +144,5 @@ untitled.ipynb
 .gitconfig
 
 nbs/docs/images/
+_docs
+sidebar.yml
