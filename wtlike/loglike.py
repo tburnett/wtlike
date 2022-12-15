@@ -303,7 +303,7 @@ class PoissonRep(object):
     """
 
     def __init__(self, loglike, tol=poisson_tolerance,  # note global
-                 ts_min=25,
+                 ts_min=45,
                 ):
         """
         """
@@ -315,7 +315,7 @@ class PoissonRep(object):
             ## NB: the dd=-10 is a kluge for very small limits, set for loglike stuff with different scales.
             # this seems to work, but must be looked at more carefully
             try:
-                self.pf = PoissonFitter(loglike, fmax=fmax, scale=sig if rate>0 else 1,  dd=-10., tol=tol)
+                self.pf = PoissonFitter(loglike, fmax=fmax, scale=sig if rate>0 else 1, delta=1e-2,  dd=-10., tol=tol)
             except Exception as msg:
                 print(f'PoissonRep: Fail poisson fit for {loglike}: {msg}'
                       f'\n\tfmax={fmax}, scale={sig if rate>0 else 1,}'
@@ -331,7 +331,15 @@ class PoissonRep(object):
                 self.poiss = Poisson.from_fit(loglike.n, rate,sig)
                 self.pf = None
             except Exception as e:
+                # raise Exception(e)
+                print(f'from_fit failed with with TS={self.ts:.1f} : {e}, using fitter')
                 use_fitter()
+        elif rate==0 and sig>1e4:
+            # special if very weak
+            slope = loglike.gradient(0)
+            curvature= loglike.hessian(0)[0]
+            b = -slope/curvature
+            self.poiss = Poisson([-b, slope, b])
         else:
             use_fitter()
 
@@ -412,7 +420,7 @@ class PoissonRep(object):
         ax.axhline(0, color='grey', ls='--')
         ax.legend(prop=dict(size=12))#, family='monospace'))
 
-# %% ../nbs/07_loglike.ipynb 24
+# %% ../nbs/07_loglike.ipynb 26
 class PoissonRepTable(PoissonRep):
     """
     Create a table, then interpolate it

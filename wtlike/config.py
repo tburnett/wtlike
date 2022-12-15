@@ -11,7 +11,7 @@ from pathlib import Path
 from typing import Tuple
 import numpy as np
 
-# %% ../nbs/00_config.ipynb 4
+# %% ../nbs/00_config.ipynb 5
 class Cache(dict):
     """
     Manage a file cache
@@ -174,7 +174,7 @@ class Cache(dict):
     def __str__(self):
         return self.show()
 
-# %% ../nbs/00_config.ipynb 9
+# %% ../nbs/00_config.ipynb 10
 class Config():
     defaults=\
     """
@@ -300,7 +300,7 @@ class Config():
     def __repr__(self): return str(self)
     def get(self, *pars): return self.__dict__.get(*pars)
 
-# %% ../nbs/00_config.ipynb 13
+# %% ../nbs/00_config.ipynb 15
 day = 24*3600.
 first_data=54683
 #mission_start = Time('2001-01-01T00:00:00', scale='utc').mjd
@@ -358,7 +358,7 @@ def mjd_range(start,stop, make_round=True):
 
     return (round(a),round(b)) if make_round else (a,b)
 
-# %% ../nbs/00_config.ipynb 17
+# %% ../nbs/00_config.ipynb 19
 class FermiInterval():
     """For iteration thru (start,stop) tuples in the Fermi data set
     """
@@ -391,7 +391,7 @@ class FermiWeek(FermiInterval):
     def __init__(self):
         super().__init__(interval=7)
 
-# %% ../nbs/00_config.ipynb 19
+# %% ../nbs/00_config.ipynb 21
 def bin_size_name(bins):
     """Provide a nice name, e.g., 'day' for a time interval
     """
@@ -413,14 +413,14 @@ def bin_size_name(bins):
     nt = f'{n:.0f}' if np.mod(n,1)<1e-3 else f'{n:.1f}'
     return f'{nt}-{unit}'# if n>1 else f'{unit}'
 
-# %% ../nbs/00_config.ipynb 21
+# %% ../nbs/00_config.ipynb 23
 def decorate_with(other_func):
     def decorator(func):
         func.__doc__ += other_func.__doc__
         return func
     return decorator
 
-# %% ../nbs/00_config.ipynb 22
+# %% ../nbs/00_config.ipynb 24
 import time
 
 class Timer():

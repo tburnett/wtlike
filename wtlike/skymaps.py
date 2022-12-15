@@ -26,21 +26,28 @@ valid = Config().valid;
 def _trans(*args):
     """ 
     Helper for AitoffFigure: Translate degrees to radians (cleaner if aitoff did it)
-    Expect either
-    * first arg is a SkyCoord object (perhabs a list of positions)
+    Expect first arg or args to be:
+    * a SkyCoord object (perhaps a list of positions)
     - or -
-    * first two args are lists of l, b in degrees
+    *  lists of l, b in degrees
+    - or -
+    * a DataFrame with ra and dec columns
     """
     nargs = len(args)
     if nargs>0 and isinstance(args[0], SkyCoord):
         sc = args[0].galactic
         l, b = sc.l.deg, sc.b.deg
         rest = args[1:]
+    elif nargs>0 and isinstance(args[0], pd.DataFrame):
+        df = args[0]
+        sc = SkyCoord(df.ra, df.dec, unit='deg', frame='fk5').galactic
+        l, b = sc.l.deg, sc.b.deg
+        rest = args[1:]
     elif nargs>1:
         l, b = args[:2]
         rest = args[2:]
     else:
-        raise ValueError('Expect positional parameters l,b, or skycoord')
+        raise ValueError('Expect positional parameters l,b, or skycoord or DataFrame with ra,dec')
 
     # convert to radians 
     x  = -np.radians(np.atleast_1d(l))
@@ -72,7 +79,7 @@ class AitoffFigure():
     def scatter(self, *args, **kwargs):
         return self.ax.scatter(*_trans(*args), **kwargs)
 
-# %% ../nbs/04_skymaps.ipynb 8
+# %% ../nbs/04_skymaps.ipynb 9
 class SquareWCS(WCS):
     """
     Create and use a WCS object
@@ -90,6 +97,8 @@ class SquareWCS(WCS):
         """
 
         """
+        if type(center)==str:
+            center = SkyCoord.from_name(center)
         assert isinstance(center, SkyCoord), 'Expect SkyCoord'
 
         frame = frame or center.frame.name
@@ -125,11 +134,13 @@ class SquareWCS(WCS):
         lon, lat = (cgrid.l.deg, cgrid.b.deg)
         return lon, lat
 
-    def plot(self, hmap, fig=None, axpos=111, figsize=(8,8),
+    def plot_map(self, hmap, fig=None, axpos=111, figsize=(8,8),
              log=False, cmap='jet', colorbar=True, 
              unit='', vmin=None, vmax=None, cb_kw={},
              annotator=None, title=None, **kwargs):
         """
+        Plot a map
+        
         - hmap -- a HEALPix map
         - fig  [None] -- a Figure
 
@@ -172,10 +183,12 @@ class SquareWCS(WCS):
             if ticklabels is not None:
                 cb.ax.set_yticklabels(ticklabels)
         if annotator is not None:
+            # set the defalut transform
+            ax.transAxes = ax.get_transform(self.frame)
             annotator(ax, self.frame)
         return fig
 
-# %% ../nbs/04_skymaps.ipynb 9
+# %% ../nbs/04_skymaps.ipynb 11
 class FITSimage():
     """
     Manage a FITs image
@@ -212,7 +225,7 @@ class FITSimage():
         result[good] = self.data[x[good], y[good]]
         return result if len(coord)>1 else result[0]
 
-# %% ../nbs/04_skymaps.ipynb 12
+# %% ../nbs/04_skymaps.ipynb 14
 class HPmap(object):
     """
     Manage HEALPix array
@@ -278,7 +291,7 @@ class HPmap(object):
         if not isinstance(skycoord, SkyCoord):
             skycoord = SkyCoord.from_name(skycoord).galactic
         swcs = SquareWCS(skycoord, size, pixsize)
-        return swcs.plot(self.map, unit=self.unit, **kwargs)
+        return swcs.plot_map(self.map, unit=self.unit, **kwargs)
 
     def convolve(self, beam_window=None, sigma=0):
         """Convolve the map with a "beam", or PSF
@@ -331,7 +344,7 @@ class HPmap(object):
             print(f'Wrote FITS file {filename}')
         return hdus
 
-# %% ../nbs/04_skymaps.ipynb 13
+# %% ../nbs/04_skymaps.ipynb 15
 def ait_plot(mappable,
         pars=[],
         label='',
@@ -416,7 +429,7 @@ def ait_plot(mappable,
 
     return fig
 
-# %% ../nbs/04_skymaps.ipynb 17
+# %% ../nbs/04_skymaps.ipynb 19
 def draw_map(mapper, time_range, name='', show_sun=False, sigma=0,
                 figsize=(9,4), label='', fignum=1, **kwargs):
 

@@ -1,3 +1,5 @@
+""" Access catalogs as dataframes 
+"""
 import os, sys, glob
 import numpy as np
 import pylab as plt
@@ -6,6 +8,7 @@ from pathlib import Path
 from astropy.io import fits 
 from astropy.table import Table
 from astropy.coordinates import SkyCoord
+
 
 class CatDF():
     """Methods common to the following classes
@@ -119,7 +122,7 @@ class UWcat(CatDF, pd.DataFrame):
     def __init__(self, model='uw1216'):
         
         filename = Path(os.path.expandvars('$FERMI'))/f'skymodels/sources_{model}.csv'
-        assert filename.exists()
+        assert filename.exists(), f'File {filename} not found'
         super().__init__(pd.read_csv(filename, index_col=0))
         print(f'Loaded UW model {model}: {len(self)} entries')
 

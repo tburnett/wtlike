@@ -3,7 +3,7 @@
 # %% auto 0
 __all__ = ['get_wtzip_index', 'WeightMan', 'weight_radius_plots', 'findsource', 'FermiCatalog', 'SourceLookup', 'PointSource']
 
-# %% ../nbs/03_sources.ipynb 7
+# %% ../nbs/03_sources.ipynb 8
 import os, sys, pickle, healpy, zipfile
 from pathlib import Path
 import numpy as np
@@ -13,7 +13,7 @@ from scipy.integrate import quad
 from astropy.coordinates import SkyCoord, Angle
 from .config import *
 
-# %% ../nbs/03_sources.ipynb 8
+# %% ../nbs/03_sources.ipynb 9
 def get_wtzip_index(config, update=False):
 
     wtzipfile = config.datapath/'weight_files.zip'
@@ -55,7 +55,7 @@ def get_wtzip_index(config, update=False):
         zip_index['coord'] = SkyCoord(zip_index['glon'], zip_index['glat'], unit='deg', frame='galactic').fk5
     return zip_index
 
-# %% ../nbs/03_sources.ipynb 9
+# %% ../nbs/03_sources.ipynb 10
 class WeightMan(dict):
     """ Weight Management
 
@@ -200,7 +200,7 @@ class WeightMan(dict):
         assert ret is not None
         return ret
 
-# %% ../nbs/03_sources.ipynb 11
+# %% ../nbs/03_sources.ipynb 12
 def weight_radius_plots(photons):
     """
     """
@@ -216,7 +216,7 @@ def weight_radius_plots(photons):
     ax.set(ylim=(8e-4, 1.2), xlim=(0,4.9))
     plt.suptitle('Weights vs. radius per band')
 
-# %% ../nbs/03_sources.ipynb 12
+# %% ../nbs/03_sources.ipynb 13
 def findsource(*pars, gal=False):
     """
     Return a SkyCoord, looking up a name, or interpreting args
@@ -265,13 +265,13 @@ def findsource(*pars, gal=False):
         raise TypeError('require name or ra,dec or l,b,gal=True')
     return skycoord.galactic if gal else skycoord
 
-# %% ../nbs/03_sources.ipynb 15
+# %% ../nbs/03_sources.ipynb 16
 class WTSkyCoord(SkyCoord):
     def __repr__(self):
         ra,dec = self.fk5.ra.deg, self.fk5.dec.deg
         return f'({ra:.3f},{dec:.3f})'
 
-# %% ../nbs/03_sources.ipynb 16
+# %% ../nbs/03_sources.ipynb 17
 import warnings
 class FermiCatalog():
 
@@ -338,7 +338,7 @@ class FermiCatalog():
     def __getitem__(self, name):   return self.df.loc[name]
     def __len__(self): return len(self.df)
 
-# %% ../nbs/03_sources.ipynb 18
+# %% ../nbs/03_sources.ipynb 19
 class SourceLookup():
     """ Use lists of the pointlike and catalog sources to check for correspondence of a name or position
     """
@@ -446,7 +446,7 @@ class SourceLookup():
         self.csep = sep2d.deg[0]
         self.cat_name = self.cat_names[idx] if self.csep < self.max_sep else None
 
-# %% ../nbs/03_sources.ipynb 21
+# %% ../nbs/03_sources.ipynb 22
 class PointSource():
     """Manage the position and name of a point source
     """
@@ -459,7 +459,7 @@ class PointSource():
         gal = kwargs.get('gal', False)
         self.nickname = pt_name = lookup(*pars, ** kwargs )
         if pt_name is None:
-            raise Exception('Source not found')
+            raise Exception(f'Source lookup using "{pars}" failed.')
         self.skycoord = lookup.skycoord
         #print(pars)
         if len(pars)==1:
@@ -507,6 +507,22 @@ class PointSource():
         """Modified name for file system"""
         return self.name.replace(' ', '_').replace('+','p') if getattr(self,'nickname',None) is None else self.nickname
 
+    @property
+    def jname(self):
+        """Return name in the format Jhhmm.m+ddmm
+        note that last digits are truncated, not rounded
+        http://cds.u-strasbg.fr/vizier/Dic/iau-spec.htx#S3.2.1
+        """
+        import numpy as np
+        mm = np.mod(self.ra*4,1440) # RA in minutes 
+        ss = np.mod(mm*60,60) #seconds
+        HH,MM = int(mm/60), int(mm%60)
+        m = int(ss/6) # prescription for .1 min digit
+        sign= '+' if self.dec>=0 else '-'
+        dem = int(abs(self.dec)*60) #abs( DEC) in minutes, truncated
+        return 'J' +   '{:02d}{:02d}.{:1d}'.format(HH,MM,m)\
+                + sign+'{:02d}{:02.0f}'.format(int(dem/60),dem%60)
+    
     @classmethod
     def fk5(cls, name, position):
         """position: (ra,dec) tuple """

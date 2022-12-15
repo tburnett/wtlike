@@ -3,7 +3,7 @@
 # %% auto 0
 __all__ = ['sc_data_selection', 'load_source_data']
 
-# %% ../nbs/04_load_data.ipynb 3
+# %% ../nbs/04_load_data.ipynb 4
 import pickle, healpy
 import pandas as pd
 import numpy as np
@@ -13,7 +13,7 @@ from .config import (Config, UTC, MJD)
 from .exposure import binned_exposure, sc_data_selection, sc_process, weighted_aeff
 from .data_man import get_week_files
 
-# %% ../nbs/04_load_data.ipynb 4
+# %% ../nbs/04_load_data.ipynb 5
 class ConeSelect():
     """Manage selection of pixels with cone
 
@@ -33,7 +33,7 @@ class ConeSelect():
         c = np.unique(np.right_shift(self.conepix, shift))
         return np.isin(a,c)
 
-# %% ../nbs/04_load_data.ipynb 6
+# %% ../nbs/04_load_data.ipynb 7
 def _get_photons_near_source(config, source, week): #tzero, photon_df):
     """
     Select the photons near a source
@@ -96,7 +96,7 @@ def _get_photons_near_source(config, source, week): #tzero, photon_df):
 
     return out_df
 
-# %% ../nbs/04_load_data.ipynb 7
+# %% ../nbs/04_load_data.ipynb 8
 def sc_data_selection(config, source, sc_data):
 
     """
@@ -126,7 +126,7 @@ def sc_data_selection(config, source, sc_data):
 
     return sc_df
 
-# %% ../nbs/04_load_data.ipynb 10
+# %% ../nbs/04_load_data.ipynb 11
 class ProcessWeek(object):
     """
     Process a week's photon and livetime info into the source-related photon and exposure tables.
@@ -219,7 +219,7 @@ class ProcessWeek(object):
 
         )
 
-# %% ../nbs/04_load_data.ipynb 11
+# %% ../nbs/04_load_data.ipynb 12
 class _TWeek():
     # This is a functor wrapping ProcessWeek which needs to be global for multprocessing.
     def __init__(self, config, source):
@@ -266,7 +266,7 @@ def multiprocess_week_data(config, source, week_range, processes=None):
 
     return pp,ee
 
-# %% ../nbs/04_load_data.ipynb 12
+# %% ../nbs/04_load_data.ipynb 13
 def load_source_data(config, source, week_range=None, key='', clear=False):
     """
     Generate photon and exposure tables specific to the source.

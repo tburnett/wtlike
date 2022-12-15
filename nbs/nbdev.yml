@@ -1,0 +1,9 @@
+project:
+  output-dir: _docs
+
+website:
+  title: "wtlike"
+  site-url: "https://tburnett.github.io/wtlike"
+  description: "Time-dependent analysis of point sources in Fermi-LAT data"
+  repo-branch: master
+  repo-url: "https://github.com/tburnett/wtlike/tree/master/"

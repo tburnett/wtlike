@@ -60,7 +60,7 @@ class GTI(object):
     
     def __str__(self): return self.__repr__()
 
-    def __call__(self, times:'array of MJD times'):
+    def __call__(self, times):
         """
         return array of bool for accepability of times 
         """

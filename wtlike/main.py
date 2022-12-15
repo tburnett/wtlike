@@ -15,7 +15,7 @@ from .config import *
 
 class WtLike(LightCurve):
     """
-    Summary
+    Initialization
     ---------
     There are three layers of initialization, implemented in superclasses,
     each with parameters. The classnames, associated parameters and data members set:

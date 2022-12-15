@@ -201,7 +201,7 @@ class Poisson(object):
         so $s$ is large compared with $\sqrt{v}$, then the poisson-like parameters can be determined as follows.
 
         We use the properties of the Poisson distribution
-        $f(n;\lambda) = \exp(n \log\lambda - \lambda + \mathrm{const})$,
+        $f(n|\ lambda) = \exp(n \log\lambda - \lambda + \mathrm{const})$,
         where the parameter $\lambda$ is equal to the expected value of number of occurrences $n$ and
         to its variance, and that the function we want is shifted by the background $b$ and scaled by a factor
         $k$ so we use $f(k(s-b)| \lambda)$. This implies that for the expected value of $s$, $\lambda = n$,
@@ -216,7 +216,7 @@ class Poisson(object):
         P = cls([flux, k , b])
         # check values at 0 and the peaks
         if P(0) > -tol**2/2:
-            raise(f'Bayes violation: P(0)= {P(0):.2f} too large for'\
+            raise Exception(f'Bayes violation: P(0)= {P(0):.2f} too large for'\
                 f' {tol} sigma limit. ')
 
         assert np.abs(P(flux))<1e-3, f'Fail validity: peak {P(mean)}'
@@ -255,6 +255,10 @@ class PoissonFitter(object):
         value to calculate numerical derivative at zero flux
 
     """
+    # determine values of the function corresponding to delta L of 0.5, 1, 2, 4
+    # depending on how peaked the function is, this will be from 5 to 8
+    # The Poisson will be fit to this set of values
+    dlist =  np.array([0.5, 1.0, 2.0, 4.0])
 
     def __init__(self, func, fmax=None, scale=None,  tol=0.20, delta=1e-4, dd=-0.1, test_mode=False):
         """
@@ -281,10 +285,7 @@ class PoissonFitter(object):
 
         if test_mode:
             return
-        # determine values of the function corresponding to delta L of 0.5, 1, 2, 4
-        # depending on how peaked the function is, this will be from 5 to 8
-        # The Poisson will be fit to this set of values
-        dlist = np.array([0.5, 1.0, 2.0, 4.0])
+        dlist = self.dlist #np.array([0.5, 1.0, 2.0, 4.0])
         if s < dd:
             # large negative derivative: this will be just an exponential
             if s < -100: s=-100. #cut off for now
