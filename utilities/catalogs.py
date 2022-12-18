@@ -155,9 +155,9 @@ class Fermi4FGL(CatDF, pd.DataFrame):
             variability = cvar('Variability_Index'),
             assoc_prob  = cvar('ASSOC_PROB_BAY'), # for Bayesian, or _LR for likelihood ratio
             assoc1_name = cname('ASSOC1'),
-            assoc2_name = cname('ASSOC2'),
+            # assoc2_name = cname('ASSOC2'),
             class1      = cname('CLASS1'),
-            class2      = cname('CLASS2'),
+            # class2      = cname('CLASS2'),
             flags       = ivar('FLAGS'),
             # ....
         ))

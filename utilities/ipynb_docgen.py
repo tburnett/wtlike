@@ -469,6 +469,10 @@ def capture(summary=None, **kwargs):
         def __str__(self):
             return monospace(self._new.getvalue(), summary=summary, **kwargs)
 
+        def _repr_html_(self):
+            # this should allow it to be interpreted by IPython.display
+            return self.__str__()
+
     return Capture_print()
 def capture_hide(summary=None, **kwargs):
     return capture(summary, **kwargs)
