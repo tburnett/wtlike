@@ -9,6 +9,8 @@ from astropy.io import fits
 from astropy.table import Table
 from astropy.coordinates import SkyCoord
 
+from . spectral_functions import *
+
 
 class CatDF():
     """Methods common to the following classes
@@ -123,11 +125,35 @@ class UWcat(CatDF, pd.DataFrame):
         
         filename = Path(os.path.expandvars('$FERMI'))/f'skymodels/sources_{model}.csv'
         assert filename.exists(), f'File {filename} not found'
-        super().__init__(pd.read_csv(filename, index_col=0))
+
+        uwdf = pd.read_csv(filename, index_col=0)
+        modeldict = dict(PLSuperExpCutoff=PLSuperExpCutoff,LogParabola=LogParabola)
+
+        sf = []
+        for n, v in uwdf.iterrows():    
+            sf.append( modeldict[v.modelname](np.array(v.pars[1:-1].split(), float), e0=v.e0))
+        uwdf.loc[:,'specfunc'] = sf
+
+        super().__init__(uwdf)
         print(f'Loaded UW model {model}: {len(self)} entries')
+        self.__dict__.update(name=model)
 
 
 class Fermi4FGL(CatDF, pd.DataFrame):
+    """
+    flags: https://heasarc.gsfc.nasa.gov/W3Browse/fermi/fermilpsc.html
+        1 Source with TS > 35 which went to TS < 25 when changing the diffuse
+           model. Note that sources with TS < 35 are not flagged with this bit
+           because normal statistical fluctuations can push them to TS < 25.
+        8  Flux (> 1 GeV) or energy flux (> 100 MeV) changed by more than 3
+           sigma when changing the diffuse model or the analysis method. Requires
+           also that the flux change by more than 35% (to not flag strong
+           sources).
+      256 Localization Quality > 8 in pointlike (see Section 3.1 in catalog
+           paper) or long axis of 95% ellipse > 0.25.
+      512 Spectral Fit Quality > 30 in pointlike.
+     2048 Highly curved spectrum; LogParabola beta fixed to 1 or PLEC_Index
+            fixed to 0 (see Section 3.3 in catalog paper)."""
 
     def __init__(self, path='$FERMI/catalog/'):
  
@@ -143,6 +169,9 @@ class Fermi4FGL(CatDF, pd.DataFrame):
         ivar = lambda a: data[a].astype(int)
         name = list(map(lambda x: x.strip() , data['Source_Name']))
 
+        # calculate these first
+        funcs = self.specfuncs(data)
+
         super().__init__( dict(
             ra          = cvar('RAJ2000'),
             dec         = cvar('DEJ2000'), 
@@ -150,6 +179,7 @@ class Fermi4FGL(CatDF, pd.DataFrame):
             glon        = cvar('GLON'),
             r95         = cvar('Conf_95_SemiMajor'),
             spectype    = cname('SpectrumType'),
+            specfunc    = funcs,
             eflux       = cvar('Energy_Flux100'), # erg cm-2 s-1
             significance= cvar('Signif_Avg'),
             variability = cvar('Variability_Index'),
@@ -162,10 +192,32 @@ class Fermi4FGL(CatDF, pd.DataFrame):
             # ....
         ))
         print( f': {len(self)} entries' )
-        self.__dict__.update(data=data, filename=filename.name,)
+        self.__dict__.update(data=data, filename=filename.name, name='4FGL-DR3')
         self.index = name
         self.index.name = 'name'
         self.fitscols = data.columns
-        
+
+    def specfuncs(self, data):
+        """ Return a list of spectral functions
+        """
+        cvar = lambda a: data[a].astype(float)
+        cname= lambda n : [s.strip() for s in data[n]]
+        def par_array(names):
+            return np.array(list(map(cvar, names))).T
+
+        pardict = dict(
+            LogParabola=par_array('LP_Flux_Density LP_Index LP_beta Pivot_Energy'.split()),
+            PowerLaw    =par_array('PL_Flux_Density PL_Index'.split()),
+            PLSuperExpCutoff=par_array('PLEC_Flux_Density PLEC_IndexS PLEC_ExpfactorS PLEC_Exp_Index'.split())
+                    )
+        specdict = dict(LogParabola=LogParabola, PowerLaw=PowerLaw, PLSuperExpCutoff=PLSuperExpCutoff4)    
+
+        pivot = cvar('Pivot_Energy')
+        spec = []                    
+        for i,name in enumerate(cname('SpectrumType')):
+            pars = pardict[name][i]
+            spec.append( specdict[name]( pars, e0=pivot[i]))
+        return spec
+
     def field(self, name):
         return self.data.field(name)

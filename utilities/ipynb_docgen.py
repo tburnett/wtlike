@@ -42,8 +42,9 @@ Images are made from plots, or imported directly, with HTML created to include t
 import sys, os, shutil, string, pprint, datetime
 
 
-__all__ = ['nbdoc', 'image', 'figure', 'monospace', 'capture', 'capture_hide', 'capture_show', 'shell', 'create_file', 'ipynb_doc',
-        'get_nb_namespace', 'special_prefix', 'figure_number', 'display_markdown'] #,'show_doc']
+__all__ = ['nbdoc', 'image', 'figure', 'monospace', 'capture', 'capture_hide', 
+        'capture_show', 'shell', 'create_file', 'ipynb_doc', 'get_nb_namespace', 'special_prefix', 
+        'figure_number', 'display_markdown', 'FigureWrapper',] #,'show_doc']
 
 special_prefix = ''
 
@@ -202,9 +203,17 @@ class Wrapper(object):
     """
     def __init__(self, *pars, **kwargs):
         self.obj = pars[0]
-        self.vars=pars[1]
         self.indent = kwargs.pop('indent', '25px') # '5%')
-        self.replacer = kwargs.pop('replacer')
+        self.summary = kwargs.pop('summary', None)
+        if len(pars)==1:
+            self.replacer=None
+            self.vars={}
+        
+            self.show = kwargs.pop('show', False)
+        else:
+            self.vars=pars[1]
+            self.replacer = kwargs.pop('replacer')
+
 
     def __repr__(self): return str(self)
     def _repr_html_(self): return str(self)
@@ -212,6 +221,14 @@ class Wrapper(object):
         text = str(self.obj).replace('\n', '\n<br>')
         return f'<p style="margin-left: {self.indent}"><samp>{text}</samp></p>'
 
+    def summarize(self, html):
+        """ wrap with a details element if self.summary is set"""
+        if self.summary is None: return html
+        show = getattr(self, 'show', False)
+        return  f'<details {"open" if show else ""}>'\
+                f'  <summary> {self.summary} </summary>'\
+                f'  {html}'\
+                ' </details>'
 
 
 class FigureWrapper(Wrapper): 
@@ -223,19 +240,23 @@ class FigureWrapper(Wrapper):
         super().__init__(*pars, **kwargs)
         self.indent = kwargs.pop('indent', '25px')
         self.base64 = kwargs.pop('base64', getattr(self.obj, 'base64', True))
+        self.caption = kwargs.pop('caption', None)
+        
 
         self.fig = fig = self.obj
         self.__dict__.update(fig.__dict__)
         if getattr(fig, 'failed', False): 
             return
-
-        # from kwargs
-        self.folder_name=kwargs.pop('folder_name', 'images')
-        self.fig_folders=kwargs.pop('fig_folders', self.replacer.document_folders)
-
-
-        self.prefix = self.replacer.figure_prefix
         self.fig_class=kwargs.pop('fig_class', 'nbdoc_image') 
+        if self.replacer is not None:
+            # from kwargs
+            self.folder_name=kwargs.pop('folder_name', 'images')
+            self.fig_folders=kwargs.pop('fig_folders', self.replacer.document_folders)
+            self.prefix = self.replacer.figure_prefix
+        else:
+            self.prefix=kwargs.get('prefix', '')
+            self.folder_name=''
+  
 
  
     def __str__(self):
@@ -250,9 +271,9 @@ class FigureWrapper(Wrapper):
             prefix = self.prefix+'_' if self.prefix else ''
 
             # the caption, which may be absent.
-            caption = getattr(fig,'caption', None)
+            caption = getattr(fig,'caption', getattr(self,'caption',None))
             if caption is not None:
-                caption = f'<b>Figure {n}</b>. ' + getattr(fig,'caption', '').format(**self.vars)
+                caption = f'<b>Figure {n}</b>. {caption}'
                 figcaption = f' <figcaption>{caption}</figcaption>'
             else: figcaption=''
 
@@ -278,12 +299,12 @@ class FigureWrapper(Wrapper):
             else:
                 b64 = fig.get_base64() 
 
-            self._html =\
+            html =\
                 f'<figure style="margin-left: {self.indent}" title="Figure {n}">'\
                 f'   <img src="data:image/png;base64,{b64}" alt="Figure {n}" '\
                 f' <br> {figcaption}' \
                     '</figure>'
-        
+            self._html = self.summarize(html)
                
         return self._html
 
@@ -470,7 +491,7 @@ def capture(summary=None, **kwargs):
             return monospace(self._new.getvalue(), summary=summary, **kwargs)
 
         def _repr_html_(self):
-            # this should allow it to be interpreted by IPython.display
+            # this should allow it to be interpreted by
             return self.__str__()
 
     return Capture_print()
