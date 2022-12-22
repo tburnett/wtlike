@@ -31,7 +31,8 @@ class FluxModel():
         func = lambda e: self(e) * e
         return 1.60218e-6 * quad(func, self.emin, self.emax)[0]
     
-    def sed_plot(self, ax=None, figsize=(5,4), label='', plot_kw={}, **kwargs):
+    def sed_plot(self, ax=None, e0=None,
+             figsize=(5,4), label='', plot_kw={}, **kwargs):
         """Make an SED for the source
 
         - kwargs -- for the Axes object (xlim, ylim, etc.)
@@ -39,8 +40,11 @@ class FluxModel():
         import matplotlib.pyplot as plt
         fig, ax = plt.subplots(figsize=figsize) if ax is None else (ax.figure, ax)
         x =np.logspace(2,5,61)
-        y = self(x)
-        ax.loglog(x/1e3, y*x**2 * 1e6, '-', lw=2, label=label, **plot_kw)
+
+        trans = lambda x: (x/1e3, self(x)*x**2 * 1e6)
+        lines=ax.loglog(*trans(x), '-', lw=2, label=label, **plot_kw)
+        if e0 is not None:
+            ax.plot(*trans(e0),'o', color=lines[0].get_color())
         ax.grid(alpha=0.5)
         kw = dict(xlabel='Energy (GeV)',
                   ylabel=r'$\mathrm{Energy\ Flux\ (eV\ cm^{-2}\ s^{-1})}$',

@@ -247,6 +247,7 @@ class FigureWrapper(Wrapper):
         self.__dict__.update(fig.__dict__)
         if getattr(fig, 'failed', False): 
             return
+
         self.fig_class=kwargs.pop('fig_class', 'nbdoc_image') 
         if self.replacer is not None:
             # from kwargs
@@ -624,9 +625,13 @@ def nbdoc(fun, *pars, name=None, fignum=1, **kwargs):
     # have IPython display the generated markdown
     display.display( md_data )  
 
-def display_markdown(text, vars={}):
-    """Add the text to the IPython display
-    - vars -- optional dictionary of replacement values
+def display_markdown(obj, vars={}):
+    """Add an object to the IPython markdown display
+    - obj -- either actual text, or an object with a _repr_html_ method.
+    - vars -- optional dictionary of replacement values, if text
+
     """
     import IPython.display as display
-    display.display(doc_formatter(text, vars))
+    if hasattr(obj, '_repr_html_'):
+        obj = obj._repr_html_()
+    display.display(doc_formatter(obj, vars))

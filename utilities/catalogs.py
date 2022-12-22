@@ -178,8 +178,8 @@ class Fermi4FGL(CatDF, pd.DataFrame):
             glat        = cvar('GLAT'),
             glon        = cvar('GLON'),
             r95         = cvar('Conf_95_SemiMajor'),
-            spectype    = cname('SpectrumType'),
             specfunc    = funcs,
+            pivot       = cvar('Pivot_Energy'),
             eflux       = cvar('Energy_Flux100'), # erg cm-2 s-1
             significance= cvar('Signif_Avg'),
             variability = cvar('Variability_Index'),

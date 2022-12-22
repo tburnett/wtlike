@@ -2,16 +2,14 @@ import datetime
 from wtlike import *
 from utilities.ipynb_docgen import *
 from utilities.catalogs import  *
-from wtlike.poisson import *
-from wtlike.loglike import *
-from wtlike.sources import SourceLookup
+
+from wtlike.sources import SourceFinder
 
 def show(*pars):
     return display_markdown(*pars)
 
 plt.rc('font', size=12)
 pd.set_option('display.float_format', lambda f: f'{f:.3f}' if abs(f)>1e-3 else f'{f:.2e}')
-SourceLookup.max_sep=0.25
 
 with capture_hide('Catalogs setup') as catalog_setup:
     cat4 = Fermi4FGL()
@@ -22,26 +20,6 @@ sk = uwcat.skycoord.galactic
 uwcat.loc[:,'glat'] = sk.b.deg
 uwcat.loc[:,'glon'] = sk.l.deg
 uwcat.loc[:, 'r95'] = np.sqrt( (uwcat.a * 2.64)**2 + (0.00791)**2) # 
-
-class SourceFinder(SourceLookup):
-    def __init__(self, config=None):
-        super().__init__(config or Config())
-        self.log = ''
-           
-    def check(self, name, tol=0.25):    
-        self.log = f'Source name, "{name}" '
-        pt_name = self(name)
-
-        if pt_name is None: 
-            return
-        elif self.psep<0.01:
-            self.log += f'\n\tcorresponds to {uwname} source "{pt_name}".'
-        elif self.psep<tol:
-            self.log += f'\n\tis closest to {uwname} source "{pt_name:}", {self.psep:.2f} deg away'
-        else:
-            self.log += f'\n\tis  {self.psep:.2f} > {tol} deg  away from nearest {uwname} source.'
-            return None
-        return pt_name
 
 src_finder = SourceFinder()
 
@@ -64,7 +42,7 @@ class Processor():
         
 
     def setup(self, name, interval, nyquist):
-        pt_name = self.pt_name =  src_finder.check(name)
+        pt_name = self.pt_name =  src_finder.find(name)
         if pt_name is None: 
             self.printout = src_finder.log 
             return False
@@ -103,7 +81,7 @@ class Processor():
         sep, r95 = info.sep, info.r95
         color = 'red' if sep>r95 else ''
         with capture(
-                f'{cat.name} {name} info <font color={color}>(sep, r95 ={sep:.3f}, {r95:.3f} deg )</font>',
+                f'{cat.name} {name} info <font color={color}>(sep, r95 ={sep*60:.1f}, {r95*60:.1f} arcmin )</font>',
                 show=show) as out:
             print(info)
         return out
@@ -114,7 +92,7 @@ class Processor():
     def display_pointlike_info(self):
 
         return self.get_catalog_info(uwcat,
-            select='ra dec glon glat ts eflux100 aprob r95 specfunc sep'.split(),
+            select='ra dec glon glat ts fitqual locqual eflux100 aprob r95 specfunc e0 sep'.split(),
             )
 
     def _repr_html_(self):
@@ -127,8 +105,8 @@ class Processor():
         c4entry = self.catalog_entry( cat4)
         uwentry = self.catalog_entry( uwcat)
         if c4entry is not None:
-            c4entry.specfunc.sed_plot(ax=ax, label=cat4.name)
-        uwentry.specfunc.sed_plot(ax=ax, label=uwcat.name,
+            c4entry.specfunc.sed_plot(ax=ax, e0=c4entry.pivot, label=cat4.name)
+        uwentry.specfunc.sed_plot(ax=ax, e0=uwentry.e0, label=uwcat.name,
                     yticks = [0.1,1,10], xticks=[0.1,1, 10],
                     yticklabels='0.1 1 10'.split(), xticklabels='0.1 1 10 '.split()
         )
@@ -136,6 +114,9 @@ class Processor():
     def plot_bb(self, ax):
 
         def g2fit(cell):
+            from wtlike.poisson import Poisson
+            from wtlike.loglike import LogLike, Gaussian2dRep
+            
             ts = Poisson.from_function(LogLike(cell)).ts
             r = dict(t=cell.t, tw=cell.tw, ts=round(ts,1))            
             if ts<4:
@@ -155,11 +136,14 @@ class Processor():
             self.bb_table = None
             self.beta_table = None
 
-    def beta_table_mkd(self):
+    def display_beta_table(self):
         """ return (hidden) markdown string"""
-
-        with capture_hide(f'beta values for BB intervals (max: {self.beta_table.beta.max():.1f})') as cp:
-            print(self.beta_table)
+        bt = self.beta_table
+        if len(bt)<2: return ''
+        test = np.max(bt.beta/bt.sig_beta)
+        color = 'red' if test>2 else ''
+        with capture_hide(f'beta values for BB intervals (<font color={color}>max sig = {test:.1f}</font> )') as cp:
+            print(bt)
         return cp
 
     def plot_periodogram(self, ax3, ax4):
@@ -179,12 +163,24 @@ class Processor():
         self.px.power_plot(ax=ax3, pmax=50)
         hist_peak_power(self.px, ax=ax4, title='Peak distribution', xlabel='')
 
-    def get_fft_peaks(self, query='p0>25 & f>0.05', show=False):
+    def display_fft_peaks(self, query='p0>25 & f>0.05', show=False):
         df = self.px.find_peaks().query(query)
         if len(df)==0:
             return f'No peaks satisfying {query}'
         with capture(f'{len(df)} FFT peaks satisfying {query}') as out:
             print( df)
+        return out
+
+    def get_nearby(self, radius_cut=3, var_cut=30):
+        near_df = cat4.select_cone(self.skycoord, cone_size=5, query=f'variability>{var_cut}& sep<{radius_cut}')
+        near_df['name'] = near_df.index
+        return near_df['sep glon glat significance variability'.split()].sort_values('sep')
+
+    def display_nearby(self, **kwargs):
+        near_df = self.get_nearby(**kwargs)
+        if len(near_df)==0: return f'No nearby variable sources.'
+        with capture_hide(f'{len(near_df) } nearby variable sources') as out:
+            print(near_df)
         return out
 
 @ipynb_doc
@@ -195,6 +191,7 @@ def process_source(name, info=None, nyquist=24):
     {pinfo}
     {ginfo}
     {fig}
+    {nearby}
     {beta}
     {fft_peaks}
     {other_info}
@@ -203,10 +200,11 @@ def process_source(name, info=None, nyquist=24):
     printout=self.printout
     if self.fig is not None: 
         fig = self.fig
+        nearby = self.display_nearby()
         pinfo = self.display_pointlike_info()
         ginfo = self.display_4fgl_info()
-        beta = self.beta_table_mkd()
-        fft_peaks = self.get_fft_peaks()
+        beta = self.display_beta_table()
+        fft_peaks = self.display_fft_peaks()
 
     else:
         pinfo=ginfo=beta=fig=fft_peaks=''
@@ -217,4 +215,15 @@ def process_source(name, info=None, nyquist=24):
     else: other_info=''
 
     return locals()
+
+def process_df(df):
+    show(f"""\
+    Processing {len(df)} sources,  Start at {str(datetime.datetime.now())[:16]}
+
+    ---
+    """)
+    for name, value in df.iterrows():
+        process_source(name, value, nyquist=24)  
+    show(f"""---
+    # Finish at {str(datetime.datetime.now())[:16]}""")
 
