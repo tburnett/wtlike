@@ -207,7 +207,7 @@ def process_source(name, info=None, nyquist=24):
         fft_peaks = self.display_fft_peaks()
 
     else:
-        pinfo=ginfo=beta=fig=fft_peaks=''
+        pinfo=ginfo=beta=fig=fft_peaks=nearby=''
 
     if info is not None:
         with capture_hide('other info') as other_info:
