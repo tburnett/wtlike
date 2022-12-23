@@ -57,21 +57,11 @@ class Processor():
             self.px = self.wtl.periodogram( 1/(4*nyquist) )
         return True
 
-    def catalog_entry(self, cat,  cone_size=0.5):
-        """ return the entry from the given catalog that is closest
-        If none within cone_size, returns None
-        """
-        near = cat.select_cone(self.skycoord, cone_size=cone_size)
-        if len(near)==0: return None #f'No source within {cone_size} deg'
-        ndf = near.sort_values('sep')
-        return ndf.iloc[0] 
-
     def get_catalog_info(self, cat, select=None, show=False, cone_size=0.5):
         """
         select - list of column names
         """
-
-        info = self.catalog_entry(cat, cone_size=cone_size)
+        info = cat.catalog_entry( self.skycoord, cone_size=cone_size)
         if info is None:
             return f'No {cat.name} source within {cone_size} deg'
         name = info.name
@@ -81,29 +71,27 @@ class Processor():
         sep, r95 = info.sep, info.r95
         color = 'red' if sep>r95 else ''
         with capture(
-                f'{cat.name} {name} info <font color={color}>(sep, r95 ={sep*60:.1f}, {r95*60:.1f} arcmin )</font>',
+                f'{cat.name} ({name}) <font color={color}>(sep, r95 ={sep*60:.1f}, {r95*60:.1f} arcmin )</font>',
                 show=show) as out:
             print(info)
         return out
 
     def display_4fgl_info(self):
-        return self.get_catalog_info(cat4)
+        return self.get_catalog_info(cat4,
+         'fk5 galactic specfunc pivot eflux significance flags variability assoc_prob class1 assoc1_name  r95 sep'.split() )
 
     def display_pointlike_info(self):
-
         return self.get_catalog_info(uwcat,
-            select='ra dec glon glat ts fitqual locqual eflux100 aprob r95 specfunc e0 sep'.split(),
+            select='fk5 galactic specfunc e0 eflux100 ts fitqual locqual aprob r95  sep'.split(),
             )
 
     def _repr_html_(self):
         return self.printout
 
     def plot_sed(self, ax):
-        # self.wtl.source.sed_plot(ax=ax, ylim=(0.05, 20), title='SED',
-        #             yticks = [0.1,1,10], xticks=[0.1,1, 10],
-        #         yticklabels='0.1 1 10'.split(), xticklabels='0.1 1 10 '.split());
-        c4entry = self.catalog_entry( cat4)
-        uwentry = self.catalog_entry( uwcat)
+
+        c4entry = cat4.catalog_entry(self.skycoord)
+        uwentry = uwcat.catalog_entry(self.skycoord)
         if c4entry is not None:
             c4entry.specfunc.sed_plot(ax=ax, e0=c4entry.pivot, label=cat4.name)
         uwentry.specfunc.sed_plot(ax=ax, e0=uwentry.e0, label=uwcat.name,
@@ -176,15 +164,15 @@ class Processor():
         near_df['name'] = near_df.index
         return near_df['sep glon glat significance variability'.split()].sort_values('sep')
 
-    def display_nearby(self, **kwargs):
-        near_df = self.get_nearby(**kwargs)
-        if len(near_df)==0: return f'No nearby variable sources.'
+    def display_nearby(self, radius_cut=3, **kwargs):
+        near_df = self.get_nearby(radius_cut=radius_cut, **kwargs)
+        if len(near_df)==0: return f'No nearby (within {radius_cut} deg) variable sources.'
         with capture_hide(f'{len(near_df) } nearby variable sources') as out:
             print(near_df)
         return out
 
 @ipynb_doc
-def process_source(name, info=None, nyquist=24):
+def examine_source(name, info=None, nyquist=24):
     """## {name}
 
     {printout}
@@ -223,7 +211,7 @@ def process_df(df):
     ---
     """)
     for name, value in df.iterrows():
-        process_source(name, value, nyquist=24)  
+        examine_source(name, value, nyquist=24)  
     show(f"""---
     # Finish at {str(datetime.datetime.now())[:16]}""")
 

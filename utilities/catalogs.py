@@ -69,7 +69,18 @@ class CatDF():
         except Exception as msg:
             print(f'Failed to find a source near "{other}" : {msg}', file=sys.stderr)
             
-
+    def catalog_entry(self, skycoord,  cone_size=0.5):
+        """ return the entry  that is closest to the skycoord
+        If none within cone_size, returns None
+        Add fk5 and galactic LonLat objects to the Series for display convenience
+        """
+        near = self.select_cone(skycoord, cone_size=cone_size)
+        if len(near)==0: return None #f'No source within {cone_size} deg'
+        ndf = near.sort_values('sep')
+        info =  ndf.iloc[0].copy() 
+        info.loc['fk5'] = LonLat(info.ra, info.dec)
+        info.loc['galactic'] = LonLat(info.glon, info.glat)
+        return info
    
 class LATpsr(CatDF, pd.DataFrame):
     
@@ -138,22 +149,44 @@ class UWcat(CatDF, pd.DataFrame):
         print(f'Loaded UW model {model}: {len(self)} entries')
         self.__dict__.update(name=model)
 
-
-class Fermi4FGL(CatDF, pd.DataFrame):
-    """
+class FlagBits():
+       
+    """For 4FGL:
     flags: https://heasarc.gsfc.nasa.gov/W3Browse/fermi/fermilpsc.html
-        1 Source with TS > 35 which went to TS < 25 when changing the diffuse
+      N=1: Source with TS > 35 which went to TS < 25 when changing the diffuse
            model. Note that sources with TS < 35 are not flagged with this bit
            because normal statistical fluctuations can push them to TS < 25.
-        8  Flux (> 1 GeV) or energy flux (> 100 MeV) changed by more than 3
+
+      N=3: Flux (> 1 GeV) or energy flux (> 100 MeV) changed by more than 3
            sigma when changing the diffuse model or the analysis method. Requires
            also that the flux change by more than 35% (to not flag strong
            sources).
-      256 Localization Quality > 8 in pointlike (see Section 3.1 in catalog
+
+      N=9: Localization Quality > 8 in pointlike (see Section 3.1 in catalog
            paper) or long axis of 95% ellipse > 0.25.
-      512 Spectral Fit Quality > 30 in pointlike.
-     2048 Highly curved spectrum; LogParabola beta fixed to 1 or PLEC_Index
-            fixed to 0 (see Section 3.3 in catalog paper)."""
+
+      N=10: Spectral Fit Quality > 30 in pointlike.
+
+      N=12: Highly curved spectrum; LogParabola beta fixed to 1 or PLEC_Index
+            fixed to 0 (see Section 3.3 in catalog paper).
+            """
+    def __init__(self, f):
+        self.f = f
+    def __repr__(self):
+        r = ''
+        for n in range(1, 16):
+            if (self.f & 2**(n-1)) >0:
+                r+= f'{n},'
+        return '-' if r=='' else '{'+r[:-1]+'}'
+
+class LonLat():
+    def __init__(self, lon,lat):
+        self.lon, self.lat=lon,lat
+    def __repr__(self):
+        return f'({self.lon:7.3f},{self.lat:+7.3f})'
+
+class Fermi4FGL(CatDF, pd.DataFrame):
+
 
     def __init__(self, path='$FERMI/catalog/'):
  
@@ -175,8 +208,10 @@ class Fermi4FGL(CatDF, pd.DataFrame):
         super().__init__( dict(
             ra          = cvar('RAJ2000'),
             dec         = cvar('DEJ2000'), 
+            # fk5         = list(map(LonLat, cvar('RAJ2000'),cvar('DEJ2000'))),
             glat        = cvar('GLAT'),
             glon        = cvar('GLON'),
+            # galactic    = list(map(LonLat, cvar('GLON'),cvar('GLAT'))),
             r95         = cvar('Conf_95_SemiMajor'),
             specfunc    = funcs,
             pivot       = cvar('Pivot_Energy'),
@@ -188,7 +223,7 @@ class Fermi4FGL(CatDF, pd.DataFrame):
             # assoc2_name = cname('ASSOC2'),
             class1      = cname('CLASS1'),
             # class2      = cname('CLASS2'),
-            flags       = ivar('FLAGS'),
+            flags       = list(map(FlagBits, ivar('FLAGS'))),
             # ....
         ))
         print( f': {len(self)} entries' )
@@ -202,8 +237,9 @@ class Fermi4FGL(CatDF, pd.DataFrame):
         """
         cvar = lambda a: data[a].astype(float)
         cname= lambda n : [s.strip() for s in data[n]]
-        def par_array(names):
-            return np.array(list(map(cvar, names))).T
+        def par_array(colnames):
+            # return a transposed table of the columns 
+            return np.array(list(map(cvar, colnames))).T
 
         pardict = dict(
             LogParabola=par_array('LP_Flux_Density LP_Index LP_beta Pivot_Energy'.split()),
