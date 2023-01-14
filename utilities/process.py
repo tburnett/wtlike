@@ -28,11 +28,12 @@ src_finder = SourceFinder()
 
 class Processor():
 
-    def __init__(self, name, neighbor=None,  interval=30, nyquist=24):
+    def __init__(self, name, neighbor=None,  interval=30, nyquist=24, 
+            tsmin=100):
         """
         """
 
-        if not self.setup(name, neighbor, interval, nyquist): 
+        if not self.setup(name, neighbor, interval, nyquist, tsmin): 
             self.fig = None # flag that no output
             return
  
@@ -49,7 +50,7 @@ class Processor():
     def __repr__(self):
         return f'Processor({self.name})'
 
-    def setup(self, name, neighbor, interval, nyquist):
+    def setup(self, name, neighbor, interval, nyquist, tsmin):
         pt_name = self.pt_name =  src_finder.find(name, tol=SourceFinder.max_sep)
         if pt_name is None: 
             self.printout = src_finder.log 
@@ -63,8 +64,14 @@ class Processor():
             if pt_name not in uwcat.index:
                 print(f'UW source {pt_name} not found in {uwname}??')
                 self.wtl = self.bb=self.px = None
+                self.pointlike_info = FileNotFoundError
                 return False
+            ts = uwcat.loc[pt_name,'ts'] 
+
             self.pointlike_info = pi = uwcat.loc[pt_name]
+            if ts < tsmin:
+                print(f'UW source has TS={ts:.1f} < {tsmin}')
+                return False
             # pi.loc[:, 'r95'] = pt[loc]
             self.wtl = WtLike(PointSource(pt_name)) 
             if neighbor is not None:
@@ -99,6 +106,11 @@ class Processor():
          'fk5 galactic specfunc pivot eflux significance flags variability assoc_prob class1 assoc1_name  r95 sep'.split() )
 
     def display_pointlike_info(self):
+        if self.pt_name is None:
+            return ''
+        if self.pt_name not in uwcat.index:
+            return f'<font color="red"> Source {self.pt_name} not in {uwname}</font>'
+        
         return self.get_catalog_info(uwcat,
             select='fk5 galactic specfunc e0 eflux100 ts fitqual locqual aprob r95  sep'.split(),
             )
@@ -194,7 +206,7 @@ proc=None
 def get_proc(): return proc
 
 @ipynb_doc
-def examine_source(name, info=None, neighbor=None, nyquist=24, max_sep=None):
+def examine_source(name, info=None, neighbor=None, nyquist=24, max_sep=None, tsmin=50):
 
     """## {name}
 
@@ -216,18 +228,18 @@ def examine_source(name, info=None, neighbor=None, nyquist=24, max_sep=None):
     # except Exception as ex:
     #     printout = f'<font color="red">Failed: {ex}</font>\n'
     #     return locals()
-    proc = self = Processor(name, neighbor=neighbor, nyquist=nyquist)
+    proc = self = Processor(name, neighbor=neighbor, nyquist=nyquist, tsmin=tsmin)
     printout=self.printout
+    pinfo = self.display_pointlike_info()
     if self.fig is not None: 
         fig = self.fig
         nearby = self.display_nearby()
-        pinfo = self.display_pointlike_info()
         ginfo = self.display_4fgl_info()
         beta = self.display_beta_table()
         fft_peaks = self.display_fft_peaks()
 
     else:
-        pinfo=ginfo=beta=fig=fft_peaks=nearby=neighbor_info=''
+        ginfo=beta=fig=fft_peaks=nearby=neighbor_info=''
     if neighbor is None:
         neighbor_plot = ''
     else: 
@@ -242,7 +254,7 @@ def examine_source(name, info=None, neighbor=None, nyquist=24, max_sep=None):
 
     return locals()
 
-def process_df(df, max_sep=None):
+def process_df(df, max_sep=None, tsmin=50):
     show(f"""\
         Processing {len(df)} sources,  Start at {str(datetime.datetime.now())[:16]}
         \n---

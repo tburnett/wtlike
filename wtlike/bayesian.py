@@ -119,7 +119,7 @@ class CountFitness(FitnessFunc):
 
         return self.mjd[change_points]
 
-#export
+# %% ../nbs/14_bayesian.ipynb 5
 class LikelihoodFitness(CountFitness):
     """ Fitness function that uses the full likelihood
     """
@@ -154,7 +154,7 @@ class LikelihoodFitness(CountFitness):
             rv[i] =y[amax]
         return rv
 
-# %% ../nbs/14_bayesian.ipynb 5
+# %% ../nbs/14_bayesian.ipynb 6
 def doc_countfitness( fitness, light_curve_dict, source_name):
     """
     #### {class_name} test with source {source_name}
@@ -179,7 +179,7 @@ def doc_countfitness( fitness, light_curve_dict, source_name):
 
     return locals()
 
-# %% ../nbs/14_bayesian.ipynb 6
+# %% ../nbs/14_bayesian.ipynb 7
 def get_bb_partition(config, lc, fitness_class=LikelihoodFitness, p0=0.05, key=None, clear=False):
 
     """Perform Bayesian Block partition of the cells found in a light curve
