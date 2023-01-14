@@ -12,6 +12,9 @@ plt.rc('font', size=12)
 pd.set_option('display.float_format', lambda f: f'{f:.3f}' if abs(f)>1e-3 else f'{f:.2e}')
 
 with capture_hide('Catalogs setup') as catalog_setup:
+    if os.environ.get('FERMI', None) is None:
+        os.environ['FERMI'] ='.'
+        print(f'Setting env var FERMI to ".". Expect to find folders catatag and skymodels')
     cat4 = Fermi4FGL()
     uwname = 'uw1216'
     uwcat = UWcat(uwname)
@@ -25,9 +28,11 @@ src_finder = SourceFinder()
 
 class Processor():
 
-    def __init__(self, name,  interval=30, nyquist=24):
+    def __init__(self, name, neighbor=None,  interval=30, nyquist=24):
+        """
+        """
 
-        if not self.setup(name, interval, nyquist): 
+        if not self.setup(name, neighbor, interval, nyquist): 
             self.fig = None # flag that no output
             return
  
@@ -41,18 +46,31 @@ class Processor():
         self.plot_periodogram(ax3, ax4)
         
 
-    def setup(self, name, interval, nyquist):
-        pt_name = self.pt_name =  src_finder.find(name)
+    def __repr__(self):
+        return f'Processor({self.name})'
+
+    def setup(self, name, neighbor, interval, nyquist):
+        pt_name = self.pt_name =  src_finder.find(name, tol=SourceFinder.max_sep)
         if pt_name is None: 
             self.printout = src_finder.log 
+            self.name='(not found)'
             return False
         self.skycoord = src_finder.skycoord
+        self.name = name
 
         with capture_hide(f'{name} ({pt_name}) analysis printout') as self.printout:
             print(src_finder.log)
+            if pt_name not in uwcat.index:
+                print(f'UW source {pt_name} not found in {uwname}??')
+                self.wtl = self.bb=self.px = None
+                return False
             self.pointlike_info = pi = uwcat.loc[pt_name]
             # pi.loc[:, 'r95'] = pt[loc]
             self.wtl = WtLike(PointSource(pt_name)) 
+            if neighbor is not None:
+                print(f'Reweighting with {neighbor}')
+                self.neighbor_bb = WtLike(neighbor).bb_view()
+                self.wtl = self.wtl.reweighted_view(self.neighbor_bb)
             self.bb = self.wtl.view(interval).bb_view()
             self.px = self.wtl.periodogram( 1/(4*nyquist) )
         return True
@@ -127,7 +145,7 @@ class Processor():
     def display_beta_table(self):
         """ return (hidden) markdown string"""
         bt = self.beta_table
-        if len(bt)<2: return ''
+        if bt is None or len(bt)<2: return ''
         test = np.max(bt.beta/bt.sig_beta)
         color = 'red' if test>2 else ''
         with capture_hide(f'beta values for BB intervals (<font color={color}>max sig = {test:.1f}</font> )') as cp:
@@ -154,7 +172,7 @@ class Processor():
     def display_fft_peaks(self, query='p0>25 & f>0.05', show=False):
         df = self.px.find_peaks().query(query)
         if len(df)==0:
-            return f'No peaks satisfying {query}'
+            return f' No peaks satisfying {query}'
         with capture(f'{len(df)} FFT peaks satisfying {query}') as out:
             print( df)
         return out
@@ -164,18 +182,24 @@ class Processor():
         near_df['name'] = near_df.index
         return near_df['sep glon glat significance variability'.split()].sort_values('sep')
 
-    def display_nearby(self, radius_cut=3, **kwargs):
+    def display_nearby(self, show=False, radius_cut=3, **kwargs):
         near_df = self.get_nearby(radius_cut=radius_cut, **kwargs)
-        if len(near_df)==0: return f'No nearby (within {radius_cut} deg) variable sources.'
-        with capture_hide(f'{len(near_df) } nearby variable sources') as out:
+        if len(near_df)==0: return f' No nearby (within {radius_cut} deg) variable sources.'
+        with capture(f'{len(near_df) } nearby variable sources', show=show) as out:
             print(near_df)
         return out
 
+# access to the Processor object from the notebook
+proc=None
+def get_proc(): return proc
+
 @ipynb_doc
-def examine_source(name, info=None, nyquist=24):
+def examine_source(name, info=None, neighbor=None, nyquist=24, max_sep=None):
+
     """## {name}
 
     {printout}
+    {neighbor_plot}
     {pinfo}
     {ginfo}
     {fig}
@@ -184,7 +208,15 @@ def examine_source(name, info=None, nyquist=24):
     {fft_peaks}
     {other_info}
     """
-    self = Processor(name, nyquist=nyquist)
+    global proc
+    if max_sep is not None: SourceFinder.max_sep=max_sep
+    neighbor_info = '' if neighbor is None else f'Reweighted with {neighbor}'
+    # try:
+    #     proc = self = Processor(name, neighbor, nyquist=nyquist)
+    # except Exception as ex:
+    #     printout = f'<font color="red">Failed: {ex}</font>\n'
+    #     return locals()
+    proc = self = Processor(name, neighbor=neighbor, nyquist=nyquist)
     printout=self.printout
     if self.fig is not None: 
         fig = self.fig
@@ -195,7 +227,13 @@ def examine_source(name, info=None, nyquist=24):
         fft_peaks = self.display_fft_peaks()
 
     else:
-        pinfo=ginfo=beta=fig=fft_peaks=nearby=''
+        pinfo=ginfo=beta=fig=fft_peaks=nearby=neighbor_info=''
+    if neighbor is None:
+        neighbor_plot = ''
+    else: 
+        neighbor_plot, ax = plt.subplots(figsize=(10,3))
+        self.neighbor_bb.plot(ax=ax)
+        neighbor_plot.summary= f'Reweighted with {neighbor} (click for its light curve)'
 
     if info is not None:
         with capture_hide('other info') as other_info:
@@ -204,14 +242,14 @@ def examine_source(name, info=None, nyquist=24):
 
     return locals()
 
-def process_df(df):
+def process_df(df, max_sep=None):
     show(f"""\
-    Processing {len(df)} sources,  Start at {str(datetime.datetime.now())[:16]}
-
-    ---
-    """)
-    for name, value in df.iterrows():
-        examine_source(name, value, nyquist=24)  
-    show(f"""---
-    # Finish at {str(datetime.datetime.now())[:16]}""")
+        Processing {len(df)} sources,  Start at {str(datetime.datetime.now())[:16]}
+        \n---
+        """)
+    for name, info in df.iterrows():
+        examine_source(name, info=info, nyquist=24, max_sep=max_sep)  
+    show(f"""\
+        \n---
+        \n# Finish at {str(datetime.datetime.now())[:16]}""")
 

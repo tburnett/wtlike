@@ -79,7 +79,7 @@ class AitoffFigure():
     def scatter(self, *args, **kwargs):
         return self.ax.scatter(*_trans(*args), **kwargs)
 
-# %% ../nbs/04_skymaps.ipynb 9
+# %% ../nbs/04_skymaps.ipynb 10
 class SquareWCS(WCS):
     """
     Create and use a WCS object
@@ -188,7 +188,7 @@ class SquareWCS(WCS):
             annotator(ax, self.frame)
         return fig
 
-# %% ../nbs/04_skymaps.ipynb 11
+# %% ../nbs/04_skymaps.ipynb 12
 class FITSimage():
     """
     Manage a FITs image
@@ -214,10 +214,17 @@ class FITSimage():
         return ax
     
     def __call__(self, coord, badval=np.nan):
-        """Return value(s) for SkyCoord value array
+        """Return value(s) for SkyCoord value array, or list of HEALPix indeces
         
         """
         coord = np.atleast_1d(coord)
+        
+        if not isinstance(coord, SkyCoord):
+            # assume HEALPix array, galactic coords RING indexing
+            # (needs nside)
+            lon, lat = healpy.pix2ang(nside, coord, lonlat=True)
+            coord = SkyCoord(lon, lat, unit='deg', frame='galactic').fk5
+        
         xsize, ysize = self.data.shape
         x,y = np.array(self.wcs.world_to_array_index(coord) )  
         result = np.full(len(coord), badval)
@@ -225,7 +232,7 @@ class FITSimage():
         result[good] = self.data[x[good], y[good]]
         return result if len(coord)>1 else result[0]
 
-# %% ../nbs/04_skymaps.ipynb 14
+# %% ../nbs/04_skymaps.ipynb 16
 class HPmap(object):
     """
     Manage HEALPix array
@@ -267,13 +274,7 @@ class HPmap(object):
     def smooth(self, sigma):
             self.map = healpy.smoothing(self.map, np.radians(sigma))
 
-    @classmethod
-    def from_FITS(cls, filename, *pars, **kwargs):
-        with fits.open(filename) as hdus:
-            header, data = hdus[1].header, hdus[1].data
-        kw = dict(unit=header.get('TUNIT1', ''), name=header['TTYPE1'])
-        kw.update(**kwargs)
-        return cls(data.field(0), *pars, **kw)
+
 
     def ait_plot(self, **kwargs):
         """
@@ -330,7 +331,7 @@ class HPmap(object):
             ('ORDER',    int(np.log2(nside)),   'redundant'),
             ('INDXSCHM', 'IMPLICIT' ,''),
             ('OBJECT' ,  'FULLSKY', ''),
-            ('COORDSYS', 'GAL', ''),
+            ('COORDSYS', 'GALACTIC', ''),
         ]]
         table = fits.BinTableHDU.from_columns([column],header=fits.Header(cards))
         table.name = 'SKYMAP'
@@ -343,8 +344,16 @@ class HPmap(object):
             hdus.writeto(filename, overwrite=True)
             print(f'Wrote FITS file {filename}')
         return hdus
+    
+    @classmethod
+    def from_FITS(cls, filename, *pars, **kwargs):
+        with fits.open(filename) as hdus:
+            header, data = hdus[1].header, hdus[1].data
+        kw = dict(unit=header.get('TUNIT1', ''), name=header['TTYPE1'])
+        kw.update(**kwargs)
+        return cls(data.field(0), *pars, **kw)
 
-# %% ../nbs/04_skymaps.ipynb 15
+# %% ../nbs/04_skymaps.ipynb 17
 def ait_plot(mappable,
         pars=[],
         label='',
@@ -429,7 +438,7 @@ def ait_plot(mappable,
 
     return fig
 
-# %% ../nbs/04_skymaps.ipynb 19
+# %% ../nbs/04_skymaps.ipynb 21
 def draw_map(mapper, time_range, name='', show_sun=False, sigma=0,
                 figsize=(9,4), label='', fignum=1, **kwargs):
 

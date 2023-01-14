@@ -151,25 +151,19 @@ class UWcat(CatDF, pd.DataFrame):
 
 class FlagBits():
        
-    """For 4FGL:
-    flags: https://heasarc.gsfc.nasa.gov/W3Browse/fermi/fermilpsc.html
-      N=1: Source with TS > 35 which went to TS < 25 when changing the diffuse
-           model. Note that sources with TS < 35 are not flagged with this bit
-           because normal statistical fluctuations can push them to TS < 25.
-
-      N=3: Flux (> 1 GeV) or energy flux (> 100 MeV) changed by more than 3
-           sigma when changing the diffuse model or the analysis method. Requires
-           also that the flux change by more than 35% (to not flag strong
-           sources).
-
-      N=9: Localization Quality > 8 in pointlike (see Section 3.1 in catalog
-           paper) or long axis of 95% ellipse > 0.25.
-
-      N=10: Spectral Fit Quality > 30 in pointlike.
-
-      N=12: Highly curved spectrum; LogParabola beta fixed to 1 or PLEC_Index
-            fixed to 0 (see Section 3.3 in catalog paper).
-            """
+    """From  Table 4 in the 4FGL DR3 paper https://arxiv.org/abs/2201.11184
+         1 TS < 25 with other model or analysis
+         2 Moved beyond 95% error ellipse
+         3 Flux changed with other model or analysis
+         4 Source/background ratio < 10%
+         5 Confused
+         6 Interstellar gas clump (c sources)
+         9 Localization flag from pointlike
+        10 Bad spectral fit quality
+        12 Highly curved spectrum
+        13 TS < 25 at 12 yr
+        14 Soft Galactic Unassociated (§ 6.2)
+        """
     def __init__(self, f):
         self.f = f
     def __repr__(self):
@@ -177,7 +171,7 @@ class FlagBits():
         for n in range(1, 16):
             if (self.f & 2**(n-1)) >0:
                 r+= f'{n},'
-        return '-' if r=='' else '{'+r[:-1]+'}'
+        return '{}' if r=='' else '{'+r[:-1]+'}'
 
 class LonLat():
     def __init__(self, lon,lat):

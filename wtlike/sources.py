@@ -273,7 +273,7 @@ class FermiCatalog():
     def __getitem__(self, name):   return self.df.loc[name]
     def __len__(self): return len(self.df)
 
-# %% ../nbs/03_sources.ipynb 15
+# %% ../nbs/03_sources.ipynb 16
 class SourceLookup():
     """ Use lists of the pointlike and catalog sources to check for correspondence of a name or position
     
@@ -436,7 +436,7 @@ def findsource(name, gal=True):
 
 # findsource('Geminga')
 
-# %% ../nbs/03_sources.ipynb 18
+# %% ../nbs/03_sources.ipynb 19
 class SourceFinder(SourceLookup):
     def __init__(self, uwname='uw1216', config=None):
         """Assume that uwname is the model used to generate the weight tables
@@ -461,7 +461,7 @@ class SourceFinder(SourceLookup):
         return pt_name
     
 
-# %% ../nbs/03_sources.ipynb 21
+# %% ../nbs/03_sources.ipynb 23
 class PointSource():
     """Manage the position and name of a point source
     """
@@ -587,11 +587,12 @@ class PointSource():
             self.e0=e0
 
         def photon_flux(self):
+            """ count flux: counts cm-2 s-1"""
             return quad(self, self.emin, self.emax)[0]
 
         def energy_flux(self):
-            func = lambda e: self(e) * e**2
-            return quad(func, self.emin, self.emax)[0]
+            """ energy flux:  erg cm-2 s-1"""
+            return quad(lambda e: self(e) * e, self.emin, self.emax)[0]/624151
 
     class LogParabola(FluxModel):
 
