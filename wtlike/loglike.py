@@ -340,9 +340,10 @@ class PoissonRep(object):
             curvature= loglike.hessian(0)[0]
             b = -slope/curvature
             self.poiss = Poisson([-b, slope, b])
-        elif max(loglike.w<1e-5):
+        elif max(loglike.w)<1e-5:
             # klugy thing for no fit. with float32 for w, small values problematic
             self.poiss = Poisson([-1, 1e-3,1])
+
         else:
             use_fitter()
 

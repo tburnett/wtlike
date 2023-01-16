@@ -139,7 +139,8 @@ class WtLike(LightCurve):
             ssi = np.searchsorted(bb_edges, photons.time)
             # isert nans at both ends of bb blux
             bbflux = np.append(np.insert(bbf.flux.values, 0, np.nan), np.nan)
-            return bbflux[ssi]-1
+            # limit values of alphas for safety
+            return (bbflux[ssi]-1).clip(0,1)
 
         def wprime(row):
             """ Apply
