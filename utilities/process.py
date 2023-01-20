@@ -1,3 +1,11 @@
+"""
+process.py: Analysis of the time behaviour of a source
+
+Do run an individual source: examine_source(name)
+where name can be:
+* any source identifier recognized by SIMBAD
+* the name of a uw source in uw1216, specifically in the wtlike table of weights
+"""
 import datetime
 from wtlike import *
 from utilities.ipynb_docgen import *
@@ -5,18 +13,24 @@ from utilities.catalogs import  *
 
 from wtlike.sources import SourceFinder
 
+uwname = 'uw1216'
+pars = sys.argv
+if len(pars)>1:
+    print(f'parameters: {pars}')
+    if pars[1].startswith('uw'):
+        uwname = pars[1]
+
 def show(*pars):
     return display_markdown(*pars)
 
 plt.rc('font', size=12)
 pd.set_option('display.float_format', lambda f: f'{f:.3f}' if (abs(f)>1e-3 and abs(f)<1e5 ) else f'{f:.2e}')
 
-with capture_hide('Catalog setup output') as catalog_setup:
+with capture_hide(f'Catalogs: {uwname} and 4FGL-DR3') as catalog_setup:
     if os.environ.get('FERMI', None) is None:
         os.environ['FERMI'] ='.'
         print(f'Setting env var FERMI to ".". Expect to find folders catatag and skymodels')
     cat4 = Fermi4FGL()
-    uwname = 'uw1216'
     uwcat = UWcat(uwname)
 
 sk = uwcat.skycoord.galactic
@@ -26,7 +40,7 @@ uwcat.loc[:, 'r95'] = np.sqrt( (uwcat.a * 2.64)**2 + (0.00791)**2) #
 
 src_finder = SourceFinder()
 
-defaults = dict(neighbor=None, interval=30, nyquist=24, max_sep=None, tsmin=25, info_name='Other info')
+defaults = dict(neighbor=None, interval=30, nyquist=24, max_sep=0.5, tsmin=25, info_name='Other info')
 
 class SourceAnalyzer():
 
@@ -34,12 +48,14 @@ class SourceAnalyzer():
             neighbor=None,  
             interval=30, 
             nyquist=24, 
-            tsmin=50):
+            tsmin=50,
+            **kwargs):
         """
         """
         self.log=''
         self.wtl=None
-
+        self.max_sep = kwargs.pop('max_sep', defaults['max_sep'])
+        SourceFinder.max_sep = self.max_sep #klugy
         if not self.setup(name, neighbor, interval, nyquist, tsmin): 
             self.fig = None # flag that no output
             return
@@ -58,12 +74,11 @@ class SourceAnalyzer():
             self.fig, ax = plt.subplots(figsize=(3,3))
             self.plot_sed(ax)
         
-
     def __repr__(self):
         return f'{self.__class__.__name__}("{self.name}")'
 
     def setup(self, name, neighbor, interval, nyquist, tsmin):
-        pt_name = self.pt_name =  src_finder.find(name, tol=SourceFinder.max_sep)
+        pt_name = self.pt_name =  src_finder.find(name, tol=self.max_sep)
         if pt_name is None: 
             self.log =  f'<font color="red">Failed lookup:</font> {monospace(src_finder.log)} ' 
             #raise Exception(self.log)
@@ -99,10 +114,11 @@ class SourceAnalyzer():
             self.px = self.wtl.periodogram( 1/(4*nyquist) )
         return True
 
-    def get_catalog_info(self, cat, select=None, show=False, cone_size=0.5):
+    def get_catalog_info(self, cat, select=None, show=False):
         """
         select - list of column names
         """
+        cone_size = SourceFinder.max_sep
         info = cat.catalog_entry( self.skycoord, cone_size=cone_size)
         if info is None:
             return f'No {cat.name} source within {cone_size} deg'
@@ -138,13 +154,14 @@ class SourceAnalyzer():
     def _repr_html_(self):
         return self.printout
 
-    def plot_sed(self, ax):
+    def plot_sed(self, ax, cone_size=1):
 
-        c4entry = cat4.catalog_entry(self.skycoord)
-        uwentry = uwcat.catalog_entry(self.skycoord)
+        c4entry = cat4.catalog_entry(self.skycoord, cone_size=cone_size)
+        uwentry = uwcat.catalog_entry(self.skycoord, cone_size=cone_size)
         if c4entry is not None:
             c4entry.specfunc.sed_plot(ax=ax, e0=c4entry.pivot, label=cat4.name)
-        uwentry.specfunc.sed_plot(ax=ax, e0=uwentry.e0, label=uwcat.name,
+        if uwentry is not None:
+            uwentry.specfunc.sed_plot(ax=ax, e0=uwentry.e0, label=uwcat.name,
                     yticks = [0.1,1,10], xticks=[0.1,1, 10],
                     yticklabels='0.1 1 10'.split(), xticklabels='0.1 1 10 '.split()
         )
@@ -226,10 +243,11 @@ proc=None
 def get_proc(): return proc
 
 @ipynb_doc
-def examine_source(name, info=None, **kwargs): 
+def examine_source(name, info=None, text='',  **kwargs): 
 
     """## {name}
     <br>
+    {text}
     {log}
     {printout}
     {neighbor_plot}
@@ -334,11 +352,15 @@ def process_excel(filename,
 Read spreadsheet "{spreadsheet.absolute()}", 
 dated {str(datetime.datetime.fromtimestamp(spreadsheet.stat().st_mtime))[:16]}
 """)
-    # make the index the source name, remove columns without a "1" in the first row
+    # make the index the source name, remove columns without a "1" (or anything?) in the first row
     df = pd.read_excel(spreadsheet)
     assert source_name_column in df.columns, f'did not find column "{source_name_column}" to use as index'
     df.index = df.loc[:,source_name_column]
     to_drop = pd.isna(df.iloc[0])
     df = df.drop(columns=df.columns[to_drop])[1:]
 
+    with capture_hide('Spread sheet:') as ss:
+        print(df)
+    show(f'{ss}')
+    
     process_df(df)

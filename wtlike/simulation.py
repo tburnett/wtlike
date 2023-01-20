@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 from scipy import stats
 
 from .config import Config
-from .weights import PointSource
+from .sources import PointSource
 
 # %% ../nbs/04_simulation.ipynb 3
 class _Sampler():
