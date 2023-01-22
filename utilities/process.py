@@ -6,19 +6,20 @@ where name can be:
 * any source identifier recognized by SIMBAD
 * the name of a uw source in uw1216, specifically in the wtlike table of weights
 """
-import datetime
+import datetime, inspect
 from wtlike import *
 from utilities.ipynb_docgen import *
 from utilities.catalogs import  *
 
 from wtlike.sources import SourceFinder
 
-uwname = 'uw1216'
+uwname = 'uw1400'
 pars = sys.argv
 if len(pars)>1:
-    print(f'parameters: {pars}')
     if pars[1].startswith('uw'):
         uwname = pars[1]
+    else:
+        print( f'Unrecognized parameter(s): {pars[1:]}')
 
 def show(*pars):
     return display_markdown(*pars)
@@ -67,12 +68,12 @@ class SourceAnalyzer():
             (ax1,ax2,ax3,ax4) =  [self.fig.add_subplot(g) for g in gs]
 
             self.plot_bb(ax1)        
-            self.plot_sed(ax2)
+            self.plot_sed(ax2, self.max_sep)
             self.plot_periodogram(ax3, ax4)
         else:
             # no analysis since low TS. Make the plots anyway
             self.fig, ax = plt.subplots(figsize=(3,3))
-            self.plot_sed(ax)
+            self.plot_sed(ax, self.max_sep)
         
     def __repr__(self):
         return f'{self.__class__.__name__}("{self.name}")'
@@ -80,7 +81,7 @@ class SourceAnalyzer():
     def setup(self, name, neighbor, interval, nyquist, tsmin):
         pt_name = self.pt_name =  src_finder.find(name, tol=self.max_sep)
         if pt_name is None: 
-            self.log =  f'<font color="red">Failed lookup:</font> {monospace(src_finder.log)} ' 
+            self.log =  f'<font color="red">Failed lookup:</font> <br>{monospace(src_finder.log)} ' 
             #raise Exception(self.log)
             self.printout=''
             self.name='(not found)'
@@ -218,8 +219,8 @@ class SourceAnalyzer():
         self.px.power_plot(ax=ax3, pmax=50)
         hist_peak_power(self.px, ax=ax4, title='Peak distribution', xlabel='')
 
-    def display_fft_peaks(self, query='p0>25 & f>0.05', show=False):
-        df = self.px.find_peaks().query(query)
+    def display_fft_peaks(self, query='p1>30 & f>0.05', show=False):
+        df = self.px.find_peaks('p1').query(query)
         if len(df)==0:
             return monospace(f'No peaks satisfying {query}')
         with capture(f'{len(df)} FFT peaks satisfying {query}') as out:
@@ -263,18 +264,21 @@ def examine_source(name, info=None, text='',  **kwargs):
     ginfo=beta=fig=fft_peaks=nearby=neighbor_plot=pinfo=other_info=''
     kw = defaults.copy() 
     kw.update(kwargs)
-    
+    max_sep = kw.pop('max_sep', None)
+    info_name = kw.pop('info_name', 'Other info')
+    if max_sep is not None: SourceFinder.max_sep=max_sep
+
     # the additional info, a dict-like object, can update default analysis parameters
     if info is not None:
         for k,v in info.items():
             if k in defaults and str(v)!='nan':
                 # print(f'setting {k} from {kw[k]} to {v}')
                 kw[k]=v
-   
 
-    max_sep = kw.pop('max_sep', None)
-    info_name = kw.pop('info_name', 'Other info')
-    if max_sep is not None: SourceFinder.max_sep=max_sep
+        with capture_hide(f'{info_name}') as other_info:
+            print(info)
+    else: other_info=''
+
 
     neighbor = kw.get('neighbor',None)
     if not str(neighbor).strip(): neighbor=None
@@ -294,26 +298,19 @@ def examine_source(name, info=None, text='',  **kwargs):
     pinfo = self.display_pointlike_info()
     ginfo = self.display_4fgl_info()
     fig = self.fig
-    if self.wtl is None:
-        # no nearby souire with TS>tsmin
-        return locals()
     
     nearby = self.display_nearby()
-    
-    beta = self.display_beta_table()
-    fft_peaks = self.display_fft_peaks()
+
+    if self.wtl is not None:
+        beta = self.display_beta_table()
+        fft_peaks = self.display_fft_peaks()
 
     if neighbor is None:
         neighbor_plot = ''
-    else: 
+    elif self.wtl is not None: 
         neighbor_plot, ax = plt.subplots(figsize=(10,3))
         self.neighbor_bb.plot(ax=ax)
         neighbor_plot.summary= f'Reweighted with {neighbor} (click for its light curve)'
-
-    if info is not None:
-        with capture_hide(f'{info_name}') as other_info:
-            print(info)
-    else: other_info=''
 
     return locals()
 
@@ -339,27 +336,31 @@ def process_df(df): #, max_sep=None, tsmin=50):
 def process_excel(filename, 
         source_name_column,
         title='Excel analysis',
+        query='',
         **kwargs):
 
     defaults.update(kwargs)
 
     spreadsheet = Path(filename) #'AMXP scorecard (2).xlsx')
     assert spreadsheet.is_file(), f'File "{filename}" not found'
+    
     show(f"""\
-# {title}
+        # {title}
 
-{catalog_setup}
-Read spreadsheet "{spreadsheet.absolute()}", 
-dated {str(datetime.datetime.fromtimestamp(spreadsheet.stat().st_mtime))[:16]}
-""")
+        {catalog_setup}
+        Read spreadsheet "{spreadsheet.absolute()}", 
+        dated {str(datetime.datetime.fromtimestamp(spreadsheet.stat().st_mtime))[:16]}
+        """)
     # make the index the source name, remove columns without a "1" (or anything?) in the first row
     df = pd.read_excel(spreadsheet)
     assert source_name_column in df.columns, f'did not find column "{source_name_column}" to use as index'
     df.index = df.loc[:,source_name_column]
     to_drop = pd.isna(df.iloc[0])
     df = df.drop(columns=df.columns[to_drop])[1:]
+    if query:        
+        df = df.query(query)
 
-    with capture_hide('Spread sheet:') as ss:
+    with capture_hide(f'Spread sheet: {query}') as ss:
         print(df)
     show(f'{ss}')
     

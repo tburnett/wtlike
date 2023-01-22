@@ -9,8 +9,7 @@ from astropy.io import fits
 from astropy.table import Table
 from astropy.coordinates import SkyCoord
 
-from . spectral_functions import *
-
+from . spectral_functions import specfun_dict
 
 class CatDF():
     """Methods common to the following classes
@@ -26,8 +25,8 @@ class CatDF():
         return idx, _delta.deg
     
     def hist_delta(self, other, name='', ax=None,  xmin=1e-3,xmax=4):
-        fig, ax = plt.subplots() if ax is None else (ax.figure, ax)
-        idx, delta = self.match(other)
+        _, ax = plt.subplots() if ax is None else (ax.figure, ax)
+        _, delta = self.match(other)
         ax.hist(delta.clip(xmin, xmax), np.logspace(np.log10(xmin), np.log10(xmax), 40), 
         histtype='stepfilled', log=True);
         ax.set(xscale='log', ylim=(0.5,None), title=name);
@@ -132,17 +131,21 @@ class BigFile(CatDF, pd.DataFrame):
     
 class UWcat(CatDF, pd.DataFrame):
     
-    def __init__(self, model='uw1216'):
-        
-        filename = Path(os.path.expandvars('$FERMI'))/f'skymodels/sources_{model}.csv'
-        assert filename.exists(), f'File {filename} not found'
+    def __init__(self, model=NotImplementedError, filename=None):
 
+        if model is not None:
+            filename = Path(os.path.expandvars('$FERMI'))/f'skymodels/sources_{model}.csv'
+        elif filename is not None:
+            pass
+        else:
+            pass
+        
+        assert filename.exists(), f'File {filename} not found'
         uwdf = pd.read_csv(filename, index_col=0)
-        modeldict = dict(PLSuperExpCutoff=PLSuperExpCutoff,LogParabola=LogParabola)
 
         sf = []
         for n, v in uwdf.iterrows():    
-            sf.append( modeldict[v.modelname](np.array(v.pars[1:-1].split(), float), e0=v.e0))
+            sf.append( specfun_dict[v.modelname](np.array(v.pars[1:-1].split(), float), e0=v.e0))
         uwdf.loc[:,'specfunc'] = sf
 
         super().__init__(uwdf)
@@ -176,6 +179,9 @@ class FlagBits():
 class LonLat():
     def __init__(self, lon,lat):
         self.lon, self.lat=lon,lat
+    @property
+    def as_tuple(self):
+        return (self.lon, self.lat)
     def __repr__(self):
         return f'({self.lon:7.3f},{self.lat:+7.3f})'
 
@@ -240,13 +246,12 @@ class Fermi4FGL(CatDF, pd.DataFrame):
             PowerLaw    =par_array('PL_Flux_Density PL_Index'.split()),
             PLSuperExpCutoff=par_array('PLEC_Flux_Density PLEC_IndexS PLEC_ExpfactorS PLEC_Exp_Index'.split())
                     )
-        specdict = dict(LogParabola=LogParabola, PowerLaw=PowerLaw, PLSuperExpCutoff=PLSuperExpCutoff4)    
 
         pivot = cvar('Pivot_Energy')
         spec = []                    
         for i,name in enumerate(cname('SpectrumType')):
             pars = pardict[name][i]
-            spec.append( specdict[name]( pars, e0=pivot[i]))
+            spec.append( specfun_dict[name]( pars, e0=pivot[i]))
         return spec
 
     def field(self, name):

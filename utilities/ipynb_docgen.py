@@ -39,7 +39,7 @@ About images:
 
 Images are made from plots, or imported directly, with HTML created to include the image as a base64 string.
 """
-import sys, os, shutil, string, pprint, datetime
+import sys, os, shutil, string, pprint, datetime, inspect
 
 
 __all__ = ['nbdoc', 'image', 'figure', 'monospace', 'capture', 'capture_hide', 
@@ -628,10 +628,14 @@ def nbdoc(fun, *pars, name=None, fignum=1, **kwargs):
 def display_markdown(obj, vars={}):
     """Add an object to the IPython markdown display
     - obj -- either actual text, or an object with a _repr_html_ method.
+            If a string, run inspect.cleandoc
     - vars -- optional dictionary of replacement values, if text
 
     """
+    import inspect
     import IPython.display as display
     if hasattr(obj, '_repr_html_'):
         obj = obj._repr_html_()
+    elif type(obj) == str:
+        obj = inspect.cleandoc(obj)
     display.display(doc_formatter(obj, vars))

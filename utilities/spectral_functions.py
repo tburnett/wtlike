@@ -7,13 +7,15 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.integrate import quad
 
+
 class FluxModel():
     
     emin, emax = 1e2, 1e5
 
-    def __init__(self, pars, e0=1000):
+    def __init__(self, pars, e0=1000, errors=[]):
         self.pars=pars
         self.e0=e0
+        self.errors=errors
 
     def __repr__(self):
 
@@ -21,10 +23,15 @@ class FluxModel():
         t = f'{self.__class__.__name__}({p[0]:.2e}, '
         return t+', '.join([(f'{x:.2f}' if x<10 else f'{x:.0f}') for x in p[1:]])+')'
 
+    @property
     def photon_flux(self):
         """photon flux (cm-2 s-1)"""
-        return quad(self, self.emin, self.emax)[0]
+        #return quad(self, self.emin, self.emax)[0]
+        # or integrate 
+        return quad( lambda loge: np.exp(loge)* self(np.exp(loge)),
+                     np.log(self.emin), np.log(self.emax) )[0] 
 
+    @property
     def energy_flux(self):
         """ Energy flux (erg cm-2 s-1)
         """
@@ -146,3 +153,15 @@ class PLSuperExpCutoff4(FluxModel):
         n0,gamma,d,b = self.pars
         x = e*(1./self.e0)
         return n0*x**(-gamma+d/b)*np.exp((d/b**2)*(1-x**b))
+
+# external access: by name, ...
+specfun_dict = dict(
+    PowerLaw=PowerLaw,
+    LogParabola=LogParabola,
+    PLSuperExpCutoff=PLSuperExpCutoff,
+    PLSuperExpCutoff4=PLSuperExpCutoff4,
+    )
+
+# or just run the appropriate construcctor
+def spectral_function(name, *pars, **kwargs):
+    return specfun_dict[name](*pars, **kwargs)
