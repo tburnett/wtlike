@@ -7,9 +7,39 @@ import pandas as pd
 from pathlib import Path
 from astropy.io import fits 
 from astropy.table import Table
-from astropy.coordinates import SkyCoord
+from astropy.coordinates import SkyCoord, Angle
 
 from . spectral_functions import specfun_dict
+
+def make_jname(skycoord):
+    """Return a name in the format Jhhmm.m+ddmm
+    note that last digits are truncated, not rounded
+    http://cds.u-strasbg.fr/vizier/Dic/iau-spec.htx#S3.2.1
+    """
+    import numpy as np
+    sc = skycoord.fk5
+    ra, dec = sc.ra.deg, sc.dec.deg
+    mm = np.mod(ra*4,1440) # RA in minutes 
+    ss = np.mod(mm*60,60) #seconds
+    HH,MM = int(mm/60), int(mm%60)
+    m = int(ss/6) # prescription for .1 min digit
+    sign= '+' if dec>=0 else '-'
+    dem = int(abs(dec)*60) #abs( DEC) in minutes, truncated
+    return 'J' +   '{:02d}{:02d}.{:1d}'.format(HH,MM,m)\
+            + sign+'{:02d}{:02.0f}'.format(int(dem/60),dem%60)
+
+def parse_jname(name):
+    """ convert a "J-name" to a SkyCoord
+    """
+    tname = name[:5]+'.0'+name[5:] if name[5]!='.' else name
+    ra = (tname[1:3]+'h'+tname[3:7]+'m')
+    dec = (tname[7:10]+'d'+tname[10:12]+'m')
+    try:
+        (ra,dec) = map(lambda a: float(Angle(a, unit=u.deg).to_string(decimal=True)),(ra,dec))
+        return SkyCoord(ra, dec, unit='deg', frame='fk5')
+    except ValueError as err:
+        print(f'Attempt to parse "{name}" failed ({err}): expect "J1234.5+6789" or "J1234.5678"', file=sys.stderr)
+        return None
 
 class CatDF():
     """Methods common to the following classes
@@ -152,30 +182,6 @@ class UWcat(CatDF, pd.DataFrame):
         print(f'Loaded UW model {model}: {len(self)} entries')
         self.__dict__.update(name=model)
 
-class FlagBits():
-       
-    """From  Table 4 in the 4FGL DR3 paper https://arxiv.org/abs/2201.11184
-         1 TS < 25 with other model or analysis
-         2 Moved beyond 95% error ellipse
-         3 Flux changed with other model or analysis
-         4 Source/background ratio < 10%
-         5 Confused
-         6 Interstellar gas clump (c sources)
-         9 Localization flag from pointlike
-        10 Bad spectral fit quality
-        12 Highly curved spectrum
-        13 TS < 25 at 12 yr
-        14 Soft Galactic Unassociated (§ 6.2)
-        """
-    def __init__(self, f):
-        self.f = f
-    def __repr__(self):
-        r = ''
-        for n in range(1, 16):
-            if (self.f & 2**(n-1)) >0:
-                r+= f'{n},'
-        return '{}' if r=='' else '{'+r[:-1]+'}'
-
 class LonLat():
     def __init__(self, lon,lat):
         self.lon, self.lat=lon,lat
@@ -186,6 +192,30 @@ class LonLat():
         return f'({self.lon:7.3f},{self.lat:+7.3f})'
 
 class Fermi4FGL(CatDF, pd.DataFrame):
+
+    class FlagBits():
+       
+        """From  Table 4 in the 4FGL DR3 paper https://arxiv.org/abs/2201.11184
+            1 TS < 25 with other model or analysis
+            2 Moved beyond 95% error ellipse
+            3 Flux changed with other model or analysis
+            4 Source/background ratio < 10%
+            5 Confused
+            6 Interstellar gas clump (c sources)
+            9 Localization flag from pointlike
+            10 Bad spectral fit quality
+            12 Highly curved spectrum
+            13 TS < 25 at 12 yr
+            14 Soft Galactic Unassociated (§ 6.2)
+            """
+        def __init__(self, f):
+            self.f = f
+        def __repr__(self):
+            r = ''
+            for n in range(1, 16):
+                if (self.f & 2**(n-1)) >0:
+                    r+= f'{n},'
+            return '{}' if r=='' else '{'+r[:-1]+'}'
 
 
     def __init__(self, path='$FERMI/catalog/'):
@@ -223,7 +253,7 @@ class Fermi4FGL(CatDF, pd.DataFrame):
             # assoc2_name = cname('ASSOC2'),
             class1      = cname('CLASS1'),
             # class2      = cname('CLASS2'),
-            flags       = list(map(FlagBits, ivar('FLAGS'))),
+            flags       = list(map(self.FlagBits, ivar('FLAGS'))),
             # ....
         ))
         print( f': {len(self)} entries' )

@@ -110,6 +110,7 @@ class SourceLookup():
         self.pt_names = zip_index['name']
 
         catalog_file = Path(config.catalog_file).expanduser()
+        assert catalog_file.is_file(), f'Fermi catalog file "{catalog_file}" not found.'
         self.catfile = catalog_file.name
         # make this optional
         with fits.open(catalog_file) as hdus:

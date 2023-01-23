@@ -3,7 +3,7 @@
 # %% auto 0
 __all__ = ['get_wtzip_index', 'WeightMan']
 
-# %% ../nbs/02_weights.ipynb 9
+# %% ../nbs/02_weights.ipynb 11
 import os, sys, pickle, healpy, zipfile
 from pathlib import Path
 import numpy as np
@@ -13,8 +13,12 @@ from scipy.integrate import quad
 from astropy.coordinates import SkyCoord, Angle
 from .config import *
 
-# %% ../nbs/02_weights.ipynb 10
+# %% ../nbs/02_weights.ipynb 12
 def get_wtzip_index(config, update=False):
+    """
+    Return a dict with weight table info
+    
+    """
 
     wtzipfile = config.datapath/'weight_files.zip'
     if not  wtzipfile.is_file():
@@ -30,6 +34,7 @@ def get_wtzip_index(config, update=False):
             zi['coord'] = SkyCoord(zi['glon'], zi['glat'], unit='deg', frame='galactic').fk5
             return zi
 
+        ## update the index
         if config.verbose>0:
             print(f'sources.get_wtzip_index: Extracting info from {wtzipfile}')
         name=[]; glat=[]; glon=[]
@@ -55,7 +60,7 @@ def get_wtzip_index(config, update=False):
         zip_index['coord'] = SkyCoord(zip_index['glon'], zip_index['glat'], unit='deg', frame='galactic').fk5
     return zip_index
 
-# %% ../nbs/02_weights.ipynb 12
+# %% ../nbs/02_weights.ipynb 16
 class WeightMan(dict):
     """ Weight Management
 
@@ -65,6 +70,9 @@ class WeightMan(dict):
 
     def __init__(self, config, source):
         """
+        source -- a PointSource object
+        
+        Lookup is via the "nickname" property of the source object.
         """
         self.source = source
         nickname = source.nickname
@@ -198,7 +206,8 @@ class WeightMan(dict):
         assert ret is not None
         return ret
 
-# %% ../nbs/02_weights.ipynb 14
+# %% ../nbs/02_weights.ipynb 19
+# ?? 
 class WTSkyCoord(SkyCoord):
     def __repr__(self):
         ra,dec = self.fk5.ra.deg, self.fk5.dec.deg

@@ -6,14 +6,14 @@ where name can be:
 * any source identifier recognized by SIMBAD
 * the name of a uw source in uw1216, specifically in the wtlike table of weights
 """
-import datetime, inspect
+import datetime
 from wtlike import *
 from utilities.ipynb_docgen import *
 from utilities.catalogs import  *
 
 from wtlike.sources import SourceFinder
 
-uwname = 'uw1400'
+uwname = 'uw1410'
 pars = sys.argv
 if len(pars)>1:
     if pars[1].startswith('uw'):
@@ -149,7 +149,7 @@ class SourceAnalyzer():
             return f'<font color="red"> Source {self.pt_name} not in {uwname}</font>'
         
         return self.get_catalog_info(uwcat,
-            select='fk5 galactic specfunc e0 eflux100 ts fitqual locqual aprob r95  sep'.split(),
+            select='jname fk5 galactic specfunc e0 eflux100 ts fitqual locqual aprob r95  sep'.split(),
             )
 
     def _repr_html_(self):
@@ -159,13 +159,14 @@ class SourceAnalyzer():
 
         c4entry = cat4.catalog_entry(self.skycoord, cone_size=cone_size)
         uwentry = uwcat.catalog_entry(self.skycoord, cone_size=cone_size)
-        if c4entry is not None:
-            c4entry.specfunc.sed_plot(ax=ax, e0=c4entry.pivot, label=cat4.name)
+
         if uwentry is not None:
             uwentry.specfunc.sed_plot(ax=ax, e0=uwentry.e0, label=uwcat.name,
                     yticks = [0.1,1,10], xticks=[0.1,1, 10],
-                    yticklabels='0.1 1 10'.split(), xticklabels='0.1 1 10 '.split()
-        )
+                    yticklabels='0.1 1 10'.split(), xticklabels='0.1 1 10 '.split() )
+        if c4entry is not None:
+            c4entry.specfunc.sed_plot(ax=ax, e0=c4entry.pivot, label=cat4.name)
+        
 
     def plot_bb(self, ax):
 
@@ -247,7 +248,7 @@ def get_proc(): return proc
 def examine_source(name, info=None, text='',  **kwargs): 
 
     """## {name}
-    <br>
+    {other_info}
     {text}
     {log}
     {printout}
@@ -258,14 +259,14 @@ def examine_source(name, info=None, text='',  **kwargs):
     {nearby}
     {beta}
     {fft_peaks}
-    {other_info}
+    
     """
     global proc
     ginfo=beta=fig=fft_peaks=nearby=neighbor_plot=pinfo=other_info=''
     kw = defaults.copy() 
     kw.update(kwargs)
     max_sep = kw.pop('max_sep', None)
-    info_name = kw.pop('info_name', 'Other info')
+    info_name = kw.pop('info_name', 'Source info')
     if max_sep is not None: SourceFinder.max_sep=max_sep
 
     # the additional info, a dict-like object, can update default analysis parameters
@@ -315,28 +316,35 @@ def examine_source(name, info=None, text='',  **kwargs):
     return locals()
 
 def process_df(df): #, max_sep=None, tsmin=50):
+
     with capture('Default parameter values') as parout:
         print(pd.Series(defaults))
 
     show(f"""\
-        \nProcessing {len(df)} sources,  Start at {str(datetime.datetime.now())[:16]}
-        \n{parout}
-        \n---
+        Processing {len(df)} sources,  Start at {str(datetime.datetime.now())[:16]}
+        {parout}
+        ---
         """)
     for name, info in df.iterrows():
         if type(name) !=str:
-            print('Bad entry', file=sys.stderr)
+            print(f'Bad entry: {name}', file=sys.stderr)
             continue
         examine_source(name, info=info, )  
     show(f"""\
         \n---
         \n# Finish at {str(datetime.datetime.now())[:16]}""")
 
+class WTSkyCoord(SkyCoord):
+    def __repr__(self):
+        ra,dec = self.fk5.ra.deg, self.fk5.dec.deg
+        return f'fk5({ra:.3f},{dec:.3f})'
 
 def process_excel(filename, 
         source_name_column,
+        ra_name=None, dec_name=None,
         title='Excel analysis',
         query='',
+        select = (None,),
         **kwargs):
 
     defaults.update(kwargs)
@@ -351,16 +359,22 @@ def process_excel(filename,
         Read spreadsheet "{spreadsheet.absolute()}", 
         dated {str(datetime.datetime.fromtimestamp(spreadsheet.stat().st_mtime))[:16]}
         """)
-    # make the index the source name, remove columns without a "1" (or anything?) in the first row
+    # make the index the source name, remove columns without a "1" (or anything?) in the second row
     df = pd.read_excel(spreadsheet)
     assert source_name_column in df.columns, f'did not find column "{source_name_column}" to use as index'
     df.index = df.loc[:,source_name_column]
     to_drop = pd.isna(df.iloc[0])
-    df = df.drop(columns=df.columns[to_drop])[1:]
+    if type(select) != tuple: 
+        # assume selecting a single row
+        select = (select,select+1)
+    df = df.drop(columns=df.columns[to_drop])[1:][slice(*select)]
+    if ra_name is not None and dec_name is not None:
+        sc = SkyCoord(df[ra_name], df[dec_name], unit='deg', frame='fk5')
+        df.loc[:,'skycoord'] = WTSkyCoord(sc)
     if query:        
         df = df.query(query)
 
-    with capture_hide(f'Spread sheet: {query}') as ss:
+    with capture_hide(f'Info dataframe from spreadsheet: {query}') as ss:
         print(df)
     show(f'{ss}')
     
