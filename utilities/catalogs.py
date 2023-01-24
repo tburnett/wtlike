@@ -9,7 +9,7 @@ from astropy.io import fits
 from astropy.table import Table
 from astropy.coordinates import SkyCoord, Angle
 
-from . spectral_functions import specfun_dict
+from . spectral_functions import *
 
 def make_jname(skycoord):
     """Return a name in the format Jhhmm.m+ddmm
@@ -71,7 +71,7 @@ class CatDF():
         """ Return a DataFrame of this catalog's entries within the cone_size of the given source
         
         - other -- name | SkyCoord
-        - cone_size -- size in degrees abut the other
+        - cone_size -- size in degrees about the other
         - query -- an optional query string to apply to the result
         
         """
@@ -108,7 +108,11 @@ class CatDF():
         ndf = near.sort_values('sep')
         info =  ndf.iloc[0].copy() 
         info.loc['fk5'] = LonLat(info.ra, info.dec)
-        info.loc['galactic'] = LonLat(info.glon, info.glat)
+        if 'glon' in info:
+            info.loc['galactic'] = LonLat(info.glon, info.glat)
+        else: #klugy
+            info.loc['galactic'] = None
+        
         return info
    
 class LATpsr(CatDF, pd.DataFrame):
@@ -191,6 +195,7 @@ class LonLat():
     def __repr__(self):
         return f'({self.lon:7.3f},{self.lat:+7.3f})'
 
+
 class Fermi4FGL(CatDF, pd.DataFrame):
 
     class FlagBits():
@@ -265,6 +270,12 @@ class Fermi4FGL(CatDF, pd.DataFrame):
     def specfuncs(self, data):
         """ Return a list of spectral functions
         """
+        # special version that
+        specfun_dict = dict(
+            PowerLaw=PowerLaw,
+            LogParabola=LogParabola,
+            PLSuperExpCutoff=PLSuperExpCutoff4,
+            )
         cvar = lambda a: data[a].astype(float)
         cname= lambda n : [s.strip() for s in data[n]]
         def par_array(colnames):

@@ -60,7 +60,7 @@ def get_wtzip_index(config, update=False):
         zip_index['coord'] = SkyCoord(zip_index['glon'], zip_index['glat'], unit='deg', frame='galactic').fk5
     return zip_index
 
-# %% ../nbs/02_weights.ipynb 16
+# %% ../nbs/02_weights.ipynb 17
 class WeightMan(dict):
     """ Weight Management
 
@@ -206,7 +206,7 @@ class WeightMan(dict):
         assert ret is not None
         return ret
 
-# %% ../nbs/02_weights.ipynb 19
+# %% ../nbs/02_weights.ipynb 20
 # ?? 
 class WTSkyCoord(SkyCoord):
     def __repr__(self):
