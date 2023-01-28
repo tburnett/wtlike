@@ -41,7 +41,8 @@ uwcat.loc[:, 'r95'] = np.sqrt( (uwcat.a * 2.64)**2 + (0.00791)**2) #
 
 src_finder = SourceFinder()
 
-defaults = dict(neighbor=None, interval=30, nyquist=24, max_sep=0.5, tsmin=25, info_name='Other info')
+defaults = dict(neighbor=None, interval=30, nyquist=24, max_sep=0.5, tsmin=25, info_name='Other info',
+            fft_query='p1>30 & f>0.05')
 
 class SourceAnalyzer():
 
@@ -65,7 +66,7 @@ class SourceAnalyzer():
     def make_plots(self):
 
         if self.wtl is not None:
-        # OK: make figure with 4 subplots
+            # OK: make figure with 4 subplots
             self.fig = plt.figure(figsize=(12,5))
             gs = plt.GridSpec(2, 2,  width_ratios=[4,1], wspace=0.2,hspace=0.5, top=0.95)
             (ax1,ax2,ax3,ax4) =  [self.fig.add_subplot(g) for g in gs]
@@ -222,7 +223,8 @@ class SourceAnalyzer():
         self.px.power_plot(ax=ax3, pmax=50)
         hist_peak_power(self.px, ax=ax4, title='Peak distribution', xlabel='')
 
-    def display_fft_peaks(self, query='p1>30 & f>0.05', show=False):
+    def display_fft_peaks(self, show=False):
+        query = defaults['fft_query']
         df = self.px.find_peaks('p1').query(query)
         if len(df)==0:
             return monospace(f'No peaks satisfying {query}')
@@ -317,8 +319,9 @@ def examine_source(name, info=None, text='',  **kwargs):
 
     return locals()
 
-def process_df(df): #, max_sep=None, tsmin=50):
+def process_df(df, **kwargs): #, max_sep=None, tsmin=50):
 
+    defaults.update(kwargs)
     with capture('Default parameter values') as parout:
         print(pd.Series(defaults))
 
@@ -343,7 +346,8 @@ class WTSkyCoord(SkyCoord):
 
 
 def load_source_spreadsheet(filename='AMXP scorecard (2).xlsx',
-                    source_name='AMXP name'):
+                    source_name='AMXP name',
+                    flag_row=True):
     """Return a dataframe derived from the table in a spreadsheet
     row 1 is column names, row 2 has non-blank to include the column in the datafrane
     
@@ -354,8 +358,11 @@ def load_source_spreadsheet(filename='AMXP scorecard (2).xlsx',
     df = pd.read_excel(spreadsheet)
     assert source_name in df.columns, f'did not find column "{source_name}" to use as index'
     df.index = df.loc[:,source_name]
-    to_drop = pd.isna(df.iloc[0])
-    df = df.drop(columns=df.columns[to_drop])[1:]
+    if flag_row:
+        to_drop = pd.isna(df.iloc[0])
+        df = df.drop(columns=df.columns[to_drop])[1:]
+    else:
+        df = df.drop(columns=[source_name])
     return df
 
 def sourceinfolist(source_names, max_sep=0.5):
