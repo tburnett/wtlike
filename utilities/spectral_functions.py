@@ -27,7 +27,7 @@ class FluxModel():
     def photon_flux(self):
         """photon flux (cm-2 s-1)"""
         #return quad(self, self.emin, self.emax)[0]
-        # or integrate 
+        # or integrate e*f(e) over log(e) for much better precision
         return quad( lambda loge: np.exp(loge)* self(np.exp(loge)),
                      np.log(self.emin), np.log(self.emax) )[0] 
 

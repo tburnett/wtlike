@@ -38,6 +38,11 @@ Names that are recognized:
 About images:
 
 Images are made from plots, or imported directly, with HTML created to include the image as a base64 string.
+
+FigureWrapper test
+    fig, ax = plt.subplots()
+    display_markdown(FigureWrapper(fig, summary='test figure'))
+
 """
 import sys, os, shutil, string, pprint, datetime, inspect
 

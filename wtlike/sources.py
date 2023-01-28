@@ -134,7 +134,7 @@ class SourceLookup():
         else:
             # get coord either by known catalog name, or explict coordinate pair
             try:
-                skycoord = self.findsource(*pars, **kwargs)
+                skycoord = self.skycoord = self.findsource(*pars, **kwargs)
             except TypeError as err:
                 print(err, file=sys.stderr)
                 return None

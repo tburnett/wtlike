@@ -60,6 +60,9 @@ class SourceAnalyzer():
         if not self.setup(name, neighbor, interval, nyquist, tsmin): 
             self.fig = None # flag that no output
             return
+        self.make_plots()
+
+    def make_plots(self):
 
         if self.wtl is not None:
         # OK: make figure with 4 subplots
@@ -68,12 +71,12 @@ class SourceAnalyzer():
             (ax1,ax2,ax3,ax4) =  [self.fig.add_subplot(g) for g in gs]
 
             self.plot_bb(ax1)        
-            self.plot_sed(ax2, self.max_sep)
+            self.plot_seds(ax2, self.max_sep)
             self.plot_periodogram(ax3, ax4)
         else:
-            # no analysis since low TS. Make the plots anyway
+            # no analysis since low TS. Only make the sed plots
             self.fig, ax = plt.subplots(figsize=(3,3))
-            self.plot_sed(ax, self.max_sep)
+            self.plot_seds(ax, self.max_sep)
         
     def __repr__(self):
         return f'{self.__class__.__name__}("{self.name}")'
@@ -155,19 +158,18 @@ class SourceAnalyzer():
     def _repr_html_(self):
         return self.printout
 
-    def plot_sed(self, ax, cone_size=1):
-
+    def plot_seds(self, ax=None, cone_size=0.5):
+        _, ax = plt.subplots(figsize=(4,4)) if ax is None else (ax.figure, ax)
         c4entry = cat4.catalog_entry(self.skycoord, cone_size=cone_size)
         uwentry = uwcat.catalog_entry(self.skycoord, cone_size=cone_size)
 
         if uwentry is not None:
-            uwentry.specfunc.sed_plot(ax=ax, e0=uwentry.e0, label=uwcat.name,
-                    yticks = [0.1,1,10], xticks=[0.1,1, 10],
-                    yticklabels='0.1 1 10'.split(), xticklabels='0.1 1 10 '.split() )
+            uwentry.specfunc.sed_plot(ax=ax, e0=uwentry.e0, label=uwcat.name)
         if c4entry is not None:
             c4entry.specfunc.sed_plot(ax=ax, e0=c4entry.pivot, label=cat4.name)
+        ax.set( yticks=[0.1,1,10], xticks=[0.1,1,10],
+                yticklabels='0.1 1 10'.split(), xticklabels='0.1 1 10'.split() )
         
-
     def plot_bb(self, ax):
 
         def g2fit(cell):
@@ -338,6 +340,84 @@ class WTSkyCoord(SkyCoord):
     def __repr__(self):
         ra,dec = self.fk5.ra.deg, self.fk5.dec.deg
         return f'fk5({ra:.3f},{dec:.3f})'
+
+
+def load_source_spreadsheet(filename='AMXP scorecard (2).xlsx',
+                    source_name='AMXP name'):
+    """Return a dataframe derived from the table in a spreadsheet
+    row 1 is column names, row 2 has non-blank to include the column in the datafrane
+    
+    The index is set to the contents of source_nane
+    """
+    spreadsheet = Path(filename) #'AMXP scorecard (2).xlsx')
+    assert spreadsheet.is_file(), f'File "{filename}" not found'
+    df = pd.read_excel(spreadsheet)
+    assert source_name in df.columns, f'did not find column "{source_name}" to use as index'
+    df.index = df.loc[:,source_name]
+    to_drop = pd.isna(df.iloc[0])
+    df = df.drop(columns=df.columns[to_drop])[1:]
+    return df
+
+def sourceinfolist(source_names, max_sep=0.5):
+    """
+    Return a data frame with information on UW and 4FGL sources near the locations of a list of source names
+    """
+    
+    src_finder = SourceFinder()
+    SourceFinder.max_sep = 0.5
+    
+    class SourceInfo(dict):
+
+        class SkyCoord(SkyCoord):
+            # subclass that displays (ra,dec)
+            def __repr__(self):
+                ra,dec = self.fk5.ra.deg, self.fk5.dec.deg
+                return f'({ra:6.3f},{dec:+6.3f})'
+        def __init__(self, name):
+            self.name=name.replace('_',' ')
+            src_finder.log=''
+
+            # get the nearest pointlike name from the weight tables
+            self.pt_name = pt_name = src_finder(name) 
+            self['skycoord'] = self.SkyCoord(src_finder.skycoord)
+
+            if pt_name is None: return
+
+            # grab pointlike info
+            uw = self.get_uwinfo(pt_name)
+            if len(uw)==0: 
+                self.update(uw_name = pt_name) 
+                return
+            self.update(uw_name=pt_name,
+                        uw_pos=self.SkyCoord(uw.ra,uw.dec,unit='deg',frame='fk5'), 
+                        uw_sep = uw.sep,
+                        uw_r95 = uw.r95,
+                        uw_ts = uw.ts,
+                       )
+            dr = self.get_4fgl()
+            if len(dr)==0: return
+            self.update(dr_name=dr.name,
+                        dr_pos=self.SkyCoord(dr.ra,dr.dec,unit='deg', frame='fk5'),
+                        dr_sep = dr.sep,
+                        dr_r95 = dr.r95)
+        def get_uwinfo(self, pt_name):
+            #return a dict 
+            if pt_name not in uwcat.index:
+                # print(f'{self.name}: UW source {pt_name} not found in {uwname}??', file=sys.stderr)
+                return pd.Series(name=pt_name, dtype=object)
+            info = uwcat.catalog_entry( self['skycoord'], cone_size=SourceFinder.max_sep)
+            return pd.Series(info)
+
+        def get_4fgl(self):
+            info = cat4.catalog_entry( self['skycoord'], cone_size=SourceFinder.max_sep)
+            if info is None: return pd.Series(dtype=object)
+            return pd.Series(info)
+
+        def __repr__(self):
+            return f'{self.__class__.__name__}({self.name}):\n{pd.Series(self, dtype=object)}'
+     
+    return pd.DataFrame([SourceInfo(name) for name in source_names], 
+        index=map(lambda name: name.replace('_',' '), source_names))
 
 def process_excel(filename, 
         source_name_column,
