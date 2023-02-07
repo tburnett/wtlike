@@ -342,10 +342,13 @@ class CellData(SourceData):
         # adjust start to correspond to edge of bin
 
         # create a view with nbins per period and get the cells
+        # make the range correspond to selected time range
         st = self.start # the start of data taking
+        tstart,tstop,_ = self.time_bins
+        st = self.start if tstart==0 else tstart
         self.reference_bin =strefbin = binner(st)
         stnew = st +np.mod(-strefbin,1)*period/nbins
-        view = self.view(stnew, 0, period/nbins, no_update=True)
+        view = self.view(stnew, tstop, period/nbins, no_update=True)
         cells = view.cells
         bw = 1/nbins
 

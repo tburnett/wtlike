@@ -80,6 +80,7 @@ class Poisson(object):
 
     @property
     def flux(self):
+        if np.isnan(self.p[1]): return 0
         return max(self.p[0], 0)
 
     @property
@@ -93,6 +94,7 @@ class Poisson(object):
 
     @property
     def ts(self):
+        if np.isnan(self.p[1]): return np.nan
         return 0 if self.flux<=0 else (self(self.flux)-self(0))*2.0
 
 

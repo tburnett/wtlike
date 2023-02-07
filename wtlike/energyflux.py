@@ -647,6 +647,7 @@ class FluxFixer():
         fluxes = fluxfits.apply(lambda x: x.flux)
         x, y = emom, fluxes-1
         self.x=x; self.y = y
+        
         class LSQ():
             def __init__(self, x, y):
                 self.a, self.b = np.linalg.lstsq(np.vstack([x, np.ones(len(x))]).T, y, rcond=None)[0]

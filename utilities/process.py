@@ -1,10 +1,11 @@
 """
 process.py: Analysis of the time behaviour of a source
 
-Do run an individual source: examine_source(name)
+To run an individual source: examine_source(name)
 where name can be:
 * any source identifier recognized by SIMBAD
 * the name of a uw source in uw1216, specifically in the wtlike table of weights
+* a "j-name": format J1234+5678 or J1234.5-6789
 """
 import datetime
 from wtlike import *
@@ -12,6 +13,9 @@ from utilities.ipynb_docgen import *
 from utilities.catalogs import  *
 
 from wtlike.sources import SourceFinder
+__all__ = ['show', 'uwcat', 'cat4', 'get_proc', 'SourceAnalyzer', 'load_source_spreadsheet',
+    'setup_excel', 'catalog_setup','add_fermi_info', 'examine_source','src_finder', 
+    'process_excel', 'process_df']
 
 uwname = 'uw1410'
 pars = sys.argv
@@ -25,7 +29,12 @@ def show(*pars):
     return display_markdown(*pars)
 
 plt.rc('font', size=12)
-pd.set_option('display.float_format', lambda f: f'{f:.3f}' if (abs(f)>1e-3 and abs(f)<1e5 ) else f'{f:.2e}')
+
+def float_format(f):
+    if f==0: return '0'
+    return f'{f:.3f}' if (abs(f)>1e-3 and abs(f)<1e5 ) else f'{f:.2e}'
+
+pd.set_option('display.float_format', float_format)
 
 with capture_hide(f'Catalogs: {uwname} and 4FGL-DR3') as catalog_setup:
     if os.environ.get('FERMI', None) is None:
@@ -42,7 +51,7 @@ uwcat.loc[:, 'r95'] = np.sqrt( (uwcat.a * 2.64)**2 + (0.00791)**2) #
 src_finder = SourceFinder()
 
 defaults = dict(neighbor=None, interval=30, nyquist=24, max_sep=0.5, tsmin=25, info_name='Other info',
-            fft_query='p1>30 & f>0.05')
+            fft_query='p1>25 & f>0.05')
 
 class SourceAnalyzer():
 
@@ -51,29 +60,43 @@ class SourceAnalyzer():
             interval=30, 
             nyquist=24, 
             tsmin=50,
+            make_figs=True,
             **kwargs):
         """
         """
         self.log=''
         self.wtl=None
         self.max_sep = kwargs.pop('max_sep', defaults['max_sep'])
+        self.porb = float(kwargs.pop('porb', np.nan))
+        self.kwargs = kwargs 
+        self.fig = None
         SourceFinder.max_sep = self.max_sep #klugy
-        if not self.setup(name, neighbor, interval, nyquist, tsmin): 
-            self.fig = None # flag that no output
+        if not self.setup(name, neighbor, interval, nyquist, tsmin) or not make_figs: 
             return
-        self.make_plots()
+        if make_figs:
+            self.make_plots()
+
+    def plot_lc(self, ax1=None,ax2=None):
+        if self.wtl is  None: return
+
+        if ax1 is None:
+            # OK: make figure with 2 subplots
+            fig = plt.figure(figsize=(12,2.5))
+            gs = plt.GridSpec(1, 2,  width_ratios=[4,1], wspace=0.2,hspace=0.5, top=0.95)
+            (ax1,ax2) =  [fig.add_subplot(g) for g in gs]
+        else: fig=None
+        self.plot_bb(ax1)        
+        self.plot_seds(ax2, self.max_sep)
+        return fig
 
     def make_plots(self):
 
         if self.wtl is not None:
-            # OK: make figure with 4 subplots
-            self.fig = plt.figure(figsize=(12,5))
+            self.fig=plt.figure(figsize=(12,5))
             gs = plt.GridSpec(2, 2,  width_ratios=[4,1], wspace=0.2,hspace=0.5, top=0.95)
             (ax1,ax2,ax3,ax4) =  [self.fig.add_subplot(g) for g in gs]
-
-            self.plot_bb(ax1)        
-            self.plot_seds(ax2, self.max_sep)
-            self.plot_periodogram(ax3, ax4)
+            self.plot_lc(ax1=ax1, ax2=ax2)
+            self.plot_FFT(ax1=ax3, ax2=ax4)
         else:
             # no analysis since low TS. Only make the sed plots
             self.fig, ax = plt.subplots(figsize=(3,3))
@@ -82,7 +105,9 @@ class SourceAnalyzer():
     def __repr__(self):
         return f'{self.__class__.__name__}("{self.name}")'
 
-    def setup(self, name, neighbor, interval, nyquist, tsmin):
+    def setup(self, name, neighbor, interval, nyquist, tsmin, **kwargs):
+        tstart = self.kwargs.get('tstart',0)
+        tstop = self.kwargs.get('tstop',0)
         pt_name = self.pt_name =  src_finder.find(name, tol=self.max_sep)
         if pt_name is None: 
             self.log =  f'<font color="red">Failed lookup:</font> <br>{monospace(src_finder.log)} ' 
@@ -94,29 +119,34 @@ class SourceAnalyzer():
         self.skycoord = src_finder.skycoord
         self.name = name
 
-        with capture_hide(f'{name} ({pt_name}) analysis printout') as self.printout:
+        with capture_hide(f'Analysis printout for {name} ({pt_name})') as self.printout:
             print(src_finder.log)
             if pt_name not in uwcat.index:
                 print(f'UW source {pt_name} not found in {uwname}??')
                 self.wtl = self.bb=self.px = None
                 self.pointlike_info = FileNotFoundError
                 return False
-            ts = uwcat.loc[pt_name,'ts'] 
-
             self.pointlike_info = pi = uwcat.loc[pt_name]
+            ts = pi.ts
             if ts < tsmin:
                 self.log = f'UW source has TS={ts:.1f} < {tsmin}'
                 self.wtl = None
                 return True
-            # pi.loc[:, 'r95'] = pt[loc]
-            self.wtl = WtLike(PointSource(pt_name)) 
-            if str(neighbor).strip() =='': neighbor
+
+            self.wtl = WtLike(PointSource(pt_name), time_bins=(tstart, tstop, interval)) 
+
             if neighbor is not None and str(neighbor).strip():
                 print(f'Reweighting with {neighbor}')
                 self.neighbor_bb = WtLike(neighbor).bb_view()
                 self.wtl = self.wtl.reweighted_view(self.neighbor_bb)
             self.bb = self.wtl.view(interval).bb_view()
-            self.px = self.wtl.periodogram( 1/(4*nyquist) )
+            
+            self.px = self.wtl.periodogram( 1/(4*nyquist), tstart=tstart, tstop=tstop)
+
+            if not(np.isnan(self.porb)) and self.porb is not None:
+                # generate orbial phase view to plot later (no periastron yet)
+                bins = self.kwargs.get('phase_bins', 25)
+                self.orbital_phase = self.wtl.phase_view(period=self.porb, nbins=bins)
         return True
 
     def get_catalog_info(self, cat, select=None, show=False):
@@ -157,9 +187,12 @@ class SourceAnalyzer():
             )
 
     def _repr_html_(self):
+        if self.fig is None:
+            self.fig = make_plots()
+            return FigureWrapper(self.fig)._repr_html_()
         return self.printout
 
-    def plot_seds(self, ax=None, cone_size=0.5):
+    def plot_seds(self, ax=None, cone_size=0.5, **kwargs):
         _, ax = plt.subplots(figsize=(4,4)) if ax is None else (ax.figure, ax)
         c4entry = cat4.catalog_entry(self.skycoord, cone_size=cone_size)
         uwentry = uwcat.catalog_entry(self.skycoord, cone_size=cone_size)
@@ -168,8 +201,12 @@ class SourceAnalyzer():
             uwentry.specfunc.sed_plot(ax=ax, e0=uwentry.e0, label=uwcat.name)
         if c4entry is not None:
             c4entry.specfunc.sed_plot(ax=ax, e0=c4entry.pivot, label=cat4.name)
-        ax.set( yticks=[0.1,1,10], xticks=[0.1,1,10],
-                yticklabels='0.1 1 10'.split(), xticklabels='0.1 1 10'.split() )
+            
+        kw = dict( yticks=[0.1,1,10], xticks=[0.1,1,10],
+            yticklabels='0.1 1 10'.split(), xticklabels='0.1 1 10'.split(),
+                ylabel=r'$E^2\ dN/dE\ \mathrm{(eV\ cm^{-2}\ s^{-1})}$')
+        kw.update(kwargs)
+        ax.set(**kw)
         
     def plot_bb(self, ax):
 
@@ -227,9 +264,11 @@ class SourceAnalyzer():
         query = defaults['fft_query']
         df = self.px.find_peaks('p1').query(query)
         if len(df)==0:
-            return monospace(f'No peaks satisfying {query}')
+            return monospace(f'No FFT peaks satisfying {query}')
+        df['period'] = 1/df.f
         with capture(f'{len(df)} FFT peaks satisfying {query}') as out:
-            print( df)
+            with pd.option_context('display.precision', 6, 'display.float_format',None):
+                print( df)
         return out
 
     def get_nearby(self, radius_cut=3, var_cut=30):
@@ -243,6 +282,61 @@ class SourceAnalyzer():
         with capture(f'{len(near_df) } nearby variable sources', show=show) as out:
             print(near_df)
         return out
+
+    def plot_FFT(self, ax1=None, ax2=None, peak_query='f>0.01'):
+        """ Generate a Kerr Periodogram and a histogram of the peak values
+        
+        px -- TimeSeries object
+        
+        Return the figure with two Axes plots if had to create
+        """
+        def hist_peak_power(px, pname='p1', ax=None, xlim=(0,40), thresh=25,  **kwargs):
+            """
+            """
+            p1 = px.find_peaks(pname).query(peak_query)[pname].clip(*xlim)
+            _, ax = plt.subplots(figsize=(3,2)) if ax is None else (ax.figure, ax)
+            kw = dict(xlabel=f'Power {pname}', xlim=xlim, title='' )
+            kw.update(kwargs); ax.set(**kw)
+            ax.hist(p1, np.linspace(*xlim,), log=True, histtype='step', lw=2);
+            ax.hist(p1[p1>thresh], np.linspace(*xlim,), log=True, histtype='stepfilled', color='red');
+            ax.grid(alpha=0.5)
+        
+        if ax1 is None:
+            fig = plt.figure(figsize=(12,2.5))
+            gs = plt.GridSpec(1, 2,  width_ratios=[4,1], wspace=0.2,hspace=0.5, top=0.95)
+            (ax1,ax2) =  [fig.add_subplot(g) for g in gs]
+        else: fig=None
+
+        px = self.px
+        px.power_plot(ax=ax1, pmax=50)
+        hist_peak_power(px, ax=ax2,  xlabel='')
+        ax2.set( xlabel=r'$P_1$ peak values')
+        return fig
+
+    def plot_orbital_phase(self, ax=None, **kwargs):
+        if self.porb is None:
+            print('No orbital period available', file=sys.stderr)
+            return
+       
+        fig,ax = plt.subplots(figsize=(6,3)) if ax is None else (ax.figure, ax)
+        kw = dict(xlim=(0,2),ylim=None); kw.update(kwargs)
+        self.orbital_phase.plot(ax=ax, **kw)
+        ax.axvline( 1.0, ls='--', color='lightgrey')
+        return fig
+        
+    def plot_phase(self, ax=None, **kwargs):
+
+        period = kwargs.pop('period', self.porb)
+        nbins  = kwargs.pop('nbins', 10)
+        ref    = kwargs.pop('ref', '2008')        
+
+        fig,ax = plt.subplots(figsize=(6,3)) if ax is None else (ax.figure, ax)
+        kw = dict(xlim=(0,2),ylim=None); kw.update(kwargs)
+        
+        self.wtl.phase_view(period=period, nbins=nbins, reference=ref).plot(ax=ax, **kw)
+        
+        ax.axvline( 1.0, ls='--', color='lightgrey')
+        return fig
 
 # access to the SourceAnalyzer object from the notebook
 proc=None
@@ -263,12 +357,14 @@ def examine_source(name, info=None, text='',  **kwargs):
     {nearby}
     {beta}
     {fft_peaks}
+    {phase_plot}
     
     """
     global proc
-    ginfo=beta=fig=fft_peaks=nearby=neighbor_plot=pinfo=other_info=''
+    ginfo=beta=fig=fft_peaks=nearby=neighbor_plot=pinfo=other_info=phase_plot=''
     kw = defaults.copy() 
     kw.update(kwargs)
+    if info is not None: kw.update(info)
     max_sep = kw.pop('max_sep', None)
     info_name = kw.pop('info_name', 'Source info')
     if max_sep is not None: SourceFinder.max_sep=max_sep
@@ -295,6 +391,7 @@ def examine_source(name, info=None, text='',  **kwargs):
         printout = f'<font color="red">Failed: {ex}</font>\n'
         raise
         return locals()
+    
     log = '' if not self.log else f'<font color="red">{self.log}</font>'
     # proc = self = SourceAnalyzer(name, **kw)
     printout=self.printout
@@ -316,6 +413,10 @@ def examine_source(name, info=None, text='',  **kwargs):
         neighbor_plot, ax = plt.subplots(figsize=(10,3))
         self.neighbor_bb.plot(ax=ax)
         neighbor_plot.summary= f'Reweighted with {neighbor} (click for its light curve)'
+
+    if getattr(self, 'orbital_phase', None) is not None:
+        phase_plot = self.plot_orbital_phase()
+        phase_plot.summary=f'Phase plot (period {self.porb:.3f} d)'
 
     return locals()
 
@@ -345,33 +446,40 @@ class WTSkyCoord(SkyCoord):
         return f'fk5({ra:.3f},{dec:.3f})'
 
 
-def load_source_spreadsheet(filename='AMXP scorecard (2).xlsx',
-                    source_name='AMXP name',
-                    flag_row=True):
+def load_source_spreadsheet(
+            filename='AMXP scorecard (2).xlsx',
+            source_name='AMXP name',
+            ra_name=None, dec_name=None,
+            flag_row=True):
     """Return a dataframe derived from the table in a spreadsheet
-    row 1 is column names, row 2 has non-blank to include the column in the datafrane
-    
+    row 1 is column names
+    if flag_row is True row 2 has non-blank to include the column in the datafrane
+    if ra_name (and dec_name) are not None, rename columns to "ra" and "dec"
     The index is set to the contents of source_nane
     """
     spreadsheet = Path(filename) #'AMXP scorecard (2).xlsx')
     assert spreadsheet.is_file(), f'File "{filename}" not found'
     df = pd.read_excel(spreadsheet)
     assert source_name in df.columns, f'did not find column "{source_name}" to use as index'
-    df.index = df.loc[:,source_name]
+    # take care of trailing non-break space
+    df.index = list(map(lambda s:str(s).strip().replace(u"\u2014","-"),df.loc[:,source_name]))
     if flag_row:
         to_drop = pd.isna(df.iloc[0])
+        to_drop[source_name]=True
         df = df.drop(columns=df.columns[to_drop])[1:]
     else:
         df = df.drop(columns=[source_name])
+    if ra_name is not None:
+        df.rename(columns={ra_name: 'ra', dec_name: 'dec'}, inplace=True)
     return df
 
-def sourceinfolist(source_names, max_sep=0.5):
+def add_fermi_info(source_names, max_sep=0.5):
     """
-    Return a data frame with information on UW and 4FGL sources near the locations of a list of source names
+    Return a dataframe with information on UW and 4FGL sources near the locations of a list of source names
     """
     
     src_finder = SourceFinder()
-    SourceFinder.max_sep = 0.5
+    SourceFinder.max_sep = max_sep
     
     class SourceInfo(dict):
 
@@ -380,13 +488,19 @@ def sourceinfolist(source_names, max_sep=0.5):
             def __repr__(self):
                 ra,dec = self.fk5.ra.deg, self.fk5.dec.deg
                 return f'({ra:6.3f},{dec:+6.3f})'
+
         def __init__(self, name):
-            self.name=name.replace('_',' ')
+            #self.name=name.replace('_',' ')
             src_finder.log=''
 
             # get the nearest pointlike name from the weight tables
             self.pt_name = pt_name = src_finder(name) 
-            self['skycoord'] = self.SkyCoord(src_finder.skycoord)
+
+            try:
+                self['skycoord'] = self.SkyCoord(src_finder.skycoord)
+            except ValueError as err:
+                print(f'SourceInfo: Fail to recognize name "{name}"', file=sys.stderr)
+                return
 
             if pt_name is None: return
 
@@ -422,11 +536,11 @@ def sourceinfolist(source_names, max_sep=0.5):
 
         def __repr__(self):
             return f'{self.__class__.__name__}({self.name}):\n{pd.Series(self, dtype=object)}'
-     
-    return pd.DataFrame([SourceInfo(name) for name in source_names], 
-        index=map(lambda name: name.replace('_',' '), source_names))
+    
+    source_names# = source_df.index
+    return pd.DataFrame([SourceInfo(name) for name in source_names], index=source_names )
 
-def process_excel(filename, 
+def setup_excel(filename, 
         source_name_column,
         ra_name=None, dec_name=None,
         title='Excel analysis',
@@ -464,5 +578,8 @@ def process_excel(filename,
     with capture_hide(f'Info dataframe from spreadsheet: {query}') as ss:
         print(df)
     show(f'{ss}')
-    
-    process_df(df)
+    return df
+
+def process_excel(filename, source_name_column,  **kwargs):
+    df = setup_excel(filename, source_name_column,  **kwargs)
+    return process_df(df)

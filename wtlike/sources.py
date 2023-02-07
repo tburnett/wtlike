@@ -26,7 +26,7 @@ class SourceLookup():
     def __init__(self, config=None):
         from astropy.io import fits
         import pandas as pd
-        self.config=config or Config()
+        self.config=Config() if config is None else config
         self.log = ''
 
         zip_index = get_wtzip_index(config)

@@ -233,8 +233,8 @@ def flux_plot(cell_fits,
     df.loc[:,'ts'] = df.fit.apply(lambda f: f.ts)
     if query:
         df = df.query(query)
-    # remove any with TS==0, which are null fits
-    df = df[df.ts>0]
+    # remove any with TS<0, which are null fits (WAS 0)
+    df = df[df.ts>=0]
     if fmt=='':
         fmt='.' if len(df)>200 else 'o'
 
@@ -376,7 +376,7 @@ class LightCurve(CellData):
         def doit():
             # fit the subset that have enought exposure and counts
             exp_min = self.exp_min*self.time_bins[2]
-            query_string = f'e>{exp_min} & n>{self.n_min}'
+            query_string = f'e>{exp_min:.3f} & n>{self.n_min}'
             fit_cells = self.cells.query(query_string).copy()
             if self.config.verbose>0:
                 print(f'LightCurve: select {len(fit_cells)} cells for fitting with {query_string}' )
@@ -432,7 +432,8 @@ class LightCurve(CellData):
 
         fig = flux_plot(self.fits,
                         source_name=source_name,
-                        label=f'{self.step_name} bins',  **kwargs)
+                        label=kwargs.pop('label', f'{self.step_name} bins'),  
+                        **kwargs)
         fig.set_facecolor('white')
         return fig
 

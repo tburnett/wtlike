@@ -110,9 +110,13 @@ class WtLike(LightCurve):
         kw = dict(ylim=(0.975, 1.025), xlim=(0,1) )
         kw.update(kwargs)
         fig, ax = plt.subplots(figsize=(10,5)) if ax is None else (ax.figure, ax)
-        fig = super().plot( ax=ax, xlabel=f'phase for {self.period:.3f}-day period');
-        ax.set(**kwargs );
-        ax.axhline(1.0, color='grey');
+        super().plot( ax=ax, 
+                label='', 
+                xlabel=f'Phase for {self.period:.4f}-day period',
+                source_name='',
+                )
+        ax.set(**kwargs )
+        ax.axhline(1.0, color='grey', ls=':')
         return fig
 
     def reweighted_view(self, other):

@@ -362,25 +362,26 @@ class TimeSeries():
     - rfact  -- resolution factor [5]
     """
 
-    def __init__(self, source, config=None, tsamp=1/24, rfact=5):
+    def __init__(self, source, config=None, tsamp=1/24, rfact=5, tstart=0, tstop=0):
 
         self.config = config or Config()
         self.tsamp = tsamp
         self.rfact = rfact
 
-        tbins = (0,0,tsamp)
+
+        tbins = (tstart,tstop,tsamp)
         if type(source)==str:
             ## string: create a CellData with binning
             self.cd = CellData(source, config=config, time_bins=tbins)
         elif isinstance(source, CellData) : #, 'Expected a CellData object'
             # existing CellData instance: make new rebined view without refitting
-            self.cd = source.view(0,0,tsamp, no_update=True)
+            self.cd = source.view(tstart,tstop,tsamp, no_update=True)
         elif isinstance(source,Simulation):
             self.cd = source
         else:
             raise Exception('Expected a source name, or a CellData or Simulation object')
 
-        self.setup_cells(0,0,tsamp)
+        self.setup_cells(tstart,tstop,tsamp)
 
     def setup_cells(self, *pars, **kwargs):
         """
