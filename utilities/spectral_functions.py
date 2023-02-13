@@ -60,7 +60,7 @@ class FluxModel():
                  )
         kw.update(kwargs)
         ax.set(**kw)
-        if label!='': ax.legend()
+        if label!='': ax.legend(fontsize=10)
 
     def i_flux(self, emin=100,emax=1e5,
                 e_weight=0,

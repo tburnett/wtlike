@@ -49,7 +49,7 @@ import sys, os, shutil, string, pprint, datetime, inspect
 
 __all__ = ['nbdoc', 'image', 'figure', 'monospace', 'capture', 'capture_hide', 
         'capture_show', 'shell', 'create_file', 'ipynb_doc', 'get_nb_namespace', 'special_prefix', 
-        'figure_number', 'display_markdown', 'FigureWrapper',] #,'show_doc']
+        'figure_number', 'display_markdown', 'FigureWrapper','show']
 
 special_prefix = ''
 
@@ -210,15 +210,16 @@ class Wrapper(object):
         self.obj = pars[0]
         self.indent = kwargs.pop('indent', '25px') # '5%')
         self.summary = kwargs.pop('summary', None)
+        self.show = kwargs.pop('show', False)
         if len(pars)==1:
             self.replacer=None
-            self.vars={}
-        
-            self.show = kwargs.pop('show', False)
+            self.vars={}        
         else:
             self.vars=pars[1]
-            self.replacer = kwargs.pop('replacer')
+            self.replacer = kwargs.pop('replacer', None)
 
+        self.kw = kwargs # remaining key words for to_html
+        assert 'summary' not in self.kw.keys(), 'Internal problem?'
 
     def __repr__(self): return str(self)
     def _repr_html_(self): return str(self)
@@ -228,11 +229,12 @@ class Wrapper(object):
 
     def summarize(self, html):
         """ wrap with a details element if self.summary is set"""
-        if self.summary is None: return html
+        txt  = f'<div style="margin-left: {self.indent}">{html}</div>'
+        if self.summary is None: return txt
         show = getattr(self, 'show', False)
         return  f'<details {"open" if show else ""}>'\
                 f'  <summary> {self.summary} </summary>'\
-                f'  {html}'\
+                f'  {txt}'\
                 ' </details>'
 
 
@@ -262,56 +264,56 @@ class FigureWrapper(Wrapper):
         else:
             self.prefix=kwargs.get('prefix', '')
             self.folder_name=''
-  
+
+    def _to_html(self):
+            # only has to do this once:
+        import base64
+        from IPython.core import pylabtools
+        fig=self.fig
+        n =  self.number = figure_number.next()
+        prefix = self.prefix+'_' if self.prefix else ''
+
+        # the caption, which may be absent.
+        caption = getattr(fig,'caption', getattr(self,'caption',None))
+        if caption is not None:
+            caption = f'<b>Figure {n}</b>. {caption}'
+            figcaption = f' <figcaption>{caption}</figcaption>'
+        else: figcaption=''
+
+        # assign, or get, a filename
+        name =fig.filename if hasattr(fig, 'filename')  else f'{prefix}fig_{n:02d}.png'
+        fn = os.path.join(self.folder_name, name )
+        browser_fn =fn
+        
+        if plt: plt.close(getattr(fig, 'number', None) )
+
+        # add the HTML as an attribute, to insert the image as base64 
+
+        width = getattr(fig,'width', None)
+        
+        if isinstance(fig, plt.Figure):
+            if  width is not None:
+                # adjust size to match width spec
+                size_inches = fig.get_size_inches()
+                wpix = size_inches[0] * fig.get_dpi(); 
+                fig.set_size_inches(size_inches*fig.width/wpix)
+            # use IPython tool to create the base64 string for the image -- but seem to need to strip trailing NL
+            b64 = pylabtools.print_figure(fig, base64=True, facecolor='white')[:-1]
+        else:
+            b64 = fig.get_base64() 
+
+        html =\
+            f'<figure style="margin-left: {self.indent}" title="Figure {n}">'\
+            f'   <img src="data:image/png;base64,{b64}" alt="Figure {n}" '\
+            f' <br> {figcaption}' \
+                '</figure>'
+        return html
 
  
-    def __str__(self):
-        from IPython.core import pylabtools
-        import base64
+    def __str__(self): 
         
-        if not hasattr(self, '_html') :
-        
-            # only has to do this once:
-            fig=self.fig
-            n =  self.number = figure_number.next()
-            prefix = self.prefix+'_' if self.prefix else ''
-
-            # the caption, which may be absent.
-            caption = getattr(fig,'caption', getattr(self,'caption',None))
-            if caption is not None:
-                caption = f'<b>Figure {n}</b>. {caption}'
-                figcaption = f' <figcaption>{caption}</figcaption>'
-            else: figcaption=''
-
-            # assign, or get, a filename
-            name =fig.filename if hasattr(fig, 'filename')  else f'{prefix}fig_{n:02d}.png'
-            fn = os.path.join(self.folder_name, name )
-            browser_fn =fn
-            
-            if plt: plt.close(getattr(fig, 'number', None) )
-
-            # add the HTML as an attribute, to insert the image as base64 
-
-            width = getattr(fig,'width', None)
-            
-            if isinstance(fig, plt.Figure):
-                if  width is not None:
-                    # adjust size to match width spec
-                    size_inches = fig.get_size_inches()
-                    wpix = size_inches[0] * fig.get_dpi(); 
-                    fig.set_size_inches(size_inches*fig.width/wpix)
-                # use IPython tool to create the base64 string for the image -- but seem to need to strip trailing NL
-                b64 = pylabtools.print_figure(fig, base64=True, facecolor='white')[:-1]
-            else:
-                b64 = fig.get_base64() 
-
-            html =\
-                f'<figure style="margin-left: {self.indent}" title="Figure {n}">'\
-                f'   <img src="data:image/png;base64,{b64}" alt="Figure {n}" '\
-                f' <br> {figcaption}' \
-                    '</figure>'
-            self._html = self.summarize(html)
-               
+        if not hasattr(self, '_html') :        
+            self._html = self.summarize(self._to_html())               
         return self._html
 
 
@@ -324,13 +326,11 @@ if pd:
 
             super().__init__(*pars, **kwargs)
             self._df = self.obj
-            kwargs.pop('replacer') # rest should be OK
-            self.kw = kwargs
-
         def __str__(self):
             if not hasattr(self, '_html'):
                 self._html = self._df.to_html(**self.kw)                
-            return self._html
+            return self.summarize(self._html)
+
     df_kwargs= dict( notebook=False, ### True confuses latex genereration 
                     max_rows=30, 
                     index=False,
@@ -358,7 +358,8 @@ class PPWrapper(Wrapper):
     def __str__(self):
         pp = pprint.PrettyPrinter(indent=2)
         text = pp.pformat(self.obj)#.replace('\n', '<br>\n')
-        return f'<p style="margin-left: {self.indent}"><samp>{text}</samp></p>'
+        # return f'<p style="margin-left: {self.indent}"><samp>{text}</samp></p>'
+        return self.summarize(text)
 
 wrappers['dict'] = (PPWrapper, {} )
 wrappers['list'] = (PPWrapper, {} )
@@ -631,16 +632,55 @@ def nbdoc(fun, *pars, name=None, fignum=1, **kwargs):
     display.display( md_data )  
 
 def display_markdown(obj, vars={}):
-    """Add an object to the IPython markdown display
-    - obj -- either actual text, or an object with a _repr_html_ method.
-            If a string, run inspect.cleandoc
-    - vars -- optional dictionary of replacement values, if text
+    print('Obsolete', file=sys.stdout)
+    show(obj, vars)
+
+def show(obj, vars={}, **kwargs):
+    """Add the representation of an object to the Jupyter notebook display,
+        which is created when the cell is executed.
+
+    * obj -- text, assumed to be markdown
+          -- one of `plt.Figure`, `pd.DataFrame` or `pd.Series objects`
+          -- an object with a `_repr_html_` method.
+          -- any standard python object
+          -- a callable function that generates printout, which will be captured and displayed.
+
+    * vars -- optional dictionary of f-string replacement values, if text
+    * kwargs -- key words for the `Wrapper` class, especially "summary".
+                if set to a text string, that will hide the representation
+                under a clickable summary line.
 
     """
     import inspect
     import IPython.display as display
-    if hasattr(obj, '_repr_html_'):
-        obj = obj._repr_html_()
-    elif type(obj) == str:
-        obj = inspect.cleandoc(obj)
-    display.display(doc_formatter(obj, vars))
+
+    if type(obj) == str:
+        # a string is markdown. 
+        # cleandoc aligns text, useful for markdown to recognize its features
+        display.display(
+            doc_formatter(inspect.cleandoc(obj),  vars,))
+
+    elif callable(obj):
+        # call the callable, capturing its output to sys.stdout, and conveertign to markdown
+        with capture(**kwargs) as out:
+            obj()
+        display.display(out)
+  
+    else:
+        # everything else is html generated by the object or a wrapper
+        # map class to a Wrapper subclass
+        wrappers= {
+            plt.Figure: FigureWrapper,
+            pd.Series: SeriesWrapper,
+            pd.DataFrame: DataFrameWrapper, 
+        }
+        wrapper = wrappers.get(obj.__class__, None)
+        if wrapper is not None:
+            txt = wrapper(obj, vars, **kwargs)._repr_html_()
+        elif hasattr(obj, '_repr_html_'):
+            txt = obj._repr_html_()
+        else:
+            # 
+            txt = str(PPWrapper(obj, **kwargs))
+
+        display.display(doc_formatter(txt, vars, mimetype='text/html'))

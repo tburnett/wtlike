@@ -44,9 +44,19 @@ def parse_jname(name):
 class CatDF():
     """Methods common to the following classes
     """
+
+    class SkyCoord(SkyCoord):
+        """Subclass that overrides __repr__ to return "(ra, dec)" """
+        def __repr__(self):
+            repr = lambda lon,lat: f'({lon:7.3f}, {lat:+7.3f})'
+            ra,dec = self.fk5.ra.deg, self.fk5.dec.deg
+            if not hasattr(ra, '__iter__'):
+                return repr(ra,dec)
+            return np.array([repr(lon,lat) for lon,lat in zip(ra,dec)]).__repr__()
+
     @property
     def skycoord(self):
-        return SkyCoord(self.ra.values, self.dec.values, unit='deg', frame='fk5')
+        return self.SkyCoord(self.ra.values, self.dec.values, unit='deg', frame='fk5')
     
     def match(self, other):
         """other -- another CatDF object

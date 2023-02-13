@@ -64,5 +64,5 @@ class Clusterer:
             lon.append(l); lat.append(b)
             s.append(sum(w))
             
-        afig.scatter(lon,lat, 4*np.sqrt(np.array(s)), alpha=0.6, color='r');
+        afig.scatter(lon,lat, 4*np.sqrt(np.array(s)), alpha=0.6, color='r')
         

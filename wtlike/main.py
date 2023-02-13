@@ -114,6 +114,8 @@ class WtLike(LightCurve):
                 label='', 
                 xlabel=f'Phase for {self.period:.4f}-day period',
                 source_name='',
+                legend_loc='none',
+                #colors=('blue','blue','blue'),
                 )
         ax.set(**kwargs )
         ax.axhline(1.0, color='grey', ls=':')
