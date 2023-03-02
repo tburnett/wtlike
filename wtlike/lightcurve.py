@@ -253,6 +253,8 @@ def flux_plot(cell_fits,
         color = colors[2 if step else 1]
 
         y = allflux[limit]
+        # set any inf's to zero 
+        y = np.where(np.isinf(y),0,y)
         if limit_fmt is None:
 
             # try to draw an error bar, hard to determine size

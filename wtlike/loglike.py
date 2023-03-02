@@ -303,7 +303,7 @@ class PoissonRep(object):
     """
 
     def __init__(self, loglike, tol=poisson_tolerance,  # note global
-                 ts_min=70,
+                 ts_min=75,
                 ):
         """
         """

@@ -2,7 +2,7 @@
 
 # %% auto 0
 __all__ = ['day', 'first_data', 'mission_start', 'Cache', 'Config', 'MJD', 'UTC', 'UTCnow', 'mission_week', 'mjd_range',
-           'FermiInterval', 'FermiMonth', 'FermiWeek', 'bin_size_name', 'decorate_with', 'Timer']
+           'FermiInterval', 'FermiMonth', 'FermiWeek', 'BaryCentricTime', 'bin_size_name', 'decorate_with', 'Timer']
 
 # %% ../nbs/00_config.ipynb 3
 import os, sys, warnings, pickle
@@ -391,7 +391,27 @@ class FermiWeek(FermiInterval):
     def __init__(self):
         super().__init__(interval=7)
 
-# %% ../nbs/00_config.ipynb 21
+# %% ../nbs/00_config.ipynb 20
+class BaryCentricTime:
+    def __init__(self, skypos):
+        """ Manage calculation of light travel time
+        
+        See [astropy.time](https://docs.astropy.org/en/stable/time/index.html#barycentric-and-heliocentric-light-travel-time-corrections)
+        We use the center of the Earth for the location here.
+
+        """
+        self.skypos = skypos
+        self.elat = skypos.barycentricmeanecliptic.lat.deg # for reference
+
+    def __call__(self, times):
+        """return light travel time (d) for times in MJD
+        """
+        from astropy import time, coordinates as coord
+        etimes = time.Time(times, format='mjd',  scale='utc', 
+            location=coord.EarthLocation(0,0,0))
+        return etimes.light_travel_time(self.skypos).jd
+
+# %% ../nbs/00_config.ipynb 22
 def bin_size_name(bins):
     """Provide a nice name, e.g., 'day' for a time interval
     """
@@ -413,14 +433,14 @@ def bin_size_name(bins):
     nt = f'{n:.0f}' if np.mod(n,1)<1e-3 else f'{n:.1f}'
     return f'{nt}-{unit}'# if n>1 else f'{unit}'
 
-# %% ../nbs/00_config.ipynb 23
+# %% ../nbs/00_config.ipynb 24
 def decorate_with(other_func):
     def decorator(func):
         func.__doc__ += other_func.__doc__
         return func
     return decorator
 
-# %% ../nbs/00_config.ipynb 24
+# %% ../nbs/00_config.ipynb 25
 import time
 
 class Timer():

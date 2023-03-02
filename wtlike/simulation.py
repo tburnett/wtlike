@@ -39,6 +39,7 @@ class _Sampler():
             y = np.array([func(t-dx) for t in self.x])
             if np.any(y<0) or np.sum(y)==0:
                 raise ValueError('Function is not positive definite')
+
         elif isinstance(func, numbers.Number):
             # a single value, or delta function
             self.deltafun = func
@@ -47,25 +48,58 @@ class _Sampler():
             self.mean=func
             return
         else:
-            n = len(func)
-            self.x = np.linspace(a,b,n)
+            # histogram, perhaps from actual data
             y = func
+            n = len(y)
+            binsize = (b-a)/n
+            self.x = np.arange(a+binsize/2, b, binsize)
+        self.y = y
         cy = np.cumsum(y)
         d = cy[-1]-cy[0]
         self.sy = (cy-cy[0])/d
-
         self.mean = np.sum( (self.x-dx) * y) / d
-
-    def _evaluate(self, r):
+        
+        # now do the weighted one
+        wcy = np.cumsum(self.x*y)
+        self.wnorm = wcy[-1]/cy[-1]
+        self.wsy = wcy/wcy[-1] 
+        
+    def __call__(self, size, alpha=0):
+        from scipy import stats
+        if self.deltafun: return np.full(int(size), self.deltafun)
+        size *= (1+ alpha* self.wnorm)
+        return self._evaluate(stats.uniform.rvs(size=int(size), random_state=self.rng), alpha=alpha)
+    
+    def _evaluate(self, r, alpha=0):
         """evaluate inverse integral. expect 0<r<1 """
-        return np.interp(r, self.sy, self.x)
+        
+        return np.interp(r, (self.sy + alpha*self.wsy)/(1+alpha*self.wsy[-1]), self.x)
 
-    def __call__(self, size):
-        """Generate `size` values
-        """
-        if self.deltafun: return np.full(size, self.deltafun)
+#     def _evaluate(self, r):
+#         """evaluate inverse integral,  expect 0<r<1 """
+#         return np.interp(r, self.sy, self.x)
 
-        return self._evaluate(stats.uniform.rvs(size=size, random_state=self.rng))
+#     def __call__(self, size):
+#         """Generate `size` values
+#         """
+#         if self.deltafun: return np.full(int(size), self.deltafun)
+
+#         return self._evaluate(stats.uniform.rvs(size=int(size), random_state=self.rng))
+    
+    @classmethod
+    def test(cls, ):
+        n = 20
+        sf = cls(lambda x: np.exp(-(x**2)/2), limits=(-4, 4) )
+
+        data = sf(10000)
+        tests = np.array([np.abs(data.mean()), np.abs(data.std()-1) ])
+        assert np.all(tests<5e-2 ), f'Failed Tests: mean {data.mean()}, std {data.std()}'
+
+        func = lambda x: x**2
+        wfun = cls(func)
+
+        test2 = wfun.mean,  np.mean(wfun(1000))
+        assert np.abs( test2[0]-test2[1] ) < 1e-1, f'Not almost equal: {test2}'
 
 # %% ../nbs/04_simulation.ipynb 9
 sec_per_day = 24*3600
@@ -117,7 +151,7 @@ class WeightFunction(object):
 
     def weights(self, s, n):
         h = self.sample(s,  n)
-        p = self.s * self.psf(h)
+        p = self.s * self.psf(h) + 1e-6 # protect against zero
         return 1/(1+self.b/p)
 
 # %% ../nbs/04_simulation.ipynb 13
@@ -160,7 +194,7 @@ class Simulation(object):
     """
 
     def __init__(self, name, src_flux, tstart, tstop,
-                 bkg_rate=1e-6,  efun=3000, wt_signif=0.1,
+                 bkg_rate=1e-6,  efun=3000, wt_signif=5e-3,
                  debug=False, rng=None, config=None):
 
         def check_scalar( f):

@@ -9,8 +9,8 @@ where name can be:
 """
 import datetime
 from wtlike import *
-from utilities.ipynb_docgen import *
-from utilities.catalogs import  *
+from utilities.ipynb_docgen import ( show, DataFrameWrapper, ipynb_doc, capture_hide, capture, monospace)
+from utilities.catalogs import*
 
 from wtlike.sources import SourceFinder
 __all__ = ['show', 'uwcat', 'cat4', 'get_proc', 'Summarize', 'SourceAnalyzer', 'load_source_spreadsheet',
@@ -50,7 +50,7 @@ uwcat.loc[:, 'r95'] = np.sqrt( (uwcat.a * 2.64)**2 + (0.00791)**2) #
 
 src_finder = SourceFinder()
 
-defaults = dict(neighbor=None, interval=30, nyquist=24, max_sep=0.5, tsmin=25, info_name='Other info',
+defaults = dict(neighbor=None, interval=30, nyquist=24, max_sep=0.5, tsmin=16, info_name='Other info',
             fft_query='p1>25 & f>0.05')
 
 class Summarize():
@@ -75,6 +75,7 @@ class SourceAnalyzer():
         self.wtl=None
         self.max_sep = kwargs.pop('max_sep', defaults['max_sep'])
         self.porb = float(kwargs.pop('porb', np.nan))
+        self.fluxlim = kwargs.pop('fluxlim', None)
         self.kwargs = kwargs 
         self.fig = None
         assert isinstance(summarizer, Summarize), f'Expect {summarizer} to be subclass of Summarize'
@@ -155,7 +156,7 @@ class SourceAnalyzer():
 
             if not(np.isnan(self.porb)) and self.porb is not None:
                 # generate orbial phase view to plot later (no periastron yet)
-                bins = self.kwargs.get('phase_bins', 25)
+                bins = self.kwargs.get('phase_bins', 8)
                 # create a phase view
                 self.orbital_phase = self.wtl.phase_view(period=self.porb, nbins=bins)
                 phase_df= self.orbital_phase.fits.query('t<1')
@@ -235,26 +236,35 @@ class SourceAnalyzer():
                 r.update(Gaussian2dRep(LogLike(cell)).fit)
             return r
         try:
+            if self.fluxlim is not None:
+                ax.set(ylim=self.fluxlim) ###
             self.bb.plot(ax=ax, source_name=self.wtl.source.name, UTC=True)
-            self.bb_table = self.bb.fluxes['t tw flux errors'.split()]
-            self.beta_table = pd.DataFrame.from_dict( 
+
+            df_bb = self.bb.fluxes['t tw ts flux errors'.split()]
+            df_beta = pd.DataFrame.from_dict( 
                 dict((i, g2fit(cell)) for i,cell in self.bb.cells.iterrows()) ,orient='index')\
-                    ['t flux beta sig_beta'.split()]
+                    ['flux beta sig_beta'.split()]
+            self.bb_table = pd.concat([df_bb, df_beta], axis=1)
+
+            
         except Exception as e:
             print(f'oops: bb failed: {e}')
             self.wtl.plot(ax=ax)
             self.bb_table = None
-            self.beta_table = None
+            # self.beta_table = None
 
-    def display_beta_table(self):
+    def display_bb_table(self):
         """ return (hidden) markdown string"""
-        bt = self.beta_table
-        if bt is None or len(bt)<2: return ''
+        bt = self.bb_table
+        if bt is None or len(bt)==0: return ''
         test = np.max(bt.beta/bt.sig_beta)
-        color = 'red' if test>2 else ''
-        with capture_hide(f'beta values for BB intervals (<font color={color}>max sig = {test:.1f}</font> )') as cp:
-            print(bt)
-        return cp
+        
+        warning_text = f'<font color=red>Check beta:  max beta/sig_beta is {test:.1f}</font>' if test>2 else ''
+        # with capture_hide(f'BB fits {warning_text}') as cp:
+        #     print(bt)
+        # return cp
+        dw = DataFrameWrapper(bt, summary=f'{len(bt)} BB fits {warning_text}', index=False)
+        return dw._repr_html_()
 
     def plot_periodogram(self, ax3, ax4):
         
@@ -279,10 +289,14 @@ class SourceAnalyzer():
         if len(df)==0:
             return monospace(f'No FFT peaks satisfying {query}')
         df['period'] = 1/df.f
-        with capture(f'{len(df)} FFT peaks satisfying {query}: max(p1)={max(df.p1):.1f}') as out:
-            with pd.option_context('display.precision', 6, 'display.float_format',None):
-                print( df)
-        return out
+        # with capture(f'{len(df)} FFT peaks satisfying {query}: max(p1)={max(df.p1):.1f}') as out:
+        #     with pd.option_context('display.precision', 6, 'display.float_format',None):
+        #         print( df)
+        with pd.option_context('display.precision', 6, 'display.float_format',None):
+            dw = DataFrameWrapper(df,
+                    summary=f'{len(df)} FFT peaks satisfying {query}: max(p1)={max(df.p1):.1f}',
+                    index=False, show=show)
+            return dw._repr_html_()
 
     def get_nearby(self, radius_cut=3, var_cut=30):
         near_df = cat4.select_cone(self.skycoord, cone_size=5, query=f'variability>{var_cut}& sep<{radius_cut}')
@@ -292,9 +306,13 @@ class SourceAnalyzer():
     def display_nearby(self, show=False, radius_cut=3, **kwargs):
         near_df = self.get_nearby(radius_cut=radius_cut, **kwargs)
         if len(near_df)==0: return f' No nearby (within {radius_cut} deg) variable sources.'
-        with capture(f'{len(near_df) } nearby variable sources', show=show) as out:
-            print(near_df)
-        return out
+        dw = DataFrameWrapper(near_df,
+            summary=f'{len(near_df) } nearby variable sources'
+            )
+        return dw._repr_html_()
+        # with capture(f'{len(near_df) } nearby variable sources', show=show) as out:
+        #     print(near_df)
+        # return out
 
     def plot_FFT(self, ax1=None, ax2=None, peak_query='f>0.01'):
         """ Generate a Kerr Periodogram and a histogram of the peak values
@@ -335,6 +353,21 @@ class SourceAnalyzer():
         kw = dict(xlim=(0,1), xticks=np.arange(0,1.01,0.25)); 
         kw.update(kwargs)
         self.orbital_phase.plot(ax=ax, **kw)
+        ax.axvline( 1.0, ls='--', color='lightgrey')
+        return fig
+
+    def plot_phase(self, ax=None, **kwargs):
+        """A phase plot with perhaps different porb, bins, or ref
+        """
+        period = kwargs.pop('period', self.porb)
+        nbins  = kwargs.pop('nbins', 10)
+        ref    = kwargs.pop('ref', '2008')
+
+        fig,ax = plt.subplots(figsize=(6,3)) if ax is None else (ax.figure, ax)
+        kw = dict(xlim=(0,2),ylim=None); kw.update(kwargs)
+        
+        self.wtl.phase_view(period=period, nbins=nbins, reference=ref).plot(ax=ax, **kw)
+        
         ax.axvline( 1.0, ls='--', color='lightgrey')
         return fig
         
@@ -418,7 +451,7 @@ def examine_source(name, info=None, text='',  **kwargs):
     nearby = self.display_nearby()
 
     if self.wtl is not None:
-        beta = self.display_beta_table()
+        beta = self.display_bb_table()
         fft_peaks = self.display_fft_peaks()
 
     if neighbor is None:
@@ -430,7 +463,7 @@ def examine_source(name, info=None, text='',  **kwargs):
 
     if getattr(self, 'orbital_phase', None) is not None:
         phase_plot = self.plot_orbital_phase()
-        phase_plot.summary=f'Phase plot (period {self.porb:.3f} d, TS={self.orbital_ts:.0f} )'
+        phase_plot.summary=f'Phase plot (period {self.porb:.6f} d, TS={self.orbital_ts:.0f} )'
 
     return locals()
 
@@ -535,7 +568,8 @@ def get_fermi_info(source_names, max_sep=0.5):
             self.update(dr_name=dr.name,
                         dr_pos=self.SkyCoord(dr.ra,dr.dec,unit='deg', frame='fk5'),
                         dr_sep = dr.sep,
-                        dr_r95 = dr.r95)
+                        dr_r95 = dr.r95,
+                        dr_class1=dr.class1)
         def get_uwinfo(self, pt_name):
             #return a dict 
             if pt_name not in uwcat.index:
@@ -552,7 +586,7 @@ def get_fermi_info(source_names, max_sep=0.5):
         def __repr__(self):
             return f'{self.__class__.__name__}({self.name}):\n{pd.Series(self, dtype=object)}'
     
-    source_names# = source_df.index
+    source_names = np.atleast_1d(source_names)
     return pd.DataFrame([SourceInfo(name) for name in source_names], index=source_names )
 
 def setup_excel(filename, 
@@ -567,7 +601,7 @@ def setup_excel(filename,
 
     spreadsheet = Path(filename) #'AMXP scorecard (2).xlsx')
     assert spreadsheet.is_file(), f'File "{filename}" not found'
-    if title[0] != '#' : title = '# '+title
+    if len(title)>1 and title[0] != '#' : title = '# '+title
     show(f"""\
         {title}
 

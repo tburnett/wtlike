@@ -47,7 +47,7 @@ FigureWrapper test
 import sys, os, shutil, string, pprint, datetime, inspect
 
 
-__all__ = ['nbdoc', 'image', 'figure', 'monospace', 'capture', 'capture_hide', 
+__all__ = ['nbdoc', 'image', 'figure', 'monospace', 'ShowPrintout','capture', 'capture_hide', 
         'capture_show', 'shell', 'create_file', 'ipynb_doc', 'get_nb_namespace', 'special_prefix', 
         'figure_number', 'display_markdown', 'FigureWrapper','show']
 
@@ -119,7 +119,7 @@ def doc_formatter(
     return MimeBundleObject()
 
 def image(filename, 
-            caption='', 
+            caption=None, 
             width=None, #height=None, 
             image_extensions=['.png', '.jpg', '.gif', '.jpeg'],
             )->'a NBimage object that generates HTML':
@@ -249,8 +249,12 @@ class FigureWrapper(Wrapper):
         self.base64 = kwargs.pop('base64', getattr(self.obj, 'base64', True))
         self.caption = kwargs.pop('caption', None)
         
+        
 
         self.fig = fig = self.obj
+        fs =  kwargs.pop('figsize', None)
+        if fs is not None: # expect a tuple
+            fig.set_size_inches(fs)
         self.__dict__.update(fig.__dict__)
         if getattr(fig, 'failed', False): 
             return
@@ -475,6 +479,33 @@ def shell(text:'a shell command ', mono=True, **kwargs):
         ret = f'Command {text} failed : {e}'
     return monospace(ret, **kwargs) if mono else ret
 
+class ShowPrintout(object):
+    """Usage:
+    
+    ```
+    with ShowPrintout('summary text'):
+        print('Hello, world')
+    ```
+    Calls  show with the formatted printout.
+    """
+    _stream = 'stdout'
+
+    def __init__(self, summary, show=False):
+        import io
+        self._new = io.StringIO()
+        self._old = getattr(sys, self._stream)
+        self.summary=summary
+        self.show = show
+
+    def __enter__(self):
+        setattr(sys, self._stream, self._new)
+        return self
+
+    def __exit__(self, exctype, excinst, exctb):
+        setattr(sys, self._stream, self._old)
+        show(monospace(self._new.getvalue(), summary=self.summary, show=self.show))
+
+
 def capture(summary=None, **kwargs):
     """
     """
@@ -632,55 +663,71 @@ def nbdoc(fun, *pars, name=None, fignum=1, **kwargs):
     display.display( md_data )  
 
 def display_markdown(obj, vars={}):
-    print('Obsolete', file=sys.stdout)
+    print('Obsolete: use "show"', file=sys.stdout)
     show(obj, vars)
 
 def show(obj, vars={}, **kwargs):
     """Add the representation of an object to the Jupyter notebook display,
         which is created when the cell is executed.
 
-    * obj -- text, assumed to be markdown
-          -- one of `plt.Figure`, `pd.DataFrame` or `pd.Series objects`
-          -- an object with a `_repr_html_` method.
-          -- any standard python object
-          -- a callable function that generates printout, which will be captured and displayed.
+    * obj -- one of the following:
+      * text, assumed to be markdown, unless it is file name of an image; in this
+          case, the image will be displayed
+      * an instance of `plt.Figure`, `pd.DataFrame` or `pd.Series`
+      * an object with a `_repr_html_` method.
+      * any standard python object (dict, list, ...)
+      * a callable function that generates printout, which will be captured and displayed.
 
     * vars -- optional dictionary of f-string replacement values, if text
     * kwargs -- key words for the `Wrapper` class, especially "summary".
                 if set to a text string, that will hide the representation
-                under a clickable summary line.
+                under a clickable summary line, a "disclosure" widget.`
+                For figures, an option "caption" allows text for a caption.
 
     """
     import inspect
     import IPython.display as display
+    mime_type = 'text/markdown'
 
+    # Generate a doc to be passed to the display buffer, markdown or html
     if type(obj) == str:
-        # a string is markdown. 
-        # cleandoc aligns text, useful for markdown to recognize its features
-        display.display(
-            doc_formatter(inspect.cleandoc(obj),  vars,))
+        if obj.endswith( ('.png', '.jpg','.gif','.jpeg')):
+            # the string may be the filename of an image
+            doc = FigureWrapper(image(obj), **kwargs)._repr_html_()
+            mime_type = 'text/html'
+            # display.display(doc_formatter(doc, mimetype='text/html'))
+        else:
+            # a string is markdown. 
+            # cleandoc aligns text, useful for markdown to recognize its features
+            doc = inspect.cleandoc(obj)
+            # display.display( doc_formatter(inspect.cleandoc(obj),  vars,))
 
     elif callable(obj):
-        # call the callable, capturing its output to sys.stdout, and conveertign to markdown
+        # call the callable, capturing its output to sys.stdout, and converting to markdown
         with capture(**kwargs) as out:
             obj()
+        doc= out
         display.display(out)
-  
+        return # special case that doc_formatter fails on
     else:
-        # everything else is html generated by the object or a wrapper
-        # map class to a Wrapper subclass
+        # everything else is html generated by the object or a Wrapper subclass
+
+        mime_type = 'text/html'
         wrappers= {
-            plt.Figure: FigureWrapper,
-            pd.Series: SeriesWrapper,
+            plt.Figure:   FigureWrapper,
+            pd.Series:    SeriesWrapper,
             pd.DataFrame: DataFrameWrapper, 
         }
         wrapper = wrappers.get(obj.__class__, None)
         if wrapper is not None:
-            txt = wrapper(obj, vars, **kwargs)._repr_html_()
+            # recognized
+            doc = wrapper(obj, vars, **kwargs)._repr_html_()
         elif hasattr(obj, '_repr_html_'):
-            txt = obj._repr_html_()
+            doc = obj._repr_html_()
         else:
-            # 
-            txt = str(PPWrapper(obj, **kwargs))
+            # finally assume this is a standard python object - will try to pretty-print
+            doc = str(PPWrapper(obj, **kwargs))
 
-        display.display(doc_formatter(txt, vars, mimetype='text/html'))
+        # display.display(doc_formatter(doc, vars, mimetype='text/html'))
+    # pass the doc, a callable or a text string to the formatter
+    display.display(doc_formatter(doc, vars, mimetype=mime_type))

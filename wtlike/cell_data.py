@@ -328,7 +328,13 @@ class CellData(SourceData):
         * period -- 'year' | 'precession' | float
         * reference -- a UTC date for aligning the bins.
         """
-        ref = 0 if not reference else MJD(reference)
+        if type(reference)  in (int, float): 
+            ref= reference
+        elif type(reference)==str:
+            ref = MJD(reference)
+        else:
+            raise Exception(f'CellData.phase_view: reference time {reference} is neigher float (MJD) nor str(UTC)')
+
 
         period = dict(precession=53.05, year=365.25).get(period, period)
         assert np.isreal(period), f'The specified period, "{name}", is not a real number'
