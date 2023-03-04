@@ -78,7 +78,7 @@ def cell_exposure(config, exposure, time_bins, exposure_factor=1e-6, set_costh=F
         u = np.vstack(t)
     """
     exp = exposure.exp.values
-    costh = exposure.cos_theta.values
+
     etot = np.sum(exp) * exposure_factor
 
     cell_edges = time_bin_edges(config, exposure, time_bins)
@@ -89,6 +89,7 @@ def cell_exposure(config, exposure, time_bins, exposure_factor=1e-6, set_costh=F
     ret = dict(exp=cell_exp, edges=cell_edges, etot=etot)
 
     if set_costh:
+        costh = exposure.cos_theta.values
         ret['costh'] =np.array([costh[slice(*ecx)].mean() for ecx in eci], np.float32)
 
 

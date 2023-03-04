@@ -161,7 +161,8 @@ class LogLike(object):
 
         if fix_beta:
             #
-            g0= self.gradient([0])
+            g = lambda x: self.gradient([x])
+            g0= g(0) #self.gradient([0])
             # solution is at zero flux
             if g0<=0:
                 return [0]
@@ -170,6 +171,9 @@ class LogLike(object):
             h0=self.hessian(0)[0]
             if g0/h0 < 0.5*np.sqrt(1/h0):
                 return [g0/h0]
+            elif g0>0 and g(1)<0:
+                # solution between 0 and 1 
+                return [optimize.brentq(g,0,1)]
 
         kw = dict(factor=2, xtol=1e-3, fprime=self.hessian)
         kw.update(**fit_kw)
@@ -308,6 +312,7 @@ class PoissonRep(object):
         """
         """
         self.loglike = loglike # do I need this? lots of memory for the array of weights
+        
         rate, sig, self.ts= loglike.rate()
 
         def use_fitter( ):
@@ -332,7 +337,7 @@ class PoissonRep(object):
                 self.pf = None
             except Exception as e:
                 # raise Exception(e)
-                print(f'from_fit failed with with TS={self.ts:.1f} : {e}, using fitter')
+                #print(f'from_fit failed with with TS={self.ts:.1f} : {e}, using fitter')
                 use_fitter()
         elif rate==0 and sig>1e4:
             # special if very weak

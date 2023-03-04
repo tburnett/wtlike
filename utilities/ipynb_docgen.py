@@ -248,8 +248,6 @@ class FigureWrapper(Wrapper):
         self.indent = kwargs.pop('indent', '25px')
         self.base64 = kwargs.pop('base64', getattr(self.obj, 'base64', True))
         self.caption = kwargs.pop('caption', None)
-        
-        
 
         self.fig = fig = self.obj
         fs =  kwargs.pop('figsize', None)
@@ -348,7 +346,7 @@ if pd:
         # have to convert to DF 
         def __init__(self, *pars, **kwargs):
             super().__init__(*pars, **kwargs)
-            self._df = self.obj.to_frame()
+            self._df = self.obj.to_frame().T
 
 
     wrappers['Series']= (SeriesWrapper, df_kwargs)

@@ -154,7 +154,7 @@ class CellData(SourceData):
         """
         Return a dict of arrays per cell:
         - exp -- exposure, in cm^2 Ms units, if exposure_factor==1e-6
-        - costh -- mean cos theta per cell
+        - costh -- mean cos theta per cell if set_costh is set
         - exp_energy if exp_fract in the exposure DF, set exposure energy
 
         Note: total exposure vs. energy is:
@@ -162,11 +162,12 @@ class CellData(SourceData):
             u = np.vstack(t)
         """
         exp = self.exposure.exp.values
-        costh = self.exposure.cos_theta.values
+
         # the cell index list
         eci = np.searchsorted(self.exposure.stop, self.cell_edges).reshape(len(self.cell_edges)//2,2)
         cell_exp = np.array([exp[slice(*ecx)].sum()*exposure_factor for ecx in eci], np.float32) #np.float32)
         if set_costh:
+            costh = self.exposure.cos_theta.values
             cell_costh =np.array([costh[slice(*ecx)].mean() for ecx in eci], np.float32)
         else: cell_costh=None
 
