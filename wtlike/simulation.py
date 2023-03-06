@@ -203,7 +203,7 @@ class Simulation(object):
                 return lambda t: fval
             return f
         self.config = config or Config()
-        self.name = name
+        self.source_name = name
         self.src_fun = check_scalar(src_flux)
         self.bkg_fun = check_scalar(bkg_rate)
         self.flux_fun = lambda t: src_fun(t)+bkg_fun(t)

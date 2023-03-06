@@ -367,6 +367,7 @@ class TimeSeries():
         self.config = config or Config()
         self.tsamp = tsamp
         self.rfact = rfact
+        self.name = getattr(source, 'name', '(noname)')
 
 
         tbins = (tstart,tstop,tsamp)
@@ -444,8 +445,8 @@ class TimeSeries():
 
 
         """
-        if self.config.verbose>0:
-            print('TimeSeries: creating amplitude spectra')
+        # if self.config.verbose>0:
+        #     print('TimeSeries: creating amplitude spectra')
         kw = dict(tweak_exp=True, get_amps=True, minf=1)
         kw.update(kwargs)
 

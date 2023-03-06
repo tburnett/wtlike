@@ -183,7 +183,7 @@ def findsource(name, gal=True):
 
 # %% ../nbs/03_sources.ipynb 10
 class SourceFinder(SourceLookup):
-    def __init__(self, uwname='uw1216', config=None):
+    def __init__(self, uwname='uw1410', config=None):
         """Assume that uwname is the model used to generate the weight tables
         """
         super().__init__(config or Config())

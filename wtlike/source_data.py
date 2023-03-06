@@ -65,7 +65,7 @@ class SourceData(object):
         elif isinstance(source, Simulation):
             self.simulated=True
             self.source=None
-            self.source_name = source.name
+            self.source_name = getattr(source, 'source_name', '')
             # can put this into cache
             source.run()
             self.photons = source.photons

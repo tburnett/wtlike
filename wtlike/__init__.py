@@ -4,7 +4,7 @@
 see https://tburnett.github.io/wtlike/tutorial
 """
 
-__version__ = "0.8.0"
+__version__ = "0.8.1"
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -13,7 +13,7 @@ from pathlib import Path
 
 from .config import Config, UTC, MJD, Timer, FermiInterval
 from .data_man import check_data, update_data, DataView
-from .sources import PointSource
+from .sources import PointSource, SourceFinder
 from .exposure import WeightedAeff
 from .loglike import PoissonRep
 from .simulation import Simulation

@@ -260,7 +260,7 @@ class Config():
         if not self.cachepath.is_dir():
             self.error_msg +=f'cachepath {self.cachepath} is not a folder.'
 
-        # look for 4FGL catalog file, gll_psc_v28.fit currently
+        # look for 4FGL catalog file, gll_psc_v31.fit currently
         fail = False
         if self.catalog_file is None or self.datapath is None:
             t = Path(self.datapath).expanduser()
@@ -270,7 +270,7 @@ class Config():
             else:
                 fail = True
         elif Path(self.catalog_file).expanduser().is_file():
-            self.catalog_file = Path(config.catalog_file).expanduser()
+            self.catalog_file = Path(self.catalog_file).expanduser()
         else: fail=True
 
         if fail:
