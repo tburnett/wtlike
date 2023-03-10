@@ -1,10 +1,16 @@
+"""
+This is an alternative to the simulation module in wtlike, using a different design.
+
+"""
+
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-
+from wtlike import Timer, WtLike
 from utilities.ipynb_docgen import *
-from wtlike.simulation import Simulation 
-from pylib.show_stuff import *
+from wtlike.simulation import Simulation # this is only to be a superclass for WtSim
+
+# from pylib.show_stuff import *
 
 def poiss_fit(w, Nsrc=None):
     """
@@ -41,7 +47,7 @@ class FunctionGenerator:
     
     """
     def __init__(self, func, limits=(0,1), n=1000,rng=None):
-        from wtlike.exposure import cumsimpson
+
         if isinstance(rng, np.random.Generator):
             self.rng = rng
         else:
@@ -122,24 +128,35 @@ FunctionGenerator.test()
 class WeightModel:
     r"""### class WeightModel
 
-    Input: signal and background functions  $f_S$ and $f_B$, $\alpha$. 
+    Input: signal and background functions  $f_S$ and $f_B$. 
 
     Implements 
-    * $f(x) = f_B(x) + (1+\alpha)\ f_S(s)$.
-    * $w(x) = (1+\alpha)\ f_S(x) / f(x) $
+    * $f_s(x) = s$.
+    * $f_b(x) = \exp(-x/\tau) /\tau $
 
     Here $x$ is an internal variable that is uniformly distributed from 0 to 1.
     """
-    def __init__(self, fs, fb,  rng=None):
+
+    class Fs:
+        def __init__(self, s=1):  self.s=s
+        def __call__(self, x):  return self.s if np.isscalar(x) else np.full(len(x), self.s)
+    class Fb:
+        def __init__(self, tau=0.1): self.tau=tau
+        def __call__(self, x): return  np.exp(-x/self.tau)/self.tau
+
+
+    def __init__(self, sn, tau=0.1,  rng=None):
         """ Manage a weighting model
 
-        fs, fb : functions on [0,1] representing signal and background
-
+        sn : signal/noise requiremt
+        tau: detmines mixing
 
         """
+        s = sn/(1-sn)
+        self.fs = self.Fs(s)
+        self.fb = self.Fb(tau)
         self.alpha = 0
-        self.fb=fb
-        self.fs=fs
+
         if isinstance(rng, np.random.Generator):
             self.rng = rng
         else:
@@ -154,12 +171,13 @@ class WeightModel:
         self.norm = T=B+S
 
         self.source_fraction = W = S/T
-        WW = integral(lambda x: self.weight(x)*fs(x))/T
+        WW = integral(lambda x: self.weight(x)*self.fs(x))/T
         self.sensitivity = 1/np.sqrt(WW)
         self.variance = WW/W
 
     def __repr__(self) -> str:
-        return f'{self.__class__.__name__}: signal/noise: {100*self.source_fraction:.1f}%, variance/event: {self.variance:.3f}'
+        return f"""{self.__class__.__name__}: s={self.fs.s:.2e}, tau={self.fb.tau:.2e}, signal/noise: {100*self.source_fraction:.2f}%, 
+        variance/event: {self.variance:.3f}"""
  
     def __call__(self, x):
         return  (self.fb(x) + (1+self.alpha)*self.fs(x))/self.norm
@@ -236,8 +254,7 @@ class WeightModel:
         plt.subplots_adjust(wspace=0.3)
         self.plot_functions(ax=ax1)
         self.plot_weight(ax=ax2, title='weight')
-        return fig
-    
+        return fig    
 
     @classmethod
     def example(cls, S=0.1, rng=None):
@@ -280,24 +297,24 @@ class WeightModel:
         a = (1-r0)*sn/(1-sn)/r0
         fsp = lambda x: a* fs(x)
         return cls(fsp, fb, rng=rng )
-    @classmethod
-    def test(cls):
-        wm = cls.example()
-        wgen = wm.generate(1e7)
-        W = wgen.mean(); WW = np.mean(wgen**2)
-        test1 = np.abs(W/wm.source_fraction -1)
-        test2 = 0 #np.abs(WW/W /wm.sensitivity -1)
-        # show(pd.Series(dict(W_meas=W,  
-        #             W_int = wm.source_fraction, #integral(weight),
-        #             WW_meas=WW, 
-        #             WW_int= wm.sensitivity*wm.source_fraction,
-        #             test1=test1,
-        #             test2=test2,
-        #            ),
-        #        name='Compare integrals with MC sums'))
-        assert test1<2e-3 and test2<1e-3, f'WeightModel failed a test :{test1:.2e}, {test2:.2e}'
+#     @classmethod
+#     def test(cls):
+#         wm = cls.example()
+#         wgen = wm.generate(1e7)
+#         W = wgen.mean(); WW = np.mean(wgen**2)
+#         test1 = np.abs(W/wm.source_fraction -1)
+#         test2 = 0 #np.abs(WW/W /wm.sensitivity -1)
+#         # show(pd.Series(dict(W_meas=W,  
+#         #             W_int = wm.source_fraction, #integral(weight),
+#         #             WW_meas=WW, 
+#         #             WW_int= wm.sensitivity*wm.source_fraction,
+#         #             test1=test1,
+#         #             test2=test2,
+#         #            ),
+#         #        name='Compare integrals with MC sums'))
+#         assert test1<2e-3 and test2<1e-3, f'WeightModel failed a test :{test1:.2e}, {test2:.2e}'
 
-WeightModel.test()        
+# WeightModel.test()        
   
 
 class PeriodicFunc:
@@ -312,7 +329,8 @@ class PeriodicFunc:
         return np.ones(len(t))
     
     def __repr__(self):
-        return self.__class__.__name__
+        return f"""{self.name} {self.info()}
+        """
     
     @property
     def name(self): return self.__class__.__name__
@@ -322,18 +340,21 @@ class PeriodicFunc:
         d = self.__dict__
         return dict( (key,d[key]) for key in d.keys() if not key.startswith('_') )
 
-    def plot(self, ax=None,  **kwargs):
+    def plot(self, ax=None, overlay=False, **kwargs):
         """
         return a plot of the function
         """
-        kw = dict( xlabel='t', xlim=(0, self.period), ylabel=self.latex, ylim=(0,None))
+        kw = dict( xlabel='phase', xlim=(0, self.period), )#ylabel=self.latex, ylim=(0,None))
         kw.update(kwargs)
         t = np.arange(*(kw['xlim']), step=1e-2*self.period)    
 
         fig,ax = plt.subplots(figsize=(3,1.5)) if ax is None else (ax.figure,ax)
         ax.plot(t,self(t),color='orange', lw=2)
-        ax.grid(alpha=0.5)
-        ax.set(**kw)
+
+        if not overlay: 
+
+            ax.set(**kw)
+            x.grid(alpha=0.5)
         return fig
 
     @classmethod
@@ -352,6 +373,13 @@ class PeriodicFunc:
             show(pd.Series(pars[~hidden], summary='Parameters'))
 
         show(cf.plot())
+    @classmethod
+    def make(cls, info):
+        """ Create a PeriodicFunc object
+        returns info['func'] initialized with rest of info dict
+        """
+        kw =  info.copy()
+        return kw.pop('func')(**kw)
 
 
 class CosFunc(PeriodicFunc):
@@ -457,6 +485,7 @@ class WtSim(Simulation):
     - rng : random generator instance, or integer seed
 
     """
+    
     def __init__(self, 
                  name, 
                  exposure,
@@ -543,28 +572,54 @@ def weight_analysis(weights, name, nbins=100):
     show(fig)
     return whist
 
- 
+
+def show_fft_peaks(px,  query='p1>25 & f>0.05'):
+
+    df = px.find_peaks('p1').query(query)
+    if len(df)==0:
+        return monospace(f'No FFT peaks satisfying {query}')
+    df['period'] = 1/df.f
+
+    with pd.option_context('display.precision', 6, 'display.float_format',None):
+        show(pd.DataFrame(df), 
+             summary=f'{len(df)} FFT peaks satisfying {query}: max(p1)={max(df.p1):.1f}',
+                index=False) 
+
 class RunSim:
-    def __init__(self, src_info, exp_info, tsamp=1/36, phase_bins=8):
+    """
+    
+    """
+    def __init__(self, src_info, exp_info, sn=0.01, tsamp=1/36, phase_bins=8, rng=42):
+        """
+        """
         self.exp_info = exp_info
-        self.periodic = src_info.pop('func')(**src_info)
+        self.periodic = PeriodicFunc.make(src_info)
         self.exposure = make_exposure(**exp_info) 
-        show(f"""---
-            ## Run {self.periodic} simulation 
-            """)
 
         sim = WtSim(f'{self.periodic} Simulation', 
                   exposure=self.exposure,
                   source = self.periodic,
-                  weight_model=WeightModel.example(S=0.005),
-                  rng=42) 
+                  weight_model=WeightModel(sn=sn, tau=0.1),
+                  rng=rng) 
+        
         with capture('Analysis output') as self.output:
             with Timer() as elapsed:
                 self.wtl = WtLike(sim, time_bins=(1,0,1))
                 self.px = self.wtl.periodogram(tsamp=tsamp)
                 self.phase_view = self.wtl.phase_view(self.periodic.period, phase_bins)
             print(elapsed)
+ 
+    def __repr__(self):
+        return f"""{self.__class__.__name__}
+        Exposure: {self.exp_info}
+        Periodic: {self.periodic}
+        """
+    def show_summary():
+        show(f"""---
+            ## Run {self.periodic} simulation 
+            """)
         show(self.output)
+
         
     def show_all(self):
         show_dict(self.exp_info,  summary='Exposure parameters',show=True) 
@@ -579,19 +634,38 @@ class RunSim:
         show(self.wtl.plot(), figsize=(15,3), summary='light curve')
         show(self.wtl.fluxes.head(), summary='Flux df head()' )
         
-    def show_phase_plot(self, xlim=(0,1)):
-        show('### Phase light curve')
-        fig, ax = plt.subplots(figsize=(3,2))
-        self.phase_view.plot(ax, xlim=xlim,) 
-        self.periodic.plot(ax=ax)
-        show(fig)
+    def phase_plot(self, ax=None, xlim=(0,1)):
+        #show('### Phase light curve')
+        T = self.periodic.period
+        fig, ax = plt.subplots(figsize=(3,2)) if ax is None else (ax.figure, ax)
+        self.phase_view.plot(ax=ax, xlim=xlim, xlabel=f'Phase for T={T}',ylabel='') 
+        self.periodic.plot(ax=ax, xlim=xlim, overlay=True)
+        return fig
 
     def show_phase_data(self):
         df = self.phase_view.fluxes
         show(df.iloc[:len(df)//2], summary=f'Phase view data')
     
-    def show_power_plot(self, xlim=(0,9), ylim=(-10,None)):
-
-        self.px.power_plot(pmax=50, xlim=xlim, ylim=ylim)
-        show(plt.gcf(), figsize=(8,2))
+    def power_plot(self, ax=None, xlim=(0,9), ylim=(-10,None)):
+        fig, ax = plt.subplots(figsize=(8,3)) if ax is None else (ax.figure, ax)
+        self.px.power_plot(ax=ax, pmax=50, xlim=xlim, ylim=ylim)
+        return fig
+    
+    def show_fft_peaks(self):  
         show_fft_peaks(self.px);     
+
+    def show_power_phase(self):
+        fig = plt.figure(figsize=(12,2.5))
+        gs = plt.GridSpec(1, 2,  width_ratios=[3,1], wspace=0.2,hspace=0.5, top=0.95)
+        (ax1,ax2) =  [fig.add_subplot(g) for g in gs]
+        self.power_plot(ax=ax1)
+        self.phase_plot(ax=ax2)
+        show(fig)
+
+    def get_harmonics(self, f0, num=6):
+        """ Return a DF with the num harmoics of f0"""
+        df = self.px.power_df
+        f= df.f.values;
+        deltaf = f[-1]/len(f)
+        n = int(f0/deltaf);         
+        return df.iloc[n*np.arange(1,num+1)]

@@ -12,6 +12,8 @@ clear = False
 def get_global(which):
     return globals().get(which, None)
 
+tnow = 60000 # adjust this later
+
 class B1259Periastron(WtLike):
     """
     """    
@@ -25,19 +27,20 @@ class B1259Periastron(WtLike):
 
     @property
     def mjd_dates(self):
-        return [self.tp+n*self.period for n in range(4)]
+        return [self.tp+n*self.period for n in range(5)]
          
     def date_info(self):
         return pd.DataFrame([dict(MJD=round(d,3), UTC=UTC(d)) for d in self.mjd_dates ])
     
     def stacked_plots(self, fignum=3, ylim=(2,200), ts_min=4, p0=0.5, xlim=(-50,200)):
-        self.sixhr= dailies = [self.view(round(tz)+xlim[0], round(tz)+xlim[1], 0.25) for tz in self.mjd_dates]
+        self.sixhr= dailies = [self.view(round(tz)+xlim[0], round(tz)+xlim[1], 0.25) for tz in self.mjd_dates if tz<tnow]
         self.bb_views = [daily.bb_view(p0=p0,) for daily in dailies]
         
         fignum=1
         fig, axx = plt.subplots(4,1, sharex=True, sharey=True, figsize=(15,10), num=fignum)
         plt.subplots_adjust(hspace=0, top=0.92)
-        for i, (bbv, ax, tzero) in enumerate(zip(self.bb_views, axx.flatten(), self.mjd_dates)):
+        for i, (bbv, ax, tzero) in enumerate(zip(self.bb_views, axx.flatten(), self.mjd_dates )):
+            if tzero> tnow: break
             tzero = round(tzero)
             bbv.plot(ax=ax, show_flux=True, tzero=tzero, xlim=xlim,
                          log=True, source_name=f'{UTC(tzero)[:10]}', ylabel='',
