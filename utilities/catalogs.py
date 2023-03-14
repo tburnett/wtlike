@@ -225,6 +225,8 @@ class Fermi4FGL(CatDF, pd.DataFrame):
             """
         def __init__(self, f):
             self.f = f
+        def __getitem__(self, n):
+            return self.f & 2**(n-1)>0
         def __repr__(self):
             r = ''
             for n in range(1, 16):

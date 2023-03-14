@@ -37,5 +37,37 @@ def profile_plot(x, y, bins, ax=None, grid=0.5, **kwargs):
     ax.errorbar(pf.x, pf.y, pf.yerr, pf.xerr,  ls=ls, marker=ms, color=color, lw=lw )
     ax.set(**kwargs)
     if grid: ax.grid(alpha=grid)
+  
+  
+class MultiHist:
     
+    def __init__(self, 
+                 ax_info,
+                 histkw = {},
+                 ncols=4,
+                figsize=(12,3),
+                ):
     
+        hkw_default =  dict(histtype='step', hatch='////', lw=2)
+        hkw = hkw_default; hkw.update(histkw)
+        n = len(ax_info)
+        ncols = min(ncols,n)
+        nrows = int((n + ncols-1)//ncols)
+
+        self.fig, axx = plt.subplots(nrows=nrows,
+                                          ncols=ncols, figsize=figsize)
+        plt.subplots_adjust(wspace=0.3, hspace=0.35)
+        self.axx = axx.flatten()
+        self.names=[]
+        self.hkw = []
+        for ax, (name,bins, kw) in zip(self.axx, ax_info):
+            self.names.append(name)
+            t = hkw.copy(); t.update(bins=bins)
+            self.hkw.append(t)
+            ax.set(**kw)
+            ax.grid(alpha=0.5)
+        for ax in self.axx[n:]: ax.set_visible(False)
+        
+    def fill(self, df):
+        for ax, name,  kw in zip(self.axx, self.names, self.hkw):
+            ax.hist(df[name], **kw)
