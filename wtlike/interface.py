@@ -92,7 +92,11 @@ class SourceAnalyzer():
             return
         if make_figs:
             self.make_plots()
-        summarizer.add(self)
+        try:
+            summarizer.add(self)
+        except Exception as msg:
+            print(f"""SourceAnalyzer caught {summarizer.__class__.__name__}
+            failure with source {self.name}: {msg} """, file=sys.stderr) 
 
     def plot_lc(self, ax1=None,ax2=None):
         if self.wtl is  None: return
@@ -228,13 +232,34 @@ class SourceAnalyzer():
                 ylabel=r'$E^2\ dN/dE\ \mathrm{(eV\ cm^{-2}\ s^{-1})}$')
         kw.update(kwargs)
         ax.set(**kw)
-        
-    def plot_bb(self, ax):
 
+    def get_harmonics(self, f0=None, p='p1', num=10):
+        """ Return a DF with the num harmoics of f0
+        """
+        def htest(p):
+            h = np.cumsum(p)-4*np.arange(len(p))
+            return h, np.argmax(h)
+        
+        f0 = 1/self.porb if f0 is None else f0
+        pdf = self.px.power_df
+        f= pdf.f.values
+        fmax = f[-1]; imax= len(f)
+        deltaf = fmax/imax
+        if0 = int(f0/deltaf);  #index of fundamental
+        nmax = imax//if0 # harmonic limit 
+        # ret = np.full(num, np.nan)
+        harmonics =  pdf.iloc[ if0 * np.arange(1, min(num+1, nmax))][p].values 
+        h, imax = htest(harmonics)
+        self.htest=h[imax]
+        return harmonics, h, imax
+    
+    def get_bb_info(self):
+        """ Return BB interval likelihood fits with 2-d (beta-free) fit also """
+        
         def g2fit(cell):
             from wtlike.poisson import Poisson
             from wtlike.loglike import LogLike, Gaussian2dRep
-            
+
             ts = Poisson.from_function(LogLike(cell)).ts
             r = dict(t=cell.t, tw=cell.tw, ts=round(ts,1))            
             if ts<4:
@@ -243,22 +268,21 @@ class SourceAnalyzer():
                 r.update(Gaussian2dRep(LogLike(cell)).fit)
             return r
         try:
-            if self.fluxlim is not None:
-                ax.set(ylim=self.fluxlim) ###
-            self.bb.plot(ax=ax, source_name=self.wtl.source.name, UTC=True)
-
             df_bb = self.bb.fluxes['t tw ts flux errors'.split()]
             df_beta = pd.DataFrame.from_dict( 
                 dict((i, g2fit(cell)) for i,cell in self.bb.cells.iterrows()) ,orient='index')\
                     ['flux beta sig_beta'.split()]
-            self.bb_table = pd.concat([df_bb, df_beta], axis=1)
+            return pd.concat([df_bb, df_beta], axis=1)
 
-            
         except Exception as e:
-            print(f'oops: bb failed: {e}')
-            self.wtl.plot(ax=ax)
-            self.bb_table = None
-            # self.beta_table = None
+            print(f'SourceAnalyzer: bb 2-d fit failed: {e}', file=sys.stderr)
+            return df_bb
+        
+    def plot_bb(self, ax):
+        if self.fluxlim is not None:
+            ax.set(ylim=self.fluxlim) ###
+        self.bb.plot(ax=ax, source_name=self.wtl.source.name, UTC=True)
+        self.bb_table = self.get_bb_info()
 
     def display_bb_table(self):
         """ return (hidden) markdown string"""
@@ -356,7 +380,7 @@ class SourceAnalyzer():
             print('No orbital period available', file=sys.stderr)
             return
        
-        fig,ax = plt.subplots(figsize=(5,3)) if ax is None else (ax.figure, ax)
+        fig,ax = plt.subplots(figsize=(4,2)) if ax is None else (ax.figure, ax)
         kw = dict(xlim=(0,1), xticks=np.arange(0,1.01,0.25)); 
         kw.update(kwargs)
         self.orbital_phase.plot(ax=ax, **kw)
@@ -376,6 +400,28 @@ class SourceAnalyzer():
         
         ax.axvline( 1.0, ls='--', color='lightgrey')
         return fig
+    
+    def plot_harmonics(self, ax=None, num=10, p='p1'):
+
+        # def htest(p):
+        #     h = np.cumsum(p)-4*np.arange(len(p))
+        #     return h, np.argmax(h)
+
+        fig, ax = plt.subplots(figsize=(4,2)) if ax is None else (ax.figure, ax)
+        harmonics, h, imax = self.get_harmonics(num=10)
+        x = np.arange(1,len(harmonics)+1)
+        ax.plot(x, harmonics, 'o--')
+        # h, imax = htest(harmonics)
+        ax.plot(x,  h, 'D--', color='orange')
+        ax.scatter(x[imax], h[imax], marker='*', c='red',s=200)
+        ax.text(0.05,0.95, f'{self.name}\nH-test {h[imax]:.1f}', 
+                transform=ax.transAxes, va='top', fontsize=10)
+        t = ax.get_ylim()
+        ax.set(xlabel='Harmonic', ylabel='FFT power', ylim=(0, max(14.9,t[1]*1.2)),
+              xticks=range(1,11,2), xlim=(0.5, 10.5), )
+        ax.grid(alpha=0.5)
+        return fig
+
 
 # %% ../nbs/91_interface.ipynb 6
 @ipynb_doc
@@ -394,6 +440,7 @@ def examine_source(name, info=None, text='',  **kwargs):
     {beta}
     {fft_peaks}
     {phase_plot}
+    {harmonic_plot}
     
     """
     global proc
@@ -453,6 +500,9 @@ def examine_source(name, info=None, text='',  **kwargs):
     if getattr(self, 'orbital_phase', None) is not None:
         phase_plot = self.plot_orbital_phase()
         phase_plot.summary=f'Phase plot (period {self.porb:.6f} d, TS={self.orbital_ts:.0f} )'
+        harmonic_plot = self.plot_harmonics()
+        harmonic_plot.summary=f'Harmonic plot (H-test={self.htest:.1f})'
+        
 
     return locals()
 
@@ -501,9 +551,12 @@ class PhaseInfo(Summarize):
         N = len(df)
         show(f'### Analyzing {N} sources with {poolsize} processes...')
         t=Timer()
-        with Pool(processes=poolsize) as pool:
-            ldf = pool.map(cls(df), range(N)) 
-            show(t)
+        if poolsize==1:
+            ldf = list(map(cls(df), range(N)))
+        else:
+            with Pool(processes=poolsize) as pool:
+                ldf = pool.map(cls(df), range(N)) 
+        show(t)
         if cf is not None:
             with open(cf, 'wb') as out:
                 pickle.dump(ldf, out)
