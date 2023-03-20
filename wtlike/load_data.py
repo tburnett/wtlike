@@ -227,7 +227,7 @@ class _TWeek():
         self.source=source
 
     def __call__(self, wkf):
-        print('.', end='')
+        if self.config.verbose>0: print('.', end='')
         eman = ProcessWeek( self.config, self.source, wkf)
         return (eman.photons, eman.sc_df)
 
@@ -251,7 +251,7 @@ def multiprocess_week_data(config, source, week_range, processes=None):
             week_data = pool.map(process_week, week_files)
     else:
         week_data = map(process_week,  week_files)
-    print('\n')
+    if config.verbose>0: print('\n')
 
     pp = []
     ee = []
