@@ -10,9 +10,10 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from pathlib import Path
 
+# plan to replace this?
 import healpy
 
-from astropy.coordinates import SkyCoord
+from astropy.coordinates import SkyCoord, Angle
 from astropy.wcs import WCS
 from astropy.io import fits
 
@@ -68,7 +69,7 @@ class AitoffFigure():
             ax.set(xticklabels=[], yticklabels=[], visible=True)
             ax.grid(color='grey')
         self.ax = self.fig.axes[0]
-        assert self.ax.__class__.__name__ == 'AitoffAxesSubplot', 'expect figure to have aitoff Axes instance'
+        assert self.ax.__class__.__name__.startswith('Aitoff'), 'expect figure to have aitoff Axes instance'
 
     def plot(self, *args, **kwargs):
         self.ax.plot(*_trans(*args), **kwargs)
@@ -201,17 +202,38 @@ class FITSimage():
             self.wcs = WCS(hdu.header)  
             self.data = hdu.data
             
-    def plot(self, fig=None, title='', cmap='jet', vmin=None, vmax=None):
+    def plot(self, fig=None,  title='', cmap='jet', grid_color='lightgrey', 
+            figsize=(6,6), colorbar=True, vmin=None, vmax=None):
         """Make a plot
         """
-        fig = fig or plt.figure(figsize=(6,6)) 
-        ax = fig.add_subplot(projection=self.wcs)
+        fig = fig or plt.figure(figsize=figsize) 
+        self.ax = ax = fig.add_subplot(projection=self.wcs)
         plt.imshow(self.data, cmap=cmap, vmin=vmin, vmax=vmax, origin='lower')
         # this needs to depend on type of coords!
         ax.set(xlabel='RA', ylabel='Dec', title=title);
-        plt.colorbar(shrink=0.8)
-        ax.grid(alpha=0.4)
+        ax.coords[0].set_format_unit('deg')
+        if colorbar:
+            plt.colorbar(shrink=0.8)
+        if grid_color is not None:
+            ax.grid(color=grid_color)
         return ax
+    
+        
+    # def scatter(self, skycoord, **kwargs):
+    #     self.ax.scatter(*self.wcs.world_to_pixel(skycoord), **kwargs) 
+
+    
+    def scatter(self, skycoord, radius=None, **kwargs):
+        
+        pixels = self.wcs.world_to_pixel(skycoord)
+        if radius is not None:
+            angle_offset = (Angle('0d'), Angle('1arcmin'))
+            Myy = self.ax.transData.get_matrix()[1,1]
+            offset_ypix = np.array([self.wcs.world_to_pixel(sky.spherical_offsets_by(*angle_offset))[1]
+                                    for sky in skycoord])
+            areas = (radius*2*(offset_ypix-pixels[1])*Myy)**2
+            kwargs.update(s=areas, facecolor=(), edgecolor= kwargs.get('edgecolor', 'white'))
+        self.ax.scatter(*pixels, **kwargs)
     
     def __call__(self, coord, badval=np.nan):
         """Return value(s) for SkyCoord value array, or list of HEALPix indeces
@@ -484,7 +506,7 @@ def draw_map(mapper, time_range, name='', show_sun=False, sigma=0,
 
     ax2.axvspan(*time_range, color='orange')
     ax2.axvspan(MJD('2008'), first_data, color='lightgrey')
-    yrs = [str(yr) for yr in range(2008,2024, 2)]
+    yrs = [str(yr) for yr in range(2008,2025, 2)]
     ax2.set( xlim=(first_data, MJD('now')), ylim=(0,120), yticks=[], aspect=1,
             xticks=[MJD(yr) for yr in yrs],
             xticklabels=yrs,);

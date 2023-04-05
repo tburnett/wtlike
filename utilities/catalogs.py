@@ -35,7 +35,7 @@ def parse_jname(name):
     ra = (tname[1:3]+'h'+tname[3:7]+'m')
     dec = (tname[7:10]+'d'+tname[10:12]+'m')
     try:
-        (ra,dec) = map(lambda a: float(Angle(a, unit=u.deg).to_string(decimal=True)),(ra,dec))
+        (ra,dec) = map(lambda a: float(Angle(a, unit='deg').to_string(decimal=True)),(ra,dec))
         return SkyCoord(ra, dec, unit='deg', frame='fk5')
     except ValueError as err:
         print(f'Attempt to parse "{name}" failed ({err}): expect "J1234.5+6789" or "J1234.5678"', file=sys.stderr)

@@ -279,7 +279,7 @@ class SourceAnalyzer():
 
         except Exception as e:
             print(f'SourceAnalyzer: bb 2-d fit failed: {e}', file=sys.stderr)
-            return df_bb
+            return None
         
     def plot_bb(self, ax):
         if self.fluxlim is not None:
@@ -318,6 +318,8 @@ class SourceAnalyzer():
         hist_peak_power(self.px, ax=ax4, title='Peak distribution', xlabel='')
 
     def get_fft_peaks(self):
+        if not hasattr(self, 'px'):
+            return pd.DataFrame()
         query = defaults['fft_query']
         df = self.px.find_peaks('p1').query(query)
         if len(df)>0: 
@@ -325,7 +327,10 @@ class SourceAnalyzer():
         return df
     
     def display_fft_peaks(self, show=False):
-        df = self.get_fft_peaks()
+        try:
+            df = self.get_fft_peaks()
+        except:
+            return monospace('FFt failed')
         query = defaults['fft_query']
         if len(df)==0:
             return monospace(f'No FFT peaks satisfying {query}')
@@ -753,6 +758,8 @@ def get_fermi_info(source_names, max_sep=0.5):
                         uw_sep = uw.sep,
                         uw_r95 = uw.r95,
                         uw_ts = uw.ts,
+                        uw_sed= uw.specfunc,
+                        uw_jname = uw.jname,
                        )
             dr = self.get_4fgl()
             if len(dr)==0: return
