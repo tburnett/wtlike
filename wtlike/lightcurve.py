@@ -251,24 +251,25 @@ def flux_plot(cell_fits,
         t = lim.t-tzero
         tw = lim.tw
         color = colors[2 if step else 1]
+        if color!= 'none':
 
-        y = allflux[limit]
-        # set any inf's to zero 
-        y = np.where(np.isinf(y),0,y)
-        if limit_fmt is None:
+            y = allflux[limit]
+            # set any inf's to zero 
+            y = np.where(np.isinf(y),0,y)
+            if limit_fmt is None:
 
-            # try to draw an error bar, hard to determine size
-            yerr = error_size(ax, t, y) #0.2*(1 if kw['yscale']=='linear' else y)#*flux_factor
+                # try to draw an error bar, hard to determine size
+                yerr = error_size(ax, t, y) #0.2*(1 if kw['yscale']=='linear' else y)#*flux_factor
 
-            ax.errorbar(x=t, y=y, xerr=tw/2,
-                    yerr=yerr,  color=color ,
-                    uplims=True, ls='',
-                    ms=ms, lw=error_lw, capsize=2*error_lw, capthick=0,
-                    zorder=zorder, label='  95% limit', **errorbar_args)
-        else:
-            # just a symbol, like 'v'
-            ax.errorbar(x=t,xerr=tw/2, y=y, fmt=limit_fmt, color=color,
-                       zorder=zorder, label='  95% limit', **errorbar_args)
+                ax.errorbar(x=t, y=y, xerr=tw/2,
+                        yerr=yerr,  color=color ,
+                        uplims=True, ls='',
+                        ms=ms, lw=error_lw, capsize=2*error_lw, capthick=0,
+                        zorder=zorder, label='  95% limit', **errorbar_args)
+            else:
+                # just a symbol, like 'v'
+                ax.errorbar(x=t,xerr=tw/2, y=y, fmt=limit_fmt, color=color,
+                        zorder=zorder, label='  95% limit', **errorbar_args)
 
     # then the points with error bars
     t = bar.t.values-tzero
@@ -279,12 +280,13 @@ def flux_plot(cell_fits,
     error = np.array([upper-fluxmeas, fluxmeas-lower])
 #     if label is None:
 #         label = f'{bin_size_name(round(tw.mean(),4))} bins' if np.std(tw)<1e-6 else ''
-    ax.errorbar(
-        x=t, xerr=tw/2, ms=ms,
-                y=fluxmeas, yerr=error, lw=2, fmt=fmt,
-                color=colors[0],
-                label=label, zorder=zorder+1,
-                **errorbar_args)
+    if colors[0]!='none':
+        ax.errorbar(
+            x=t, xerr=tw/2, ms=ms,
+                    y=fluxmeas, yerr=error, lw=2, fmt=fmt,
+                    color=colors[0],
+                    label=label, zorder=zorder+1,
+                    **errorbar_args)
 
     # finally overlay the step if requested
     if step:

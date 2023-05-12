@@ -252,7 +252,7 @@ class Fermi4FGL(CatDF, pd.DataFrame):
         # calculate these first
         funcs = self.specfuncs(data)
 
-        super().__init__( dict(
+        cat_subset =  dict(
             ra          = cvar('RAJ2000'),
             dec         = cvar('DEJ2000'), 
             # fk5         = list(map(LonLat, cvar('RAJ2000'),cvar('DEJ2000'))),
@@ -265,14 +265,28 @@ class Fermi4FGL(CatDF, pd.DataFrame):
             eflux       = cvar('Energy_Flux100'), # erg cm-2 s-1
             significance= cvar('Signif_Avg'),
             variability = cvar('Variability_Index'),
-            assoc_prob  = cvar('ASSOC_PROB_BAY'), # for Bayesian, or _LR for likelihood ratio
-            assoc1_name = cname('ASSOC1'),
-            # assoc2_name = cname('ASSOC2'),
-            class1      = cname('CLASS1'),
+
             # class2      = cname('CLASS2'),
             flags       = list(map(self.FlagBits, ivar('FLAGS'))),
             # ....
-        ))
+        )
+        if 'ASSOC1' in data.columns.names:
+            # release format
+            cat_subset.update(dict(
+                assoc_prob  = cvar('ASSOC_PROB_BAY'), # for Bayesian, or _LR for likelihood ratio
+                assoc1_name = cname('ASSOC1'),
+                class1      = cname('CLASS1'),
+            ))
+        else:
+            # internal format 
+            cat_subset.update(dict(
+                assoc_prob  = cvar('Passoc'), 
+                assoc1_name = cname('assoc_new'),
+                class1      = cname('class_new'),
+            ))
+
+        super().__init__( cat_subset)
+
         print( f': {len(self)} entries' )
         self.__dict__.update(data=data, filename=filename.name, name='4FGL-DR3')
         self.index = name
@@ -287,6 +301,8 @@ class Fermi4FGL(CatDF, pd.DataFrame):
             PowerLaw=PowerLaw,
             LogParabola=LogParabola,
             PLSuperExpCutoff=PLSuperExpCutoff4,
+            PLSuperExpCutoff4=PLSuperExpCutoff4,
+
             )
         cvar = lambda a: data[a].astype(float)
         cname= lambda n : [s.strip() for s in data[n]]
@@ -297,7 +313,8 @@ class Fermi4FGL(CatDF, pd.DataFrame):
         pardict = dict(
             LogParabola=par_array('LP_Flux_Density LP_Index LP_beta Pivot_Energy'.split()),
             PowerLaw    =par_array('PL_Flux_Density PL_Index'.split()),
-            PLSuperExpCutoff=par_array('PLEC_Flux_Density PLEC_IndexS PLEC_ExpfactorS PLEC_Exp_Index'.split())
+            PLSuperExpCutoff=par_array('PLEC_Flux_Density PLEC_IndexS PLEC_ExpfactorS PLEC_Exp_Index'.split()),
+            PLSuperExpCutoff4=par_array('PLEC_Flux_Density PLEC_IndexS PLEC_ExpfactorS PLEC_Exp_Index'.split())
                     )
 
         pivot = cvar('Pivot_Energy')
