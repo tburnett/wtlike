@@ -52,7 +52,7 @@ uwcat.loc[:, 'r95'] = np.sqrt( (uwcat.a * 2.64)**2 + (0.00791)**2) #
 src_finder = SourceFinder()
 
 defaults = dict(neighbor=None, interval=30, nyquist=24, max_sep=0.5, tsmin=16, info_name='Other info',
-            fft_query='p1>25 & 10>f>0.01')
+            fft_query='p1>25 & 10>f>0.01', UTC=False)
 
 
 # %% ../nbs/91_interface.ipynb 5
