@@ -42,7 +42,7 @@ class Poisson(object):
 
     """
 
-    def __init__(self, p:'array of parameters'):
+    def __init__(self, p:[]):
         """p : array of parameters
         """
         self.p = p

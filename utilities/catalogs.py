@@ -41,22 +41,33 @@ def parse_jname(name):
         print(f'Attempt to parse "{name}" failed ({err}): expect "J1234.5+6789" or "J1234.5678"', file=sys.stderr)
         return None
 
+class MySkyCoord(SkyCoord):
+    """Subclass that overrides __repr__ to return "(ra, dec)" 
+        Also make pickle-able
+    """
+    def __repr__(self):
+        repr = lambda lon,lat: f'({lon:7.3f}, {lat:+7.3f})'
+        ra,dec = self.fk5.ra.deg, self.fk5.dec.deg
+        if not hasattr(ra, '__iter__'):
+            return repr(ra,dec)
+        return np.array([repr(lon,lat) for lon,lat in zip(ra,dec)]).__repr__()
+    # For pickle: represent with RA, Dec dict
+    def __getstate__(self):
+        ra,dec = self.fk5.ra.deg, self.fk5.dec.deg
+        return dict(ra=ra,dec=dec)
+    def __setstate__(self, state):
+        # tricky: make a new object, copy its dict to self
+        obj = SkyCoord(state['ra'], state['dec'], unit='deg', frame='fk5')
+        self.__dict__.update(obj.__dict__)
+
+
 class CatDF():
     """Methods common to the following classes
     """
 
-    class SkyCoord(SkyCoord):
-        """Subclass that overrides __repr__ to return "(ra, dec)" """
-        def __repr__(self):
-            repr = lambda lon,lat: f'({lon:7.3f}, {lat:+7.3f})'
-            ra,dec = self.fk5.ra.deg, self.fk5.dec.deg
-            if not hasattr(ra, '__iter__'):
-                return repr(ra,dec)
-            return np.array([repr(lon,lat) for lon,lat in zip(ra,dec)]).__repr__()
-
     @property
     def skycoord(self):
-        return self.SkyCoord(self.ra.values, self.dec.values, unit='deg', frame='fk5')
+        return MySkyCoord(self.ra.values, self.dec.values, unit='deg', frame='fk5')
     
     def match(self, other):
         """other -- another CatDF object
@@ -238,9 +249,13 @@ class Fermi4FGL(CatDF, pd.DataFrame):
     def __init__(self, path='$FERMI/catalog/'):
  
         t=Path(os.path.expandvars(path)).expanduser(); 
-        assert t.is_dir(), f'path {path} is not a directory'
-        filename = sorted(list(t.glob('gll_psc_v*.fit')))[-1]
-        print(f'Loaded Fermi 4FGL-DR3 {filename.name}', end='')
+        if t.is_file():
+            filename = t
+        elif t.is_dir():
+            filename = sorted(list(t.glob('gll_psc_v*.fit')))[-1]
+        else:
+            raise Exception( f'path {path} is not a directory or a FITS file')
+        print(f'Loaded Fermi 4FGL {filename.name}', end='')
         with fits.open(filename) as hdus:
             data = hdus[1].data
 
@@ -283,6 +298,8 @@ class Fermi4FGL(CatDF, pd.DataFrame):
                 assoc_prob  = cvar('Passoc'), 
                 assoc1_name = cname('assoc_new'),
                 class1      = cname('class_new'),
+                nickname    = cname('NickName'),
+                ts          = cvar('Test_Statistic'),
             ))
 
         super().__init__( cat_subset)

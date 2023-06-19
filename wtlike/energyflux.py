@@ -173,8 +173,9 @@ class EnergyCells(object):
     
     """    
         
-    def __init__(self, wtl:'SourceData object', interval,
+    def __init__(self, wtl:SourceData, interval,
                 adjust_slope=-0.55):
+                    
   
         if not isinstance(wtl, SourceData):
             raise TypeError(f'Expect {wtl} to be an instance of SourceData')

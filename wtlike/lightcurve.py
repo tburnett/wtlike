@@ -509,6 +509,14 @@ class LightCurve(CellData):
         return TimeSeries(self, config=self.config, tsamp=tsamp, **kwargs)
 
     @property
+    def variability(self):
+        """Determine the vaariabity index, a chi2-like measure from the likelihood ratio
+        with the constant null hypothese
+        Returns a tuple of it and the ndf. 
+        """
+        return -2* np.sum([f(1) for f in self.fits.fit.values]), len(self.fits)-1
+
+    @property
     def fluxes(self):
         """A DataFrame table of the flux measurements"""
         return self.flux_table()

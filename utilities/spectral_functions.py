@@ -7,6 +7,35 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.integrate import quad
 
+class SedFun:
+    """Create a log-log SED version of dN/dE:
+    Function of log10(e/1GeV) returns log(e**2 * dN/dE(e) * 1e6) 
+    
+    """
+    def __init__(self, cntfun):
+        self.f = cntfun
+    def __call__(self, loge):        
+        e = 1e3 * 10**loge         
+        return np.log(e**2 * self.f(e) * 1e6)
+    
+    @property
+    def peak(self):
+        """ log10 of peak energy/1 GeV
+        """
+        from scipy.optimize import minimize
+        return  minimize(lambda x: -self(x), [1.0], bounds=[(-1,3)] ).x[0]
+    
+    def plot(self, show_peak=True, ax=None, **kwargs):
+        fig, ax = plt.subplots(figsize=(4,2)) if ax is None else (ax.figure, ax)
+        x = np.linspace(-1, 2,)
+        kw = dict(); kw.update(kwargs)
+        ax.plot(x, self(x))
+        ax.set(**kw)
+        if show_peak:
+            pk = self.peak
+            ax.plot(pk, self(pk), 'o')
+        return fig
+ 
 
 class FluxModel():
     
@@ -38,10 +67,14 @@ class FluxModel():
         func = lambda e: self(e) * e
         return 1.60218e-6 * quad(func, self.emin, self.emax)[0]
     
+    @property
+    def sedfun(self):
+        return SedFun(self)
+    
     def sed_plot(self, ax=None, e0=None,
              figsize=(5,4), label='', plot_kw={}, **kwargs):
         """Make an SED for the source
-
+        - plot_kw -- for the plot command (lw,ls,color, etc.) 
         - kwargs -- for the Axes object (xlim, ylim, etc.)
         """
         import matplotlib.pyplot as plt
@@ -49,7 +82,9 @@ class FluxModel():
         x =np.logspace(2,5,61)
 
         trans = lambda x: (x/1e3, self(x)*x**2 * 1e6)
-        lines=ax.loglog(*trans(x), '-', lw=2, label=label, **plot_kw)
+        pkw = dict(ls='-', lw=2)
+        pkw.update(plot_kw)
+        lines=ax.loglog(*trans(x), label=label, **pkw)
         if e0 is not None:
             ax.plot(*trans(e0),'o', color=lines[0].get_color())
         ax.grid(alpha=0.5)
@@ -117,6 +152,24 @@ class FluxModel():
                 print( f'Encountered a numerical error, "{msg}", when attempting to calculate integral flux.',
                 out=sys.stderr)
             return np.nan if not error else ([flux, np.nan,np.nan] if two_sided else [flux, np.nan])
+        
+    def curvature(self, e=None):
+        """return estimate of the curvature, using numerical derivatives
+        This is exactly the parameter beta for a LogParabola 
+        e: float
+            energy in Mev, default e0
+        """
+        from scipy.misc import derivative
+        def dfun(x):
+            def fun(x):
+                """flux as function of x=ln(e0/e)"""
+                e = self.e0 * np.exp(-x)
+                return self(e)
+            return derivative(fun,x, dx=0.01)/fun(x)
+        x=0 if e is None else np.log(self.e0/e)
+
+        return -0.5*derivative(lambda x: dfun(x), x, dx=0.01)
+
 
 class PowerLaw(FluxModel):
 
@@ -165,3 +218,64 @@ specfun_dict = dict(
 # or just run the appropriate construcctor
 def spectral_function(name, *pars, **kwargs):
     return specfun_dict[name](*pars, **kwargs)
+
+
+class MultiSED:
+    """ Generate a table of SED plots
+    - tooltips
+    - caption
+    """    
+    def __init__(self, n, start=0, ncols=10, caption='',
+                 tooltips=None, **kwargs):
+        """
+        * n -- Number of plots
+        * start -- for annotating with sequential index
+        * ncols -- number of columns
+        * caption -- use if invoked with `show`
+        * tooltips -- relevant for show
+        
+        """
+
+        nrows = (n+ncols-1)//ncols
+        self.caption = caption
+        self.tooltips = tooltips
+        self.fig, axx = plt.subplots(ncols=ncols, nrows=nrows, 
+                figsize=(12,1.2*nrows), sharex=True, sharey=True,
+                gridspec_kw=dict(
+                    left= 0.01,  right=0.99, hspace=0.05,
+                    top = 0.95, bottom=0.01, wspace=0.05))
+        self.axx = axx.flatten()
+
+        # keywords for all the Axes objects
+        self.ax_kw = dict(xticks=[], yticks=[], xlabel='', ylabel='', ylim=(0.05,5),)
+        self.ax_kw.update(kwargs)
+        
+        # this could be flexible, perhaps use names
+        self.annotate(start)
+        self.axx[0].set(**self.ax_kw)
+        
+    def annotate(self, start=0):
+        
+        # add id's to top right of all subplots -- here just an index
+        for j,ax in enumerate(self.axx):
+            ax.text(0.95,0.95, str(start+j), transform=ax.transAxes, 
+                fontsize=10, ha='right',va='top')
+            
+    def plots(self, specfuns, **kwargs ):
+        """
+        * specfuns -- a list of specral functions to apply to set of Axes
+        * kwargs -- plotting options, like color, lw, ls        
+        """
+        for ax, f in zip(self.axx, specfuns):
+            f.sed_plot(ax, plot_kw=dict(kwargs))  
+            ax.set(**self.ax_kw)
+        return self
+    
+    def _repr_html_(self):
+        # for ipython display
+        from utilities.ipynb_docgen import FigureWrapper
+        return FigureWrapper(
+            self, 
+            tooltips=self.tooltips,
+            caption=self.caption,
+        )._repr_html_()

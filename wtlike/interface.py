@@ -139,6 +139,8 @@ class SourceAnalyzer():
             self.skycoord = None
             return False
         self.skycoord = src_finder.skycoord
+        if self.skycoord is None:
+            raise Exception('Failed to locate source')
         self.name = name
 
         with capture_hide(f'Analysis printout for {name} ({pt_name})') as self.printout:
@@ -199,7 +201,7 @@ class SourceAnalyzer():
             return self.get_catalog_info(cat4,
             'fk5 galactic specfunc pivot eflux significance flags variability assoc_prob class1 assoc1_name  r95 sep'.split() )
         except:
-            return 'No 4FGL-DR3 info'
+            return 'No 4FGL-DR4 info'
 
     def display_pointlike_info(self):
         if self.pt_name is None:
@@ -412,7 +414,7 @@ class SourceAnalyzer():
         ax.axvline( 1.0, ls='--', color='lightgrey')
         return fig
     
-    def plot_harmonics(self, ax=None, num=10, p='p1'):
+    def plot_harmonics(self, ax=None, num=10, p='p1', **kwargs):
 
         # def htest(p):
         #     h = np.cumsum(p)-4*np.arange(len(p))
@@ -426,8 +428,10 @@ class SourceAnalyzer():
         if imax>=0:
             ax.scatter(x[imax], h[imax], marker='*', c='red',s=200)
         t = ax.get_ylim()
-        ax.set(xlabel='Harmonic', ylabel='FFT power', ylim=(0, max(14.9,t[1])),
-              xticks=range(1,11,2), xlim=(0.5, 10.5), )
+        kw = dict(xlabel='Harmonic', ylabel='FFT power', ylim=(0, max(14.9,t[1])),
+              xticks=range(1,11,2), xlim=(0.5, 10.5),)
+        kw.update(kwargs)
+        ax.set(**kw)
         ax.grid(alpha=0.5)
         return fig
 
@@ -739,11 +743,11 @@ def get_fermi_info(source_names, max_sep=0.5):
     
     class SourceInfo(dict):
 
-        class SkyCoord(SkyCoord):
-            # subclass that displays (ra,dec)
-            def __repr__(self):
-                ra,dec = self.fk5.ra.deg, self.fk5.dec.deg
-                return f'({ra:6.3f},{dec:+6.3f})'
+        # class SkyCoord(SkyCoord):
+        #     # subclass that displays (ra,dec)
+        #     def __repr__(self):
+        #         ra,dec = self.fk5.ra.deg, self.fk5.dec.deg
+        #         return f'({ra:6.3f},{dec:+6.3f})'
 
         def __init__(self, name):
             #self.name=name.replace('_',' ')
@@ -753,7 +757,7 @@ def get_fermi_info(source_names, max_sep=0.5):
             self.pt_name = pt_name = src_finder(name) 
 
             try:
-                self['skycoord'] = self.SkyCoord(src_finder.skycoord)
+                self['skycoord'] = WTSkyCoord(src_finder.skycoord)
             except ValueError as err:
                 print(f'SourceInfo: Fail to recognize name "{name}"', file=sys.stderr)
                 return
@@ -766,7 +770,7 @@ def get_fermi_info(source_names, max_sep=0.5):
                 self.update(uw_name = pt_name) 
                 return
             self.update(uw_name=pt_name,
-                        uw_pos=self.SkyCoord(uw.ra,uw.dec,unit='deg',frame='fk5'), 
+                        uw_pos=WTSkyCoord(uw.ra,uw.dec,unit='deg',frame='fk5'), 
                         uw_sep = uw.sep,
                         uw_r95 = uw.r95,
                         uw_ts = uw.ts,
@@ -776,7 +780,7 @@ def get_fermi_info(source_names, max_sep=0.5):
             dr = self.get_4fgl()
             if len(dr)==0: return
             self.update(dr_name=dr.name,
-                        dr_pos=self.SkyCoord(dr.ra,dr.dec,unit='deg', frame='fk5'),
+                        dr_pos=WTSkyCoord(dr.ra,dr.dec,unit='deg', frame='fk5'),
                         dr_sep = dr.sep,
                         dr_r95 = dr.r95,
                         dr_class1=dr.class1)

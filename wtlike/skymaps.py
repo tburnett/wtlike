@@ -62,7 +62,7 @@ class AitoffFigure():
     """ Implement plot and text conversion from (l,b) in degrees, or a SkyCoord.
 
     """
-    def __init__(self, fig=None, figsize=(10,5)):
+    def __init__(self, fig=None, figsize=(10,5), **kwargs):
         self.fig = fig or plt.figure(figsize=figsize)
         if len(self.fig.axes)==0:
             ax=self.fig.add_subplot(111, projection='aitoff')
@@ -70,6 +70,7 @@ class AitoffFigure():
             ax.grid(color='grey')
         self.ax = self.fig.axes[0]
         assert self.ax.__class__.__name__.startswith('Aitoff'), 'expect figure to have aitoff Axes instance'
+        ax.set(**kwargs)
 
     def plot(self, *args, **kwargs):
         self.ax.plot(*_trans(*args), **kwargs)

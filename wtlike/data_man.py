@@ -24,10 +24,11 @@ class GTI(object):
     Note, internally use MJD time scale
 
     """    
-    def __init__(self, times:'interleaved (start,stop) times in MJD', 
-                 name:'str name to associate'='', 
+    def __init__(self, times:[], 
+                 name:str='', 
                  **kwargs):
-
+        """ times: interleaved (start,stop) times in MJD
+            namme to associte?"""
         self.times = times
         self.name = name
         if np.any(np.diff(self.times)<0):
@@ -344,7 +345,7 @@ class GSFCweekly(dict):
         # check that file date agrees
         return data['file_date'] != self[week]
 
-# %% ../nbs/01_data_man.ipynb 22
+# %% ../nbs/01_data_man.ipynb 23
 class FermiData(GSFCweekly):
     """ Manage the full data set in weekly chunks
     * Checking the current set of files at GSFC
@@ -526,7 +527,7 @@ class FermiData(GSFCweekly):
             assert False
         return MJD(runs)
 
-# %% ../nbs/01_data_man.ipynb 25
+# %% ../nbs/01_data_man.ipynb 26
 def check_data(config=None, update=False):
     """
     Print current status, and update if requested
@@ -549,7 +550,7 @@ def update_data( config=None):
     ff = FermiData(config)
     return ff.update_data()
 
-# %% ../nbs/01_data_man.ipynb 27
+# %% ../nbs/01_data_man.ipynb 28
 def get_week_files(config, week_range=None):
     """Return list of week files
 
@@ -579,7 +580,7 @@ def get_week_files(config, week_range=None):
 
     return data_files
 
-# %% ../nbs/01_data_man.ipynb 29
+# %% ../nbs/01_data_man.ipynb 30
 class DataView(object):
     """
     Manage various views of the data set
@@ -774,7 +775,7 @@ class DataView(object):
         """
         return self.count_map()/self.exposure_map(beam_window) * 12*self.nside**2/(4*np.pi)
 
-# %% ../nbs/01_data_man.ipynb 34
+# %% ../nbs/01_data_man.ipynb 35
 def project_to_map(pixel_dict, nside, to_nside=None, nest=True):
     """ Return a HEALPix map, of the data for a band, perhaps projected
 

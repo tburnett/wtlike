@@ -245,11 +245,22 @@ class FigureWrapper(Wrapper):
     def __init__(self, *pars, **kwargs): 
 
         super().__init__(*pars, **kwargs)
-        self.indent = kwargs.pop('indent', '25px')
+        self.indent = kwargs.pop('indent', '10px')
         self.base64 = kwargs.pop('base64', getattr(self.obj, 'base64', True))
         self.caption = kwargs.pop('caption', None)
-
+        self.show_fig_number = kwargs.pop('show_fig_number', False)
         self.fig = fig = self.obj
+        self.tooltips=None
+        
+        if isinstance(fig, plt.Figure):
+            # this is not relevant to image
+            self.width = kwargs.pop('width', None)
+            # to customize tooltips:
+            #  https://stackoverflow.com/questions/20778110/is-it-possible-to-customize-the-title-popup-in-a-tag
+            self.tooltips = kwargs.pop('tooltips', None)        
+            if len(fig.axes)==0:
+                raise Exception ('Figure has no axes to plot')
+        
         fs =  kwargs.pop('figsize', None)
         if fs is not None: # expect a tuple
             fig.set_size_inches(fs)
@@ -278,7 +289,7 @@ class FigureWrapper(Wrapper):
         # the caption, which may be absent.
         caption = getattr(fig,'caption', getattr(self,'caption',None))
         if caption is not None:
-            caption = f'<b>Figure {n}</b>. {caption}'
+            caption = f'<b>Figure {n}</b>. {caption}' if self.show_fig_number else caption
             figcaption = f' <figcaption>{caption}</figcaption>'
         else: figcaption=''
 
@@ -291,22 +302,47 @@ class FigureWrapper(Wrapper):
 
         # add the HTML as an attribute, to insert the image as base64 
 
-        width = getattr(fig,'width', None)
+        width = self.width #getattr(fig,'width', None)
         
         if isinstance(fig, plt.Figure):
             if  width is not None:
                 # adjust size to match width spec
                 size_inches = fig.get_size_inches()
                 wpix = size_inches[0] * fig.get_dpi(); 
-                fig.set_size_inches(size_inches*fig.width/wpix)
-            # use IPython tool to create the base64 string for the image -- but seem to need to strip trailing NL
-            b64 = pylabtools.print_figure(fig, base64=True, facecolor='white')[:-1]
+                fig.set_size_inches(size_inches*width/wpix)
+            # use IPython tool to create the base64 string for the image -- but seem to need to strip trailing NL ?
+            # bbox_inches mod if using tool tips to keep pixel coordinates
+            b64 = pylabtools.print_figure(fig, base64=True, facecolor='white',
+                                          bbox_inches=None if self.tooltips is not None else 'tight')#[:-1]
         else:
             b64 = fig.get_base64() 
 
+        def html_map(fig, tooltips):
+            # Create an HTML map with tooltips for each Axes 
+            import random #needed to make the map_name (mostly) unique in jupyterlab environmant with other maps
+            if tooltips is None:
+                return '',''
+            _, fig_height = fig.get_size_inches()*fig.dpi
+
+            def flipped_bbox(ax): 
+                # return (x1, y1. x2, y2) in pixel coordinates, origin at top left
+                v = ax.bbox.get_points().flatten()
+                v[1],v[3] =fig_height-v[3], fig_height-v[1]
+                return str(list(v.astype(int)))[1:-1].replace(' ','')
+            map_name = f"figmap_{random.randrange(2**16)}"
+            maptag = f'<map name="{map_name}">'
+            for tip,ax in zip(tooltips, fig.axes):
+                maptag +=f'\n  <area shape="rect" coords="{flipped_bbox(ax)}" title="{tip}"> '
+            maptag += "\n</map>"
+            return f'usemap="#{map_name}"', maptag
+
+        # if a list of "tooltips" strings was specified, set up html map
+        usemap, themap = html_map(fig, self.tooltips)            
+
         html =\
-            f'<figure style="margin-left: {self.indent}" title="Figure {n}">'\
-            f'   <img src="data:image/png;base64,{b64}" alt="Figure {n}" '\
+            f'{themap}'\
+            f'<figure style="margin-left: {self.indent}" >'\
+            f'   <img src="data:image/png;base64,{b64}" {usemap} title="figure">'\
             f' <br> {figcaption}' \
                 '</figure>'
         return html
