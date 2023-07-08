@@ -224,25 +224,28 @@ class CellData(SourceData):
 
     def update(self): pass # virtual
 
-    def view(self, *pars, exp_min=None, no_update=False):
+    def view(self, *pars, exp_min=None, no_update=False,
+            apply=None):
         """
         Return a "view", a copy of this instance with a perhaps a different set of cells
 
         - pars -- start, stop, step  to define new binning. Or start, step, or just step
-           start and stop are either MJD values, or offsets from the start or stop.
-           step -- the cell size in days, or if zero, orbit-based binning
+            start and stop are either MJD values, or offsets from the start or stop.
+            step -- the cell size in days, or if zero, orbit-based binning
 
         - exp_min [None] -- If specified, a different minimum exposure, in cm^2 Ms units to use for fitting
             from.
 
         - no_update -- avoid fitting the cells if invoked by LightCurve or WtLike
+        
+        - apply -- functor to apply to each of the new cells
         """
         import copy
         if self.config.verbose>1:
             print(f'Making a view of the class {self.__class__}')
-        r = copy.copy(self)
+        r = copy.copy(self) # not deep
         if exp_min is not None: r.exp_min=exp_min
-
+        # maybe new binning
         if len(pars)==3:
             newbins = pars
         elif len(pars)==2: # new limits, same interval
@@ -259,10 +262,16 @@ class CellData(SourceData):
             r.rebin(newbins)
             if not no_update:
                 r.update()
-
+        if apply is not None:
+            if self.config.verbose>0:
+                print(f'update cells using {apply}')
+            newcells = [apply(cell) for _,cell in self.cells.iterrows()]
+            r.cells = pd.concat(newcells, axis=1).T
+            r.update()
+            
         r.parent = self
         return r
-
+    
     def __repr__(self):
         return f'''{self.__class__}:
         {len(self.exposure):,} intervals from {self.cell_edges[0]:.1f} to {self.cell_edges[-1]:.1f} for source {self.source_name}

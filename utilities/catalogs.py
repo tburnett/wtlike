@@ -186,7 +186,7 @@ class BigFile(CatDF, pd.DataFrame):
     
 class UWcat(CatDF, pd.DataFrame):
     
-    def __init__(self, model=NotImplementedError, filename=None):
+    def __init__(self, model='uw1410', filename=None):
 
         if model is not None:
             filename = Path(os.path.expandvars('$FERMI'))/f'skymodels/sources_{model}.csv'

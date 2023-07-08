@@ -39,7 +39,8 @@ class CountFitness(FitnessFunc):
 
         #actual times for bin edges
         t = df.t.values
-        dt = df.tw.values/2
+        up = np.sign(t[1]-t[0]) # account for reversed order
+        dt = df.tw.values/2 * up
         self.mjd = np.concatenate([t-dt, [t[-1]+dt[-1]] ] ) # put one at the end
         self.name = self.__class__.__name__
         self.setup()
@@ -180,12 +181,15 @@ def doc_countfitness( fitness, light_curve_dict, source_name):
     return locals()
 
 # %% ../nbs/14_bayesian.ipynb 7
-def get_bb_partition(config, lc, fitness_class=LikelihoodFitness, p0=0.05, key=None, clear=False):
+def get_bb_partition(config, lc, fitness_class=LikelihoodFitness, p0=0.05, 
+                     reverse=False, key=None, clear=None):
 
     """Perform Bayesian Block partition of the cells found in a light curve
 
     - lc : input LightCurve object or DataFrame with fit cells
-    - fitness_class
+    - fitness_class 
+    - p0 : the nominal false positive parameter
+    - reverse: if True, reverse the order of cells
 
     return edges for partition
     """
@@ -196,12 +200,15 @@ def get_bb_partition(config, lc, fitness_class=LikelihoodFitness, p0=0.05, key=N
 
 
     def doit():
-        fitness = fitness_class(lc, p0=p0)
+        fitness = fitness_class(lc if not reverse else lc[::-1], p0=p0 )
         # Now run the astropy Bayesian Blocks code using my version of the 'event' model
         if config.verbose>0:
-            print(f'Bayesian Blocks: partitioning {len(lc)} cells using {fitness_class.__name__}'\
+            print(f'Bayesian Blocks: partitioning {len(lc)} {"" if not reverse else "reversed" }'\
+                  f' cells using {fitness_class.__name__}'\
                   f' with penalty {100*fitness.p0:.0f}%')
-        return fitness.fit()
+        ret = fitness.fit()
+        return ret if not reverse else ret[::-1] 
+
 
     # not clear need to cache this -- fails if cache not set up
 #     key = f'BB_edges_' if key == '' else key

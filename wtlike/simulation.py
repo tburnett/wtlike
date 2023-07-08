@@ -55,9 +55,16 @@ class _Sampler():
             self.x = np.arange(a+binsize/2, b, binsize)
         self.y = y
         cy = np.cumsum(y)
-        d = cy[-1]-cy[0]
-        self.sy = (cy-cy[0])/d
-        self.mean = np.sum( (self.x-dx) * y) / d
+        # ---old mistake ---
+        # d = cy[-1]-cy[0]
+        # self.sy = (cy-cy[0])/d
+        # self.mean = np.sum( (self.x-dx) * y) / d
+        # ----------------
+        self.sy = cy/cy[-1]
+        self.mean = np.mean(self.sy)
+        # ----------------
+
+
         
         # now do the weighted one
         wcy = np.cumsum(self.x*y)

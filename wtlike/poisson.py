@@ -203,7 +203,7 @@ class Poisson(object):
         so $s$ is large compared with $\sqrt{v}$, then the poisson-like parameters can be determined as follows.
 
         We use the properties of the Poisson distribution
-        $f(n|\ lambda) = \exp(n \log\lambda - \lambda + \mathrm{const})$,
+        $f(n|\lambda) = \exp(n \log\lambda - \lambda + \mathrm{const})$,
         where the parameter $\lambda$ is equal to the expected value of number of occurrences $n$ and
         to its variance, and that the function we want is shifted by the background $b$ and scaled by a factor
         $k$ so we use $f(k(s-b)| \lambda)$. This implies that for the expected value of $s$, $\lambda = n$,

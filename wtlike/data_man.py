@@ -283,7 +283,7 @@ class GSFCweekly(dict):
         self.config = config or Config()
         # self.wtlike_data_file_path = Path(self.config.datapath/'data_files')
         # assert self.wtlike_data_file_path.is_dir(), 'Data path invalid'
-        # os.makedirs(self.local_path, exist_ok=True)
+        os.makedirs(self.local_path, exist_ok=True)
         try:
             with FTP(self.ftp_site) as ftp:
                 ftp.login()
