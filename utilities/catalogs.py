@@ -305,7 +305,7 @@ class Fermi4FGL(CatDF, pd.DataFrame):
         super().__init__( cat_subset)
 
         print( f': {len(self)} entries' )
-        self.__dict__.update(data=data, filename=filename.name, name='4FGL-DR3')
+        self.__dict__.update(data=data, filename=filename.name, name='4FGL-DR4')
         self.index = name
         self.index.name = 'name'
         self.fitscols = data.columns
@@ -343,3 +343,23 @@ class Fermi4FGL(CatDF, pd.DataFrame):
 
     def field(self, name):
         return self.data.field(name)
+
+    def get_specfunc(self, src_name, func_name='default', ):
+        """ Return a spectral function 
+
+        - src_name - The 4FGL name
+        - func_name - one of PLEC4, LP, PL, default
+        """
+
+        from utilities.spectral_functions import PLSuperExpCutoff4, LogParabola, PowerLaw 
+        specs = dict(
+            PLEC4=(PLSuperExpCutoff4,'PLEC_Flux_Density PLEC_IndexS PLEC_ExpfactorS PLEC_Exp_Index'.split()),
+            LP = (LogParabola, 'LP_Flux_Density LP_Index LP_beta Pivot_Energy'.split(), ),
+            PL = (PowerLaw, 'PL_Flux_Density PL_Index'.split(),), 
+        )
+        fgl_names =list(self.index) 
+        row = self.data[fgl_names.index(src_name)]
+        default = dict(PLSuperExpCutoff4='PLEC4', LogParabola='LP', PowerLaw='PL')[row['SpectrumType']]
+        func, parnames = specs.get(func_name if func_name !='default'  else default)    
+        pars = [row[name] for name in parnames] 
+        return func(pars, e0=row['Pivot_Energy']) if pars is not None else None     

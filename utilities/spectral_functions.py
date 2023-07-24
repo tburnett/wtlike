@@ -71,6 +71,16 @@ class FluxModel():
     def sedfun(self):
         return SedFun(self)
     
+    @property
+    def epeak(self):
+        return SedFun(self).peak
+    
+    @property
+    def fpeak(self):
+        """Flux (eV cm-2 s-1) at peak energy"""
+        sf = SedFun(self)
+        return sf(sf.peak)
+    
     def sed_plot(self, ax=None, e0=None,
              figsize=(5,4), label='', plot_kw={}, **kwargs):
         """Make an SED for the source
