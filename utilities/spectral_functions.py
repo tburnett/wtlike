@@ -25,11 +25,11 @@ class SedFun:
         from scipy.optimize import minimize
         return  minimize(lambda x: -self(x), [1.0], bounds=[(-1,3)] ).x[0]
     
-    def plot(self, show_peak=True, ax=None, **kwargs):
+    def plot(self, show_peak=True, ax=None, plot_kw={}, **kwargs):
         fig, ax = plt.subplots(figsize=(4,2)) if ax is None else (ax.figure, ax)
         x = np.linspace(-1, 2,)
         kw = dict(); kw.update(kwargs)
-        ax.plot(x, self(x))
+        ax.plot(x, self(x), **plot_kw)
         ax.set(**kw)
         if show_peak:
             pk = self.peak

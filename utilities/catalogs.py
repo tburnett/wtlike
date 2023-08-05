@@ -359,7 +359,8 @@ class Fermi4FGL(CatDF, pd.DataFrame):
         )
         fgl_names =list(self.index) 
         row = self.data[fgl_names.index(src_name)]
-        default = dict(PLSuperExpCutoff4='PLEC4', LogParabola='LP', PowerLaw='PL')[row['SpectrumType']]
+        default = dict(PLSuperExpCutoff4='PLEC4', PLSuperExpCutoff='PLEC4', #allow for mistake?
+                       LogParabola='LP', PowerLaw='PL')[row['SpectrumType']]
         func, parnames = specs.get(func_name if func_name !='default'  else default)    
         pars = [row[name] for name in parnames] 
         return func(pars, e0=row['Pivot_Energy']) if pars is not None else None     
