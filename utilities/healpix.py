@@ -550,7 +550,7 @@ def ait_multiplot(
             ait_plot(m,  ax=ax,  label=label, **kw)
 
     if title: fig.text(0.4, 0.92, title, fontsize=16, ha='center');
-    fig.set_facecolor('white')
+    # fig.set_facecolor('white')
     return fig
         
 
@@ -696,7 +696,7 @@ class Polyfit(object):
         for glon, glat, ax in zip(glons, glats, axx.flatten()):
             self.plot_fit( glon, glat, ax, axis_labels=False)
         fig.suptitle(title, fontsize=16); 
-        fig.set_facecolor('white')
+        # fig.set_facecolor('white')
            
     def ait_plots(self, fignum=1, title=''):
         fig, axx = plt.subplots(2,2, figsize=(14, 7.5), num=None,
@@ -710,5 +710,5 @@ class Polyfit(object):
         ait_plot(HPmap( self.residuals,label='residuals'),  ax=axx[1,1],label='residuals')
         if title: 
             fig.text(0.4, 0.92, title, fontsize=16, ha='center')
-        fig.set_facecolor('white')
+        # fig.set_facecolor('white')
         return fig

@@ -309,7 +309,7 @@ def flux_plot(cell_fits,
         ax.errorbar(
             x=t, xerr=tw/2, ms=ms,
                     y=fluxmeas, yerr=error, lw=2, fmt=fmt,
-                    color=colors[0],
+                    color=colors[2] if step else colors[0],
                     label=label, zorder=zorder+1,
                     **errorbar_args)
 
@@ -463,7 +463,7 @@ class LightCurve(CellData):
                         source_name=source_name,
                         label=kwargs.pop('label', f'{self.step_name} bins'),  
                         **kwargs)
-        fig.set_facecolor('white')
+        # fig.set_facecolor('white')
         return fig
 
     def plot_with_exposure(self, **kwargs):

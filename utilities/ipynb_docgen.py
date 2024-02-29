@@ -314,7 +314,7 @@ class FigureWrapper(Wrapper):
                 fig.set_size_inches(size_inches*width/wpix)
             # use IPython tool to create the base64 string for the image -- but seem to need to strip trailing NL ?
             # bbox_inches mod if using tool tips to keep pixel coordinates
-            b64 = pylabtools.print_figure(fig, base64=True, facecolor='white',
+            b64 = pylabtools.print_figure(fig, base64=True, #facecolor=fig.get_facecolor(),
                                           bbox_inches=None if self.tooltips is not None else 'tight')#[:-1]
         else:
             b64 = fig.get_base64() 

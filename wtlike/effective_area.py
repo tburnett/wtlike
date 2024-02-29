@@ -125,7 +125,7 @@ class EffectiveArea(object):
         ax2.legend()
         ax2.set(xlabel =r'$\cos\ \theta$',ylabel='relative to normal at 1 GeV')
         ax2.grid(alpha=0.5)
-        fig.set_facecolor('white')
+        # fig.set_facecolor('white')
 
 
     def tabulate(self, ctstep=0.05,  logestep=0.25, ctmin=0.4):

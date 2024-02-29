@@ -7,7 +7,7 @@ import healpy
 
 class SkyDir(object):
     """ Provide convenient interface to astropy's SkyCoord:
-    * specific to fk5 and galacic use
+    * specific to fk5 and galactic use
     * added HEALPix capability
     """
     nside = None

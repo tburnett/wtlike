@@ -308,14 +308,16 @@ class HPmap(object):
         kw.update(**kwargs)
         return ait_plot(self, **kw)
 
-    def zea_plot(self, skycoord, size=10, pixsize=0.1, **kwargs):
+    def zea_plot(self, skycoord, size=10, pixsize=0.1, 
+                 fig=None, figsize=(8,8), **kwargs):
         """
+        Create a SquareWCS object that defines its WCS as a ZEA square centered on `skycoord`
         
         """
         if not isinstance(skycoord, SkyCoord):
             skycoord = SkyCoord.from_name(skycoord).galactic
         swcs = SquareWCS(skycoord, size, pixsize)
-        return swcs.plot_map(self.map, unit=self.unit, **kwargs)
+        return swcs.plot_map(self.map, unit=self.unit, fig=fig, figsize=figsize, **kwargs)
 
     def convolve(self, beam_window=None, sigma=0):
         """Convolve the map with a "beam", or PSF
@@ -369,12 +371,12 @@ class HPmap(object):
         return hdus
     
     @classmethod
-    def from_FITS(cls, filename, *pars, **kwargs):
+    def from_FITS(cls, filename, field=0, *pars, **kwargs):
         with fits.open(filename) as hdus:
             header, data = hdus[1].header, hdus[1].data
         kw = dict(unit=header.get('TUNIT1', ''), name=header['TTYPE1'])
         kw.update(**kwargs)
-        return cls(data.field(0), *pars, **kw)
+        return cls(data.field(field), *pars, **kw)
 
 # %% ../nbs/04_skymaps.ipynb 17
 def ait_plot(mappable,

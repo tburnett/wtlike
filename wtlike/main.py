@@ -94,14 +94,17 @@ class WtLike(LightCurve):
         source_name =kwargs.pop('source_name', self.source_name)
         fig, ax = plt.subplots(figsize=figsize, num=fignum) if ax is None else (ax.figure, ax)
 
-
-        colors = kwargs.pop('colors', ('lightblue', 'wheat', 'blue') )
+        dark_mode = fig.get_facecolor()==(0,0,0,1)
+        colors = kwargs.pop('colors', 
+                            ('salmon','maroon', 'cyan') if dark_mode else
+                            ('lightblue', 'wheat', 'blue')
+                                )
         flux_plot(self.parent.fits, ax=ax, colors=colors, source_name=source_name,
                   label=self.step_name+' bins', **kwargs)
-        flux_plot(self.fits, ax=ax, step=True,
+        flux_plot(self.fits, ax=ax, step=True, colors=colors,
                   label=f'BB (p0={100*self.bayes_p0:.0f}%)', zorder=10,**kwargs)
         ax.grid(alpha=0.5)
-        fig.set_facecolor('white')
+        # fig.set_facecolor('white')
         return fig
 
     def plot_phase(self, ax=None, **kwargs):

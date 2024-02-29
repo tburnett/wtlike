@@ -59,7 +59,7 @@ class SourceLookup():
         self.check_4fgl()
         return name
     
-    def findsource(self, *pars, gal=False):
+    def findsource(self, *pars, gal=False, parse=True):
         """
         Return a SkyCoord, looking up a name, or interpreting args
 
@@ -68,6 +68,9 @@ class SourceLookup():
         - Jxxxx.x+yyyy -- intrepret  to get ra, dec, then convert
         - ra,dec -- assume frame=fk5
         - l,b, gal=True -- assume degrees, frame=galactic
+
+        - gal [False] --set frame to galactic
+        - parse [True] -- parse J... for coords for name lookup
         """
 
         import astropy.units as u
@@ -91,7 +94,7 @@ class SourceLookup():
                     return None
             else:
                 try:
-                    skycoord = SkyCoord.from_name(name)
+                    skycoord = SkyCoord.from_name(name, parse=parse)
                     self.log += f'\n\tlocated by astropy at ra,dec= {skycoord.ra.deg:.3f}, {skycoord.dec.deg:.3f}' 
                 except Exception as e:
                     self.log += f'\n\t "{name}" not found by astropy'

@@ -429,7 +429,7 @@ class PoissonFitter(object):
         if xticks:
             ax.set_xticks([0, xp[-1]])
         ax.grid(alpha=0.4)
-        fig.set_facecolor('white')
+        # fig.set_facecolor('white')
         return fig
 
     def normalization_summary(self, nominal=None):

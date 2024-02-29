@@ -104,7 +104,7 @@ class CellData(SourceData):
     r"""Manage a set of cells generated from a data set
 
         Invoke superclass to load photon data and exposure for the source.
-
+        * interval. If specified set time_bins to (0,0,interval)
         * time_bins, default config.time_bins. If specified, set week_range and bypass cache.
 
         The `e` cell entry is the weighted exposure for the cell in units $cm^2\ Ms$.
@@ -113,8 +113,11 @@ class CellData(SourceData):
     def __init__(self, *pars, **kwargs):
         """
         """
-
-        bins = kwargs.pop('time_bins', None)
+        interval = kwargs.pop('interval', None)
+        if interval is not None:
+            bins=(0,0,interval)
+        else:
+            bins = kwargs.pop('time_bins', None)
         if bins is not None:
             if bins[0]>50000 and bins[1]>50000:
                 # kluge to at least accept (0,0) in constructor

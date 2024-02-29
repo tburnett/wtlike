@@ -246,18 +246,26 @@ class Fermi4FGL(CatDF, pd.DataFrame):
             return '{}' if r=='' else '{'+r[:-1]+'}'
 
 
-    def __init__(self, path='$FERMI/catalog/'):
+    def __init__(self, version=None, path='$FERMI/catalog/'):
  
         t=Path(os.path.expandvars(path)).expanduser(); 
+        if version is not None:
+            version = {'DR4':'v32', 'DR3':'v28'}.get(version, version)
         if t.is_file():
             filename = t
         elif t.is_dir():
-            filename = sorted(list(t.glob('gll_psc_v*.fit')))[-1]
+            filename = sorted(list(t.glob('gll_psc_v*.fit')))[-1] if version is None else \
+                    Path(f'{t}/gll_psc_{version}.fit')
+                
         else:
             raise Exception( f'path {path} is not a directory or a FITS file')
+        if not Path(filename).is_file():
+            raise Exception(f'File {filename} does not exist.')
         print(f'Loaded Fermi 4FGL {filename.name}', end='')
         with fits.open(filename) as hdus:
             data = hdus[1].data
+
+     
 
         cname= lambda n : [s.strip() for s in data[n]]
         cvar = lambda a: data[a].astype(float)
@@ -280,7 +288,8 @@ class Fermi4FGL(CatDF, pd.DataFrame):
             eflux       = cvar('Energy_Flux100'), # erg cm-2 s-1
             significance= cvar('Signif_Avg'),
             variability = cvar('Variability_Index'),
-
+            curvature   = 2*cvar('LP_Beta'),
+            curv_unc    = 2*cvar('Unc_LP_Beta'),
             # class2      = cname('CLASS2'),
             flags       = list(map(self.FlagBits, ivar('FLAGS'))),
             # ....
@@ -305,11 +314,16 @@ class Fermi4FGL(CatDF, pd.DataFrame):
         super().__init__( cat_subset)
 
         print( f': {len(self)} entries' )
-        self.__dict__.update(data=data, filename=filename.name, name='4FGL-DR4')
+        # extract actual version
+        v = hdus[1].header['VERSION'] 
+        v = {'v28':'DR3', 'v32':'DR4'}.get(v,v)
+        vname = f'4FGL-{v}'
+        self.__dict__.update(data=data, filename=filename.name, name=vname)
+        #index by source names
         self.index = name
-        self.index.name = 'name'
+        self.index.name = vname
         self.fitscols = data.columns
-
+       
     def specfuncs(self, data):
         """ Return a list of spectral functions
         """
