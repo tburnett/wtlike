@@ -60,7 +60,7 @@ def make_time_cells(self, time_bins):
 # %% ../nbs/10-time_series.ipynb 5
 def power_spectrum_fft(timeseries,dfgoal=None,tweak_exp=False,
         exp_only=False,get_amps=False,exposure_correction=None,
-                      minf=0,):
+                      minf=0, profile=False):
     """ Use FFT to evalute the sums in the maximum likelihood expression.
 
     This version matches the notation in the paper.
@@ -84,6 +84,8 @@ def power_spectrum_fft(timeseries,dfgoal=None,tweak_exp=False,
     THB:
     * add `minf`,default 0, to set lowest frequency to return. If set to one, avoid runtime warnings
        at zero frequency
+
+    * profile to return profile likelihood, "dlogl" below 
 
     """
 
@@ -175,6 +177,8 @@ def power_spectrum_fft(timeseries,dfgoal=None,tweak_exp=False,
     dlogl  = alpha_cos*WmS_cos + alpha_sin*WmS_sin + beta_cos*WbmB_cos + beta_sin*WbmB_sin
     if exp_only:
         return freqs[minf:(l//4+1)],dlogl_nobg
+    elif profile:
+        return freqs[minf:(l//4+1)],dlogl
 
     return freqs[minf:(l//4+1)], dlogl_nobg, dlogl-dlogl_null, dlogl_null
 

@@ -174,7 +174,7 @@ def utc_check(kwargs):
     if utc_flag:
         # even years if True else interpret as int
         cnt = 2 if type(utc_flag)==bool else utc_flag
-        yrs = [str(yr) for yr in range(2008,2023, cnt)] #get this from kwarg maybe
+        yrs = [str(yr) for yr in range(2008,2025, cnt)] #get this from kwarg maybe
         yrkw = dict( xticks=[MJD(yr) for yr in yrs], xticklabels=yrs,  xlabel='UTC',)
         kwargs.update(**yrkw)
     return kwargs
@@ -226,7 +226,7 @@ def flux_plot(cell_fits,
             sx, sy = topix((a,b))
             c,d = frompix((sx, sy-error_pixsize))
             sizes.append(b-d)
-        return  np.array(sizes)
+        return  np.array(sizes).clip(0,None)
 
     import matplotlib.ticker as ticker
     kwargs = utc_check(kwargs)
@@ -372,7 +372,7 @@ def utc_check(kwargs):
         return kwargs
     # even years if True else interpret as int
     cnt = 2 if type(utc_flag)==bool else utc_flag
-    yrs = [str(yr) for yr in range(2008,2023, cnt)] #get this from kwarg maybe
+    yrs = [str(yr) for yr in range(2008,2025, cnt)] #get this from kwarg maybe
     yrkw = dict( xticks=[MJD(yr) for yr in yrs], xticklabels=yrs,  xlabel='UTC',)
     kwargs.update(**yrkw)
     return kwargs
@@ -436,13 +436,7 @@ class LightCurve(CellData):
             kwargs['flux_factor'] = self.src_flux * 1e6
             if kwargs.get('ylabel', None) is None:
                 kwargs['ylabel'] = r'Photon flux [$\mathrm{10^{-6} cm^{-2} s^{-1}}$]'
-        # utc_flag = kwargs.pop('UTC', False)
-        # if utc_flag:
-        #     # even years if True else interpret as int
-        #     cnt = 2 if type(utc_flag)==bool else utc_flag
-        #     yrs = [str(yr) for yr in range(2008,2023, cnt)] #get this from kwarg maybe
-        #     yrkw = dict( xticks=[MJD(yr) for yr in yrs], xticklabels=yrs,  xlabel='UTC',)
-        #     kwargs.update(**yrkw)
+ 
 
     @decorate_with(flux_plot)
     def plot(self, **kwargs):
