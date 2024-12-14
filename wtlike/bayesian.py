@@ -124,9 +124,11 @@ class CountFitness(FitnessFunc):
 class LikelihoodFitness(CountFitness):
     """ Fitness function that uses the full likelihood
     """
+    # number of points for table generation
+    npt=100 # make class variable
 
-    def __init__(self, lc,  p0=0.05, npt=50):
-        self.npt = npt
+    def __init__(self, lc,  p0=0.05,): # npt=50):
+        # self.npt = npt
         super().__init__(lc, p0)
 
     def setup(self):

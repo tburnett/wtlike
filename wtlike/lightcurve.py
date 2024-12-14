@@ -460,7 +460,7 @@ class LightCurve(CellData):
         # fig.set_facecolor('white')
         return fig
 
-    def plot_with_exposure(self, **kwargs):
+    def plot_with_exposure(self, bar=True, **kwargs):
         """Stacked flux plot flux with exposure
         """
         fig,(ax1,ax2) = plt.subplots(2,1, figsize=(15,6), sharex=True);
@@ -474,10 +474,17 @@ class LightCurve(CellData):
         tzero = kwargs.get('tzero', 0)
         self.plot(ax=ax1, **kwargs)
 
-        # the step plot
-        ax2.step(self.cells.t-tzero, self.cells.e, '-', where='mid')
+        if not bar:
+            # the step plot
+            ax2.step(self.cells.t-tzero, self.cells.e, '-', where='mid')
+        else:
+
+            # or a bar plot showing exposure rate, bar width the live time 
+            df = self.cells
+            ax2.bar(df.t-tzero, df.e/df.tw, width=df.tw, )
+
         ax2.grid(alpha=0.5)
-        ax2.set(ylabel='exposure', ylim=(0,None))
+        ax2.set(ylabel='Exposure rate', ylim=(0,None))
         return fig
 
     def flux_table(self, lc=None, include_e=True, include_ctm=True):
