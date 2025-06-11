@@ -3,7 +3,6 @@ Support single-cell documents in Jupyterlab
 
 Usage: Wtih code like this in a cell
 
-    from utilities.ipynb_docgen import *
 
     @ipynb_doc
     def userdoc():
@@ -45,13 +44,16 @@ FigureWrapper test
 
 """
 import sys, os, string, pprint, datetime
+import numpy as np # type: ignore
 
 
 __all__ = ['nbdoc', 'image', 'figure', 'monospace', 'ShowPrintout','capture', 'capture_hide', 
         'capture_show', 'shell', 'create_file', 'ipynb_doc', 'get_nb_namespace', 'special_prefix', 
-        'figure_number', 'display_markdown', 'FigureWrapper','show']
+        'figure_number', 'display_markdown', 'FigureWrapper','show', 'show_fig', 'show_date', 'figure_callback']
 
 special_prefix = ''
+
+figure_callback = None # perhaps a function to process figure
 
 # Manage the figure number
 class FigureNumber:
@@ -200,7 +202,7 @@ except:
     pd=None
 
 
-# a dict accumulated here, used to initialze set of wrappers for ObjectReplacer
+# a dict accumulated here, used to initialize set of wrappers for ObjectReplacer
 wrappers = {}
                      
 class Wrapper(object):
@@ -250,6 +252,7 @@ class FigureWrapper(Wrapper):
         self.base64 = kwargs.pop('base64', getattr(self.obj, 'base64', True))
         self.caption = kwargs.pop('caption', None)
         self.fignum = kwargs.pop('fignum', None)
+        self.facecolor = kwargs.pop('facecolor', None)
         self.show_fig_number = kwargs.pop('show_fig_number', self.fignum is not None)
         self.fig = fig = self.obj
         self.tooltips=None
@@ -285,8 +288,13 @@ class FigureWrapper(Wrapper):
         import base64
         from IPython.core import pylabtools
         fig=self.fig
-        n =  self.fignum# = figure_number.next()
-        prefix = self.prefix+'_' if self.prefix else ''
+
+        n =  self.fignum
+
+        # special for savefig maybe
+        if figure_callback is not None:
+            figure_callback(self)
+        # prefix = self.prefix+'_' if self.prefix else ''
 
         # the caption, which may be absent.
         caption = getattr(fig,'caption', getattr(self,'caption',None))
@@ -295,10 +303,6 @@ class FigureWrapper(Wrapper):
             figcaption = f' <figcaption>{caption}</figcaption>'
         else: figcaption=''
 
-        # assign, or get, a filename
-        # name =fig.filename if hasattr(fig, 'filename')  else f'{prefix}fig_{n:02d}.png'
-        # fn = os.path.join(self.folder_name, name )
-        # browser_fn =fn
         
         if plt: plt.close(getattr(fig, 'number', None) )
 
@@ -314,7 +318,7 @@ class FigureWrapper(Wrapper):
                 fig.set_size_inches(size_inches*width/wpix)
             # use IPython tool to create the base64 string for the image -- but seem to need to strip trailing NL ?
             # bbox_inches mod if using tool tips to keep pixel coordinates
-            b64 = pylabtools.print_figure(fig, base64=True, #facecolor=fig.get_facecolor(),
+            b64 = pylabtools.print_figure(fig, base64=True, facecolor=self.facecolor,
                                           bbox_inches=None if self.tooltips is not None else 'tight')#[:-1]
         else:
             b64 = fig.get_base64() 
@@ -345,7 +349,7 @@ class FigureWrapper(Wrapper):
             f'{themap}'\
             f'<a id="Figure_{self.fignum}"/>'\
             f'<figure style="margin-left: {self.indent}">'\
-            f'   <img src="data:image/png;base64,{b64}" {usemap} title="Figure {self.fignum}">'\
+            f'   <img src="data:image/png;base64,{b64}" {usemap} >'\
             f' <br> {figcaption}' \
              '</figure>'
         return html
@@ -398,8 +402,7 @@ class PPWrapper(Wrapper):
 
     def __str__(self):
         pp = pprint.PrettyPrinter(indent=2)
-        text = pp.pformat(self.obj)#.replace('\n', '<br>\n')
-        # return f'<p style="margin-left: {self.indent}"><samp>{text}</samp></p>'
+        text = pp.pformat(self.obj)
         return self.summarize(text)
 
 wrappers['dict'] = (PPWrapper, {} )
@@ -700,7 +703,7 @@ def nbdoc(fun, *pars, name=None, fignum=1, **kwargs):
     display.display( md_data )  
 
 def display_markdown(obj, vars={}):
-    print('Obsolete: use "show"', file=sys.stdout)
+    raise DeprecationWarning('Obsolete: use "show"', )
     show(obj, vars)
 
 def show(obj, vars={}, **kwargs):
@@ -724,12 +727,20 @@ def show(obj, vars={}, **kwargs):
 
     """
     import inspect
-    import IPython.display as display
+    import IPython.display as display # type: ignore
     mimetype = 'text/markdown'
     id = kwargs.pop('id', None)
     if id is not None:
         display.display(doc_formatter(f'<a id="{id}"/a>\n', mimetype='text/html'))
 
+    # if not np.isscalar(objs) and type(objs)!=str:
+    #     # a list: just pass on to display
+    #     for obj in objs:
+    #         display.display_pretty(obj)
+    #     return
+
+    # else:
+    #     obj = objs[0]
 
     # Generate a doc to be passed to the display buffer, markdown or html
     if type(obj) == str:
@@ -753,6 +764,7 @@ def show(obj, vars={}, **kwargs):
         return # special case that doc_formatter fails on
     else:
         # everything else is html generated by the object or a Wrapper subclass
+        # or simple python object
 
         mimetype = 'text/html'
         metadata = None 
@@ -762,6 +774,10 @@ def show(obj, vars={}, **kwargs):
             pd.DataFrame: DataFrameWrapper, 
         }
         wrapper = wrappers.get(obj.__class__, None)
+        if wrapper==PPWrapper:
+            # bypass this in favor of immediate display_pretty
+            display.display_pretty(obj)
+            return
         if wrapper is not None:
             # recognized
             doc = wrapper(obj, vars, **kwargs)._repr_html_()
@@ -776,8 +792,41 @@ def show(obj, vars={}, **kwargs):
 
         else:
             # finally assume this is a standard python object - will try to pretty-print
-            doc = str(PPWrapper(obj, **kwargs))
+            if kwargs:
+                doc = str(PPWrapper(obj, **kwargs))
+            else:
+                # maybe this works
+                display.display_pretty(obj)
+                return
 
-        # display.display(doc_formatter(doc, vars, mimetype='text/html'))
     # pass the doc, a callable or a text string to the formatter
     display.display(doc_formatter(doc, vars, mimetype=mimetype))
+
+def show_fig(fn, *pars, fignum=None, caption=None, 
+             format_kw:dict=None,
+             facecolor:str=None, 
+             save_to:str=None, 
+             **kwargs): 
+    """
+    Equivalent to :
+    show(fn(pars, **kwargs), fignum=fignum, caption=fn.__doc__)
+
+    But with the possibility of run-time modification of the doc string via a format call,
+    with the dict items in format_kw.
+    * facecolor
+    * save_to: fig.savefig(save_to, facecolor='w',  bbox_inches='tight')
+    """
+    assert callable(fn), 'Expect fn to be a callable'
+    fig = fn(*pars, **kwargs);    
+    assert isinstance(fig, plt.Figure), 'Expect fn to return a plt.Figure object'
+    cpn = caption if caption is not None else fn.__doc__
+    if format_kw is not None:
+        cpn = cpn.format(**format_kw)
+    show( fig, fignum=fignum,  caption=cpn, facecolor=facecolor)
+    if save_to is not None:
+        fig.savefig(save_to, facecolor='w' if facecolor is None else facecolor,  bbox_inches='tight')
+
+def show_date():
+    import datetime
+    date=str(datetime.datetime.now())[:16]
+    show(f"""<h5 style="text-align:right; margin-right:15px"> {date}</h5>""")
