@@ -350,7 +350,7 @@ class Spectogram(pd.DataFrame):
         ax.imshow(self.to_numpy(), extent= get_extent(self.columns)+get_extent(self.index) ,
                   **imkw);
         if grid: ax.grid(color=grid);
-        kw = dict(ylabel='Time (MJD)', xlabel='Frequency (cycles $\mathrm{d^{-1})}$',)
+        kw = dict(ylabel='Time (MJD)', xlabel=r'Frequency (cycles $\mathrm{d^{-1})}$',)
         kw.update(kwargs)
         ax.set(**kw)
 

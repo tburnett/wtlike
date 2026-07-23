@@ -111,7 +111,7 @@ class FluxModel():
                 e_weight=0,
                 cgs=False, #error=False,two_sided=False,
                 quiet=False):
-        """ Return the integral flux, \int_{emin}^{emax} dE E^{e_weight} dN/dE.
+        r""" Return the integral flux, \int_{emin}^{emax} dE E^{e_weight} dN/dE.
             e_weight = 0 gives the photon flux (ph cm^-2 s^-1)
             e_weight = 1 gives the energy flux (MeV cm^-2 s^-1) (see kwargs)
 

@@ -153,7 +153,7 @@ class WtLike(LightCurve):
             return (bbflux[ssi]-1).clip(0,1)
 
         def wprime(row):
-            """ Apply
+            r""" Apply
             $$w'_1 = \frac{w_1}{1+\alpha_2\ w_2}\ \    $$
             """
             w1 = row['weight']

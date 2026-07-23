@@ -365,7 +365,7 @@ class PoissonFitter(object):
         smax = self.smax
         if smax>0:
             # function to fit has positive peak. Fit the drived parameters mu, beta
-            cod = self(self.dom)-self.func(smax)
+            cod = np.array(self(self.dom))-self.func(smax)
             #print 'smax=%.2f, w(smax)=%s, w(%s)=%s' % (smax,self.func(smax), self.dom, cod)
             def fitfunc(p):
                 mu,beta=p
@@ -380,7 +380,7 @@ class PoissonFitter(object):
             return [smax, e, b]
         else:
             # maximum is at zero, so only limit.
-            x=self.dom; y=self(x)
+            x=self.dom; y=np.array(self(x))
             # exposure factor estimated from asymptotic behavior
             big= x[-1]*1e3; e = -self(big)/big;
             # preliminary fit to the quadratic coeficients and estimate parameters from the linear and 2nd order
@@ -390,7 +390,7 @@ class PoissonFitter(object):
             mu = beta*(1+a/e)
             smax= (mu-beta)/e; b= beta/e
             # now fit the Poisson with e fixed to the asym. estimate.
-            cod = self(self.dom)-self(0)
+            cod = np.array(self(self.dom))-self(0)
             pinit = [smax,  b]
             def fitfunc(p):
                 self._poiss = Poisson([p[0], e, p[1]])

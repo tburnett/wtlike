@@ -41,7 +41,7 @@ with capture_hide(f'Catalog setup: {_uwname} and 4FGL-DR3') as catalog_setup:
     if os.environ.get('FERMI', None) is None:
         os.environ['FERMI'] ='.'
         print(f'Setting env var FERMI to ".". Expect to find folders catatag and skymodels')
-    cat4 = Fermi4FGL()
+    cat4 = Fermi4FGL('DR4')
     uwcat = UWcat(_uwname)
 
 _sk = uwcat.skycoord.galactic

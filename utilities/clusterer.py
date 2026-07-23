@@ -3,6 +3,73 @@ import healpy
 from wtlike.skymaps import AitoffFigure
 
 
+def grouper(points, radius, min_size=1, return_indices=False):
+    """Group points into connected clusters using a distance threshold.
+
+    Parameters
+    ----------
+    points : array-like, shape (n_points, n_dims)
+        Point coordinates.
+    radius : float
+        Maximum pairwise distance for two points to be considered neighbors.
+    min_size : int, default=1
+        Minimum number of points required to keep a cluster.
+    return_indices : bool, default=False
+        If True, return index arrays for each cluster; otherwise return points.
+
+    Returns
+    -------
+    list[np.ndarray]
+        A list of clusters, sorted by descending cluster size.
+    """
+    pts = np.asarray(points, dtype=float)
+    if pts.ndim != 2:
+        raise ValueError("points must be a 2D array with shape (n_points, n_dims)")
+    if radius <= 0:
+        raise ValueError("radius must be > 0")
+    if min_size < 1:
+        raise ValueError("min_size must be >= 1")
+
+    n_points = len(pts)
+    if n_points == 0:
+        return []
+
+    r2 = float(radius) ** 2
+    unvisited = np.ones(n_points, dtype=bool)
+    clusters = []
+
+    # Build connected components where edges join points within `radius`.
+    for seed in range(n_points):
+        if not unvisited[seed]:
+            continue
+
+        stack = [seed]
+        unvisited[seed] = False
+        cluster = []
+
+        while stack:
+            i = stack.pop()
+            cluster.append(i)
+
+            remaining = np.flatnonzero(unvisited)
+            if len(remaining) == 0:
+                continue
+
+            d2 = ((pts[remaining] - pts[i]) ** 2).sum(axis=1)
+            neighbors = remaining[d2 <= r2]
+            if len(neighbors):
+                unvisited[neighbors] = False
+                stack.extend(neighbors.tolist())
+
+        if len(cluster) >= min_size:
+            clusters.append(np.array(cluster, dtype=int))
+
+    clusters.sort(key=len, reverse=True)
+    if return_indices:
+        return clusters
+    return [pts[idx] for idx in clusters]
+
+
 class Clusterer:
     
     def cluster(self, indices, min_size=2):

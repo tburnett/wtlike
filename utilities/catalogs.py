@@ -142,7 +142,7 @@ class LATpsr(CatDF, pd.DataFrame):
     index is the Source_Name field
     """
 
-    def __init__(self, *args, path='$FERMI/catalog/obj-pulsar-lat_v1*', **kwargs):
+    def __init__(self, *args, path='$FERMI/catalog/srcid/cat/obj-pulsar-lat_v1*', **kwargs):
         from astropy.table import Table
         lcat = glob.glob(os.path.expandvars(path))[-1]
         filename= os.path.split(lcat)[-1]
@@ -188,10 +188,10 @@ class UWcat(CatDF, pd.DataFrame):
     
     def __init__(self, model='uw1410', filename=None):
 
-        if model is not None:
+        if model is not None and filename is None:
             filename = Path(os.path.expandvars('$FERMI'))/f'skymodels/sources_{model}.csv'
         elif filename is not None:
-            pass
+            filename = Path(filename)
         else:
             pass
         
@@ -218,6 +218,9 @@ class LonLat():
 
 
 class Fermi4FGL(CatDF, pd.DataFrame):
+
+    PRIMARY_HEADER_KEYS = ('TELESCOP', 'INSTRUME', 'ORIGIN', 'DATE', 'VERSION')
+    CATALOG_IDENTIFYING_KEYS = ('VERSION', 'CDS-NAME', 'EXTNAME', 'HDUCLAS1', 'HDUCLAS2', 'HDUVERS')
 
     class FlagBits():
        
@@ -246,15 +249,29 @@ class Fermi4FGL(CatDF, pd.DataFrame):
             return '{}' if r=='' else '{'+r[:-1]+'}'
 
 
-    def __init__(self, version=None, path='$FERMI/catalog/'):
+    def __init__(self, version=None, *, path='$FERMI/catalog/', reset_index=False):
+        """
+        - version: "vnn" for release, or DR3 or DR4 for 4FGL data release
+                    "uwnnnn" for an internal version
+
+        - path: either a folder containing the catalog FITS files for use by the version lookup, 
+                or the absolute path to an appropriate FITS file             
+        """
  
         t=Path(os.path.expandvars(path)).expanduser(); 
         if version is not None:
-            version = {'DR4':'v32', 'DR3':'v28'}.get(version, version)
+            if not version.startswith('uw'):
+                version = {'DR4':'v32', 'DR3':'v28', 'FL16Y':'v36'}.get(version, version)
         if t.is_file():
             filename = t
         elif t.is_dir():
-            filename = sorted(list(t.glob('gll_psc_v*.fit')))[-1] if version is None else \
+            if version.startswith('uw'):
+                u = list(t.glob(f'gll_pscP305{version}*.fits')); 
+                assert len(u)>0, f'No files for version {version} found.'
+                filename=u[-1]
+
+            else:
+                filename = sorted(list(t.glob('gll_psc_v*.fit')))[-1] if version is None else \
                     Path(f'{t}/gll_psc_{version}.fit')
                 
         else:
@@ -262,51 +279,65 @@ class Fermi4FGL(CatDF, pd.DataFrame):
         if not Path(filename).is_file():
             raise Exception(f'File {filename} does not exist.')
         print(f'Loaded Fermi 4FGL {filename.name}', end='')
+        resolved_filename = Path(filename).expanduser().resolve()
         with fits.open(filename) as hdus:
             data = hdus[1].data
+            header0 = hdus[0].header
+            header1 = hdus[1].header
 
-     
+        primary_header_values = {k: header0.get(k) for k in self.PRIMARY_HEADER_KEYS}
+        catalog_identifying_values = {k: header1.get(k) for k in self.CATALOG_IDENTIFYING_KEYS}
 
         cname= lambda n : [s.strip() for s in data[n]]
-        cvar = lambda a: data[a].astype(float)
+        cvar = lambda a: data[a].astype(np.float32)
         ivar = lambda a: data[a].astype(int)
         name = list(map(lambda x: x.strip() , data['Source_Name']))
+        energy_factor = 1 if data.columns['Energy_Flux100'].unit.startswith('erg') else 1.602178e-06
 
         # calculate these first
         funcs = self.specfuncs(data)
 
+
         cat_subset =  dict(
             ra          = cvar('RAJ2000'),
             dec         = cvar('DEJ2000'), 
-            # fk5         = list(map(LonLat, cvar('RAJ2000'),cvar('DEJ2000'))),
             glat        = cvar('GLAT'),
             glon        = cvar('GLON'),
-            # galactic    = list(map(LonLat, cvar('GLON'),cvar('GLAT'))),
             r95         = cvar('Conf_95_SemiMajor'),
             specfunc    = funcs,
             pivot       = cvar('Pivot_Energy'),
-            eflux       = cvar('Energy_Flux100'), # erg cm-2 s-1
+            eflux       = cvar('Energy_Flux100') * energy_factor, # to erg
             significance= cvar('Signif_Avg'),
-            variability = cvar('Variability_Index'),
             curvature   = 2*cvar('LP_Beta'),
             curv_unc    = 2*cvar('Unc_LP_Beta'),
-            # class2      = cname('CLASS2'),
-            flags       = list(map(self.FlagBits, ivar('FLAGS'))),
+
+            
             # ....
         )
-        if 'ASSOC1' in data.columns.names:
+        if 'Variability_Index' in data.columns.names:
+            cat_subset['variability'] = cvar('Variability_Index')
+
+        release_format =  'ASSOC1' in data.columns.names
+        if release_format:
             # release format
             cat_subset.update(dict(
                 assoc_prob  = cvar('ASSOC_PROB_BAY'), # for Bayesian, or _LR for likelihood ratio
                 assoc1_name = cname('ASSOC1'),
                 class1      = cname('CLASS1'),
+                flags       = list(map(self.FlagBits, ivar('FLAGS'))),
             ))
-        else:
-            # internal format 
+        elif 'Passoc' in data.columns.names:
+            # internal association format
             cat_subset.update(dict(
                 assoc_prob  = cvar('Passoc'), 
                 assoc1_name = cname('assoc_new'),
                 class1      = cname('class_new'),
+                nickname    = cname('NickName'),
+                ts          = cvar('Test_Statistic'),
+            ))
+        else:
+            # internal no assocation
+            cat_subset.update(dict(
                 nickname    = cname('NickName'),
                 ts          = cvar('Test_Statistic'),
             ))
@@ -315,14 +346,46 @@ class Fermi4FGL(CatDF, pd.DataFrame):
 
         print( f': {len(self)} entries' )
         # extract actual version
-        v = hdus[1].header['VERSION'] 
+        v = header1['VERSION'] 
         v = {'v28':'DR3', 'v32':'DR4'}.get(v,v)
-        vname = f'4FGL-{v}'
-        self.__dict__.update(data=data, filename=filename.name, name=vname)
-        #index by source names
-        self.index = name
-        self.index.name = vname
+        vname = version if version=='FL16Y' else f'4FGL-{v}'
+        index_name = str(header1.get('CDS-NAME', vname)).strip()
+        if len(index_name) == 0:
+            index_name = vname
+        self.__dict__.update(
+            data=data,
+            filename=filename.name,
+            catalog_file=str(resolved_filename),
+            name=vname,
+            primary_header_values=primary_header_values,
+            catalog_identifying_values=catalog_identifying_values,
+        )
+
+        #index by source names except now with FL16Y
+        if not reset_index:
+            # index with Source_Name or NickName
+            if release_format:
+                self.index = name
+            else:
+                self.index = self.nickname
+                self['jname'] = name 
+            self.index.name = index_name
+        else:
+            # ordinal indexing
+            self['name'] = name
         self.fitscols = data.columns
+
+    def info(self):
+        """Print catalog file path and selected FITS header identification keys."""
+        print(f'Catalog file: {self.catalog_file}')
+
+        print('Primary header keys:')
+        for key in self.PRIMARY_HEADER_KEYS:
+            print(f'  {key}: {self.primary_header_values.get(key)}')
+
+        print('\nCatalog-identifying keys:')
+        for key in self.CATALOG_IDENTIFYING_KEYS:
+            print(f'  {key}: {self.catalog_identifying_values.get(key)}')
        
     def specfuncs(self, data):
         """ Return a list of spectral functions
@@ -377,4 +440,65 @@ class Fermi4FGL(CatDF, pd.DataFrame):
                        LogParabola='LP', PowerLaw='PL')[row['SpectrumType']]
         func, parnames = specs.get(func_name if func_name !='default'  else default)    
         pars = [row[name] for name in parnames] 
-        return func(pars, e0=row['Pivot_Energy']) if pars is not None else None     
+        return func(pars, e0=row['Pivot_Energy']) if pars is not None else None  
+
+    def get_series(self, name):
+        """If name is a source:
+                Return the full record for the source as a Pandas Series object
+            else
+                Return the column 
+        """
+        if name not in self.index:
+            # it is a field name
+            return pd.Series(self.field(name), index=self.index)
+        index = list(self.index).index(name)
+        assert index>=0, f'Failed to find {name}'
+        s = self.data[index]
+        cols = self.data.columns
+        return pd.Series(dict( (c, s.field(c)) for c in cols.names),  name=name) 
+    
+    def flux_band(self, name):
+
+        s = self.get_series(name)
+        flux = s['Flux_Band']
+        unc = s['Unc_Flux_Band']
+        return pd.Series(dict(
+                flux=flux[1:], 
+                low=unc[1:,0], 
+                high=unc[1:,1],
+                islimit=pd.isna(unc[1:,0]),
+                nufnu=s['nuFnu_Band'][1:],
+                ),  name=name)
+
+    def band_plot(self, name, ax=None, emax=None, specfun=True, ms=0, **kwargs):
+        
+        fb = self.flux_band(name)
+        e_bins = np.array([ 0.1, 0.3, 1, 3, 10, 30, 100, 1000])
+        energy = np.sqrt(e_bins[:-1]* e_bins[1:])
+        e_err = np.array([energy-e_bins[:-1],e_bins[1:]-energy])
+        
+        lim = fb.islimit
+        bar =~lim
+        err = np.array([-fb.low, fb.high, ])
+        fig,ax=plt.subplots(figsize=(8,5)) if ax is None else (ax.figure, ax)
+        scale = 1e9 * energy # / 624.150648
+        ax.errorbar(x=energy[bar], xerr=e_err[:,bar], y=(scale*fb.flux)[bar], 
+                    yerr=(scale*err)[:,bar], fmt='o', ms=ms);
+        if sum(lim)>0:
+            _,caps,_ = ax.errorbar(x=energy[lim], xerr=e_err[:,lim], y=(y:=(scale* fb.high)[lim]), 
+                        uplims=True*sum(lim), yerr=y/2,  fmt='.',color='grey')
+            caps[0].set_markersize(ms)
+        if specfun:
+            sf = self.get_specfunc(name, 'LP')
+            sf.sed_plot(ax=ax,plot_kw=dict(color='orange'),
+                    )#label='4FGL-DR3')        
+        # ax.scatter(energy, 1e12*fb.nufnu, marker='o', facecolor='none', edgecolor='w', s=400 )
+        kw = dict(xscale='log', xlim=(0.1, 100), xlabel='Energy (GeV)', 
+            yscale='log', ylim=(0.02), yticks=[0.1,1,10, 100], 
+                yticklabels='0.1 1 10 100'.split()
+                )
+        kw.update(kwargs)
+        ax.set(**kw)
+        # ax.set_title(fb.name, fontsize=10) 
+        # ax.text(0.5,0.92, fb.name, fontsize=12, ha='center', transform=ax.transAxes) # ylabel=r'$\nu F_{\nu}\ \ [\mathrm{10^{-12}\ erg\ cm^{-2}\ s^{-1}}]$',
+        return fig   

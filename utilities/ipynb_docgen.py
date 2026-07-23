@@ -43,17 +43,26 @@ FigureWrapper test
     display_markdown(FigureWrapper(fig, summary='test figure'))
 
 """
-import sys, os, string, pprint, datetime
+import sys, os, string, pprint, datetime, contextlib
 import numpy as np # type: ignore
 
 
 __all__ = ['nbdoc', 'image', 'figure', 'monospace', 'ShowPrintout','capture', 'capture_hide', 
         'capture_show', 'shell', 'create_file', 'ipynb_doc', 'get_nb_namespace', 'special_prefix', 
-        'figure_number', 'display_markdown', 'FigureWrapper','show', 'show_fig', 'show_date', 'figure_callback']
+        'figure_number', 'display_markdown', 'FigureWrapper','show', 'show_fig', 'show_date', 
+        'figure_callback', 'stdout_redirect', 'export_notebook_to_markdown']
 
 special_prefix = ''
 
 figure_callback = None # perhaps a function to process figure
+
+@contextlib.contextmanager
+def stdout_redirect(where= None):
+    sys.stdout = where if where is not None else open(os.devnull, 'w')
+    try:
+        yield where
+    finally:
+        sys.stdout = sys.__stdout__
 
 # Manage the figure number
 class FigureNumber:
@@ -830,3 +839,63 @@ def show_date():
     import datetime
     date=str(datetime.datetime.now())[:16]
     show(f"""<h5 style="text-align:right; margin-right:15px"> {date}</h5>""")
+
+
+from pathlib import Path
+
+
+def export_notebook_to_markdown(notebook_name, output_dir='../docs'):
+    """Export a notebook's markdown cells and rendered code outputs to a Markdown file.
+
+    Parameters
+    ----------
+    notebook_name : str
+        Notebook stem to read from the current directory, without the .ipynb suffix.
+    output_dir : str, default '../docs'
+        Directory where the generated Markdown file will be written.
+
+    Notes
+    -----
+    Markdown cell sources are copied as-is. Code cell inputs are skipped, but common
+    rendered outputs are preserved, including plain text, markdown, HTML, and inline
+    PNG images encoded as data URLs.
+    """
+
+    import nbformat
+    from pathlib import Path
+
+    # Load the notebook
+    if Path(notebook_name+'.ipynb').exists():
+        nb = nbformat.read(notebook_name+'.ipynb', as_version=4)
+    else:
+        raise FileNotFoundError(f"Notebook {notebook_name}.ipynb not found")
+
+    md_lines = []
+
+    for cell in nb.cells:
+        if cell.cell_type == "markdown":
+            # Keep markdown content as-is
+            md_lines.append(cell.source)
+        elif cell.cell_type == "code":
+            # Keep only outputs
+            for output in cell.get("outputs", []):
+                if output.output_type == "stream":
+                    md_lines.append(f"```\n{output.text.strip()}\n```")
+                elif output.output_type == "execute_result" and "text/plain" in output.data:
+                    md_lines.append(f"```\n{output.data['text/plain'].strip()}\n```")
+                elif output.output_type == "display_data":
+                    if "image/png" in output.data:
+                        img_data = output.data["image/png"]
+                        md_lines.append(f"![output](data:image/png;base64,{img_data})")
+                    elif "text/markdown" in output.data:
+                        md_lines.append(output.data["text/markdown"].strip())
+                    elif 'text/html' in output.data:
+                        md_lines.append(output.data['text/html'].strip())
+                    elif "text/plain" in output.data:
+                        md_lines.append(f"```\n{output.data['text/plain'].strip()}\n```")
+
+    # Save to Markdown file
+    with open(f'{output_dir}/{notebook_name}.md', "w", encoding="utf-8") as f:
+        f.write("\n\n".join(md_lines))
+
+    print(f"✅ Export complete: processed {len(nb.cells)} cells, wrote {len(md_lines)} segments to {output_dir}/{notebook_name}.md")
